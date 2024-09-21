@@ -123,11 +123,11 @@ const AuthInputField: React.FC<AuthInputFieldProps> = ({
           type === 'password' ? (
             <InputAdornment position="end">
               <IconButton
-                onClick={handleClickShowPassword}
+                onClick={() => console.log('Show password')}
                 onMouseDown={(e) => e.preventDefault()}
                 edge="end"
               >
-                {showPassword ? <VisibilityOff /> : <Visibility />}
+                {true ? <VisibilityOff /> : <Visibility />}
               </IconButton>
             </InputAdornment>
           ) : null,

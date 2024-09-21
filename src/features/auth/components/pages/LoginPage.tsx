@@ -3,6 +3,7 @@ import { loginSuccess, selectAuth } from '../../../../redux/slices/authSlice';
 import { useAppDispatch } from '../../../../hooks/useAppDispatch';
 import { useGetExampleDataQuery } from '../../../../services/api';
 import { useNavigate } from 'react-router-dom';
+import Login from '../organisms/Login';
 
 export const LoginPage = () => {
   const dispatch = useAppDispatch();
@@ -20,6 +21,12 @@ export const LoginPage = () => {
   return (
     <div>
       <h1>Login Page</h1>
+      <Login
+        onLogin={handleLogin}
+        onSwitchToSignup={function (): void {
+          throw new Error('Function not implemented.');
+        }}
+      />
       <button onClick={handleLogin}>Login</button>
     </div>
   );
