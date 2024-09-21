@@ -24,7 +24,7 @@ const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
-    null
+    null,
   );
   const theme = useTheme();
   const { palette } = theme;
@@ -36,7 +36,6 @@ function ResponsiveAppBar() {
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };
-
 
   return (
     <AppBar position="static" color="transparent">
@@ -124,7 +123,7 @@ function ResponsiveAppBar() {
           >
             {pages.map((page) => (
               <Button
-              href='/auth/login'
+                href="/auth/login"
                 key={page}
                 onClick={handleCloseNavMenu}
                 sx={{ my: 2, color: 'gray', display: 'block' }}

@@ -6,8 +6,10 @@ type TextAtomProps = {
   size: 'large' | 'medium' | 'small';
 } & Omit<TypographyProps, 'variant' | 'style'>;
 
-
-const variantMap: Record<TextAtomProps['variant'], Record<TextAtomProps['size'], TypographyProps['variant']>> = {
+const variantMap: Record<
+  TextAtomProps['variant'],
+  Record<TextAtomProps['size'], TypographyProps['variant']>
+> = {
   display: {
     large: 'displayLarge',
     medium: 'displayMedium',
@@ -35,13 +37,10 @@ const variantMap: Record<TextAtomProps['variant'], Record<TextAtomProps['size'],
   },
 };
 
-
 const TextAtom: React.FC<TextAtomProps> = ({ variant, size, ...props }) => {
   const typographyVariant = variantMap[variant][size];
 
-  return (
-    <Typography variant={typographyVariant} {...props} />
-  );
+  return <Typography variant={typographyVariant} {...props} />;
 };
 
 export default TextAtom;

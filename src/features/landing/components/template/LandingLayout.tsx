@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 
 import { ReactNode } from 'react';
 import ResponsiveAppBar from '../organisms/AppBar';
@@ -13,5 +13,5 @@ export const LandingLayout = ({ children }: Props) => {
       <ResponsiveAppBar />
       {children}
     </div>
-  )
-}
+  );
+};

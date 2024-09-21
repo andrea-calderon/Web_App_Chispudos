@@ -1,4 +1,3 @@
-
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { IconButton, InputAdornment, TextField } from '@mui/material';
@@ -29,7 +28,6 @@ const AuthInputField: React.FC<AuthInputFieldProps> = ({
   ...props
 }) => {
   const theme = useTheme();
-
 
   const getInputStyles = () => {
     switch (variant) {
