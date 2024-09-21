@@ -1,10 +1,13 @@
 import React from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
+import { useAppSelector } from '../../hooks/useAppSelector';
+import { selectAuth } from '../../redux/slices/authSlice';
 
 const ProtectedRoutesWrapper: React.FC = () => {
-  const isAuth = true;
+  const authState = useAppSelector(selectAuth);
+  console.error('ProtectedRoutesWrapper ', authState);
 
-  return isAuth ? <Outlet /> : <Navigate to="/login" />;
+  return authState.isAuthenticated ? <Outlet /> : <Navigate to="/login" />;
 };
 
 export default ProtectedRoutesWrapper;
