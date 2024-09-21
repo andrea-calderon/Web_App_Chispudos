@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { LandingLayout } from '../template/LandingLayout';
+import { LandingLayout } from '../templates/LandingLayout';
 
 export const LandingPage = () => {
   const navigate = useNavigate();

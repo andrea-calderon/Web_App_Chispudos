@@ -7,7 +7,6 @@ import { ButtonAtom, InputAtom, TextAtom } from '../../../../components/atoms';
 
 interface LoginProps {
   onLogin: () => void;
-  onSwitchToSignup: () => void;
 }
 
 const validationSchema = Yup.object({
@@ -23,7 +22,7 @@ const validationSchema = Yup.object({
     .required('Password is required'),
 });
 
-const Login: React.FC<LoginProps> = ({ onLogin, onSwitchToSignup }) => {
+const Login: React.FC<LoginProps> = ({ onLogin }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
@@ -68,6 +67,7 @@ const Login: React.FC<LoginProps> = ({ onLogin, onSwitchToSignup }) => {
           }}
         >
           <TextAtom
+            onClick={() => navigate('/')}
             variant="display"
             size="large"
             sx={{
@@ -186,7 +186,7 @@ const Login: React.FC<LoginProps> = ({ onLogin, onSwitchToSignup }) => {
                     <ButtonAtom
                       type="button"
                       variant="text"
-                      onClick={onSwitchToSignup}
+                      onClick={() => navigate('/register')}
                       sx={{ ml: 1, textTransform: 'none', fontSize: 'inherit' }}
                     >
                       {t('auth.login.register')}

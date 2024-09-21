@@ -1,5 +1,10 @@
-import React from 'react';
+import Signup from '../organisms/Signup';
+import AuthLayout from '../templates/AuthLayout';
 
 export const RegisterPage = () => {
-  return <div>RegisterPage</div>;
+  return (
+    <AuthLayout>
+      <Signup />
+    </AuthLayout>
+  );
 };

@@ -6,6 +6,7 @@
     }
   },
   "auth": {
+    "initialTitle": "Easily manage your tasks and establish a network of preferred on Workoo.",
     "login": {
       "title": "Iniciar sesión",
       "email": "Correo electrónico",
@@ -19,6 +20,25 @@
           "invalid_acc": "Correo electrónico o contraseña incorrectos"
         }
       }
+    },
+    "register": {
+      "usernameLabel": "Username",
+      "usernamePlaceholder": "Enter your username",
+      "emailLabel": "Email",
+      "emailPlaceholder": "Enter a valid email",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "Enter your password",
+      "confirmPasswordLabel": "Confirm Password",
+      "confirmPasswordPlaceholder": "Enter the password again",
+      "invalidCredentials": "Invalid username or password",
+      "errorOccurred": "An error occurred",
+      "signup_title_button": "Sign Up",
+      "agree_terms": "By signing up, you agree to our ",
+      "terms_of_service": "Terms of Service",
+      "and": "and",
+      "privacy_policy": "Privacy Policy",
+      "have_an_account": "Already have an account?",
+      "login_title_button": "Log In"
     }
   }
 }

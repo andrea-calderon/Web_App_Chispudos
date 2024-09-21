@@ -11,6 +11,7 @@ import { HomePage } from '../features/home/components/pages/HomePage';
 import { useAppSelector } from '../hooks/useAppSelector';
 import { selectAuth } from '../redux/slices/authSlice';
 import { ProfilePage } from '../features/profile/components/pages/ProfilePage';
+import { RegisterPage } from '../features/auth/components/pages/RegisterPage';
 
 const AppRoutes = () => {
   const authState = useAppSelector(selectAuth);
@@ -19,6 +20,7 @@ const AppRoutes = () => {
       <Routes>
         {/* Public Route */}
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
         <Route path="/" element={<LandingPage />} />
 
         {/* Protected Routes */}
