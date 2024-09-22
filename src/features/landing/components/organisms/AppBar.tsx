@@ -12,17 +12,20 @@ import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import { useTheme } from '@mui/material/styles';
 import { TextAtom, ButtonAtom } from '../../../../components/atoms';
+import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const pages = [
-  'Ubicación',
-  'Cómo funciona',
-  '¿Eres profesional?',
-  'Servicios',
-  'Iniciar sesión',
+  { title: 'Ubicación', url: '/location' },
+  { title: 'Cómo funciona', url: '/how-it-works' },
+  { title: '¿Eres profesional?', url: '/are-you-a-professional' },
+  { title: 'Servicios', url: '/services' },
+  { title: 'Iniciar sesión', url: '/login' },
 ];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 function ResponsiveAppBar() {
+  const navigate = useNavigate();
+  const { t } = useTranslation();
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null,
   );
@@ -38,7 +41,7 @@ function ResponsiveAppBar() {
   };
 
   return (
-    <AppBar position="static" color="transparent">
+    <AppBar position="static" color="transparent" sx={{ boxShadow: 'none' }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
@@ -88,8 +91,13 @@ function ResponsiveAppBar() {
               sx={{ display: { xs: 'block', md: 'none' } }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography sx={{ textAlign: 'center' }}>{page}</Typography>
+                <MenuItem key={page.url} onClick={handleCloseNavMenu}>
+                  <Typography
+                    sx={{ textAlign: 'center' }}
+                    onClick={() => navigate(page.url)}
+                  >
+                    {page.title}
+                  </Typography>
                 </MenuItem>
               ))}
             </Menu>
@@ -123,18 +131,16 @@ function ResponsiveAppBar() {
           >
             {pages.map((page) => (
               <Button
-                href="/auth/login"
-                key={page}
+                href={page.url}
+                key={page.url}
                 onClick={handleCloseNavMenu}
                 sx={{ my: 2, color: 'gray', display: 'block' }}
               >
-                {/* <Link href={'auth/login'} passHref>
-                {page}
-                </Link> */}
-                {page}
+                {page.title}
               </Button>
             ))}
             <ButtonAtom
+              onClick={() => navigate('/register')}
               type="submit"
               variant="filled"
               fullWidth
@@ -146,7 +152,7 @@ function ResponsiveAppBar() {
                 textTransform: 'none',
               }}
             >
-              {'hey'}
+              {t('auth.login.register')}
             </ButtonAtom>
           </Box>
         </Toolbar>

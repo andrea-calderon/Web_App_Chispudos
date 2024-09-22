@@ -1,7 +1,6 @@
 import { Box, Grid } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { TextAtom } from '../../../../components/atoms';
-import initialScreenImage from './../../../../assets/Main_screen_img_bg.svg';
+import { TextAtom, PersonAppImage } from '../../../../components/atoms';
 
 interface AuthLayoutProps {
   children?: React.ReactNode;
@@ -11,7 +10,7 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ children }) => {
   const { t } = useTranslation();
 
   return (
-    <Grid container sx={{ height: '100vh', width: '100vw' }}>
+    <Grid container>
       <Grid
         item
         xs={12}
@@ -52,15 +51,7 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ children }) => {
           </TextAtom>
         </Box>
         <Box sx={{ textAlign: 'center' }}>
-          <img
-            src={initialScreenImage}
-            alt="Initial screen"
-            style={{
-              width: '416px',
-              height: '518px',
-              borderRadius: '5%',
-            }}
-          />
+          <PersonAppImage />
         </Box>
       </Grid>
 

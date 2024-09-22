@@ -6,7 +6,7 @@
     }
   },
   "auth": {
-    "initialTitle": "Easily manage your tasks and establish a network of preferred on Workoo.",
+    "initialTitle": "Gestiona fácilmente tus tareas y establece una red de preferidos en Workoo.",
     "login": {
       "title": "Iniciar sesión",
       "email": "Correo electrónico",
@@ -22,23 +22,23 @@
       }
     },
     "register": {
-      "usernameLabel": "Username",
-      "usernamePlaceholder": "Enter your username",
-      "emailLabel": "Email",
-      "emailPlaceholder": "Enter a valid email",
-      "passwordLabel": "Password",
-      "passwordPlaceholder": "Enter your password",
-      "confirmPasswordLabel": "Confirm Password",
-      "confirmPasswordPlaceholder": "Enter the password again",
-      "invalidCredentials": "Invalid username or password",
-      "errorOccurred": "An error occurred",
-      "signup_title_button": "Sign Up",
-      "agree_terms": "By signing up, you agree to our ",
-      "terms_of_service": "Terms of Service",
-      "and": "and",
-      "privacy_policy": "Privacy Policy",
-      "have_an_account": "Already have an account?",
-      "login_title_button": "Log In"
+      "usernameLabel": "Nombre de usuario",
+      "usernamePlaceholder": "Introduce tu nombre de usuario",
+      "emailLabel": "Correo electrónico",
+      "emailPlaceholder": "Introduce un correo electrónico válido",
+      "passwordLabel": "Contraseña",
+      "passwordPlaceholder": "Introduce tu contraseña",
+      "confirmPasswordLabel": "Confirmar contraseña",
+      "confirmPasswordPlaceholder": "Introduce la contraseña de nuevo",
+      "invalidCredentials": "Nombre de usuario o contraseña inválidos",
+      "errorOccurred": "Ocurrió un error",
+      "signup_title_button": "Registrarse",
+      "agree_terms": "Al registrarte, aceptas nuestros ",
+      "terms_of_service": "Términos de Servicio",
+      "and": "y",
+      "privacy_policy": "Política de Privacidad",
+      "have_an_account": "¿Ya tienes una cuenta?",
+      "login_title_button": "Iniciar sesión"
     }
   }
 }

@@ -1,4 +1,44 @@
 {
   "welcome": "Welcome!",
-  "login": "Login"
+  "components": {
+    "button": {
+      "login": "Login"
+    }
+  },
+  "auth": {
+    "initialTitle": "Easily manage your tasks and establish a network of preferred on Workoo.",
+    "login": {
+      "title": "Login",
+      "email": "Email",
+      "password": "Password",
+      "login": "Login",
+      "register": "Register",
+      "forgot_password": "Forgot your password?",
+      "dont_have_account": "Don't have an account?",
+      "form": {
+        "error": {
+          "invalid_acc": "Incorrect email or password"
+        }
+      }
+    },
+    "register": {
+      "usernameLabel": "Username",
+      "usernamePlaceholder": "Enter your username",
+      "emailLabel": "Email",
+      "emailPlaceholder": "Enter a valid email",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "Enter your password",
+      "confirmPasswordLabel": "Confirm Password",
+      "confirmPasswordPlaceholder": "Enter the password again",
+      "invalidCredentials": "Invalid username or password",
+      "errorOccurred": "An error occurred",
+      "signup_title_button": "Sign Up",
+      "agree_terms": "By signing up, you agree to our ",
+      "terms_of_service": "Terms of Service",
+      "and": "and",
+      "privacy_policy": "Privacy Policy",
+      "have_an_account": "Already have an account?",
+      "login_title_button": "Log In"
+    }
+  }
 }
