@@ -1,30 +1,41 @@
 import { Box, Container, Grid } from '@mui/material';
-import { Field, Form, Formik } from 'formik';
+import { Form, Formik } from 'formik';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 import { ButtonAtom, InputAtom, TextAtom } from '../../../../components/atoms';
-
-interface LoginProps {
-  onLogin: () => void;
-}
+import { useAppDispatch } from '../../../../hooks/useAppDispatch';
+import { useLoginMutation } from '../../../../services/api';
+import { loginSuccess } from '../../../../redux/slices/authSlice';
 
 const validationSchema = Yup.object({
-  username: Yup.string()
-    .matches(
-      /^[a-zA-Z0-9_]+$/,
-      'Username can only contain letters, numbers, and underscores',
-    )
-    .required('Username is required'),
-
+  username: Yup.string().required('Username is required'),
   password: Yup.string()
     .min(6, 'Password must be at least 6 characters')
     .required('Password is required'),
 });
 
-const Login: React.FC<LoginProps> = ({ onLogin }) => {
+const Login: React.FC= () => {
   const { t } = useTranslation();
+  const dispatch = useAppDispatch();
+  const [login, { isLoading }] = useLoginMutation();
   const navigate = useNavigate();
+  const handleLogin = async (values: {
+    username: string;
+    password: string;
+  }) => {
+    try {
+      const result = await login({
+        email: values.username,
+        password: values.password,
+      }).unwrap();
+      console.log('Login result:', result);
+      dispatch(loginSuccess(result));
+      navigate('/home');
+    } catch (err) {
+      console.error('Failed to login:', err);
+    }
+  };
 
   return (
     <Container
@@ -82,10 +93,10 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
         <Formik
           initialValues={{ username: '', password: '' }}
           validationSchema={validationSchema}
-          onSubmit={async (values, { setSubmitting, setFieldError }) => {
+          onSubmit={async ({ username, password }, { setSubmitting, setFieldError }) => {
             try {
-              onLogin();
-              navigate('/app/home');
+              handleLogin({username, password});
+              navigate('/home');
             } catch {
               setFieldError('username', t('loginScreen.errorOccurred'));
               setFieldError('password', t('loginScreen.errorOccurred'));
@@ -103,9 +114,10 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
                 justifyContent="center"
               >
                 <Grid item xs={12}>
-                  <Field
-                    as={InputAtom}
+                  <InputAtom
                     name="username"
+                    type="email"
+                    autoComplete='email'
                     variant="underlined"
                     label={t('auth.login.email')}
                     placeholder={t('auth.login.email')}
@@ -116,8 +128,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
                   />
                 </Grid>
                 <Grid item xs={12}>
-                  <Field
-                    as={InputAtom}
+                  <InputAtom
                     name="password"
                     type="password"
                     variant="underlined"
@@ -135,7 +146,6 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
                     variant="filled"
                     fullWidth
                     disabled={isSubmitting}
-                    onClick={onLogin}
                     sx={{
                       mt: 2,
                       width: '100%',
@@ -186,6 +196,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
                     <ButtonAtom
                       type="button"
                       variant="text"
+                      disabled={isSubmitting || isLoading}
                       onClick={() => navigate('/register')}
                       sx={{ ml: 1, textTransform: 'none', fontSize: 'inherit' }}
                     >

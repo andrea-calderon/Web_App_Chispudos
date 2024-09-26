@@ -107,8 +107,8 @@ const InputAtom: React.FC<InputAtomProps> = ({
 
   return (
     <Field
-      name={name}
-      render={({ field, form: { isSubmitting } }) => (
+      name={name}>
+        {({ field, form: { isSubmitting } }) => (
         <TextField
           {...field}
           variant={variant === 'underlined' ? 'standard' : 'outlined'}
@@ -152,7 +152,7 @@ const InputAtom: React.FC<InputAtomProps> = ({
           ]}
         />
       )}
-    />
+        </Field>
   );
 };
 
