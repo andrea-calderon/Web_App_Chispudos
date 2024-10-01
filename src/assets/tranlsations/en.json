@@ -40,5 +40,12 @@
       "have_an_account": "Already have an account?",
       "login_title_button": "Log In"
     }
-  }
+    },
+  "landing": {
+    "guarantee": {
+      "category": "Guarantee",
+      "tittle": "Enjoy 100% coverage when you sign up and pay with Chispudos.",
+      "button": "Subscribe now"
+      }
+    }
 }

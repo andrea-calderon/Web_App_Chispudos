@@ -40,5 +40,12 @@
       "have_an_account": "¿Ya tienes una cuenta?",
       "login_title_button": "Iniciar sesión"
     }
-  }
+  },
+  "landing": {
+    "guarantee": {
+      "category": "Garantía",
+      "tittle": "Cuentas con una cobertura del 100% contratando y pagando con Chispudos.",
+      "button": "Suscríbete ahora"
+      }
+    }
 }

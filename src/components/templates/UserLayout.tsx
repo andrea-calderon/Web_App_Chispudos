@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 import { useMediaQuery, useTheme } from '@mui/material';
-import ButtonTab from '../molecules/organisms/ButtonTab';
-import DrawerMenu from '../molecules/organisms/DrawerMenu';
+import ButtonTab from '../organisms/ButtonTab';
+import DrawerMenu from '../organisms/DrawerMenu';
 
 interface Props {
   children: ReactNode;

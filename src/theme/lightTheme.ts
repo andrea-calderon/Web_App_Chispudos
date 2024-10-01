@@ -30,7 +30,7 @@ export const lightTheme = createTheme({
       contrastText: '#FFFFFF',
     },
     background: {
-      default: '#FFFBFE',
+      default: '#FFFFFF',
       paper: '#FFFFFF',
     },
     text: {
