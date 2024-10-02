@@ -47,5 +47,31 @@
       "tittle": "Cuentas con una cobertura del 100% contratando y pagando con Chispudos.",
       "button": "Suscríbete ahora"
       }
-    }
-}
+    },
+  "landing_testimonials": {
+      "category": "Testimoniales",
+      "title": "Confía en nuestros clientes"
+      },
+  "testimonials": {
+          "title": "Testimoniales",
+          "subtitle": "Confía en nuestros clientes",
+          "cta": "Suscríbete ahora",
+          "feedback": [
+            {
+              "name": "Sofía Rodriguez",
+              "title": "Analista de marketing",
+              "comment": "Por fin encontré una app donde puedo encontrar profesionales de confianza a precios justos. ¡Ha sido un gran alivio!"
+            },
+            {
+              "name": "Juan Pérez",
+              "title": "Ingeniero de Software",
+              "comment": "Chispudos me ha ahorrado mucho tiempo. Encontré un plomero excelente en minutos."
+            },
+            {
+              "name": "Ana Fernández",
+              "title": "Diseñadora gráfica",
+              "comment": "Muy útil y fácil de usar. Encontré un electricista de confianza rápidamente."
+            }
+          ]
+        }
+      } 
