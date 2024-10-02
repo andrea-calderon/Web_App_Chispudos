@@ -14,6 +14,7 @@ import { ProfilePage } from '../features/profile/components/pages/ProfilePage';
 import { RegisterPage } from '../features/auth/components/pages/RegisterPage';
 import FeatureWarranty from '../components/organisms/FeatureWarranty';
 import TestimonialsSection from '../components/organisms/TestimonialsSection';
+import DownloadAppSection from '../components/organisms/DownloadAppSection';
 
 const AppRoutes = () => {
   const authState = useAppSelector(selectAuth);
@@ -35,6 +36,7 @@ const AppRoutes = () => {
       </Router>
       <FeatureWarranty />
       <TestimonialsSection />
+      <DownloadAppSection />
     </div>
   );
 };

@@ -73,5 +73,9 @@
               "comment": "Muy útil y fácil de usar. Encontré un electricista de confianza rápidamente."
             }
           ]
-        }
+        },
+  "landing_downloadSection": {
+  "title": "¡Descarga nuestra app ahora!",
+  "description": "¿Necesitas un electricista urgente? ¿O buscas una niñera de confianza? Encuentra al profesional perfecto en cuestión de minutos."
+      }
       } 

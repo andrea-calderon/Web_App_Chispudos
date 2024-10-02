@@ -73,5 +73,9 @@
               "comment": "Very useful and easy to use. I found a trustworthy electrician quickly."
             }
           ]
-        }
+        },
+        "landing_downloadSection": {
+          "title": "Get our app today!",
+          "description": "Urgent need for an electrician? Trustworthy babysitter wanted? Find your perfect match in no time."
+              }
       }     
