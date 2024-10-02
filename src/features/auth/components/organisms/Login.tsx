@@ -7,6 +7,7 @@ import { ButtonAtom, InputAtom, TextAtom } from '../../../../components/atoms';
 import { useAppDispatch } from '../../../../hooks/useAppDispatch';
 import { useLoginMutation } from '../../../../services/api';
 import { loginSuccess } from '../../../../redux/slices/authSlice';
+import { LoginValues } from '../../../../types/api/apiResponses';
 
 const validationSchema = Yup.object({
   username: Yup.string().required('Username is required'),
@@ -15,23 +16,27 @@ const validationSchema = Yup.object({
     .required('Password is required'),
 });
 
-const Login: React.FC= () => {
+const Login: React.FC = () => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const [login, { isLoading }] = useLoginMutation();
   const navigate = useNavigate();
-  const handleLogin = async (values: {
-    username: string;
-    password: string;
-  }) => {
+
+  const handleLogin = async (values: LoginValues) => {
     try {
       const result = await login({
-        email: values.username,
+        username: values.username,
         password: values.password,
       }).unwrap();
-      console.log('Login result:', result);
-      dispatch(loginSuccess(result));
-      navigate('/home');
+      if (result.success) {
+        const token = result.data.token;
+        dispatch(
+          loginSuccess({ user: result.data.user, token: token as string }),
+        );
+        navigate('/home');
+      } else {
+        console.error('Login failed:', result.message);
+      }
     } catch (err) {
       console.error('Failed to login:', err);
     }
@@ -93,9 +98,12 @@ const Login: React.FC= () => {
         <Formik
           initialValues={{ username: '', password: '' }}
           validationSchema={validationSchema}
-          onSubmit={async ({ username, password }, { setSubmitting, setFieldError }) => {
+          onSubmit={async (
+            { username, password },
+            { setSubmitting, setFieldError },
+          ) => {
             try {
-              handleLogin({username, password});
+              handleLogin({ username, password });
               navigate('/home');
             } catch {
               setFieldError('username', t('loginScreen.errorOccurred'));
@@ -117,7 +125,7 @@ const Login: React.FC= () => {
                   <InputAtom
                     name="username"
                     type="email"
-                    autoComplete='email'
+                    autoComplete="email"
                     variant="underlined"
                     label={t('auth.login.email')}
                     placeholder={t('auth.login.email')}
