@@ -6,7 +6,12 @@
     }
   },
   "auth": {
-    "initialTitle": "Gestiona fácilmente tus tareas y establece una red de preferidos en Workoo.",
+    "slider_intro": {
+      "title_1": "Encuentra al experto que necesitas en pocos minutos.",
+      "title_2": "Contrata fácil y sin complicaciones.",
+      "title_3": "Basado en valoraciones de usuarios que compraron sus servicios.",
+      "title_4": "Explora, compara y agenda en pocos pasos."
+    },
     "login": {
       "title": "Iniciar sesión",
       "email": "Correo electrónico",
