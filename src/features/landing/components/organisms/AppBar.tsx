@@ -40,6 +40,11 @@ function ResponsiveAppBar() {
     setAnchorElNav(null);
   };
 
+  const handlePressNavMenuItem = (url: string) => {
+    navigate(url);
+    handleCloseNavMenu();
+  }
+
   return (
     <AppBar position="static" color="transparent" sx={{ boxShadow: 'none' }}>
       <Container maxWidth="xl">
@@ -131,9 +136,8 @@ function ResponsiveAppBar() {
           >
             {pages.map((page) => (
               <Button
-                href={page.url}
                 key={page.url}
-                onClick={handleCloseNavMenu}
+                onClick={() => handlePressNavMenuItem(page.url)}
                 sx={{ my: 2, color: 'gray', display: 'block' }}
               >
                 {page.title}
