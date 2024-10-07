@@ -2,12 +2,12 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Grid, Button, Typography, Box } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import MobileApp from '../../assets/images/MobileApp.webp';
-import GooglePlay from '../../assets/images/GooglePlay.svg';
-import AppStore from '../../assets/images/Appstore.svg';
-import LogoIsotype from '../../assets/images/isotipo.svg';
+import MobileApp from '../../../../assets/images/MobileApp.webp';
+import GooglePlay from '../../../../assets/images/GooglePlay.svg';
+import AppStore from '../../../../assets/images/Appstore.svg';
+import LogoIsotype from '../../../../assets/images/isotipo.svg';
 
-const DownloadAppSection = () => {
+const FeatureDownloadApp = () => {
   const { t } = useTranslation();
   const isMobile = useMediaQuery('(max-width:600px)');
 
@@ -58,4 +58,4 @@ const DownloadAppSection = () => {
   );
 };
 
-export default DownloadAppSection;
+export default FeatureDownloadApp;

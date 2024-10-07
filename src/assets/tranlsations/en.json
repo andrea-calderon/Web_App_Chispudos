@@ -74,8 +74,13 @@
             }
           ]
         },
-        "landing_downloadSection": {
-          "title": "Get our app today!",
-          "description": "Urgent need for an electrician? Trustworthy babysitter wanted? Find your perfect match in no time."
-              }
+"landing_downloadSection": {
+  "title": "Get our app today!",
+  "description": "Urgent need for an electrician? Trustworthy babysitter wanted? Find your perfect match in no time."
+              },
+"landing_footer": {
+  "title": "Subscribe to our Newsletter",
+  "placeholder": "Your Email",
+  "copyright": "Web and mobile development."
+                          }
       }     

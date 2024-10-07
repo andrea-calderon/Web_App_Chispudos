@@ -2,6 +2,9 @@ import { Box, Grid2 } from '@mui/material';
 import { LandingLayout } from '../templates/LandingLayout';
 import { PersonAppImage } from '../../../../components/atoms/';
 import { LandingForm } from '../organisms';
+import FeatureGuarantee from '../../components/organisms/FeatureGuarantee';
+import FeatureTestimonials from '../../components/organisms/FeatureTestimonials';
+import FeatureDownloadApp from '../../components/organisms/FeatureDownloadApp';
 
 export const LandingPage = () => {
   return (
@@ -16,6 +19,9 @@ export const LandingPage = () => {
           </Box>
         </Grid2>
       </Grid2>
+      <FeatureGuarantee />
+      <FeatureTestimonials />
+      <FeatureDownloadApp />
     </LandingLayout>
   );
 };

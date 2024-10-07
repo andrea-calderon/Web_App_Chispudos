@@ -77,5 +77,10 @@
   "landing_downloadSection": {
   "title": "¡Descarga nuestra app ahora!",
   "description": "¿Necesitas un electricista urgente? ¿O buscas una niñera de confianza? Encuentra al profesional perfecto en cuestión de minutos."
-      }
+      },
+  "landing_footer": {
+  "title": "Suscríbete a nuestro Newsletter",
+  "placeholder": "Tu Email",
+  "copyright": "Desarrollo web y móvil."
+            }
       } 

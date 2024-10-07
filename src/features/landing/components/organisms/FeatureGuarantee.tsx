@@ -9,20 +9,20 @@ const StyledContainer = styled(Box)(({ theme }) => ({
   borderRadius: '40px',
   textAlign: 'center',
   [theme.breakpoints.down('sm')]: {
-    padding: theme.spacing(8),
-    margin: '25px',
+    padding: theme.spacing(10),
+    margin: '60px -130px',
   },
   [theme.breakpoints.between('sm', 'md')]: {
     padding: theme.spacing(10),
-    margin: '40px',
+    margin: '60px 0px',
   },
   [theme.breakpoints.up('md')]: {
     padding: theme.spacing(10),
-    margin: '40px',
+    margin: '60px 0px',
   },
   [theme.breakpoints.up('lg')]: {
     padding: theme.spacing(10),
-    margin: '120px',
+    margin: '60px 0px',
   },
 }));
 
@@ -32,13 +32,14 @@ const StyledButton = styled(Button)(({ theme }) => ({
   color: '#fff',
   borderRadius: '20px',
   padding: theme.spacing(1, 4),
+  margin: '40px 0px',
   marginTop: theme.spacing(4),
   '&:hover': {
     backgroundColor: '#6750A4',
   },
 }));
 
-const GuaranteeSection: React.FC = () => {
+const FeatureGuarantee: React.FC = () => {
   const { t } = useTranslation();
 
   return (
@@ -61,4 +62,4 @@ const GuaranteeSection: React.FC = () => {
   );
 };
 
-export default GuaranteeSection;
+export default FeatureGuarantee;

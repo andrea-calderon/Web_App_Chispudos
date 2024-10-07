@@ -12,9 +12,7 @@ import { useAppSelector } from '../hooks/useAppSelector';
 import { selectAuth } from '../redux/slices/authSlice';
 import { ProfilePage } from '../features/profile/components/pages/ProfilePage';
 import { RegisterPage } from '../features/auth/components/pages/RegisterPage';
-import FeatureWarranty from '../components/organisms/FeatureWarranty';
-import TestimonialsSection from '../components/organisms/TestimonialsSection';
-import DownloadAppSection from '../components/organisms/DownloadAppSection';
+import Footer from '../components/organisms/Footer';
 
 const AppRoutes = () => {
   const authState = useAppSelector(selectAuth);
@@ -34,9 +32,7 @@ const AppRoutes = () => {
           </Route>
         </Routes>
       </Router>
-      <FeatureWarranty />
-      <TestimonialsSection />
-      <DownloadAppSection />
+      <Footer />
     </div>
   );
 };
