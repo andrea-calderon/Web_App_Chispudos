@@ -5,6 +5,7 @@ import { LandingForm } from '../organisms';
 import FeatureGuarantee from '../../components/organisms/FeatureGuarantee';
 import FeatureTestimonials from '../../components/organisms/FeatureTestimonials';
 import FeatureDownloadApp from '../../components/organisms/FeatureDownloadApp';
+import Footer from '../../../../components/organisms/Footer';
 
 export const LandingPage = () => {
   return (
@@ -22,6 +23,7 @@ export const LandingPage = () => {
       <FeatureGuarantee />
       <FeatureTestimonials />
       <FeatureDownloadApp />
+      <Footer />
     </LandingLayout>
   );
 };

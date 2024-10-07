@@ -17,7 +17,7 @@ const FeatureDownloadApp = () => {
       spacing={2}
       alignItems="center"
       justifyContent="center"
-      style={{ padding: '60px 150px 0px 150px' }}
+      style={{ padding: '60px 10px 0px 10px' }}
     >
       <Grid item xs={12} md={6}>
         <Grid container spacing={2}>
@@ -42,7 +42,11 @@ const FeatureDownloadApp = () => {
           <img
             src={AppStore}
             alt={t('downloadSection.appPreviewAlt')}
-            style={{ width: '100%', maxWidth: '175px', margin: '0px 15px' }}
+            style={{
+              width: '100%',
+              maxWidth: '175px',
+              margin: '0px 15px',
+            }}
           />
         </Grid>
       </Grid>
@@ -51,7 +55,11 @@ const FeatureDownloadApp = () => {
         <img
           src={MobileApp}
           alt={t('downloadSection.appPreviewAlt')}
-          style={{ width: '100%', maxWidth: '600px', margin: '0px 15px' }}
+          style={{
+            width: '100%',
+            maxWidth: '600px',
+            margin: '0px 15px',
+          }}
         />
       </Grid>
     </Grid>

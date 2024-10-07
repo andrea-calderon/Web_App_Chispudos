@@ -12,7 +12,6 @@ import { useAppSelector } from '../hooks/useAppSelector';
 import { selectAuth } from '../redux/slices/authSlice';
 import { ProfilePage } from '../features/profile/components/pages/ProfilePage';
 import { RegisterPage } from '../features/auth/components/pages/RegisterPage';
-import Footer from '../components/organisms/Footer';
 
 const AppRoutes = () => {
   const authState = useAppSelector(selectAuth);
@@ -32,7 +31,6 @@ const AppRoutes = () => {
           </Route>
         </Routes>
       </Router>
-      <Footer />
     </div>
   );
 };
