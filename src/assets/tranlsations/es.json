@@ -48,14 +48,9 @@
       "button": "Suscríbete ahora"
       }
     },
-  "landing_testimonials": {
-      "category": "Testimoniales",
-      "title": "Confía en nuestros clientes"
-      },
   "testimonials": {
           "title": "Testimoniales",
           "subtitle": "Confía en nuestros clientes",
-          "cta": "Suscríbete ahora",
           "feedback": [
             {
               "name": "Sofía Rodriguez",

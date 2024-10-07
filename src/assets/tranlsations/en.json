@@ -49,13 +49,10 @@
       }
     },
   "landing_testimonials": {
-      "category": "Testimonials",
-      "title": "What our customers say?"
       },
         "testimonials": {
           "title": "Testimonials",
           "subtitle": "Trust our clients",
-          "cta": "Subscribe now",
           "feedback": [
             {
               "name": "Sofía Rodriguez",

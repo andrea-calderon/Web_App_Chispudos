@@ -1,20 +1,24 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Box, Typography, Avatar, IconButton, Rating } from '@mui/material';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { useTranslation } from 'react-i18next';
 import { styled } from '@mui/system';
-import SofiaPhoto from '../../assets/images/Sofia.png';
 
 const StyledContainer = styled(Box)(({ theme }) => ({
   padding: theme.spacing(4),
   textAlign: 'center',
   margin: '20px auto',
   position: 'relative',
-  width: '85%', // Occupy the full width of the parent container
+  width: '85%',
+  [theme.breakpoints.down('sm')]: {
+    margin: '10px auto',
+    width: '95%',
+    padding: theme.spacing(2),
+  },
 }));
 
-const CircleButton = styled(IconButton)(({}) => ({
+const CircleButton = styled(IconButton)(() => ({
   backgroundColor: '#FFFFFF',
   border: '1px solid #CBCBCB',
   color: '#191825',
@@ -30,26 +34,53 @@ const Dots = styled(Box)(({ theme }) => ({
   display: 'flex',
   justifyContent: 'center',
   marginTop: theme.spacing(2),
+  [theme.breakpoints.down('sm')]: {
+    marginTop: theme.spacing(1),
+  },
 }));
 
-const Dot = styled(Box)(({ theme, active }) => ({
-  width: '10px',
-  height: '10px',
+const Dot = styled(Box)(({ active }) => ({
+  width: '20px',
+  height: '20px',
   borderRadius: '50%',
-  backgroundColor: active ? theme.palette.primary.main : '#ccc',
-  margin: '0 5px',
+  backgroundColor: active ? '#019FE9' : '#ccc',
+  margin: '10px',
 }));
 
-export default function Testimonials() {
+const Testimonials = () => {
   const { t } = useTranslation();
-  const [currentIndex, setCurrentIndex] = React.useState(0);
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const testimonials = [
+    {
+      name: t('testimonials.feedback.0.name'),
+      title: t('testimonials.feedback.0.title'),
+      comment: t('testimonials.feedback.0.comment'),
+      image: 'src/assets/images/AnaF.webp',
+    },
+    {
+      name: t('testimonials.feedback.1.name'),
+      title: t('testimonials.feedback.1.title'),
+      comment: t('testimonials.feedback.1.comment'),
+      image: 'src/assets/images/Juan.webp',
+    },
+    {
+      name: t('testimonials.feedback.2.name'),
+      title: t('testimonials.feedback.2.title'),
+      comment: t('testimonials.feedback.2.comment'),
+      image: 'src/assets/images/Sofia.webp',
+    },
+  ];
 
   const handleNext = () => {
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % 3); // Cambia entre los tres testimonios
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % testimonials.length);
   };
 
   const handlePrev = () => {
-    setCurrentIndex((prevIndex) => (prevIndex - 1 + 3) % 3); // Cambia entre los tres testimonios
+    setCurrentIndex(
+      (prevIndex) =>
+        (prevIndex - 1 + testimonials.length) % testimonials.length,
+    );
   };
 
   return (
@@ -62,7 +93,7 @@ export default function Testimonials() {
       >
         {t('testimonials.title')}
       </Typography>
-      <Typography variant="h4" fontWeight="bold" mb={2}>
+      <Typography variant="h4" fontWeight="bold" padding="30px 0px" mb={2}>
         {t('testimonials.subtitle')}
       </Typography>
 
@@ -73,19 +104,19 @@ export default function Testimonials() {
 
         <Box mx={2}>
           <Avatar
-            alt={t(`testimonials.feedback.${currentIndex}.name`)}
-            src="url-a-la-imagen"
-            sx={{ width: 80, height: 80, margin: 'auto' }}
+            alt={testimonials[currentIndex].name}
+            src={testimonials[currentIndex].image}
+            sx={{ width: 90, height: 90, margin: 'auto' }}
           />
           <Typography variant="h6" color="secondary">
             <span style={{ color: '#FF7043' }}>
-              {t(`testimonials.feedback.${currentIndex}.name`)}
+              {testimonials[currentIndex].name}
             </span>{' '}
-            / {t(`testimonials.feedback.${currentIndex}.title`)}
+            / {testimonials[currentIndex].title}
           </Typography>
           <Rating value={5} readOnly />
-          <Typography variant="body1" mt={2}>
-            {t(`testimonials.feedback.${currentIndex}.comment`)}
+          <Typography color="#5F5F5F" variant="body1" mt={2}>
+            {testimonials[currentIndex].comment}
           </Typography>
         </Box>
 
@@ -95,10 +126,12 @@ export default function Testimonials() {
       </Box>
 
       <Dots>
-        {[...Array(3)].map((_, index) => (
+        {testimonials.map((_, index) => (
           <Dot key={index} active={index === currentIndex} />
         ))}
       </Dots>
     </StyledContainer>
   );
-}
+};
+
+export default Testimonials;

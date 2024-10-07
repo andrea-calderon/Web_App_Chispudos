@@ -10,7 +10,7 @@ const StyledContainer = styled(Box)(({ theme }) => ({
   textAlign: 'center',
   [theme.breakpoints.down('sm')]: {
     padding: theme.spacing(10),
-    margin: '60px -130px',
+    margin: '60px -100px',
   },
   [theme.breakpoints.between('sm', 'md')]: {
     padding: theme.spacing(10),
