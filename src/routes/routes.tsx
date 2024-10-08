@@ -16,20 +16,22 @@ import { RegisterPage } from '../features/auth/components/pages/RegisterPage';
 const AppRoutes = () => {
   const authState = useAppSelector(selectAuth);
   return (
-    <Router>
-      <Routes>
-        {/* Public Route */}
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
-        <Route path="/" element={<LandingPage />} />
+    <div>
+      <Router>
+        <Routes>
+          {/* Public Route */}
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/" element={<LandingPage />} />
 
-        {/* Protected Routes */}
-        <Route element={<ProtectedRoutesWrapper />}>
-          <Route path="/home" element={<HomePage />} />
-          <Route path="/profile" element={<ProfilePage />} />
-        </Route>
-      </Routes>
-    </Router>
+          {/* Protected Routes */}
+          <Route element={<ProtectedRoutesWrapper />}>
+            <Route path="/home" element={<HomePage />} />
+            <Route path="/profile" element={<ProfilePage />} />
+          </Route>
+        </Routes>
+      </Router>
+    </div>
   );
 };
 
