@@ -1,5 +1,5 @@
 import { Box, Grid2 } from '@mui/material';
-import { Field, Formik } from 'formik';
+import { Formik } from 'formik';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
@@ -35,7 +35,7 @@ export const LandingForm = () => {
           fontWeight: 'bold',
         }}
       >
-        {t('auth.initialTitle')}
+        {t('auth.slider_intro.title_1')}
       </TextAtom>
       <TextAtom
         variant="headline"

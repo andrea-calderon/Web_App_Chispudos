@@ -6,7 +6,12 @@
     }
   },
   "auth": {
-    "initialTitle": "Easily manage your tasks and establish a network of preferred on Workoo.",
+    "slider_intro": {
+      "title_1": "Find the expert you need in minutes.",
+      "title_2": "Hire easily and without complications.",
+      "title_3": "Based on user ratings who bought their services.",
+      "title_4": "Explore, compare and schedule in a few steps."
+    },
     "login": {
       "title": "Login",
       "email": "Email",
