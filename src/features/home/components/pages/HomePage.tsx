@@ -3,6 +3,7 @@ import { TextAtom } from '../../../../components/atoms';
 import ServicesCard from '../../../../components/atoms/ServicesCard';
 import { Box, Grid2 } from '@mui/material';
 import Categories from '../../../home/components/pages/Categories';
+import RequestForm from '../../../home/components/pages/RequestForm';
 import Footer from '../../../../components/organisms/Footer';
 
 
@@ -69,6 +70,7 @@ export const HomePage: React.FC = () => {
         Home Page
       </TextAtom>
       <Categories />
+      <RequestForm />
       <Box sx={{ position: 'relative', padding: 4 }}>
         <TextAtom
           variant="title"

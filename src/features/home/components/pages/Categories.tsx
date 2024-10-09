@@ -8,7 +8,7 @@ import {
   CardContent,
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import BuildIcon from '@mui/icons-material/Build'; // Ejemplo de icono
+import BuildIcon from '@mui/icons-material/Build';
 
 const HighlightedCategories = () => {
   const { t } = useTranslation();
@@ -59,7 +59,7 @@ const HighlightedCategories = () => {
                 borderRadius: '32px',
                 padding: '18px',
                 boxShadow: 'none',
-                width: '175px', // Ajusta el ancho según tus necesidades
+                width: '150px',
               }}
             >
               <CardContent>
