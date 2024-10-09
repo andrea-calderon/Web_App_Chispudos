@@ -93,5 +93,17 @@
   "title": "Suscríbete a nuestro Newsletter",
   "placeholder": "Tu Email",
   "copyright": "Desarrollo web y móvil."
-            }
-      } 
+            },
+"categories": {
+  "title": "Servicios destacados",
+  "button": "Ver todos",
+  "mechanic": "Mecánico",
+    "electrician": "Electricista",
+    "mason": "Albañil",
+    "plumber": "Plomero",
+    "cleaning": "Limpieza",
+    "gardener": "Jardinero",
+    "locksmith": "Cerrajero",
+    "carpenter": "Carpintero"
+    }
+} 
