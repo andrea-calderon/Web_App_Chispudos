@@ -1,46 +1,71 @@
-import { Box, Container, Grid } from '@mui/material';
-import { Form, Formik } from 'formik';
+import React, { useCallback, useState } from 'react';
+import { Box, Container, Grid, IconButton } from '@mui/material';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { Form, Formik, FormikHelpers } from 'formik';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 import { ButtonAtom, InputAtom, TextAtom } from '../../../../components/atoms';
 import { useAppDispatch } from '../../../../hooks/useAppDispatch';
 import { useLoginMutation } from '../../../../services/api';
+import { logger } from '../../../../utils/logger';
 import { loginSuccess } from '../../../../redux/slices/authSlice';
-import { LoginValues } from '../../../../types/api/apiResponses';
-
-const validationSchema = Yup.object({
-  username: Yup.string().required('Username is required'),
-  password: Yup.string()
-    .min(6, 'Password must be at least 6 characters')
-    .required('Password is required'),
-});
+import { LoginValues } from '../../../../types/api/apiRequests';
 
 const Login: React.FC = () => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const [login, { isLoading }] = useLoginMutation();
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
+
+  const validationSchema = Yup.object({
+    email: Yup.string()
+      .email(t('forms.commons.email'))
+      .required(t('forms.commons.required')),
+    password: Yup.string()
+      .min(6, t('forms.commons.min_length', { min: 6 }))
+      .required(t('forms.commons.required')),
+  });
 
   const handleLogin = async (values: LoginValues) => {
     try {
-      const result = await login({
-        username: values.username,
-        password: values.password,
-      }).unwrap();
+      const result = await login(values).unwrap();
       if (result.success) {
-        const token = result.data.token;
-        dispatch(
-          loginSuccess({ user: result.data.user, token: token as string }),
-        );
+        const { token, user } = result.data;
+        dispatch(loginSuccess({ user, token }));
         navigate('/home');
       } else {
-        console.error('Login failed:', result.message);
+        setErrorMsg(result.message);
       }
-    } catch (err) {
-      console.error('Failed to login:', err);
+    } catch (error) {
+      logger('error', error, 'Login.tsx.handleLogin', 'Web');
+      setErrorMsg(t('auth.login.form.error.invalid_acc'));
     }
   };
+
+  const handleSubmit = async (
+    values: LoginValues,
+    { setSubmitting }: FormikHelpers<LoginValues>
+  ) => {
+    await handleLogin(values);
+    setSubmitting(false);
+  };
+
+  const togglePasswordVisibility = useCallback(() => {
+    setShowPassword((prev) => !prev);
+  }, []);
+
+  const rightIcon = (
+    <IconButton
+      onClick={togglePasswordVisibility}
+      onMouseDown={(e) => e.preventDefault()}
+      edge="end"
+    >
+      {showPassword ? <VisibilityOff /> : <Visibility />}
+    </IconButton>
+  );
 
   return (
     <Container
@@ -91,27 +116,14 @@ const Login: React.FC = () => {
               fontWeight: 'bold',
             }}
           >
-            Workoo
+            {t('app_name')}
           </TextAtom>
         </Box>
         <Box sx={{ height: '100px' }} />
         <Formik
-          initialValues={{ username: '', password: '' }}
+          initialValues={{ email: '', password: '' }}
           validationSchema={validationSchema}
-          onSubmit={async (
-            { username, password },
-            { setSubmitting, setFieldError },
-          ) => {
-            try {
-              handleLogin({ username, password });
-              navigate('/home');
-            } catch {
-              setFieldError('username', t('loginScreen.errorOccurred'));
-              setFieldError('password', t('loginScreen.errorOccurred'));
-            } finally {
-              setSubmitting(false);
-            }
-          }}
+          onSubmit={handleSubmit}
         >
           {({ isSubmitting, touched, errors }) => (
             <Form style={{ width: '350px' }}>
@@ -123,14 +135,12 @@ const Login: React.FC = () => {
               >
                 <Grid item xs={12}>
                   <InputAtom
-                    name="username"
+                    name="email"
                     type="email"
-                    autoComplete="email"
-                    variant="underlined"
+                    variant='underlined'
                     label={t('auth.login.email')}
                     placeholder={t('auth.login.email')}
-                    error={touched.username && !!errors.username}
-                    helperText={errors.username}
+                    errorMsg={errors.email || errorMsg}
                     fullWidth
                     sx={{ width: '100%', maxWidth: '328px' }}
                   />
@@ -138,12 +148,12 @@ const Login: React.FC = () => {
                 <Grid item xs={12}>
                   <InputAtom
                     name="password"
-                    type="password"
+                    type={showPassword ? 'text' : 'password'}
                     variant="underlined"
                     label={t('auth.login.password')}
                     placeholder={t('auth.login.password')}
-                    error={touched.password && !!errors.password}
-                    helperText={errors.password}
+                    errorMsg={errors.password || errorMsg}
+                    rightIcon={rightIcon}
                     fullWidth
                     sx={{ width: '100%', maxWidth: '328px' }}
                   />

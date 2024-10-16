@@ -10,10 +10,6 @@ export type UserResponseType = {
   deletedAt: null;
 };
 
-export type LoginValues = {
-  username: string;
-  password: string;
-};
 
 export type LoginResponse = {
   user: UserResponseType;

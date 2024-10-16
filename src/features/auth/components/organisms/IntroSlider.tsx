@@ -21,7 +21,6 @@ const IntroSlider: React.FC = () => {
   const { t } = useTranslation();
   const theme = useTheme();
   const { palette } = theme;
-  console.log('palette', theme);
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const handlePrev = () => {

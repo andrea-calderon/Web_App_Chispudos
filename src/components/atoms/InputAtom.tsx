@@ -1,7 +1,4 @@
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import {
-  IconButton,
   InputAdornment,
   TextField,
   TextFieldProps,
@@ -16,9 +13,9 @@ interface InputAtomProps extends Omit<TextFieldProps, 'variant'> {
   label: string;
   placeholder: string;
   leftIcon?: React.ReactNode;
+  rightIcon?: React.ReactNode;
   errorMsg?: string;
   helperText?: string;
-  error?: boolean;
   name: string;
   type?: string;
 }
@@ -28,9 +25,9 @@ const InputAtom: React.FC<InputAtomProps> = ({
   label,
   placeholder,
   leftIcon,
+  rightIcon,
   errorMsg,
   helperText,
-  error,
   type = 'text',
   name,
   ...props
@@ -53,7 +50,7 @@ const InputAtom: React.FC<InputAtomProps> = ({
             '&.Mui-focused fieldset': {
               borderColor: theme.palette.primary.light,
             },
-            ...(error && {
+            ...(errorMsg && {
               '& fieldset': {
                 borderColor: theme.palette.error.main,
               },
@@ -72,7 +69,7 @@ const InputAtom: React.FC<InputAtomProps> = ({
           '& .MuiInput-underline.Mui-focused:before': {
             borderBottomColor: theme.palette.secondary.light,
           },
-          ...(error && {
+          ...(errorMsg && {
             '&:before': {
               borderBottomColor: theme.palette.error.main,
             },
@@ -93,7 +90,7 @@ const InputAtom: React.FC<InputAtomProps> = ({
             '&.Mui-focused fieldset': {
               borderColor: theme.palette.tertiary.light,
             },
-            ...(error && {
+            ...(errorMsg && {
               '& fieldset': {
                 borderColor: theme.palette.error.main,
               },
@@ -110,10 +107,11 @@ const InputAtom: React.FC<InputAtomProps> = ({
       {({ field, form: { isSubmitting } }) => (
         <TextField
           {...field}
+          type={type}
           variant={variant === 'underlined' ? 'standard' : 'outlined'}
           label={label}
           placeholder={placeholder}
-          error={error || !!errorMsg}
+          error={errorMsg}
           helperText={
             errorMsg ? (
               <TextAtom variant="body" size="small">
@@ -131,18 +129,9 @@ const InputAtom: React.FC<InputAtomProps> = ({
               startAdornment: leftIcon ? (
                 <InputAdornment position="start">{leftIcon}</InputAdornment>
               ) : null,
-              endAdornment:
-                type === 'password' ? (
-                  <InputAdornment position="end">
-                    <IconButton
-                      onClick={() => console.log('Show password')}
-                      onMouseDown={(e) => e.preventDefault()}
-                      edge="end"
-                    >
-                      {true ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                  </InputAdornment>
-                ) : null,
+              endAdornment:rightIcon ? (
+                <InputAdornment position="start">{rightIcon}</InputAdornment>
+              ) : null,
             },
           }}
           sx={[
