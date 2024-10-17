@@ -14,30 +14,36 @@ type Service = {
 export const ProfilePage: React.FC = () => {
   const navigate = useNavigate();
 
-  const service: Service = {
-    name: 'Servicio de Jardinería',
-    description:
-      'Ofrecemos servicios profesionales de jardinería y paisajismo.',
-    image: 'https://via.placeholder.com/140',
-    rating: 4.5,
-    reviewCount: 4,
-    location: 'San José Pinula',
-  };
+  const services: Service[] = [
+    {
+      name: 'José Pérez',
+      description:
+        'Se especializa en la instalación y mantenimiento de sistemas para agua potable, alcantarillado y drenaje en sistemas de plomería.',
+      image: 'src/assets/images/cards/Jose_Perez.svg',
+      rating: 4.5,
+      reviewCount: 4,
+      location: 'San José Pinula',
+    },
+  ];
 
   return (
     <UserLayout>
       <h1>Profile Page</h1>
 
-      <ProfileCard
-        name={service.name}
-        description={service.description}
-        image={service.image}
-        rating={service.rating}
-        reviewCount={service.reviewCount}
-        location={service.location}
-      />
-
+      {services.map((service, i) => (
+        <ProfileCard
+          key={i}
+          name={service.name}
+          description={service.description}
+          image={service.image}
+          rating={service.rating}
+          reviewCount={service.reviewCount}
+          location={service.location}
+        />
+      ))}
+      <br />
       <button onClick={() => navigate('/home')}>Home</button>
+
       <button onClick={() => navigate('/')}>Landing</button>
     </UserLayout>
   );
