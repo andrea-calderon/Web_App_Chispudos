@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 import { TextAtom, ButtonAtom, InputAtom } from '../../../../components/atoms';
+import AppLogo from '../../../../components/molecules/AppLogo';
 
 const Signup: React.FC = () => {
   const navigate = useNavigate();
@@ -68,17 +69,7 @@ const Signup: React.FC = () => {
             height: '36.9px',
           }}
         >
-          <TextAtom
-            onClick={() => navigate('/')}
-            variant="display"
-            size="large"
-            sx={{
-              color: '#6750A4',
-              fontWeight: 'bold',
-            }}
-          >
-            Workoo
-          </TextAtom>
+          <AppLogo maxWidth='250px'  />
         </Box>
         <Box sx={{ height: '75px' }} />
         <Formik

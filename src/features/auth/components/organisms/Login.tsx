@@ -11,6 +11,7 @@ import { useLoginMutation } from '../../../../services/api';
 import { logger } from '../../../../utils/logger';
 import { loginSuccess } from '../../../../redux/slices/authSlice';
 import { LoginValues } from '../../../../types/api/apiRequests';
+import AppLogo from '../../../../components/molecules/AppLogo';
 
 const Login: React.FC = () => {
   const { t } = useTranslation();
@@ -103,21 +104,9 @@ const Login: React.FC = () => {
             alignItems: 'center',
             gap: '10px',
             mb: '30px',
-            width: '181.47px',
-            height: '36.9px',
           }}
         >
-          <TextAtom
-            onClick={() => navigate('/')}
-            variant="display"
-            size="large"
-            sx={{
-              color: '#6750A4',
-              fontWeight: 'bold',
-            }}
-          >
-            {t('app_name')}
-          </TextAtom>
+          <AppLogo maxWidth='250px' />
         </Box>
         <Box sx={{ height: '100px' }} />
         <Formik
