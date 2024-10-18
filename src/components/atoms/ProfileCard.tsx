@@ -1,17 +1,17 @@
 import React from 'react';
 import { Card, CardContent, CardMedia, Box } from '@mui/material';
 import { LocationOn, Star } from '@mui/icons-material';
-
 import ButtonAtom from './ButtonAtom';
 import TextAtom from './TextAtom';
 
 type ProfileCardProps = {
-  name: string;
-  description: string;
-  image: string;
-  rating: number;
-  reviewCount: number;
-  location: string;
+  name?: string;
+  description?: string;
+  image?: string;
+  rating?: number;
+  reviewCount?: number;
+  location?: string;
+  [key: string]: unknown;
 };
 
 const ProfileCard: React.FC<ProfileCardProps> = ({
@@ -21,6 +21,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
   rating,
   reviewCount,
   location,
+  ...props
 }) => {
   return (
     <Card
@@ -31,6 +32,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
         maxHeight: 321,
         boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
       }}
+      {...props}
     >
       <Box
         sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
