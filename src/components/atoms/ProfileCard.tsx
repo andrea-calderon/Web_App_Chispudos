@@ -5,12 +5,12 @@ import ButtonAtom from './ButtonAtom';
 import TextAtom from './TextAtom';
 
 type ProfileCardProps = {
-  name?: string;
-  description?: string;
-  image?: string;
-  rating?: number;
-  reviewCount?: number;
-  location?: string;
+  name: string;
+  description: string;
+  image: string;
+  rating: number;
+  reviewCount: number;
+  location: string;
   [key: string]: unknown;
 };
 
