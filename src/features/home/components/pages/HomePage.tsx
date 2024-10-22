@@ -2,9 +2,9 @@ import { UserLayout } from '../../../../components/templates/UserLayout';
 import { TextAtom } from '../../../../components/atoms';
 import ServicesCard from '../../../../components/atoms/ServicesCard';
 import { Box, Grid2 } from '@mui/material';
-import Categories from '../../../home/components/pages/Categories';
-import RequestForm from '../../../home/components/pages/RequestForm';
+import RequestForm from '../../../home/components/organisms/RequestForm';
 import Footer from '../../../../components/organisms/Footer';
+import HighlightedCategories from '../organisms/Categories';
 
 
 type ServicesSection = {
@@ -69,7 +69,7 @@ export const HomePage: React.FC = () => {
       <TextAtom variant="display" size="medium" fontWeight="bold">
         Home Page
       </TextAtom>
-      <Categories />
+      <HighlightedCategories />
       <RequestForm />
       <Box sx={{ position: 'relative', padding: 4 }}>
         <TextAtom
