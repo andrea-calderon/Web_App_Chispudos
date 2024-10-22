@@ -3,7 +3,7 @@ import { SxProps, Theme, useTheme } from '@mui/material/styles';
 import React from 'react';
 
 export interface ButtonAtomProps {
-  onClick: () => void;
+  onClick?: () => void;
   children: React.ReactNode;
   variant?: 'filled' | 'outlined' | 'text' | 'elevated' | 'tonal';
   disabled?: boolean;

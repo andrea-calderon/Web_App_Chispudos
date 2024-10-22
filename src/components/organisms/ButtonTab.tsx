@@ -43,9 +43,6 @@ export default function ButtonTab({ children }: Props) {
               onClick={() => navigate(item.url)}
             />
           ))}
-          <BottomNavigationAction label="Recents" icon={<RestoreIcon />} />
-          <BottomNavigationAction label="Favorites" icon={<FavoriteIcon />} />
-          <BottomNavigationAction label="Archive" icon={<ArchiveIcon />} />
         </BottomNavigation>
       </Paper>
     </Box>

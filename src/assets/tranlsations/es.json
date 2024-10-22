@@ -1,15 +1,26 @@
 {
+  "app_name": "Reco",
   "welcome": "Bienvenido!",
   "components": {
     "button": {
       "login": "Iniciar sesión"
     }
   },
+  "forms": {
+    "commons": {
+      "required": "Este campo es requerido",
+      "min_length": "El campo deberia tener al menos {{min}} caracteres",
+      "max_length": "El campo deberia tener como máximo {{max}} caracteres",
+      "min_value": "El valor deberia ser mayor o igual a {{min}}",
+      "max_value": "El valor deberia ser menor o igual a {{max}}",
+      "email": "El campo deberia ser un email válido"
+    }
+  },
   "auth": {
     "slider_intro": {
       "title_1": "Encuentra al experto que necesitas en pocos minutos.",
       "title_2": "Contrata fácil y sin complicaciones.",
-      "title_3": "Basado en valoraciones de usuarios que compraron sus servicios.",
+      "title_3": "Basado en valoraciones de usuarios que compraron sus servicios.",
       "title_4": "Explora, compara y agenda en pocos pasos."
     },
     "login": {
