@@ -1,10 +1,11 @@
-// import { useAppSelector } from '../../../../hooks/useAppSelector';
-// import { useGetExampleDataQuery } from '../../../../services/api';
-// import { selectAuth } from '../../../../redux/slices/authSlice';
 import { UserLayout } from '../../../../components/templates/UserLayout';
 import { TextAtom } from '../../../../components/atoms';
 import ServicesCard from '../../../../components/atoms/ServicesCard';
 import { Box, Grid2 } from '@mui/material';
+import RequestForm from '../../../home/components/organisms/RequestForm';
+import Footer from '../../../../components/organisms/Footer';
+import HighlightedCategories from '../organisms/Categories';
+
 
 type ServicesSection = {
   name: string;
@@ -68,6 +69,8 @@ export const HomePage: React.FC = () => {
       <TextAtom variant="display" size="medium" fontWeight="bold">
         Home Page
       </TextAtom>
+      <HighlightedCategories />
+      {/* <RequestForm /> */}
       <Box sx={{ position: 'relative', padding: 4 }}>
         <TextAtom
           variant="title"
@@ -98,6 +101,7 @@ export const HomePage: React.FC = () => {
           ))}
         </Grid2>
       </Box>
+      <Footer />
     </UserLayout>
   );
 };

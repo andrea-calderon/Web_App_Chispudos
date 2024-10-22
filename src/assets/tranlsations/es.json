@@ -93,5 +93,29 @@
   "title": "Suscríbete a nuestro Newsletter",
   "placeholder": "Tu Email",
   "copyright": "Desarrollo web y móvil."
-            }
-      } 
+            },
+"categories": {
+  "title": "Servicios destacados",
+  "button": "Ver todos",
+  "mechanic": "Mecánico",
+    "electrician": "Electricista",
+    "mason": "Albañil",
+    "plumber": "Plomero",
+    "cleaning": "Limpieza",
+    "gardener": "Jardinero",
+    "locksmith": "Cerrajero",
+    "carpenter": "Carpintero",
+    "paint": "Pintor",
+    "carwash": "CarWash"
+    },
+"form": {
+    "title": "¿Qué necesitas?",
+    "subtitle": "¡Chatea con 3 profesionales al momento y consigue tu presupuesto ideal!",
+    "category": "Categoría",
+    "titlePlaceholder": "Ej. Filtraciones en la cocina",
+    "descriptionPlaceholder": "Ej. Necesito reparar una filtración",
+    "locationPlaceholder": "Ej. Guatemala, zona 9",
+    "submit": "Pedir presupuesto",
+    "professionals": "Profesionales"
+  }
+} 
