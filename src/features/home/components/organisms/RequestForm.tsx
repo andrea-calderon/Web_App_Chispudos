@@ -1,14 +1,9 @@
 import React, { useState } from 'react';
-import {
-  Box,
-  Button,
-  TextField,
-  MenuItem,
-  Typography,
-  Divider,
-} from '@mui/material';
+import { Box, TextField, MenuItem } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import MainImage from '../../../../assets/images/intro_sliders/intro_1.png';
+import TextAtom from '../../../../components/atoms/TextAtom';
+import ButtonAtom from '../../../../components/atoms/ButtonAtom';
 
 const RequestForm = () => {
   const { t } = useTranslation();
@@ -49,12 +44,20 @@ const RequestForm = () => {
     >
       {/* Sección del formulario */}
       <Box sx={{ width: '40%' }}>
-        <Typography variant="h3" sx={{ fontWeight: 'bold', mb: 2 }}>
+        {/* Título del formulario */}
+        <TextAtom
+          variant="title"
+          size="medium"
+          fontWeight="bold"
+          sx={{ mb: 2 }}
+        >
           {t('form.title')}
-        </Typography>
-        <Typography variant="body1" sx={{ mb: 4 }}>
+        </TextAtom>
+
+        {/* Subtítulo */}
+        <TextAtom variant="title" size="small" sx={{ mb: 4 }}>
           {t('form.subtitle')}
-        </Typography>
+        </TextAtom>
 
         {/* Categoría */}
         <TextField
@@ -103,18 +106,21 @@ const RequestForm = () => {
           sx={{ mb: 3 }}
         />
 
-        <Button
+        {/* Botón de enviar */}
+        <ButtonAtom
           variant="contained"
           color="primary"
           sx={{
-            backgroundColor: '#5D50C6',
+            backgroundColor: 'primary.main',
             textTransform: 'none',
             fontWeight: 'bold',
             borderRadius: '8px',
           }}
         >
-          {t('form.submit')}
-        </Button>
+          <TextAtom variant="button" size="medium">
+            {t('form.submit')}
+          </TextAtom>
+        </ButtonAtom>
       </Box>
 
       <Box sx={{ position: 'relative', width: '45%' }}>

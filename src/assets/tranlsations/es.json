@@ -104,7 +104,9 @@
     "cleaning": "Limpieza",
     "gardener": "Jardinero",
     "locksmith": "Cerrajero",
-    "carpenter": "Carpintero"
+    "carpenter": "Carpintero",
+    "paint": "Pintor",
+    "carwash": "CarWash"
     },
 "form": {
     "title": "¿Qué necesitas?",

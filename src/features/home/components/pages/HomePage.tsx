@@ -70,7 +70,7 @@ export const HomePage: React.FC = () => {
         Home Page
       </TextAtom>
       <HighlightedCategories />
-      <RequestForm />
+      {/* <RequestForm /> */}
       <Box sx={{ position: 'relative', padding: 4 }}>
         <TextAtom
           variant="title"
