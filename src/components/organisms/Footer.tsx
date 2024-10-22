@@ -12,7 +12,7 @@ import InstagramIcon from '@mui/icons-material/Instagram';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import PinterestIcon from '@mui/icons-material/Pinterest';
 import { useTranslation } from 'react-i18next';
-import LogoChispudosHorizontal from '../../assets/images/LogoChispudosHorizontal.svg';
+import AppLogo from '../molecules/AppLogo';
 
 const Footer: React.FC = () => {
   const { t } = useTranslation();
@@ -75,16 +75,8 @@ const Footer: React.FC = () => {
 
       <Box>
         <Grid item xs={12} textAlign="center">
-          <img
-            src={LogoChispudosHorizontal}
-            alt="Logo Chispudos"
-            style={{
-              width: '100%',
-              maxWidth: '350px',
-              marginTop: '40px',
-              padding: '30px',
-            }}
-          />
+          <Box padding={8}><AppLogo maxWidth='250px' /></Box>
+          
           <Box>
             <IconButton
               href="https://www.instagram.com"
