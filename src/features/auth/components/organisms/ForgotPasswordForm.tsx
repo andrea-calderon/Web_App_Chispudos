@@ -13,7 +13,7 @@ import { loginSuccess } from '../../../../redux/slices/authSlice';
 import { LoginValues } from '../../../../types/api/apiRequests';
 import AppLogo from '../../../../components/molecules/AppLogo';
 
-const Login: React.FC = () => {
+const ForgotPasswordForm: React.FC = () => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const [login, { isLoading }] = useLoginMutation();
@@ -135,22 +135,10 @@ const Login: React.FC = () => {
                   />
                 </Grid>
                 <Grid item xs={12}>
-                  <InputAtom
-                    name="password"
-                    type={showPassword ? 'text' : 'password'}
-                    variant="underlined"
-                    label={t('auth.login.password')}
-                    placeholder={t('auth.login.password')}
-                    errorMsg={errors.password || errorMsg}
-                    rightIcon={rightIcon}
-                    fullWidth
-                    sx={{ width: '100%', maxWidth: '328px' }}
-                  />
-                </Grid>
-                <Grid item xs={12}>
                   <ButtonAtom
                     type="submit"
                     variant="filled"
+                    onClick={() => navigate('/reset-password-request')}
                     fullWidth
                     disabled={isSubmitting}
                     sx={{
@@ -160,22 +148,7 @@ const Login: React.FC = () => {
                       textTransform: 'none',
                     }}
                   >
-                    {t('auth.login.title')}
-                  </ButtonAtom>
-                </Grid>
-                <Grid item xs={12}>
-                  <ButtonAtom
-                    type="button"
-                    variant="text"
-                    fullWidth
-                    onClick={() => navigate('/forgot-password')}
-                    sx={{
-                      width: '100%',
-                      maxWidth: '328px',
-                      textTransform: 'none',
-                    }}
-                  >
-                    {t('auth.login.forgot_password')}
+                    {t('auth.forgot_password.submit')}
                   </ButtonAtom>
                 </Grid>
                 <Box sx={{ height: '191px' }} />
@@ -220,4 +193,4 @@ const Login: React.FC = () => {
   );
 };
 
-export default Login;
+export default ForgotPasswordForm;
