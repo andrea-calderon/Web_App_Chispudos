@@ -1,5 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import { Box, Container, Grid, IconButton } from '@mui/material';
+import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { Form, Formik, FormikHelpers } from 'formik';
 import { useTranslation } from 'react-i18next';
@@ -48,7 +49,7 @@ const ForgotPasswordForm: React.FC = () => {
 
   const handleSubmit = async (
     values: LoginValues,
-    { setSubmitting }: FormikHelpers<LoginValues>
+    { setSubmitting }: FormikHelpers<LoginValues>,
   ) => {
     await handleLogin(values);
     setSubmitting(false);
@@ -106,7 +107,7 @@ const ForgotPasswordForm: React.FC = () => {
             mb: '30px',
           }}
         >
-          <AppLogo maxWidth='250px' />
+          <AppLogo maxWidth="250px" />
         </Box>
         <Box sx={{ height: '100px' }} />
         <Formik
@@ -116,6 +117,15 @@ const ForgotPasswordForm: React.FC = () => {
         >
           {({ isSubmitting, touched, errors }) => (
             <Form style={{ width: '350px' }}>
+              <IconButton
+                sx={{
+                  alignSelf: 'flex-start',
+                  marginBottom: '20px',
+                  bgcolor: '#f5f5f5',
+                }}
+              >
+                <KeyboardArrowLeftIcon />
+              </IconButton>
               <Grid
                 container
                 spacing={2}
@@ -123,15 +133,44 @@ const ForgotPasswordForm: React.FC = () => {
                 justifyContent="center"
               >
                 <Grid item xs={12}>
+                  <Box>
+                    <TextAtom
+                      variant="title"
+                      size="large"
+                      sx={{
+                        textAlign: 'left',
+                        textTransform: 'none',
+                        fontWeight: 'bold',
+                      }}
+                    >
+                      {t('auth.forget_pass.title')}
+                    </TextAtom>
+                  </Box>
+                  <Box>
+                    <TextAtom
+                      variant="body"
+                      size="medium"
+                      sx={{
+                        textAlign: 'left',
+                        textTransform: 'none',
+                      }}
+                    >
+                      {t('auth.forget_pass.body')}
+                    </TextAtom>
+                  </Box>
                   <InputAtom
                     name="email"
                     type="email"
-                    variant='underlined'
+                    variant="outlined"
                     label={t('auth.login.email')}
                     placeholder={t('auth.login.email')}
                     errorMsg={errors.email || errorMsg}
                     fullWidth
-                    sx={{ width: '100%', maxWidth: '328px' }}
+                    sx={{
+                      marginTop: '20px',
+                      width: '100%',
+                      maxWidth: '328px',
+                    }}
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -145,10 +184,11 @@ const ForgotPasswordForm: React.FC = () => {
                       mt: 2,
                       width: '100%',
                       maxWidth: '328px',
+                      Height: '328px',
                       textTransform: 'none',
                     }}
                   >
-                    {t('auth.forgot_password.submit')}
+                    {t('auth.forget_pass.resetPassword')}
                   </ButtonAtom>
                 </Grid>
                 <Box sx={{ height: '191px' }} />
@@ -162,28 +202,7 @@ const ForgotPasswordForm: React.FC = () => {
                     alignItems: 'center',
                     textAlign: 'center',
                   }}
-                >
-                  <TextAtom
-                    variant="body"
-                    size="small"
-                    sx={{
-                      textAlign: 'center',
-                      textTransform: 'none',
-                      fontSize: 'inherit',
-                    }}
-                  >
-                    {t('auth.login.dont_have_account')}
-                    <ButtonAtom
-                      type="button"
-                      variant="text"
-                      disabled={isSubmitting || isLoading}
-                      onClick={() => navigate('/register')}
-                      sx={{ ml: 1, textTransform: 'none', fontSize: 'inherit' }}
-                    >
-                      {t('auth.login.register')}
-                    </ButtonAtom>
-                  </TextAtom>
-                </Grid>
+                ></Grid>
               </Grid>
             </Form>
           )}

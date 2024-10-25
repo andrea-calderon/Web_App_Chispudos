@@ -55,6 +55,13 @@
       "privacy_policy": "Política de Privacidad",
       "have_an_account": "¿Ya tienes una cuenta?",
       "login_title_button": "Iniciar sesión"
+    },
+    "forget_pass": {
+      "title": "¿Olvidaste tu contraseña?",
+      "body": "Por favor ingresa tu correo electrónico para restablecer tu contraseña.",
+      "emailTitle": "Tu cuenta de correo",
+      "emailText": "Ingresa tu correo",
+      "resetPassword": "Restablecer Contraseña"
     }
   },
   "landing": {
