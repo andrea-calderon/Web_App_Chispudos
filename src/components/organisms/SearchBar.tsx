@@ -6,22 +6,32 @@ import {
   Box,
   Typography,
   Stack,
+  Menu,
+  MenuItem,
 } from '@mui/material';
-import SearchIcon from '@mui/icons-material/Search';
 import FilterListIcon from '@mui/icons-material/FilterList';
 
 type FilterType = {
   [key: string]: string[];
 };
 
-const SearchBarWithFilters = () => {
+//const URL_DE_LA_API='';
+
+const SearchBar = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [appliedFilters, setAppliedFilters] = useState<string[]>([]);
-  const [availableFilters, setAvailableFilters] = useState<string[]>([]);
   const [resultsCount, setResultsCount] = useState(0);
+  const [filteredResults, setFilteredResults] = useState<
+    { name: string; details: string }[]
+  >([]);
+  const [allResults, setAllResults] = useState<
+    { name: string; details: string }[]
+  >([]);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
-  // Datos de ejemplo para los resultados
-  const allResults = useMemo(
+  //Ejemplos hardcodeados para pruebas
+  const initialResults = useMemo(
     () => [
       { name: 'Plomero', details: 'Reparación de tuberías' },
       { name: 'Electricista', details: 'Instalación eléctrica' },
@@ -34,7 +44,7 @@ const SearchBarWithFilters = () => {
       },
       {
         name: 'Cerrajero',
-        details: 'Apertura de puertas y instalación de cerraduras',
+        details: 'Apertura de puertas e instalación de cerraduras',
       },
       {
         name: 'Técnico de Aire Acondicionado',
@@ -42,12 +52,29 @@ const SearchBarWithFilters = () => {
       },
       { name: 'Limpiador', details: 'Limpieza de casas y oficinas' },
       { name: 'Diseñador Gráfico', details: 'Diseño de logotipos y branding' },
+      { name: 'Ubicacion', details: 'San José Pinula' },
     ],
     [],
   );
 
-  // Usar useMemo para definir allFilters
+  useEffect(() => {
+    {
+      /*const fetchData = async () => {
+      try {
+        const response = await fetch('URL_DE_LA_API'); // Reemplazar con la URL de la API
+        const data = await response.json();
+        setAllResults(data); // Ajustar esto según la estructura de respuesta de la API
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
 
+    fetchData();*/
+    }
+    setAllResults(initialResults);
+  }, [initialResults]);
+
+  // Filtros de ejemplo hardcodeados
   const allFilters: FilterType = useMemo(
     () => ({
       Plomero: [
@@ -96,30 +123,56 @@ const SearchBarWithFilters = () => {
         'Diseño de folletos',
         'Identidad corporativa',
       ],
+      Ubicación: ['San José Pinula', 'Tecpán', 'Ciudad de Guatemala'], //Esto es solo demostrativo.
     }),
     [],
   );
 
-  // Actualizar los filtros disponibles según el término de búsqueda
-  useEffect(() => {
-    const lowerCaseSearchTerm = searchTerm.toLowerCase();
-    const filters = Object.keys(allFilters).filter((filter) =>
+  const lowerCaseSearchTerm = searchTerm.toLowerCase();
+
+  const availableOptions = useMemo(() => {
+    const options = Object.keys(allFilters).filter((filter) =>
       filter.toLowerCase().includes(lowerCaseSearchTerm),
     );
-    const availableOptions = filters.flatMap((filter) => allFilters[filter]);
-    setAvailableFilters(availableOptions);
 
-    // Filtrar los resultados en función del término de búsqueda y los filtros aplicados
-    const filteredResults = allResults.filter((result) => {
+    Object.entries(allFilters).forEach(([key, subCategories]) => {
+      subCategories.forEach((subCategory) => {
+        if (
+          subCategory.toLowerCase().includes(lowerCaseSearchTerm) &&
+          !options.includes(key)
+        ) {
+          options.push(key);
+        }
+      });
+    });
+
+    return options;
+  }, [lowerCaseSearchTerm, allFilters]);
+
+  useEffect(() => {
+    const filtered = allResults.filter((result) => {
       const matchesSearchTerm =
         result.name.toLowerCase().includes(lowerCaseSearchTerm) ||
         result.details.toLowerCase().includes(lowerCaseSearchTerm);
-      const matchesFilters =
-        appliedFilters.length === 0 || appliedFilters.includes(result.name);
-      return matchesSearchTerm && matchesFilters;
+
+      return matchesSearchTerm;
     });
-    setResultsCount(filteredResults.length); // Actualizar el contador de resultados
-  }, [searchTerm, appliedFilters, allResults, allFilters]); // Añadido allFilters a las dependencias
+
+    const uniqueResults = filtered.reduce<{ name: string; details: string }[]>(
+      (acc, current) => {
+        const x = acc.find((item) => item.name === current.name);
+        if (!x) {
+          return acc.concat([current]);
+        } else {
+          return acc;
+        }
+      },
+      [],
+    );
+
+    setResultsCount(uniqueResults.length);
+    setFilteredResults(uniqueResults);
+  }, [lowerCaseSearchTerm, appliedFilters, allResults, allFilters]);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
@@ -131,8 +184,24 @@ const SearchBarWithFilters = () => {
     );
   };
 
-  const handleClearFilters = () => {
-    setAppliedFilters([]); // Limpiar todos los filtros
+  const handleMenuClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleCloseMenu = () => {
+    setAnchorEl(null);
+    setSelectedCategory(null);
+  };
+
+  const handleFilterSelect = (filter: string) => {
+    if (!appliedFilters.includes(filter)) {
+      setAppliedFilters((prev) => [...prev, filter]);
+    }
+    handleCloseMenu();
+  };
+
+  const handleCategorySelect = (category: string) => {
+    setSelectedCategory(category);
   };
 
   return (
@@ -140,17 +209,22 @@ const SearchBarWithFilters = () => {
       sx={{
         padding: '20px',
         backgroundColor: '#f4ecff',
-        borderRadius: '10px',
-        maxWidth: '600px',
+        maxWidth: 'auto',
         margin: 'auto',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        textAlign: 'center',
       }}
     >
       <Typography variant="h6" sx={{ mb: 2 }}>
         Buscar especialista
       </Typography>
 
-      {/* Campo de búsqueda */}
-      <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+      <Box
+        sx={{ display: 'flex', alignItems: 'center', mb: 2, width: '576px' }}
+      >
         <TextField
           fullWidth
           variant="outlined"
@@ -159,69 +233,94 @@ const SearchBarWithFilters = () => {
           onChange={handleSearchChange}
           InputProps={{
             endAdornment: (
-              <>
-                <IconButton>
-                  <FilterListIcon />
-                </IconButton>
-                <IconButton
-                  onClick={() => {
-                    if (searchTerm && !appliedFilters.includes(searchTerm)) {
-                      setAppliedFilters((prev) => [...prev, searchTerm]);
-                    }
-                  }}
-                >
-                  <SearchIcon />
-                </IconButton>
-              </>
+              <IconButton
+                onClick={handleMenuClick}
+                sx={{ backgroundColor: '#5D50C6', color: 'white' }}
+              >
+                <FilterListIcon />
+              </IconButton>
             ),
           }}
           sx={{
             backgroundColor: 'white',
             borderRadius: '50px',
             paddingRight: 1,
+            '& .MuiOutlinedInput-root': {
+              borderRadius: '50px',
+              '& fieldset': {
+                border: 'none',
+              },
+              '&:hover fieldset': {
+                border: 'none',
+              },
+              '&.Mui-focused fieldset': {
+                border: 'none',
+              },
+            },
           }}
         />
       </Box>
 
-      {/* Filtros aplicados */}
-      <Stack direction="row" spacing={1} sx={{ mb: 2 }}>
-        {appliedFilters.map((filter) => (
-          <Chip
-            key={filter}
-            label={filter}
-            onDelete={() => handleDeleteFilter(filter)}
-            sx={{ backgroundColor: '#7a4cec', color: 'white' }}
-          />
-        ))}
-      </Stack>
+      {searchTerm && (
+        <>
+          <Stack direction="row" spacing={1} sx={{ mb: 2 }}>
+            {appliedFilters.map((filter) => (
+              <Chip
+                key={filter}
+                label={filter}
+                onDelete={() => handleDeleteFilter(filter)}
+                sx={{
+                  backgroundColor: '#6750A4',
+                  color: 'white',
+                  '& .MuiChip-deleteIcon': {
+                    color: 'white',
+                  },
+                }}
+              />
+            ))}
+          </Stack>
 
-      {/* Botón para limpiar filtros */}
-      {appliedFilters.length > 0 && (
-        <Box sx={{ mb: 2 }}>
-          <IconButton onClick={handleClearFilters} sx={{ color: 'red' }}>
-            Limpiar Filtros
-          </IconButton>
-        </Box>
+          <Menu
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={handleCloseMenu}
+          >
+            {availableOptions.map((filter) => (
+              <div key={filter}>
+                <MenuItem onClick={() => handleCategorySelect(filter)}>
+                  {filter}
+                </MenuItem>
+                {selectedCategory === filter && (
+                  <Box sx={{ pl: 4 }}>
+                    {allFilters[filter].map((subCategory) => (
+                      <MenuItem
+                        key={subCategory}
+                        onClick={() => handleFilterSelect(subCategory)}
+                      >
+                        {subCategory}
+                      </MenuItem>
+                    ))}
+                  </Box>
+                )}
+              </div>
+            ))}
+          </Menu>
+
+          <Box sx={{ width: '100%' }}>
+            {filteredResults.map((result) => (
+              <Typography key={result.name} sx={{ mb: 1 }}>
+                {result.name} - {result.details}
+              </Typography>
+            ))}
+          </Box>
+
+          <Typography sx={{ color: 'gray' }}>
+            {resultsCount} resultados para "{searchTerm || '...'}"
+          </Typography>
+        </>
       )}
-
-      {/* Filtros disponibles según la búsqueda */}
-      <Stack direction="row" spacing={1} sx={{ mb: 2 }}>
-        {availableFilters.map((filter) => (
-          <Chip
-            key={filter}
-            label={filter}
-            onClick={() => setAppliedFilters([...appliedFilters, filter])}
-            sx={{ backgroundColor: '#7a4cec', color: 'white' }}
-          />
-        ))}
-      </Stack>
-
-      {/* Número de resultados */}
-      <Typography sx={{ color: 'gray' }}>
-        {resultsCount} resultados para "{searchTerm || '...'}"
-      </Typography>
     </Box>
   );
 };
 
-export default SearchBarWithFilters;
+export default SearchBar;
