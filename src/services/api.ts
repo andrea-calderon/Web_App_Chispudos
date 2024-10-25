@@ -43,13 +43,24 @@ export const api = createApi({
         body,
       }),
     }),
-    // Agrega otros endpoints según sea necesario
+    signup: builder.mutation({
+      query: (userData) => ({
+        url: 'signup/',
+        method: 'POST',
+        body: userData,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }),
+    }),
+    // Add other endpoints here
   }),
 });
 
 export const {
   useGetExampleDataQuery,
   useLoginMutation,
+  useSignupMutation,
   useRequestPasswordResetMutation,
   useUpdatePasswordMutation,
 } = api;

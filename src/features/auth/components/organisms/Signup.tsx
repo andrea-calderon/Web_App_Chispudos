@@ -1,35 +1,34 @@
 import { Box, Container, Grid } from '@mui/material';
-import { Field, Form, Formik } from 'formik';
+import { Form, Formik } from 'formik';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
-import { TextAtom, ButtonAtom, InputAtom } from '../../../../components/atoms';
-import AppLogo from '../../../../components/molecules/AppLogo';
+import { ButtonAtom, InputAtom, TextAtom } from '../../../../components/atoms';
 
-const Signup: React.FC = () => {
-  const navigate = useNavigate();
+interface SignupProps {
+  onSignup: (values: {
+    username: string;
+    email: string;
+    password: string;
+  }) => Promise<void>;
+}
+
+const validationSchema = Yup.object({
+  username: Yup.string().required('Username is required'),
+  email: Yup.string()
+    .email('Invalid email format')
+    .required('Email is required'),
+  password: Yup.string()
+    .min(6, 'Password must be at least 6 characters')
+    .required('Password is required'),
+  confirmPassword: Yup.string()
+    .oneOf([Yup.ref('password'), undefined], 'Passwords must match')
+    .required('Confirm password is required'),
+});
+
+const Signup: React.FC<SignupProps> = ({ onSignup }) => {
   const { t } = useTranslation();
-
-  const validationSchema = Yup.object({
-    username: Yup.string()
-      .matches(
-        /^[a-zA-Z0-9_]+$/,
-        'Username can only contain letters, numbers, and underscores',
-      )
-      .required('Username is required'),
-
-    email: Yup.string()
-      .email('Invalid email address')
-      .required('Email is required'),
-
-    password: Yup.string()
-      .min(6, 'Password must be at least 6 characters')
-      .required('Password is required'),
-
-    confirmPassword: Yup.string()
-      .oneOf([Yup.ref('password')], 'Passwords must match')
-      .required('Confirm Password is required'),
-  });
+  const navigate = useNavigate();
 
   return (
     <Container
@@ -42,6 +41,7 @@ const Signup: React.FC = () => {
         alignItems: 'center',
         bgcolor: '#FFF',
         position: 'relative',
+        padding: 0,
       }}
     >
       <Box
@@ -82,18 +82,12 @@ const Signup: React.FC = () => {
           validationSchema={validationSchema}
           onSubmit={async (values, { setSubmitting, setFieldError }) => {
             try {
-              if (values.email === '' && values.password === '') {
-                navigate('/login');
-              } else {
-                setFieldError('email', t('auth.register.invalidCredentials'));
-                setFieldError(
-                  'password',
-                  t('auth.register.invalidCredentials'),
-                );
-              }
+              await onSignup(values); // Usamos la función onSignup que recibimos como prop
             } catch {
-              setFieldError('email', t('auth.register.errorOccurred'));
-              setFieldError('password', t('auth.register.errorOccurred'));
+              setFieldError('username', t('signupScreen.errorOccurred'));
+              setFieldError('email', t('signupScreen.errorOccurred'));
+              setFieldError('password', t('signupScreen.errorOccurred'));
+              setFieldError('confirmPassword', t('signupScreen.errorOccurred'));
             } finally {
               setSubmitting(false);
             }
@@ -103,70 +97,59 @@ const Signup: React.FC = () => {
             <Form style={{ width: '350px' }}>
               <Grid
                 container
-                spacing={1.5}
+                spacing={2}
                 direction="column"
                 justifyContent="center"
               >
                 <Grid item xs={12}>
-                  <Field
-                    as={InputAtom}
+                  <InputAtom
                     name="username"
+                    type="text"
                     variant="underlined"
-                    label={t('auth.register.usernameLabel')}
-                    placeholder={t('auth.register.usernamePlaceholder')}
+                    label={t('auth.signup.username')}
+                    placeholder={t('auth.signup.username')}
                     error={touched.username && !!errors.username}
-                    helperText={
-                      touched.username && errors.username ? errors.username : ''
-                    }
+                    helperText={errors.username}
                     fullWidth
                     sx={{ width: '100%', maxWidth: '328px' }}
                   />
                 </Grid>
                 <Grid item xs={12}>
-                  <Field
-                    as={InputAtom}
+                  <InputAtom
                     name="email"
+                    type="email"
+                    autoComplete="email"
                     variant="underlined"
-                    label={t('auth.register.emailLabel')}
-                    placeholder={t('auth.register.emailPlaceholder')}
+                    label={t('auth.signup.email')}
+                    placeholder={t('auth.signup.email')}
                     error={touched.email && !!errors.email}
-                    helperText={
-                      touched.email && errors.email ? errors.email : ''
-                    }
+                    helperText={errors.email}
                     fullWidth
                     sx={{ width: '100%', maxWidth: '328px' }}
                   />
                 </Grid>
                 <Grid item xs={12}>
-                  <Field
-                    as={InputAtom}
+                  <InputAtom
                     name="password"
                     type="password"
                     variant="underlined"
-                    label={t('auth.register.passwordLabel')}
-                    placeholder={t('auth.register.passwordPlaceholder')}
+                    label={t('auth.signup.password')}
+                    placeholder={t('auth.signup.password')}
                     error={touched.password && !!errors.password}
-                    helperText={
-                      touched.password && errors.password ? errors.password : ''
-                    }
+                    helperText={errors.password}
                     fullWidth
                     sx={{ width: '100%', maxWidth: '328px' }}
                   />
                 </Grid>
                 <Grid item xs={12}>
-                  <Field
-                    as={InputAtom}
+                  <InputAtom
                     name="confirmPassword"
                     type="password"
                     variant="underlined"
-                    label={t('auth.register.confirmPasswordLabel')}
-                    placeholder={t('auth.register.confirmPasswordPlaceholder')}
+                    label={t('auth.signup.confirm_password')}
+                    placeholder={t('auth.signup.confirm_password')}
                     error={touched.confirmPassword && !!errors.confirmPassword}
-                    helperText={
-                      touched.confirmPassword && errors.confirmPassword
-                        ? errors.confirmPassword
-                        : ''
-                    }
+                    helperText={errors.confirmPassword}
                     fullWidth
                     sx={{ width: '100%', maxWidth: '328px' }}
                   />
@@ -177,7 +160,7 @@ const Signup: React.FC = () => {
                     variant="filled"
                     fullWidth
                     disabled={isSubmitting}
-                    onClick={() => console.log('Button clicked!')}
+                    onClick={() => {}}
                     sx={{
                       mt: 2,
                       width: '100%',
@@ -185,58 +168,10 @@ const Signup: React.FC = () => {
                       textTransform: 'none',
                     }}
                   >
-                    {t('auth.register.signup_title_button')}
+                    {t('auth.signup.title')}
                   </ButtonAtom>
                 </Grid>
-                <Box sx={{ height: '50px' }} />
-                <Grid
-                  item
-                  xs={12}
-                  sx={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    textAlign: 'center',
-                  }}
-                >
-                  <TextAtom
-                    variant="body"
-                    size="small"
-                    sx={{ fontSize: 'inherit' }}
-                  >
-                    {t('auth.register.agree_terms')}
-                    <ButtonAtom
-                      type="button"
-                      variant="text"
-                      onClick={() => console.log('Button clicked!')}
-                      sx={{
-                        display: 'inline',
-                        padding: 0,
-                        margin: '0 5px',
-                        fontSize: 'inherit',
-                        textTransform: 'none',
-                      }}
-                    >
-                      {t('auth.register.terms_of_service')}
-                    </ButtonAtom>
-                    {t('auth.register.and')}
-                    <ButtonAtom
-                      type="button"
-                      variant="text"
-                      onClick={() => console.log('Button clicked!')}
-                      sx={{
-                        display: 'inline',
-                        textTransform: 'none',
-                        fontSize: 'inherit',
-                        padding: 0,
-                        margin: '0 5px',
-                      }}
-                    >
-                      {t('auth.register.privacy_policy')}
-                    </ButtonAtom>
-                  </TextAtom>
-                </Grid>
-                <Box sx={{ height: '50px' }} />
+                <Box sx={{ height: '191px' }} />
                 <Grid
                   item
                   xs={12}
@@ -251,16 +186,20 @@ const Signup: React.FC = () => {
                   <TextAtom
                     variant="body"
                     size="small"
-                    sx={{ textAlign: 'center', fontSize: 'inherit' }}
+                    sx={{
+                      textAlign: 'center',
+                      textTransform: 'none',
+                      fontSize: 'inherit',
+                    }}
                   >
-                    {t('auth.register.have_an_account')}
+                    {t('auth.signup.have_account')}
                     <ButtonAtom
                       type="button"
                       variant="text"
                       onClick={() => navigate('/login')}
                       sx={{ ml: 1, textTransform: 'none', fontSize: 'inherit' }}
                     >
-                      {t('auth.register.login_title_button')}
+                      {t('auth.signup.login')}
                     </ButtonAtom>
                   </TextAtom>
                 </Grid>

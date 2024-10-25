@@ -1,10 +1,20 @@
-import Signup from '../organisms/Signup';
-import AuthLayout from '../templates/AuthLayout';
+import React from 'react';
+import Signup from './../organisms/Signup';
 
-export const RegisterPage = () => {
+const RegisterPage: React.FC = () => {
+  const handleSignup = async (values: {
+    username: string;
+    email: string;
+    password: string;
+  }) => {
+    console.log('Valores de registro:', values);
+  };
+
   return (
-    <AuthLayout>
-      <Signup />
-    </AuthLayout>
+    <div>
+      <Signup onSignup={handleSignup} />
+    </div>
   );
 };
+
+export default RegisterPage;
