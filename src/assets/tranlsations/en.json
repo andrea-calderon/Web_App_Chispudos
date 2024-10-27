@@ -70,6 +70,11 @@
       "label2": "Confirm Password",
       "placeholder2": "Re-enter password",
       "update": "Update Password"
+    },
+    "success": {
+      "title": "¡Password reset!",
+      "body": "Your password has been successfully reset. click confirm to set a new password",
+      "confirm": "Confirm"
     }
     },
   "landing": {

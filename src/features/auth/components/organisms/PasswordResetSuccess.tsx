@@ -2,7 +2,7 @@ import React, { useCallback, useState } from 'react';
 import { Box, Container, Grid, IconButton } from '@mui/material';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { Form, Formik, FormikHelpers } from 'formik';
+import { Form, Formik, useFormik, FormikHelpers } from 'formik';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
@@ -11,27 +11,26 @@ import { useAppDispatch } from '../../../../hooks/useAppDispatch';
 import { useLoginMutation } from '../../../../services/api';
 import { logger } from '../../../../utils/logger';
 import { loginSuccess } from '../../../../redux/slices/authSlice';
-import { LoginValues } from '../../../../types/api/apiRequests';
 import AppLogo from '../../../../components/molecules/AppLogo';
 
-const ResetPasswordForm: React.FC = () => {
+const PasswordResetSuccess: React.FC = () => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const [login, { isLoading }] = useLoginMutation();
   const navigate = useNavigate();
-  const [showPassword, setShowPassword] = useState(false);
-  const [errorMsg, setErrorMsg] = useState('');
 
   const validationSchema = Yup.object({
-    email: Yup.string()
-      .email(t('forms.commons.email'))
-      .required(t('forms.commons.required')),
-    password: Yup.string()
-      .min(6, t('forms.commons.min_length', { min: 6 }))
-      .required(t('forms.commons.required')),
+    otp: Yup.array()
+      .of(
+        Yup.string()
+          .matches(/^[0-9]$/, t('otp_error'))
+          .required(t('otp_required')),
+      )
+      .min(5, t('otp_complete'))
+      .required(),
   });
 
-  const handleLogin = async (values: LoginValues) => {
+  const handleLogin = async (values: { email: string; password: string }) => {
     try {
       const result = await login(values).unwrap();
       if (result.success) {
@@ -58,20 +57,6 @@ const ResetPasswordForm: React.FC = () => {
   const togglePasswordVisibility = useCallback(() => {
     setShowPassword((prev) => !prev);
   }, []);
-
-  const handleBackToLogin = () => {
-    navigate('/login'); // Reemplaza '/login' con la ruta correcta de tu pantalla de inicio de sesión
-  };
-
-  const rightIcon = (
-    <IconButton
-      onClick={togglePasswordVisibility}
-      onMouseDown={(e) => e.preventDefault()}
-      edge="end"
-    >
-      {showPassword ? <VisibilityOff /> : <Visibility />}
-    </IconButton>
-  );
 
   return (
     <Container
@@ -127,7 +112,6 @@ const ResetPasswordForm: React.FC = () => {
                   marginBottom: '20px',
                   bgcolor: '#f5f5f5',
                 }}
-                onClick={handleBackToLogin}
               >
                 <KeyboardArrowLeftIcon />
               </IconButton>
@@ -148,7 +132,7 @@ const ResetPasswordForm: React.FC = () => {
                         fontWeight: 'bold',
                       }}
                     >
-                      {t('auth.SetNewPass.title')}
+                      {t('auth.success.title')}
                     </TextAtom>
                   </Box>
                   <Box>
@@ -160,33 +144,9 @@ const ResetPasswordForm: React.FC = () => {
                         textTransform: 'none',
                       }}
                     >
-                      {t('auth.SetNewPass.body')}
+                      {t('auth.success.body')}
                     </TextAtom>
                   </Box>
-                  <InputAtom
-                    name="password"
-                    type={showPassword ? 'text' : 'password'}
-                    variant="outlined"
-                    label={t('auth.SetNewPass.placeholder1')}
-                    placeholder={t('auth.SetNewPass.label1')}
-                    errorMsg={errors.password || errorMsg}
-                    rightIcon={rightIcon}
-                    fullWidth
-                    sx={{ marginTop: '20px', width: '100%', maxWidth: '328px' }}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <InputAtom
-                    name="password"
-                    type={showPassword ? 'text' : 'password'}
-                    variant="outlined"
-                    label={t('auth.SetNewPass.placeholder2')}
-                    placeholder={t('auth.SetNewPass.label2')}
-                    errorMsg={errors.password || errorMsg}
-                    rightIcon={rightIcon}
-                    fullWidth
-                    sx={{ width: '100%', maxWidth: '328px' }}
-                  />
                 </Grid>
                 <Grid item xs={12}>
                   <ButtonAtom
@@ -199,12 +159,14 @@ const ResetPasswordForm: React.FC = () => {
                       mt: 2,
                       width: '100%',
                       maxWidth: '328px',
+                      Height: '328px',
                       textTransform: 'none',
                     }}
                   >
-                    {t('auth.SetNewPass.update')}
+                    {t('auth.success.confirm')}
                   </ButtonAtom>
                 </Grid>
+
                 <Box sx={{ height: '191px' }} />
                 <Grid
                   item
@@ -226,4 +188,4 @@ const ResetPasswordForm: React.FC = () => {
   );
 };
 
-export default ResetPasswordForm;
+export default PasswordResetSuccess;

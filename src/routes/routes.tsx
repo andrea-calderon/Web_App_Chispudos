@@ -15,6 +15,7 @@ import { RegisterPage } from '../features/auth/components/pages/RegisterPage';
 import { ForgotPasswordPage } from '../features/auth/components/pages/ForgotPasswordPage';
 import { SetNewPasswordPage } from '../features/auth/components/pages/SetNewPasswordPage';
 import { OTPVerificationPage } from '../features/auth/components/pages/OTPVerificationPage';
+import { PasswordResetSuccessPage } from '../features/auth/components/pages/PasswordResetSuccessPage';
 
 const AppRoutes = () => {
   const authState = useAppSelector(selectAuth);
@@ -27,7 +28,12 @@ const AppRoutes = () => {
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           <Route path="/otp-verification" element={<OTPVerificationPage />} />
+          <Route
+            path="/password-reset-success"
+            element={<PasswordResetSuccessPage />}
+          />
           <Route path="/set-new-password" element={<SetNewPasswordPage />} />
+          <Route path="/update-success" element={<SetNewPasswordPage />} />
           <Route path="/" element={<LandingPage />} />
 
           {/* Protected Routes */}

@@ -207,7 +207,7 @@ const OTPVerification: React.FC = () => {
                   <ButtonAtom
                     type="submit"
                     variant="filled"
-                    onClick={() => navigate('/reset-password-request')}
+                    onClick={() => navigate('/password-reset-success')}
                     fullWidth
                     disabled={isSubmitting}
                     sx={{

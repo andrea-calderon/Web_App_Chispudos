@@ -81,6 +81,11 @@
       "label2": "Confirmar Contraseña",
       "placeholder2": "Vuelve a ingresar la contraseña",
       "update": "Actualizar Contraseña"
+    },
+    "success": {
+      "title": "¡Contraseña restablecida!",
+      "body": "Tu contraseña se ha cambiado con éxito. Haz clic en 'Confirmar' para establecer una nueva contraseña.",
+      "confirm": "Confirmar"
     }
   },
   "landing": {
