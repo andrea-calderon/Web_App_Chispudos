@@ -2,7 +2,7 @@ import React, { useCallback, useState } from 'react';
 import { Box, Container, Grid, IconButton } from '@mui/material';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { Form, Formik, FormikHelpers } from 'formik';
+import { Form, Formik, useFormik, FormikHelpers } from 'formik';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
@@ -11,10 +11,9 @@ import { useAppDispatch } from '../../../../hooks/useAppDispatch';
 import { useLoginMutation } from '../../../../services/api';
 import { logger } from '../../../../utils/logger';
 import { loginSuccess } from '../../../../redux/slices/authSlice';
-import { LoginValues } from '../../../../types/api/apiRequests';
 import AppLogo from '../../../../components/molecules/AppLogo';
 
-const ForgotPasswordForm: React.FC = () => {
+const OTPVerification: React.FC = () => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const [login, { isLoading }] = useLoginMutation();
@@ -23,15 +22,17 @@ const ForgotPasswordForm: React.FC = () => {
   const [errorMsg, setErrorMsg] = useState('');
 
   const validationSchema = Yup.object({
-    email: Yup.string()
-      .email(t('forms.commons.email'))
-      .required(t('forms.commons.required')),
-    password: Yup.string()
-      .min(6, t('forms.commons.min_length', { min: 6 }))
-      .required(t('forms.commons.required')),
+    otp: Yup.array()
+      .of(
+        Yup.string()
+          .matches(/^[0-9]$/, t('otp_error'))
+          .required(t('otp_required')),
+      )
+      .min(5, t('otp_complete'))
+      .required(),
   });
 
-  const handleLogin = async (values: LoginValues) => {
+  const handleLogin = async (values: { email: string; password: string }) => {
     try {
       const result = await login(values).unwrap();
       if (result.success) {
@@ -59,19 +60,26 @@ const ForgotPasswordForm: React.FC = () => {
     setShowPassword((prev) => !prev);
   }, []);
 
-  const handleBackToLogin = () => {
-    navigate('/login'); // Reemplaza '/login' con la ruta correcta de tu pantalla de inicio de sesión
-  };
-
-  const rightIcon = (
-    <IconButton
-      onClick={togglePasswordVisibility}
-      onMouseDown={(e) => e.preventDefault()}
-      edge="end"
-    >
-      {showPassword ? <VisibilityOff /> : <Visibility />}
-    </IconButton>
-  );
+  // Configuración de Formik y Yup
+  const formik = useFormik({
+    initialValues: {
+      otp: ['', '', '', '', ''],
+    },
+    validationSchema: Yup.object({
+      otp: Yup.array()
+        .of(
+          Yup.string()
+            .matches(/^[0-9]$/, t('auth.OTPVerification.otp_error'))
+            .required(t('auth.OTPVerification.otp_required')),
+        )
+        .required()
+        .min(5, t('auth.OTPVerification.otp_complete')),
+    }),
+    onSubmit: (values) => {
+      // Aquí manejas la verificación del código
+      console.log('OTP ingresado:', values.otp.join(''));
+    },
+  });
 
   return (
     <Container
@@ -127,7 +135,6 @@ const ForgotPasswordForm: React.FC = () => {
                   marginBottom: '20px',
                   bgcolor: '#f5f5f5',
                 }}
-                onClick={handleBackToLogin}
               >
                 <KeyboardArrowLeftIcon />
               </IconButton>
@@ -148,7 +155,7 @@ const ForgotPasswordForm: React.FC = () => {
                         fontWeight: 'bold',
                       }}
                     >
-                      {t('auth.forget_pass.title')}
+                      {t('auth.OTPVerification.title')}
                     </TextAtom>
                   </Box>
                   <Box>
@@ -160,29 +167,47 @@ const ForgotPasswordForm: React.FC = () => {
                         textTransform: 'none',
                       }}
                     >
-                      {t('auth.forget_pass.body')}
+                      {t('auth.OTPVerification.body')}
                     </TextAtom>
                   </Box>
-                  <InputAtom
-                    name="email"
-                    type="email"
-                    variant="outlined"
-                    label={t('auth.forget_pass.emailTitle')}
-                    placeholder={t('auth.forget_pass.emailText')}
-                    errorMsg={errors.email || errorMsg}
-                    fullWidth
-                    sx={{
-                      marginTop: '20px',
-                      width: '100%',
-                      maxWidth: '328px',
-                    }}
-                  />
+
+                  {/* Input de OTP */}
+                  <form onSubmit={formik.handleSubmit}>
+                    <div
+                      style={{
+                        display: 'flex',
+                        gap: '8px',
+                        justifyContent: 'center',
+                        marginTop: '20px',
+                      }}
+                    >
+                      {formik.values.otp.map((_, index) => (
+                        <InputAtom
+                          key={index}
+                          type="text"
+                          name={`otp[${index}]`}
+                          variant="outlined"
+                          maxLength="1"
+                          value={formik.values.otp[index]}
+                          onChange={formik.handleChange}
+                          onFocus={(e) => e.target.select()}
+                          style={{ width: '40px', textAlign: 'center' }}
+                        />
+                      ))}
+                    </div>
+
+                    {formik.errors.otp && (
+                      <TextAtom variant="caption" color="error">
+                        {formik.errors.otp}
+                      </TextAtom>
+                    )}
+                  </form>
                 </Grid>
                 <Grid item xs={12}>
                   <ButtonAtom
                     type="submit"
                     variant="filled"
-                    onClick={() => navigate('/otp-verification')}
+                    onClick={() => navigate('/reset-password-request')}
                     fullWidth
                     disabled={isSubmitting}
                     sx={{
@@ -193,9 +218,25 @@ const ForgotPasswordForm: React.FC = () => {
                       textTransform: 'none',
                     }}
                   >
-                    {t('auth.forget_pass.resetPassword')}
+                    {t('auth.OTPVerification.verify_code')}
                   </ButtonAtom>
                 </Grid>
+                {/* Opción de reenviar */}
+                <TextAtom
+                  variant="body"
+                  size="medium"
+                  sx={{
+                    textAlign: 'center',
+                    textTransform: 'none',
+                    marginTop: '20px',
+                  }}
+                >
+                  {t('auth.OTPVerification.did_not_receive')}{' '}
+                  <span style={{ color: 'blue', cursor: 'pointer' }}>
+                    {t('auth.OTPVerification.resend')}
+                  </span>
+                </TextAtom>
+
                 <Box sx={{ height: '191px' }} />
                 <Grid
                   item
@@ -217,4 +258,4 @@ const ForgotPasswordForm: React.FC = () => {
   );
 };
 
-export default ForgotPasswordForm;
+export default OTPVerification;

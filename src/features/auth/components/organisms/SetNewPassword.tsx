@@ -1,5 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import { Box, Container, Grid, IconButton } from '@mui/material';
+import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { Form, Formik, FormikHelpers } from 'formik';
 import { useTranslation } from 'react-i18next';
@@ -48,7 +49,7 @@ const ResetPasswordForm: React.FC = () => {
 
   const handleSubmit = async (
     values: LoginValues,
-    { setSubmitting }: FormikHelpers<LoginValues>
+    { setSubmitting }: FormikHelpers<LoginValues>,
   ) => {
     await handleLogin(values);
     setSubmitting(false);
@@ -57,6 +58,10 @@ const ResetPasswordForm: React.FC = () => {
   const togglePasswordVisibility = useCallback(() => {
     setShowPassword((prev) => !prev);
   }, []);
+
+  const handleBackToLogin = () => {
+    navigate('/login'); // Reemplaza '/login' con la ruta correcta de tu pantalla de inicio de sesión
+  };
 
   const rightIcon = (
     <IconButton
@@ -106,7 +111,7 @@ const ResetPasswordForm: React.FC = () => {
             mb: '30px',
           }}
         >
-          <AppLogo maxWidth='250px' />
+          <AppLogo maxWidth="250px" />
         </Box>
         <Box sx={{ height: '100px' }} />
         <Formik
@@ -116,6 +121,16 @@ const ResetPasswordForm: React.FC = () => {
         >
           {({ isSubmitting, touched, errors }) => (
             <Form style={{ width: '350px' }}>
+              <IconButton
+                sx={{
+                  alignSelf: 'flex-start',
+                  marginBottom: '20px',
+                  bgcolor: '#f5f5f5',
+                }}
+                onClick={handleBackToLogin}
+              >
+                <KeyboardArrowLeftIcon />
+              </IconButton>
               <Grid
                 container
                 spacing={2}
@@ -123,25 +138,50 @@ const ResetPasswordForm: React.FC = () => {
                 justifyContent="center"
               >
                 <Grid item xs={12}>
+                  <Box>
+                    <TextAtom
+                      variant="title"
+                      size="large"
+                      sx={{
+                        textAlign: 'left',
+                        textTransform: 'none',
+                        fontWeight: 'bold',
+                      }}
+                    >
+                      {t('auth.SetNewPass.title')}
+                    </TextAtom>
+                  </Box>
+                  <Box>
+                    <TextAtom
+                      variant="body"
+                      size="medium"
+                      sx={{
+                        textAlign: 'left',
+                        textTransform: 'none',
+                      }}
+                    >
+                      {t('auth.SetNewPass.body')}
+                    </TextAtom>
+                  </Box>
                   <InputAtom
                     name="password"
                     type={showPassword ? 'text' : 'password'}
-                    variant="underlined"
-                    label={t('auth.login.password')}
-                    placeholder={t('auth.login.password')}
+                    variant="outlined"
+                    label={t('auth.SetNewPass.placeholder1')}
+                    placeholder={t('auth.SetNewPass.label1')}
                     errorMsg={errors.password || errorMsg}
                     rightIcon={rightIcon}
                     fullWidth
-                    sx={{ width: '100%', maxWidth: '328px' }}
+                    sx={{ marginTop: '20px', width: '100%', maxWidth: '328px' }}
                   />
                 </Grid>
                 <Grid item xs={12}>
                   <InputAtom
                     name="password"
                     type={showPassword ? 'text' : 'password'}
-                    variant="underlined"
-                    label={t('auth.login.password')}
-                    placeholder={t('auth.login.password')}
+                    variant="outlined"
+                    label={t('auth.SetNewPass.placeholder2')}
+                    placeholder={t('auth.SetNewPass.label2')}
                     errorMsg={errors.password || errorMsg}
                     rightIcon={rightIcon}
                     fullWidth
@@ -161,7 +201,7 @@ const ResetPasswordForm: React.FC = () => {
                       textTransform: 'none',
                     }}
                   >
-                    {t('auth.reset_password.submit')}
+                    {t('auth.SetNewPass.update')}
                   </ButtonAtom>
                 </Grid>
                 <Box sx={{ height: '191px' }} />

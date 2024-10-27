@@ -44,6 +44,32 @@
       "privacy_policy": "Privacy Policy",
       "have_an_account": "Already have an account?",
       "login_title_button": "Log In"
+    },
+    "forget_pass": {
+      "title": "Forgot password?",
+      "body": "Please enter your email to reset the password.",
+      "emailTitle": "Tu cuenta de correo",
+      "emailText": "Ingresa tu correo",
+      "resetPassword": "Reset Password"
+    },
+  "OTPVerification": {
+      "title": "Check you email",
+      "body": "Almost done! We'll send you an email with a 5-digit code. Use it here to create a new password and continue enjoying Reco.",
+      "otp_error": "Verification code must be a number",
+      "otp_required": "Verification code is required",
+      "otp_complete": "Verification code must be 5 digits",
+      "verify_code": "Verify Code",
+      "did_not_receive": "Haven’t got the email yet?",
+      "resend": "Resend email"
+    },
+    "SetNewPass": {
+      "title": "Set a new password",
+      "body": "Create a new password. Ensure it differs from previous ones for security.",
+      "label1": "Password",
+      "placeholder1": "Enter your new password",
+      "label2": "Confirm Password",
+      "placeholder2": "Re-enter password",
+      "update": "Update Password"
     }
     },
   "landing": {
