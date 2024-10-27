@@ -1,19 +1,15 @@
 import React, { useCallback, useState } from 'react';
 import { Box, Container, Grid, IconButton } from '@mui/material';
-import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { Form, Formik, useFormik, FormikHelpers } from 'formik';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
-import { ButtonAtom, InputAtom, TextAtom } from '../../../../components/atoms';
+import { ButtonAtom, TextAtom } from '../../../../components/atoms';
 import { useAppDispatch } from '../../../../hooks/useAppDispatch';
 import { useLoginMutation } from '../../../../services/api';
-import { logger } from '../../../../utils/logger';
-import { loginSuccess } from '../../../../redux/slices/authSlice';
-import AppLogo from '../../../../components/molecules/AppLogo';
+import SuccessImage from '../../../../assets/images/SuccessImage.svg';
 
-const PasswordResetSuccess: React.FC = () => {
+const PasswordUpdateSuccess: React.FC = () => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const [login, { isLoading }] = useLoginMutation();
@@ -30,22 +26,6 @@ const PasswordResetSuccess: React.FC = () => {
       .required(),
   });
 
-  const handleLogin = async (values: { email: string; password: string }) => {
-    try {
-      const result = await login(values).unwrap();
-      if (result.success) {
-        const { token, user } = result.data;
-        dispatch(loginSuccess({ user, token }));
-        navigate('/home');
-      } else {
-        setErrorMsg(result.message);
-      }
-    } catch (error) {
-      logger('error', error, 'Login.tsx.handleLogin', 'Web');
-      setErrorMsg(t('auth.login.form.error.invalid_acc'));
-    }
-  };
-
   const handleSubmit = async (
     values: LoginValues,
     { setSubmitting }: FormikHelpers<LoginValues>,
@@ -53,10 +33,6 @@ const PasswordResetSuccess: React.FC = () => {
     await handleLogin(values);
     setSubmitting(false);
   };
-
-  const togglePasswordVisibility = useCallback(() => {
-    setShowPassword((prev) => !prev);
-  }, []);
 
   return (
     <Container
@@ -86,18 +62,6 @@ const PasswordResetSuccess: React.FC = () => {
           alignItems: 'center',
         }}
       >
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'center',
-            alignItems: 'center',
-            gap: '10px',
-            mb: '30px',
-          }}
-        >
-          <AppLogo maxWidth="250px" />
-        </Box>
         <Box sx={{ height: '100px' }} />
         <Formik
           initialValues={{ email: '', password: '' }}
@@ -106,15 +70,16 @@ const PasswordResetSuccess: React.FC = () => {
         >
           {({ isSubmitting, touched, errors }) => (
             <Form style={{ width: '350px' }}>
-              <IconButton
-                sx={{
-                  alignSelf: 'flex-start',
-                  marginBottom: '20px',
-                  bgcolor: '#f5f5f5',
-                }}
-              >
-                <KeyboardArrowLeftIcon />
-              </IconButton>
+              <Container>
+                <img
+                  src={SuccessImage}
+                  alt="Ilustración de mujer sosteniendo un ícono de check"
+                  style={{
+                    alignSelf: 'flex-start',
+                    marginBottom: '20px',
+                  }}
+                />
+              </Container>
               <Grid
                 container
                 spacing={2}
@@ -132,7 +97,7 @@ const PasswordResetSuccess: React.FC = () => {
                         fontWeight: 'bold',
                       }}
                     >
-                      {t('auth.resetSuccess.title')}
+                      {t('auth.updateSuccess.title')}
                     </TextAtom>
                   </Box>
                   <Box>
@@ -144,7 +109,7 @@ const PasswordResetSuccess: React.FC = () => {
                         textTransform: 'none',
                       }}
                     >
-                      {t('auth.resetSuccess.body')}
+                      {t('auth.updateSuccess.body')}
                     </TextAtom>
                   </Box>
                 </Grid>
@@ -152,7 +117,7 @@ const PasswordResetSuccess: React.FC = () => {
                   <ButtonAtom
                     type="submit"
                     variant="filled"
-                    onClick={() => navigate('/set-new-password')}
+                    onClick={() => navigate('/login')}
                     fullWidth
                     disabled={isSubmitting}
                     sx={{
@@ -163,7 +128,7 @@ const PasswordResetSuccess: React.FC = () => {
                       textTransform: 'none',
                     }}
                   >
-                    {t('auth.resetSuccess.confirm')}
+                    {t('auth.updateSuccess.continue')}
                   </ButtonAtom>
                 </Grid>
 
@@ -188,4 +153,4 @@ const PasswordResetSuccess: React.FC = () => {
   );
 };
 
-export default PasswordResetSuccess;
+export default PasswordUpdateSuccess;

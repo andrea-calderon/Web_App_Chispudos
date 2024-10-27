@@ -71,10 +71,15 @@
       "placeholder2": "Re-enter password",
       "update": "Update Password"
     },
-    "success": {
+    "resetSuccess": {
       "title": "¡Password reset!",
       "body": "Your password has been successfully reset. click confirm to set a new password",
       "confirm": "Confirm"
+    },
+    "updateSuccess": {
+      "title": "¡Successful!",
+      "body": "¡Congratulations! Your password has been changed. Click continue to login",
+      "continue": "Continue"
     }
     },
   "landing": {

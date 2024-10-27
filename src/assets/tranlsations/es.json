@@ -82,10 +82,15 @@
       "placeholder2": "Vuelve a ingresar la contraseña",
       "update": "Actualizar Contraseña"
     },
-    "success": {
+    "resetSuccess": {
       "title": "¡Contraseña restablecida!",
       "body": "Tu contraseña se ha cambiado con éxito. Haz clic en 'Confirmar' para establecer una nueva contraseña.",
       "confirm": "Confirmar"
+    },
+    "updateSuccess": {
+      "title": "¡Todo listo!",
+      "body": "¡Genial! Ya puedes iniciar sesión con tu nueva contraseña. Haz clic en continuar.",
+      "continue": "Continuar"
     }
   },
   "landing": {

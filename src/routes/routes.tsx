@@ -13,9 +13,10 @@ import { selectAuth } from '../redux/slices/authSlice';
 import { ProfilePage } from '../features/profile/components/pages/ProfilePage';
 import { RegisterPage } from '../features/auth/components/pages/RegisterPage';
 import { ForgotPasswordPage } from '../features/auth/components/pages/ForgotPasswordPage';
-import { SetNewPasswordPage } from '../features/auth/components/pages/SetNewPasswordPage';
 import { OTPVerificationPage } from '../features/auth/components/pages/OTPVerificationPage';
 import { PasswordResetSuccessPage } from '../features/auth/components/pages/PasswordResetSuccessPage';
+import { SetNewPasswordPage } from '../features/auth/components/pages/SetNewPasswordPage';
+import { PasswordUpdateSuccessPage } from '../features/auth/components/pages/PasswordUpdateSuccessPage';
 
 const AppRoutes = () => {
   const authState = useAppSelector(selectAuth);
@@ -33,7 +34,10 @@ const AppRoutes = () => {
             element={<PasswordResetSuccessPage />}
           />
           <Route path="/set-new-password" element={<SetNewPasswordPage />} />
-          <Route path="/update-success" element={<SetNewPasswordPage />} />
+          <Route
+            path="/update-success"
+            element={<PasswordUpdateSuccessPage />}
+          />
           <Route path="/" element={<LandingPage />} />
 
           {/* Protected Routes */}

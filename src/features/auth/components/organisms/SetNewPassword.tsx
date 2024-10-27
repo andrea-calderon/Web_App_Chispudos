@@ -192,7 +192,7 @@ const ResetPasswordForm: React.FC = () => {
                   <ButtonAtom
                     type="submit"
                     variant="filled"
-                    onClick={() => navigate('/set-new-password')}
+                    onClick={() => navigate('/update-success')}
                     fullWidth
                     disabled={isSubmitting}
                     sx={{
