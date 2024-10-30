@@ -48,7 +48,7 @@ const Login: React.FC = () => {
 
   const handleSubmit = async (
     values: LoginValues,
-    { setSubmitting }: FormikHelpers<LoginValues>
+    { setSubmitting }: FormikHelpers<LoginValues>,
   ) => {
     await handleLogin(values);
     setSubmitting(false);
@@ -106,7 +106,7 @@ const Login: React.FC = () => {
             mb: '30px',
           }}
         >
-          <AppLogo maxWidth='250px' />
+          <AppLogo maxWidth="250px" />
         </Box>
         <Box sx={{ height: '100px' }} />
         <Formik
@@ -126,7 +126,7 @@ const Login: React.FC = () => {
                   <InputAtom
                     name="email"
                     type="email"
-                    variant='underlined'
+                    variant="underlined"
                     label={t('auth.login.email')}
                     placeholder={t('auth.login.email')}
                     errorMsg={errors.email || errorMsg}
@@ -168,7 +168,7 @@ const Login: React.FC = () => {
                     type="button"
                     variant="text"
                     fullWidth
-                    onClick={() => navigate('/forgot-password')}
+                    onClick={() => navigate('/password-recovery')}
                     sx={{
                       width: '100%',
                       maxWidth: '328px',

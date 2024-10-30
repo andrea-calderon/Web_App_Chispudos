@@ -8,50 +8,51 @@ import { useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 import { ButtonAtom, InputAtom, TextAtom } from '../../../../components/atoms';
 import { useAppDispatch } from '../../../../hooks/useAppDispatch';
-import { useLoginMutation } from '../../../../services/api';
+import { useUpdatePasswordMutation } from '../../../../services/api'; // Asegúrate de tener esta mutación
 import { logger } from '../../../../utils/logger';
-import { loginSuccess } from '../../../../redux/slices/authSlice';
 import { LoginValues } from '../../../../types/api/apiRequests';
 import AppLogo from '../../../../components/molecules/AppLogo';
 
-const ResetPasswordForm: React.FC = () => {
+interface SetNewPasswordProps {
+  otp: string;
+  onSuccess: () => void;
+}
+
+const SetNewPassword: React.FC<SetNewPasswordProps> = ({ otp, onSuccess }) => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
-  const [login, { isLoading }] = useLoginMutation();
+  const [updatePassword] = useUpdatePasswordMutation();
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
+  console.warn({ otp });
 
   const validationSchema = Yup.object({
-    email: Yup.string()
-      .email(t('forms.commons.email'))
-      .required(t('forms.commons.required')),
-    password: Yup.string()
+    newPassword: Yup.string()
       .min(6, t('forms.commons.min_length', { min: 6 }))
+      .required(t('forms.commons.required')),
+    confirmPassword: Yup.string()
+      .oneOf(
+        [Yup.ref('newPassword'), null],
+        t('forms.commons.passwords_must_match'),
+      )
       .required(t('forms.commons.required')),
   });
 
-  const handleLogin = async (values: LoginValues) => {
-    try {
-      const result = await login(values).unwrap();
-      if (result.success) {
-        const { token, user } = result.data;
-        dispatch(loginSuccess({ user, token }));
-        navigate('/home');
-      } else {
-        setErrorMsg(result.message);
-      }
-    } catch (error) {
-      logger('error', error, 'Login.tsx.handleLogin', 'Web');
-      setErrorMsg(t('auth.login.form.error.invalid_acc'));
-    }
-  };
-
   const handleSubmit = async (
-    values: LoginValues,
-    { setSubmitting }: FormikHelpers<LoginValues>,
+    values: { newPassword: string; confirmPassword: string },
+    {
+      setSubmitting,
+    }: FormikHelpers<{ newPassword: string; confirmPassword: string }>,
   ) => {
-    await handleLogin(values);
+    try {
+      // Llama a tu mutación para actualizar la contraseña aquí
+      await updatePassword({ otp, newPassword: values.newPassword }).unwrap();
+      onSuccess(); // Llama a onSuccess para proceder a la pantalla de éxito
+    } catch (error) {
+      logger('error', error, 'SetNewPassword.tsx.handleSubmit', 'Web');
+      setErrorMsg(t('auth.error.updating_password'));
+    }
     setSubmitting(false);
   };
 
@@ -59,10 +60,7 @@ const ResetPasswordForm: React.FC = () => {
     setShowPassword((prev) => !prev);
   }, []);
 
-  const handleBackToLogin = () => {
-    navigate('/login'); // Reemplaza '/login' con la ruta correcta de tu pantalla de inicio de sesión
-  };
-
+  // Definición del icono para mostrar/ocultar contraseña
   const rightIcon = (
     <IconButton
       onClick={togglePasswordVisibility}
@@ -113,9 +111,8 @@ const ResetPasswordForm: React.FC = () => {
         >
           <AppLogo maxWidth="250px" />
         </Box>
-        <Box sx={{ height: '100px' }} />
         <Formik
-          initialValues={{ email: '', password: '' }}
+          initialValues={{ newPassword: '', confirmPassword: '' }}
           validationSchema={validationSchema}
           onSubmit={handleSubmit}
         >
@@ -127,7 +124,6 @@ const ResetPasswordForm: React.FC = () => {
                   marginBottom: '20px',
                   bgcolor: '#f5f5f5',
                 }}
-                onClick={handleBackToLogin}
               >
                 <KeyboardArrowLeftIcon />
               </IconButton>
@@ -138,38 +134,25 @@ const ResetPasswordForm: React.FC = () => {
                 justifyContent="center"
               >
                 <Grid item xs={12}>
-                  <Box>
-                    <TextAtom
-                      variant="title"
-                      size="large"
-                      sx={{
-                        textAlign: 'left',
-                        textTransform: 'none',
-                        fontWeight: 'bold',
-                      }}
-                    >
-                      {t('auth.SetNewPass.title')}
-                    </TextAtom>
-                  </Box>
-                  <Box>
-                    <TextAtom
-                      variant="body"
-                      size="medium"
-                      sx={{
-                        textAlign: 'left',
-                        textTransform: 'none',
-                      }}
-                    >
-                      {t('auth.SetNewPass.body')}
-                    </TextAtom>
-                  </Box>
+                  <TextAtom
+                    variant="title"
+                    size="large"
+                    sx={{
+                      textAlign: 'left',
+                      textTransform: 'none',
+                      fontWeight: 'bold',
+                    }}
+                  >
+                    {t('auth.SetNewPass.title')}
+                  </TextAtom>
+                </Grid>
+                <Grid item xs={12}>
                   <InputAtom
-                    name="password"
+                    name="newPassword"
                     type={showPassword ? 'text' : 'password'}
                     variant="outlined"
                     label={t('auth.SetNewPass.placeholder1')}
-                    placeholder={t('auth.SetNewPass.label1')}
-                    errorMsg={errors.password || errorMsg}
+                    errorMsg={errors.newPassword || errorMsg}
                     rightIcon={rightIcon}
                     fullWidth
                     sx={{ marginTop: '20px', width: '100%', maxWidth: '328px' }}
@@ -177,12 +160,11 @@ const ResetPasswordForm: React.FC = () => {
                 </Grid>
                 <Grid item xs={12}>
                   <InputAtom
-                    name="password"
+                    name="confirmPassword"
                     type={showPassword ? 'text' : 'password'}
                     variant="outlined"
                     label={t('auth.SetNewPass.placeholder2')}
-                    placeholder={t('auth.SetNewPass.label2')}
-                    errorMsg={errors.password || errorMsg}
+                    errorMsg={errors.confirmPassword || errorMsg}
                     rightIcon={rightIcon}
                     fullWidth
                     sx={{ width: '100%', maxWidth: '328px' }}
@@ -192,7 +174,6 @@ const ResetPasswordForm: React.FC = () => {
                   <ButtonAtom
                     type="submit"
                     variant="filled"
-                    onClick={() => navigate('/update-success')}
                     fullWidth
                     disabled={isSubmitting}
                     sx={{
@@ -206,17 +187,6 @@ const ResetPasswordForm: React.FC = () => {
                   </ButtonAtom>
                 </Grid>
                 <Box sx={{ height: '191px' }} />
-                <Grid
-                  item
-                  xs={12}
-                  sx={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    textAlign: 'center',
-                  }}
-                ></Grid>
               </Grid>
             </Form>
           )}
@@ -226,4 +196,4 @@ const ResetPasswordForm: React.FC = () => {
   );
 };
 
-export default ResetPasswordForm;
+export default SetNewPassword;

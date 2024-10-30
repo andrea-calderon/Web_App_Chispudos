@@ -1,85 +1,47 @@
-import React, { useCallback, useState } from 'react';
+import React, { useState } from 'react';
 import { Box, Container, Grid, IconButton } from '@mui/material';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { Form, Formik, useFormik, FormikHelpers } from 'formik';
+import { Form, Formik } from 'formik';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 import { ButtonAtom, InputAtom, TextAtom } from '../../../../components/atoms';
 import { useAppDispatch } from '../../../../hooks/useAppDispatch';
-import { useLoginMutation } from '../../../../services/api';
-import { logger } from '../../../../utils/logger';
-import { loginSuccess } from '../../../../redux/slices/authSlice';
 import AppLogo from '../../../../components/molecules/AppLogo';
 
-const OTPVerification: React.FC = () => {
+// Agregamos el tipo para la prop onOtpReceived
+interface OTPVerificationProps {
+  onOtpReceived: (otp: string) => void;
+  onNext: () => void;
+}
+
+const OTPVerification: React.FC<OTPVerificationProps> = ({
+  onNext,
+  onOtpReceived,
+}) => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
-  const [login, { isLoading }] = useLoginMutation();
   const navigate = useNavigate();
-  const [showPassword, setShowPassword] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
+  //console.warn(otp);
 
   const validationSchema = Yup.object({
-    otp: Yup.array()
-      .of(
-        Yup.string()
-          .matches(/^[0-9]$/, t('otp_error'))
-          .required(t('otp_required')),
-      )
-      .min(5, t('otp_complete'))
-      .required(),
+    otp: Yup.string()
+      .matches(/^[a-zA-Z0-9]{6}$/, t('auth.OTPVerification.otp_error'))
+      .required(t('auth.OTPVerification.otp_required')),
   });
 
-  const handleLogin = async (values: { email: string; password: string }) => {
+  const handleSubmit = async (values: { otp: string }) => {
     try {
-      const result = await login(values).unwrap();
-      if (result.success) {
-        const { token, user } = result.data;
-        dispatch(loginSuccess({ user, token }));
-        navigate('/home');
-      } else {
-        setErrorMsg(result.message);
-      }
+      console.log('OTP ingresado:', values.otp);
+      onOtpReceived(values.otp);
+      // Aquí realizarías la verificación de OTP con la API y llamas a `onNext` si es exitoso.
+      onNext(); // Avanza al siguiente paso
     } catch (error) {
-      logger('error', error, 'Login.tsx.handleLogin', 'Web');
-      setErrorMsg(t('auth.login.form.error.invalid_acc'));
+      console.error('Error al verificar OTP:', error);
+      setErrorMsg(t('auth.OTPVerification.error'));
     }
   };
-
-  const handleSubmit = async (
-    values: LoginValues,
-    { setSubmitting }: FormikHelpers<LoginValues>,
-  ) => {
-    await handleLogin(values);
-    setSubmitting(false);
-  };
-
-  const togglePasswordVisibility = useCallback(() => {
-    setShowPassword((prev) => !prev);
-  }, []);
-
-  // Configuración de Formik y Yup
-  const formik = useFormik({
-    initialValues: {
-      otp: ['', '', '', '', ''],
-    },
-    validationSchema: Yup.object({
-      otp: Yup.array()
-        .of(
-          Yup.string()
-            .matches(/^[0-9]$/, t('auth.OTPVerification.otp_error'))
-            .required(t('auth.OTPVerification.otp_required')),
-        )
-        .required()
-        .min(5, t('auth.OTPVerification.otp_complete')),
-    }),
-    onSubmit: (values) => {
-      // Aquí manejas la verificación del código
-      console.log('OTP ingresado:', values.otp.join(''));
-    },
-  });
 
   return (
     <Container
@@ -123,11 +85,11 @@ const OTPVerification: React.FC = () => {
         </Box>
         <Box sx={{ height: '100px' }} />
         <Formik
-          initialValues={{ email: '', password: '' }}
+          initialValues={{ otp: '' }}
           validationSchema={validationSchema}
           onSubmit={handleSubmit}
         >
-          {({ isSubmitting, touched, errors }) => (
+          {({ isSubmitting, touched, errors, handleChange, values }) => (
             <Form style={{ width: '350px' }}>
               <IconButton
                 sx={{
@@ -135,6 +97,7 @@ const OTPVerification: React.FC = () => {
                   marginBottom: '20px',
                   bgcolor: '#f5f5f5',
                 }}
+                onClick={() => navigate(-1)}
               >
                 <KeyboardArrowLeftIcon />
               </IconButton>
@@ -171,57 +134,41 @@ const OTPVerification: React.FC = () => {
                     </TextAtom>
                   </Box>
 
-                  {/* Input de OTP */}
-                  <form onSubmit={formik.handleSubmit}>
-                    <div
-                      style={{
-                        display: 'flex',
-                        gap: '8px',
-                        justifyContent: 'center',
-                        marginTop: '20px',
-                      }}
-                    >
-                      {formik.values.otp.map((_, index) => (
-                        <InputAtom
-                          key={index}
-                          type="text"
-                          name={`otp[${index}]`}
-                          variant="outlined"
-                          maxLength="1"
-                          value={formik.values.otp[index]}
-                          onChange={formik.handleChange}
-                          onFocus={(e) => e.target.select()}
-                          style={{ width: '40px', textAlign: 'center' }}
-                        />
-                      ))}
-                    </div>
-
-                    {formik.errors.otp && (
-                      <TextAtom variant="caption" color="error">
-                        {formik.errors.otp}
-                      </TextAtom>
-                    )}
-                  </form>
+                  {/* Input único de OTP */}
+                  <InputAtom
+                    name="otp"
+                    type="text"
+                    variant="outlined"
+                    maxLength={6}
+                    value={values.otp}
+                    onChange={handleChange}
+                    placeholder={t('auth.OTPVerification.otp_placeholder')}
+                    errorMsg={touched.otp && errors.otp ? errors.otp : errorMsg}
+                    fullWidth
+                    sx={{
+                      marginTop: '20px',
+                      width: '100%',
+                      maxWidth: '328px',
+                      textAlign: 'center',
+                    }}
+                  />
                 </Grid>
                 <Grid item xs={12}>
                   <ButtonAtom
                     type="submit"
                     variant="filled"
-                    onClick={() => navigate('/password-reset-success')}
                     fullWidth
                     disabled={isSubmitting}
                     sx={{
                       mt: 2,
                       width: '100%',
                       maxWidth: '328px',
-                      Height: '328px',
                       textTransform: 'none',
                     }}
                   >
                     {t('auth.OTPVerification.verify_code')}
                   </ButtonAtom>
                 </Grid>
-                {/* Opción de reenviar */}
                 <TextAtom
                   variant="body"
                   size="medium"
@@ -238,17 +185,6 @@ const OTPVerification: React.FC = () => {
                 </TextAtom>
 
                 <Box sx={{ height: '191px' }} />
-                <Grid
-                  item
-                  xs={12}
-                  sx={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    textAlign: 'center',
-                  }}
-                ></Grid>
               </Grid>
             </Form>
           )}

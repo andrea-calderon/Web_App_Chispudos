@@ -1,77 +1,50 @@
 import React, { useCallback, useState } from 'react';
 import { Box, Container, Grid, IconButton } from '@mui/material';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { Form, Formik, FormikHelpers } from 'formik';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 import { ButtonAtom, InputAtom, TextAtom } from '../../../../components/atoms';
 import { useAppDispatch } from '../../../../hooks/useAppDispatch';
-import { useLoginMutation } from '../../../../services/api';
 import { logger } from '../../../../utils/logger';
-import { loginSuccess } from '../../../../redux/slices/authSlice';
-import { LoginValues } from '../../../../types/api/apiRequests';
+import { useRequestPasswordResetMutation } from '../../../../services/api';
 import AppLogo from '../../../../components/molecules/AppLogo';
 
-const ForgotPasswordForm: React.FC = () => {
+interface ForgotPasswordFormProps {
+  handleSecondScreen: () => void;
+}
+
+const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
+  handleSecondScreen,
+}) => {
   const { t } = useTranslation();
-  const dispatch = useAppDispatch();
-  const [login, { isLoading }] = useLoginMutation();
   const navigate = useNavigate();
-  const [showPassword, setShowPassword] = useState(false);
+  const [successMsg, setSuccessMsg] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
+  const [requestPasswordReset, { isLoading, isError }] =
+    useRequestPasswordResetMutation();
 
   const validationSchema = Yup.object({
     email: Yup.string()
       .email(t('forms.commons.email'))
       .required(t('forms.commons.required')),
-    password: Yup.string()
-      .min(6, t('forms.commons.min_length', { min: 6 }))
-      .required(t('forms.commons.required')),
   });
 
-  const handleLogin = async (values: LoginValues) => {
+  const handlePasswordReset = async (values: { email: string }) => {
     try {
-      const result = await login(values).unwrap();
-      if (result.success) {
-        const { token, user } = result.data;
-        dispatch(loginSuccess({ user, token }));
-        navigate('/home');
-      } else {
-        setErrorMsg(result.message);
-      }
+      const result = await requestPasswordReset(values).unwrap();
+      setSuccessMsg(t('auth.forget_pass.success_message'));
+      setErrorMsg('');
+      handleSecondScreen();
     } catch (error) {
-      logger('error', error, 'Login.tsx.handleLogin', 'Web');
-      setErrorMsg(t('auth.login.form.error.invalid_acc'));
+      setErrorMsg(t('auth.forget_pass.error_message'));
     }
   };
-
-  const handleSubmit = async (
-    values: LoginValues,
-    { setSubmitting }: FormikHelpers<LoginValues>,
-  ) => {
-    await handleLogin(values);
-    setSubmitting(false);
-  };
-
-  const togglePasswordVisibility = useCallback(() => {
-    setShowPassword((prev) => !prev);
-  }, []);
 
   const handleBackToLogin = () => {
     navigate('/login'); // Reemplaza '/login' con la ruta correcta de tu pantalla de inicio de sesión
   };
-
-  const rightIcon = (
-    <IconButton
-      onClick={togglePasswordVisibility}
-      onMouseDown={(e) => e.preventDefault()}
-      edge="end"
-    >
-      {showPassword ? <VisibilityOff /> : <Visibility />}
-    </IconButton>
-  );
 
   return (
     <Container
@@ -115,9 +88,9 @@ const ForgotPasswordForm: React.FC = () => {
         </Box>
         <Box sx={{ height: '100px' }} />
         <Formik
-          initialValues={{ email: '', password: '' }}
+          initialValues={{ email: '' }}
           validationSchema={validationSchema}
-          onSubmit={handleSubmit}
+          onSubmit={handlePasswordReset}
         >
           {({ isSubmitting, touched, errors }) => (
             <Form style={{ width: '350px' }}>
@@ -182,20 +155,48 @@ const ForgotPasswordForm: React.FC = () => {
                   <ButtonAtom
                     type="submit"
                     variant="filled"
-                    onClick={() => navigate('/otp-verification')}
                     fullWidth
-                    disabled={isSubmitting}
+                    disabled={isSubmitting || isLoading}
                     sx={{
                       mt: 2,
                       width: '100%',
                       maxWidth: '328px',
-                      Height: '328px',
                       textTransform: 'none',
                     }}
                   >
                     {t('auth.forget_pass.resetPassword')}
                   </ButtonAtom>
                 </Grid>
+                {successMsg && (
+                  <Grid item xs={12}>
+                    <TextAtom
+                      variant="body"
+                      size="medium"
+                      sx={{
+                        color: 'green',
+                        textAlign: 'center',
+                        marginTop: '10px',
+                      }}
+                    >
+                      {successMsg}
+                    </TextAtom>
+                  </Grid>
+                )}
+                {errorMsg && (
+                  <Grid item xs={12}>
+                    <TextAtom
+                      variant="body"
+                      size="medium"
+                      sx={{
+                        color: 'red',
+                        textAlign: 'center',
+                        marginTop: '10px',
+                      }}
+                    >
+                      {errorMsg}
+                    </TextAtom>
+                  </Grid>
+                )}
                 <Box sx={{ height: '191px' }} />
                 <Grid
                   item
@@ -207,7 +208,7 @@ const ForgotPasswordForm: React.FC = () => {
                     alignItems: 'center',
                     textAlign: 'center',
                   }}
-                ></Grid>
+                />
               </Grid>
             </Form>
           )}

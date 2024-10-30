@@ -13,7 +13,7 @@ import { logger } from '../../../../utils/logger';
 import { loginSuccess } from '../../../../redux/slices/authSlice';
 import AppLogo from '../../../../components/molecules/AppLogo';
 
-const PasswordResetSuccess: React.FC = () => {
+const PasswordResetSuccess: React.FC<{ onNext: () => void }> = ({ onNext }) => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const [login, { isLoading }] = useLoginMutation();
@@ -53,10 +53,6 @@ const PasswordResetSuccess: React.FC = () => {
     await handleLogin(values);
     setSubmitting(false);
   };
-
-  const togglePasswordVisibility = useCallback(() => {
-    setShowPassword((prev) => !prev);
-  }, []);
 
   return (
     <Container
@@ -152,7 +148,7 @@ const PasswordResetSuccess: React.FC = () => {
                   <ButtonAtom
                     type="submit"
                     variant="filled"
-                    onClick={() => navigate('/set-new-password')}
+                    onClick={onNext} // Avanza al paso 4 en PasswordRecovery.tsx
                     fullWidth
                     disabled={isSubmitting}
                     sx={{
