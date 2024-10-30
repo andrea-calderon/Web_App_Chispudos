@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useState } from 'react';
 import { Box, Container, Grid, IconButton } from '@mui/material';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import { Form, Formik, FormikHelpers } from 'formik';
@@ -6,8 +6,6 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 import { ButtonAtom, InputAtom, TextAtom } from '../../../../components/atoms';
-import { useAppDispatch } from '../../../../hooks/useAppDispatch';
-import { logger } from '../../../../utils/logger';
 import { useRequestPasswordResetMutation } from '../../../../services/api';
 import AppLogo from '../../../../components/molecules/AppLogo';
 
@@ -43,7 +41,7 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
   };
 
   const handleBackToLogin = () => {
-    navigate('/login'); // Reemplaza '/login' con la ruta correcta de tu pantalla de inicio de sesión
+    navigate('/login');
   };
 
   return (

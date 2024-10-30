@@ -13,6 +13,7 @@
       "max_length": "El campo deberia tener como máximo {{max}} caracteres",
       "min_value": "El valor deberia ser mayor o igual a {{min}}",
       "max_value": "El valor deberia ser menor o igual a {{max}}",
+      "passwords_must_match": "Las contraseñas deben coincidir",
       "email": "El campo deberia ser un email válido"
     }
   },
@@ -65,7 +66,8 @@
     },
     "OTPVerification": {
       "title": "Revisa tu correo",
-      "body": "¡Casi listo! Te mandamos un email con un código de 5 dígitos. Úsalo aquí para crear una nueva contraseña y seguir disfrutando de Reco.",
+      "body": "¡Casi listo! Te mandamos un email con un código de 6 dígitos. Úsalo aquí para crear una nueva contraseña y seguir disfrutando de Reco.",
+      "otp_placeholder": "Ingresa tu código de 6 dígitos",
       "otp_error": "El código de verificación debe ser numérico",
       "otp_required": "El código de verificación es obligatorio",
       "otp_complete": "El código de verificación debe tener 5 dígitos",
@@ -84,7 +86,7 @@
     },
     "resetSuccess": {
       "title": "¡Contraseña restablecida!",
-      "body": "Tu contraseña se ha cambiado con éxito. Haz clic en 'Confirmar' para establecer una nueva contraseña.",
+      "body": "Tu contraseña se restableció con éxito. Haz clic en 'Confirmar' para establecer una nueva contraseña.",
       "confirm": "Confirmar"
     },
     "updateSuccess": {

@@ -9,7 +9,6 @@ import { ButtonAtom, InputAtom, TextAtom } from '../../../../components/atoms';
 import { useAppDispatch } from '../../../../hooks/useAppDispatch';
 import AppLogo from '../../../../components/molecules/AppLogo';
 
-// Agregamos el tipo para la prop onOtpReceived
 interface OTPVerificationProps {
   onOtpReceived: (otp: string) => void;
   onNext: () => void;
@@ -23,7 +22,6 @@ const OTPVerification: React.FC<OTPVerificationProps> = ({
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [errorMsg, setErrorMsg] = useState('');
-  //console.warn(otp);
 
   const validationSchema = Yup.object({
     otp: Yup.string()
@@ -35,8 +33,7 @@ const OTPVerification: React.FC<OTPVerificationProps> = ({
     try {
       console.log('OTP ingresado:', values.otp);
       onOtpReceived(values.otp);
-      // Aquí realizarías la verificación de OTP con la API y llamas a `onNext` si es exitoso.
-      onNext(); // Avanza al siguiente paso
+      onNext();
     } catch (error) {
       console.error('Error al verificar OTP:', error);
       setErrorMsg(t('auth.OTPVerification.error'));
@@ -134,7 +131,6 @@ const OTPVerification: React.FC<OTPVerificationProps> = ({
                     </TextAtom>
                   </Box>
 
-                  {/* Input único de OTP */}
                   <InputAtom
                     name="otp"
                     type="text"

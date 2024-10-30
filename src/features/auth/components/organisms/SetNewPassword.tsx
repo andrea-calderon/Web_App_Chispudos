@@ -8,9 +8,8 @@ import { useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 import { ButtonAtom, InputAtom, TextAtom } from '../../../../components/atoms';
 import { useAppDispatch } from '../../../../hooks/useAppDispatch';
-import { useUpdatePasswordMutation } from '../../../../services/api'; // Asegúrate de tener esta mutación
+import { useUpdatePasswordMutation } from '../../../../services/api';
 import { logger } from '../../../../utils/logger';
-import { LoginValues } from '../../../../types/api/apiRequests';
 import AppLogo from '../../../../components/molecules/AppLogo';
 
 interface SetNewPasswordProps {
@@ -46,9 +45,8 @@ const SetNewPassword: React.FC<SetNewPasswordProps> = ({ otp, onSuccess }) => {
     }: FormikHelpers<{ newPassword: string; confirmPassword: string }>,
   ) => {
     try {
-      // Llama a tu mutación para actualizar la contraseña aquí
       await updatePassword({ otp, newPassword: values.newPassword }).unwrap();
-      onSuccess(); // Llama a onSuccess para proceder a la pantalla de éxito
+      onSuccess();
     } catch (error) {
       logger('error', error, 'SetNewPassword.tsx.handleSubmit', 'Web');
       setErrorMsg(t('auth.error.updating_password'));
@@ -60,7 +58,6 @@ const SetNewPassword: React.FC<SetNewPasswordProps> = ({ otp, onSuccess }) => {
     setShowPassword((prev) => !prev);
   }, []);
 
-  // Definición del icono para mostrar/ocultar contraseña
   const rightIcon = (
     <IconButton
       onClick={togglePasswordVisibility}
@@ -145,6 +142,18 @@ const SetNewPassword: React.FC<SetNewPasswordProps> = ({ otp, onSuccess }) => {
                   >
                     {t('auth.SetNewPass.title')}
                   </TextAtom>
+                  <Box>
+                    <TextAtom
+                      variant="body"
+                      size="medium"
+                      sx={{
+                        textAlign: 'left',
+                        textTransform: 'none',
+                      }}
+                    >
+                      {t('auth.SetNewPass.body')}
+                    </TextAtom>
+                  </Box>
                 </Grid>
                 <Grid item xs={12}>
                   <InputAtom

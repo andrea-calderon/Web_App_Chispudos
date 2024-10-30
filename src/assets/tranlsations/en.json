@@ -5,6 +5,17 @@
       "login": "Login"
     }
   },
+  "forms": {
+    "commons": {
+      "required": "This field is required",
+      "min_length": "The field should have at least {{min}} characters",
+      "max_length": "The field should have at most {{max}} characters",
+      "min_value": "The value should be greater than or equal to {{min}}",
+      "max_value": "The value should be less than or equal to {{max}}",
+      "passwords_must_match": "Passwords must match",
+      "email": "The field should be a valid email"
+    }
+  },
   "auth": {
     "slider_intro": {
       "title_1": "Find the expert you need in minutes.",
@@ -54,7 +65,8 @@
     },
   "OTPVerification": {
       "title": "Check you email",
-      "body": "Almost done! We'll send you an email with a 5-digit code. Use it here to create a new password and continue enjoying Reco.",
+      "body": "Almost done! We'll send you an email with a 6-digit code. Use it here to create a new password and continue enjoying Reco.",
+      "otp_placeholder": "Enter your 6-digit code",
       "otp_error": "Verification code must be a number",
       "otp_required": "Verification code is required",
       "otp_complete": "Verification code must be 5 digits",
