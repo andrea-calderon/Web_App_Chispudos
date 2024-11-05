@@ -1,34 +1,68 @@
-import { Box, Container, Grid } from '@mui/material';
-import { Form, Formik } from 'formik';
+import React, { useCallback, useState } from 'react';
+import { Box, Container, Grid, IconButton } from '@mui/material';
+import { Form, Formik, FormikHelpers } from 'formik';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
+import { useSignupMutation } from '../../../../services/api';
 import { ButtonAtom, InputAtom, TextAtom } from '../../../../components/atoms';
+import { logger } from '../../../../utils/logger';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
+import AppLogo from '../../../../components/molecules/AppLogo';
 
-interface SignupProps {
-  onSignup: (values: {
-    username: string;
-    email: string;
-    password: string;
-  }) => Promise<void>;
+type SignupValues = {
+  username: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
 }
 
-const validationSchema = Yup.object({
-  username: Yup.string().required('Username is required'),
-  email: Yup.string()
-    .email('Invalid email format')
-    .required('Email is required'),
-  password: Yup.string()
-    .min(6, 'Password must be at least 6 characters')
-    .required('Password is required'),
-  confirmPassword: Yup.string()
-    .oneOf([Yup.ref('password'), undefined], 'Passwords must match')
-    .required('Confirm password is required'),
-});
-
-const Signup: React.FC<SignupProps> = ({ onSignup }) => {
+const Signup: React.FC = () => {
+  const [showPassword, setShowPassword] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
   const { t } = useTranslation();
+  const [onSignup] = useSignupMutation();
   const navigate = useNavigate();
+
+  const validationSchema = Yup.object({
+    email: Yup.string()
+      .email(t('forms.commons.email'))
+      .required(t('forms.commons.required')),
+    password: Yup.string()
+      .min(6, t('forms.commons.min_length', { min: 6 }))
+      .required(t('forms.commons.required')),
+    confirmPassword: Yup.string()
+      .oneOf([Yup.ref('password'), undefined], 'Passwords must match')
+      .required(t('forms.commons.required')),
+  });
+
+  const handleSignup = async (values: SignupValues) => {
+    try {
+      await onSignup(values);
+    } catch (error) {
+      logger('error', error, 'Signup.tsx.handleSignup', 'Web');
+    }
+  }
+
+  const handleSubmit = async (values: SignupValues, { setSubmitting }: FormikHelpers<SignupValues>) => {
+    console.log('values', values);
+    await handleSignup(values);
+    setSubmitting(false);
+  }
+
+  const togglePasswordVisibility = useCallback(() => {
+    setShowPassword((prev) => !prev);
+  }, []);
+
+  const rightIcon = (
+    <IconButton
+      onClick={togglePasswordVisibility}
+      onMouseDown={(e) => e.preventDefault()}
+      edge="end"
+    >
+      {showPassword ? <VisibilityOff /> : <Visibility />}
+    </IconButton>
+  );
 
   return (
     <Container
@@ -65,13 +99,12 @@ const Signup: React.FC<SignupProps> = ({ onSignup }) => {
             justifyContent: 'center',
             alignItems: 'center',
             gap: '10px',
-            width: '181.47px',
-            height: '36.9px',
+            mb: '30px',
           }}
         >
-          <AppLogo maxWidth="250px" />
+          <AppLogo maxWidth='250px' />
         </Box>
-        <Box sx={{ height: '75px' }} />
+        <Box sx={{ height: '100px' }} />
         <Formik
           initialValues={{
             username: '',
@@ -80,21 +113,10 @@ const Signup: React.FC<SignupProps> = ({ onSignup }) => {
             confirmPassword: '',
           }}
           validationSchema={validationSchema}
-          onSubmit={async (values, { setSubmitting, setFieldError }) => {
-            try {
-              await onSignup(values); // Usamos la función onSignup que recibimos como prop
-            } catch {
-              setFieldError('username', t('signupScreen.errorOccurred'));
-              setFieldError('email', t('signupScreen.errorOccurred'));
-              setFieldError('password', t('signupScreen.errorOccurred'));
-              setFieldError('confirmPassword', t('signupScreen.errorOccurred'));
-            } finally {
-              setSubmitting(false);
-            }
-          }}
+          onSubmit={handleSubmit}
         >
           {({ isSubmitting, touched, errors }) => (
-            <Form style={{ width: '350px' }}>
+            <Form style={{ width: '350px' }} >
               <Grid
                 container
                 spacing={2}
@@ -103,27 +125,13 @@ const Signup: React.FC<SignupProps> = ({ onSignup }) => {
               >
                 <Grid item xs={12}>
                   <InputAtom
-                    name="username"
-                    type="text"
-                    variant="underlined"
-                    label={t('auth.signup.username')}
-                    placeholder={t('auth.signup.username')}
-                    error={touched.username && !!errors.username}
-                    helperText={errors.username}
-                    fullWidth
-                    sx={{ width: '100%', maxWidth: '328px' }}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <InputAtom
                     name="email"
                     type="email"
                     autoComplete="email"
                     variant="underlined"
-                    label={t('auth.signup.email')}
-                    placeholder={t('auth.signup.email')}
-                    error={touched.email && !!errors.email}
-                    helperText={errors.email}
+                    label={t('auth.register.emailLabel')}
+                    placeholder={t('auth.register.emailLabel')}
+                    errorMsg={errors.email}
                     fullWidth
                     sx={{ width: '100%', maxWidth: '328px' }}
                   />
@@ -131,12 +139,12 @@ const Signup: React.FC<SignupProps> = ({ onSignup }) => {
                 <Grid item xs={12}>
                   <InputAtom
                     name="password"
-                    type="password"
+                    type={showPassword ? 'text' : 'password'}
+                    rightIcon={rightIcon}
                     variant="underlined"
-                    label={t('auth.signup.password')}
-                    placeholder={t('auth.signup.password')}
-                    error={touched.password && !!errors.password}
-                    helperText={errors.password}
+                    label={t('auth.register.passwordLabel')}
+                    placeholder={t('auth.register.passwordLabel')}
+                    errorMsg={errors.password}
                     fullWidth
                     sx={{ width: '100%', maxWidth: '328px' }}
                   />
@@ -144,12 +152,12 @@ const Signup: React.FC<SignupProps> = ({ onSignup }) => {
                 <Grid item xs={12}>
                   <InputAtom
                     name="confirmPassword"
-                    type="password"
+                    type={showPassword ? 'text' : 'password'}
+                    rightIcon={rightIcon}
                     variant="underlined"
-                    label={t('auth.signup.confirm_password')}
-                    placeholder={t('auth.signup.confirm_password')}
-                    error={touched.confirmPassword && !!errors.confirmPassword}
-                    helperText={errors.confirmPassword}
+                    label={t('auth.register.confirmPasswordLabel')}
+                    placeholder={t('auth.register.confirmPasswordLabel')}
+                    errorMsg={errors.confirmPassword}
                     fullWidth
                     sx={{ width: '100%', maxWidth: '328px' }}
                   />
@@ -160,7 +168,6 @@ const Signup: React.FC<SignupProps> = ({ onSignup }) => {
                     variant="filled"
                     fullWidth
                     disabled={isSubmitting}
-                    onClick={() => {}}
                     sx={{
                       mt: 2,
                       width: '100%',
@@ -168,7 +175,7 @@ const Signup: React.FC<SignupProps> = ({ onSignup }) => {
                       textTransform: 'none',
                     }}
                   >
-                    {t('auth.signup.title')}
+                    {t('auth.register.signup_title_button')}
                   </ButtonAtom>
                 </Grid>
                 <Box sx={{ height: '191px' }} />
@@ -192,14 +199,14 @@ const Signup: React.FC<SignupProps> = ({ onSignup }) => {
                       fontSize: 'inherit',
                     }}
                   >
-                    {t('auth.signup.have_account')}
+                    {t('auth.register.have_an_account')}
                     <ButtonAtom
                       type="button"
                       variant="text"
                       onClick={() => navigate('/login')}
                       sx={{ ml: 1, textTransform: 'none', fontSize: 'inherit' }}
                     >
-                      {t('auth.signup.login')}
+                      {t('auth.register.login_title_button')}
                     </ButtonAtom>
                   </TextAtom>
                 </Grid>
