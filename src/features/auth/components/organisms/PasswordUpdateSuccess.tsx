@@ -1,37 +1,17 @@
-import React, { useCallback, useState } from 'react';
-import { Box, Container, Grid, IconButton } from '@mui/material';
-import { Form, Formik, useFormik, FormikHelpers } from 'formik';
+import React from 'react';
+import { Box, Container, Grid } from '@mui/material';
+import { Form, Formik } from 'formik';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import * as Yup from 'yup';
 import { ButtonAtom, TextAtom } from '../../../../components/atoms';
-import { useAppDispatch } from '../../../../hooks/useAppDispatch';
-import { useLoginMutation } from '../../../../services/api';
 import SuccessImage from '../../../../assets/images/SuccessImage.svg';
 
 const PasswordUpdateSuccess: React.FC = () => {
   const { t } = useTranslation();
-  const dispatch = useAppDispatch();
-  const [login, { isLoading }] = useLoginMutation();
   const navigate = useNavigate();
 
-  const validationSchema = Yup.object({
-    otp: Yup.array()
-      .of(
-        Yup.string()
-          .matches(/^[0-9]$/, t('otp_error'))
-          .required(t('otp_required')),
-      )
-      .min(5, t('otp_complete'))
-      .required(),
-  });
-
-  const handleSubmit = async (
-    values: LoginValues,
-    { setSubmitting }: FormikHelpers<LoginValues>,
-  ) => {
-    await handleLogin(values);
-    setSubmitting(false);
+  const handleSubmit = () => {
+    navigate('/login');
   };
 
   return (
@@ -63,12 +43,8 @@ const PasswordUpdateSuccess: React.FC = () => {
         }}
       >
         <Box sx={{ height: '100px' }} />
-        <Formik
-          initialValues={{ email: '', password: '' }}
-          validationSchema={validationSchema}
-          onSubmit={handleSubmit}
-        >
-          {({ isSubmitting, touched, errors }) => (
+        <Formik initialValues={{}} onSubmit={handleSubmit}>
+          {() => (
             <Form style={{ width: '350px' }}>
               <Container>
                 <img
@@ -117,14 +93,11 @@ const PasswordUpdateSuccess: React.FC = () => {
                   <ButtonAtom
                     type="submit"
                     variant="filled"
-                    onClick={() => navigate('/login')}
                     fullWidth
-                    disabled={isSubmitting}
                     sx={{
                       mt: 2,
                       width: '100%',
                       maxWidth: '328px',
-                      Height: '328px',
                       textTransform: 'none',
                     }}
                   >
