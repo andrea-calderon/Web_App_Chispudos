@@ -69,7 +69,7 @@ const Signup: React.FC = () => {
             height: '36.9px',
           }}
         >
-          <AppLogo maxWidth='250px'  />
+          <AppLogo maxWidth="250px" />
         </Box>
         <Box sx={{ height: '75px' }} />
         <Formik

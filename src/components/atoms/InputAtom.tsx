@@ -1,8 +1,4 @@
-import {
-  InputAdornment,
-  TextField,
-  TextFieldProps,
-} from '@mui/material';
+import { InputAdornment, TextField, TextFieldProps } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import React from 'react';
 import TextAtom from './TextAtom';
@@ -129,7 +125,7 @@ const InputAtom: React.FC<InputAtomProps> = ({
               startAdornment: leftIcon ? (
                 <InputAdornment position="start">{leftIcon}</InputAdornment>
               ) : null,
-              endAdornment:rightIcon ? (
+              endAdornment: rightIcon ? (
                 <InputAdornment position="start">{rightIcon}</InputAdornment>
               ) : null,
             },

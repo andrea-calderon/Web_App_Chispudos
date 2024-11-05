@@ -29,8 +29,27 @@ export const api = createApi({
         body: credentials,
       }),
     }),
-    // Add other endpoints here
+    requestPasswordReset: builder.mutation<void, { email: string }>({
+      query: (body) => ({
+        url: 'request-password-reset/',
+        method: 'POST',
+        body,
+      }),
+    }),
+    updatePassword: builder.mutation<void, { otp: string; newPassword: string }>({
+      query: (body) => ({
+        url: 'reset-password/',
+        method: 'POST',
+        body,
+      }),
+    }),
+    // Agrega otros endpoints según sea necesario
   }),
 });
 
-export const { useGetExampleDataQuery, useLoginMutation } = api;
+export const {
+  useGetExampleDataQuery,
+  useLoginMutation,
+  useRequestPasswordResetMutation,
+  useUpdatePasswordMutation,
+} = api;

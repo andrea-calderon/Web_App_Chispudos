@@ -12,6 +12,8 @@ import { useAppSelector } from '../hooks/useAppSelector';
 import { selectAuth } from '../redux/slices/authSlice';
 import { ProfilePage } from '../features/profile/components/pages/ProfilePage';
 import { RegisterPage } from '../features/auth/components/pages/RegisterPage';
+import PasswordRecovery from '../features/auth/components/pages/PasswordRecovery';
+//import PasswordRecovery from './path/to/PasswordRecovery'; // Asegúrate de usar la ruta correcta
 
 const AppRoutes = () => {
   const authState = useAppSelector(selectAuth);
@@ -23,6 +25,7 @@ const AppRoutes = () => {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/" element={<LandingPage />} />
+          <Route path="/password-recovery" element={<PasswordRecovery />} />
 
           {/* Protected Routes */}
           <Route element={<ProtectedRoutesWrapper />}>

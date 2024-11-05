@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import { Box, Container, Grid, IconButton } from '@mui/material';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { Form, Formik, FormikHelpers } from 'formik';
+import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
+import { Form, Formik, useFormik, FormikHelpers } from 'formik';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
@@ -10,27 +10,26 @@ import { useAppDispatch } from '../../../../hooks/useAppDispatch';
 import { useLoginMutation } from '../../../../services/api';
 import { logger } from '../../../../utils/logger';
 import { loginSuccess } from '../../../../redux/slices/authSlice';
-import { LoginValues } from '../../../../types/api/apiRequests';
 import AppLogo from '../../../../components/molecules/AppLogo';
 
-const Login: React.FC = () => {
+const PasswordResetSuccess: React.FC<{ onNext: () => void }> = ({ onNext }) => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const [login, { isLoading }] = useLoginMutation();
   const navigate = useNavigate();
-  const [showPassword, setShowPassword] = useState(false);
-  const [errorMsg, setErrorMsg] = useState('');
 
   const validationSchema = Yup.object({
-    email: Yup.string()
-      .email(t('forms.commons.email'))
-      .required(t('forms.commons.required')),
-    password: Yup.string()
-      .min(6, t('forms.commons.min_length', { min: 6 }))
-      .required(t('forms.commons.required')),
+    otp: Yup.array()
+      .of(
+        Yup.string()
+          .matches(/^[0-9]$/, t('otp_error'))
+          .required(t('otp_required')),
+      )
+      .min(5, t('otp_complete'))
+      .required(),
   });
 
-  const handleLogin = async (values: LoginValues) => {
+  const handleLogin = async (values: { email: string; password: string }) => {
     try {
       const result = await login(values).unwrap();
       if (result.success) {
@@ -53,20 +52,6 @@ const Login: React.FC = () => {
     await handleLogin(values);
     setSubmitting(false);
   };
-
-  const togglePasswordVisibility = useCallback(() => {
-    setShowPassword((prev) => !prev);
-  }, []);
-
-  const rightIcon = (
-    <IconButton
-      onClick={togglePasswordVisibility}
-      onMouseDown={(e) => e.preventDefault()}
-      edge="end"
-    >
-      {showPassword ? <VisibilityOff /> : <Visibility />}
-    </IconButton>
-  );
 
   return (
     <Container
@@ -116,6 +101,15 @@ const Login: React.FC = () => {
         >
           {({ isSubmitting, touched, errors }) => (
             <Form style={{ width: '350px' }}>
+              <IconButton
+                sx={{
+                  alignSelf: 'flex-start',
+                  marginBottom: '20px',
+                  bgcolor: '#f5f5f5',
+                }}
+              >
+                <KeyboardArrowLeftIcon />
+              </IconButton>
               <Grid
                 container
                 spacing={2}
@@ -123,61 +117,51 @@ const Login: React.FC = () => {
                 justifyContent="center"
               >
                 <Grid item xs={12}>
-                  <InputAtom
-                    name="email"
-                    type="email"
-                    variant="underlined"
-                    label={t('auth.login.email')}
-                    placeholder={t('auth.login.email')}
-                    errorMsg={errors.email || errorMsg}
-                    fullWidth
-                    sx={{ width: '100%', maxWidth: '328px' }}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <InputAtom
-                    name="password"
-                    type={showPassword ? 'text' : 'password'}
-                    variant="underlined"
-                    label={t('auth.login.password')}
-                    placeholder={t('auth.login.password')}
-                    errorMsg={errors.password || errorMsg}
-                    rightIcon={rightIcon}
-                    fullWidth
-                    sx={{ width: '100%', maxWidth: '328px' }}
-                  />
+                  <Box>
+                    <TextAtom
+                      variant="title"
+                      size="large"
+                      sx={{
+                        textAlign: 'left',
+                        textTransform: 'none',
+                        fontWeight: 'bold',
+                      }}
+                    >
+                      {t('auth.resetSuccess.title')}
+                    </TextAtom>
+                  </Box>
+                  <Box>
+                    <TextAtom
+                      variant="body"
+                      size="medium"
+                      sx={{
+                        textAlign: 'left',
+                        textTransform: 'none',
+                      }}
+                    >
+                      {t('auth.resetSuccess.body')}
+                    </TextAtom>
+                  </Box>
                 </Grid>
                 <Grid item xs={12}>
                   <ButtonAtom
                     type="submit"
                     variant="filled"
+                    onClick={onNext} // Avanza al paso 4 en PasswordRecovery.tsx
                     fullWidth
                     disabled={isSubmitting}
                     sx={{
                       mt: 2,
                       width: '100%',
                       maxWidth: '328px',
+                      Height: '328px',
                       textTransform: 'none',
                     }}
                   >
-                    {t('auth.login.title')}
+                    {t('auth.resetSuccess.confirm')}
                   </ButtonAtom>
                 </Grid>
-                <Grid item xs={12}>
-                  <ButtonAtom
-                    type="button"
-                    variant="text"
-                    fullWidth
-                    onClick={() => navigate('/password-recovery')}
-                    sx={{
-                      width: '100%',
-                      maxWidth: '328px',
-                      textTransform: 'none',
-                    }}
-                  >
-                    {t('auth.login.forgot_password')}
-                  </ButtonAtom>
-                </Grid>
+
                 <Box sx={{ height: '191px' }} />
                 <Grid
                   item
@@ -189,28 +173,7 @@ const Login: React.FC = () => {
                     alignItems: 'center',
                     textAlign: 'center',
                   }}
-                >
-                  <TextAtom
-                    variant="body"
-                    size="small"
-                    sx={{
-                      textAlign: 'center',
-                      textTransform: 'none',
-                      fontSize: 'inherit',
-                    }}
-                  >
-                    {t('auth.login.dont_have_account')}
-                    <ButtonAtom
-                      type="button"
-                      variant="text"
-                      disabled={isSubmitting || isLoading}
-                      onClick={() => navigate('/register')}
-                      sx={{ ml: 1, textTransform: 'none', fontSize: 'inherit' }}
-                    >
-                      {t('auth.login.register')}
-                    </ButtonAtom>
-                  </TextAtom>
-                </Grid>
+                ></Grid>
               </Grid>
             </Form>
           )}
@@ -220,4 +183,4 @@ const Login: React.FC = () => {
   );
 };
 
-export default Login;
+export default PasswordResetSuccess;

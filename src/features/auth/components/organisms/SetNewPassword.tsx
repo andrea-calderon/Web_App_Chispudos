@@ -1,5 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import { Box, Container, Grid, IconButton } from '@mui/material';
+import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { Form, Formik, FormikHelpers } from 'formik';
 import { useTranslation } from 'react-i18next';
@@ -7,50 +8,49 @@ import { useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 import { ButtonAtom, InputAtom, TextAtom } from '../../../../components/atoms';
 import { useAppDispatch } from '../../../../hooks/useAppDispatch';
-import { useLoginMutation } from '../../../../services/api';
+import { useUpdatePasswordMutation } from '../../../../services/api';
 import { logger } from '../../../../utils/logger';
-import { loginSuccess } from '../../../../redux/slices/authSlice';
-import { LoginValues } from '../../../../types/api/apiRequests';
 import AppLogo from '../../../../components/molecules/AppLogo';
 
-const Login: React.FC = () => {
+interface SetNewPasswordProps {
+  otp: string;
+  onSuccess: () => void;
+}
+
+const SetNewPassword: React.FC<SetNewPasswordProps> = ({ otp, onSuccess }) => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
-  const [login, { isLoading }] = useLoginMutation();
+  const [updatePassword] = useUpdatePasswordMutation();
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
+  console.warn({ otp });
 
   const validationSchema = Yup.object({
-    email: Yup.string()
-      .email(t('forms.commons.email'))
-      .required(t('forms.commons.required')),
-    password: Yup.string()
+    newPassword: Yup.string()
       .min(6, t('forms.commons.min_length', { min: 6 }))
+      .required(t('forms.commons.required')),
+    confirmPassword: Yup.string()
+      .oneOf(
+        [Yup.ref('newPassword'), null],
+        t('forms.commons.passwords_must_match'),
+      )
       .required(t('forms.commons.required')),
   });
 
-  const handleLogin = async (values: LoginValues) => {
-    try {
-      const result = await login(values).unwrap();
-      if (result.success) {
-        const { token, user } = result.data;
-        dispatch(loginSuccess({ user, token }));
-        navigate('/home');
-      } else {
-        setErrorMsg(result.message);
-      }
-    } catch (error) {
-      logger('error', error, 'Login.tsx.handleLogin', 'Web');
-      setErrorMsg(t('auth.login.form.error.invalid_acc'));
-    }
-  };
-
   const handleSubmit = async (
-    values: LoginValues,
-    { setSubmitting }: FormikHelpers<LoginValues>,
+    values: { newPassword: string; confirmPassword: string },
+    {
+      setSubmitting,
+    }: FormikHelpers<{ newPassword: string; confirmPassword: string }>,
   ) => {
-    await handleLogin(values);
+    try {
+      await updatePassword({ otp, newPassword: values.newPassword }).unwrap();
+      onSuccess();
+    } catch (error) {
+      logger('error', error, 'SetNewPassword.tsx.handleSubmit', 'Web');
+      setErrorMsg(t('auth.error.updating_password'));
+    }
     setSubmitting(false);
   };
 
@@ -108,14 +108,22 @@ const Login: React.FC = () => {
         >
           <AppLogo maxWidth="250px" />
         </Box>
-        <Box sx={{ height: '100px' }} />
         <Formik
-          initialValues={{ email: '', password: '' }}
+          initialValues={{ newPassword: '', confirmPassword: '' }}
           validationSchema={validationSchema}
           onSubmit={handleSubmit}
         >
           {({ isSubmitting, touched, errors }) => (
             <Form style={{ width: '350px' }}>
+              <IconButton
+                sx={{
+                  alignSelf: 'flex-start',
+                  marginBottom: '20px',
+                  bgcolor: '#f5f5f5',
+                }}
+              >
+                <KeyboardArrowLeftIcon />
+              </IconButton>
               <Grid
                 container
                 spacing={2}
@@ -123,25 +131,49 @@ const Login: React.FC = () => {
                 justifyContent="center"
               >
                 <Grid item xs={12}>
+                  <TextAtom
+                    variant="title"
+                    size="large"
+                    sx={{
+                      textAlign: 'left',
+                      textTransform: 'none',
+                      fontWeight: 'bold',
+                    }}
+                  >
+                    {t('auth.SetNewPass.title')}
+                  </TextAtom>
+                  <Box>
+                    <TextAtom
+                      variant="body"
+                      size="medium"
+                      sx={{
+                        textAlign: 'left',
+                        textTransform: 'none',
+                      }}
+                    >
+                      {t('auth.SetNewPass.body')}
+                    </TextAtom>
+                  </Box>
+                </Grid>
+                <Grid item xs={12}>
                   <InputAtom
-                    name="email"
-                    type="email"
-                    variant="underlined"
-                    label={t('auth.login.email')}
-                    placeholder={t('auth.login.email')}
-                    errorMsg={errors.email || errorMsg}
+                    name="newPassword"
+                    type={showPassword ? 'text' : 'password'}
+                    variant="outlined"
+                    label={t('auth.SetNewPass.placeholder1')}
+                    errorMsg={errors.newPassword || errorMsg}
+                    rightIcon={rightIcon}
                     fullWidth
-                    sx={{ width: '100%', maxWidth: '328px' }}
+                    sx={{ marginTop: '20px', width: '100%', maxWidth: '328px' }}
                   />
                 </Grid>
                 <Grid item xs={12}>
                   <InputAtom
-                    name="password"
+                    name="confirmPassword"
                     type={showPassword ? 'text' : 'password'}
-                    variant="underlined"
-                    label={t('auth.login.password')}
-                    placeholder={t('auth.login.password')}
-                    errorMsg={errors.password || errorMsg}
+                    variant="outlined"
+                    label={t('auth.SetNewPass.placeholder2')}
+                    errorMsg={errors.confirmPassword || errorMsg}
                     rightIcon={rightIcon}
                     fullWidth
                     sx={{ width: '100%', maxWidth: '328px' }}
@@ -160,57 +192,10 @@ const Login: React.FC = () => {
                       textTransform: 'none',
                     }}
                   >
-                    {t('auth.login.title')}
-                  </ButtonAtom>
-                </Grid>
-                <Grid item xs={12}>
-                  <ButtonAtom
-                    type="button"
-                    variant="text"
-                    fullWidth
-                    onClick={() => navigate('/password-recovery')}
-                    sx={{
-                      width: '100%',
-                      maxWidth: '328px',
-                      textTransform: 'none',
-                    }}
-                  >
-                    {t('auth.login.forgot_password')}
+                    {t('auth.SetNewPass.update')}
                   </ButtonAtom>
                 </Grid>
                 <Box sx={{ height: '191px' }} />
-                <Grid
-                  item
-                  xs={12}
-                  sx={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    textAlign: 'center',
-                  }}
-                >
-                  <TextAtom
-                    variant="body"
-                    size="small"
-                    sx={{
-                      textAlign: 'center',
-                      textTransform: 'none',
-                      fontSize: 'inherit',
-                    }}
-                  >
-                    {t('auth.login.dont_have_account')}
-                    <ButtonAtom
-                      type="button"
-                      variant="text"
-                      disabled={isSubmitting || isLoading}
-                      onClick={() => navigate('/register')}
-                      sx={{ ml: 1, textTransform: 'none', fontSize: 'inherit' }}
-                    >
-                      {t('auth.login.register')}
-                    </ButtonAtom>
-                  </TextAtom>
-                </Grid>
               </Grid>
             </Form>
           )}
@@ -220,4 +205,4 @@ const Login: React.FC = () => {
   );
 };
 
-export default Login;
+export default SetNewPassword;

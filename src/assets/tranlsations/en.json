@@ -5,6 +5,17 @@
       "login": "Login"
     }
   },
+  "forms": {
+    "commons": {
+      "required": "This field is required",
+      "min_length": "The field should have at least {{min}} characters",
+      "max_length": "The field should have at most {{max}} characters",
+      "min_value": "The value should be greater than or equal to {{min}}",
+      "max_value": "The value should be less than or equal to {{max}}",
+      "passwords_must_match": "Passwords must match",
+      "email": "The field should be a valid email"
+    }
+  },
   "auth": {
     "slider_intro": {
       "title_1": "Find the expert you need in minutes.",
@@ -44,6 +55,43 @@
       "privacy_policy": "Privacy Policy",
       "have_an_account": "Already have an account?",
       "login_title_button": "Log In"
+    },
+    "forget_pass": {
+      "title": "Forgot password?",
+      "body": "Please enter your email to reset the password.",
+      "emailTitle": "Tu cuenta de correo",
+      "emailText": "Ingresa tu correo",
+      "resetPassword": "Reset Password"
+    },
+  "OTPVerification": {
+      "title": "Check you email",
+      "body": "Almost done! We'll send you an email with a 6-digit code. Use it here to create a new password and continue enjoying Reco.",
+      "otp_placeholder": "Enter your 6-digit code",
+      "otp_error": "Verification code must be a number",
+      "otp_required": "Verification code is required",
+      "otp_complete": "Verification code must be 5 digits",
+      "verify_code": "Verify Code",
+      "did_not_receive": "Haven’t got the email yet?",
+      "resend": "Resend email"
+    },
+    "SetNewPass": {
+      "title": "Set a new password",
+      "body": "Create a new password. Ensure it differs from previous ones for security.",
+      "label1": "Password",
+      "placeholder1": "Enter your new password",
+      "label2": "Confirm Password",
+      "placeholder2": "Re-enter password",
+      "update": "Update Password"
+    },
+    "resetSuccess": {
+      "title": "¡Password reset!",
+      "body": "Your password has been successfully reset. click confirm to set a new password",
+      "confirm": "Confirm"
+    },
+    "updateSuccess": {
+      "title": "¡Successful!",
+      "body": "¡Congratulations! Your password has been changed. Click continue to login",
+      "continue": "Continue"
     }
     },
   "landing": {
