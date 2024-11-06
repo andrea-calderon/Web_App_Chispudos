@@ -11,7 +11,7 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 import AppLogo from '../../../../components/molecules/AppLogo';
 
 type SignupValues = {
-  username: string;
+  
   email: string;
   password: string;
   confirmPassword: string;
@@ -107,7 +107,7 @@ const Signup: React.FC = () => {
         <Box sx={{ height: '100px' }} />
         <Formik
           initialValues={{
-            username: '',
+            
             email: '',
             password: '',
             confirmPassword: '',

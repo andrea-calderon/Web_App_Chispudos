@@ -1,7 +1,8 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { RootState } from '../redux/store/store';
 import { selectAuth } from '../redux/slices/authSlice';
-import { UserResponseType, ApiResponseType, LoginValues } from '../types/api/apiResponses';
+import { UserResponseType, ApiResponseType} from '../types/api/apiResponses';
+import { LoginValues } from '../types/api/apiRequests';
 
 export const api = createApi({
   reducerPath: 'api',
@@ -45,7 +46,7 @@ export const api = createApi({
     }),
     signup: builder.mutation({
       query: (userData) => ({
-        url: 'signup/',
+        url: 'register/',
         method: 'POST',
         body: userData,
         headers: {
