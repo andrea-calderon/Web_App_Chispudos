@@ -1,35 +1,68 @@
-import { Box, Container, Grid } from '@mui/material';
-import { Field, Form, Formik } from 'formik';
+import React, { useCallback, useState } from 'react';
+import { Box, Container, Grid, IconButton } from '@mui/material';
+import { Form, Formik, FormikHelpers } from 'formik';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
-import { TextAtom, ButtonAtom, InputAtom } from '../../../../components/atoms';
+import { useSignupMutation } from '../../../../services/api';
+import { ButtonAtom, InputAtom, TextAtom } from '../../../../components/atoms';
+import { logger } from '../../../../utils/logger';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 import AppLogo from '../../../../components/molecules/AppLogo';
 
+type SignupValues = {
+  
+  email: string;
+  password: string;
+  confirmPassword: string;
+}
+
 const Signup: React.FC = () => {
-  const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
   const { t } = useTranslation();
+  const [onSignup] = useSignupMutation();
+  const navigate = useNavigate();
 
   const validationSchema = Yup.object({
-    username: Yup.string()
-      .matches(
-        /^[a-zA-Z0-9_]+$/,
-        'Username can only contain letters, numbers, and underscores',
-      )
-      .required('Username is required'),
-
     email: Yup.string()
-      .email('Invalid email address')
-      .required('Email is required'),
-
+      .email(t('forms.commons.email'))
+      .required(t('forms.commons.required')),
     password: Yup.string()
-      .min(6, 'Password must be at least 6 characters')
-      .required('Password is required'),
-
+      .min(6, t('forms.commons.min_length', { min: 6 }))
+      .required(t('forms.commons.required')),
     confirmPassword: Yup.string()
-      .oneOf([Yup.ref('password')], 'Passwords must match')
-      .required('Confirm Password is required'),
+      .oneOf([Yup.ref('password'), undefined], 'Passwords must match')
+      .required(t('forms.commons.required')),
   });
+
+  const handleSignup = async (values: SignupValues) => {
+    try {
+      await onSignup(values);
+    } catch (error) {
+      logger('error', error, 'Signup.tsx.handleSignup', 'Web');
+    }
+  }
+
+  const handleSubmit = async (values: SignupValues, { setSubmitting }: FormikHelpers<SignupValues>) => {
+    console.log('values', values);
+    await handleSignup(values);
+    setSubmitting(false);
+  }
+
+  const togglePasswordVisibility = useCallback(() => {
+    setShowPassword((prev) => !prev);
+  }, []);
+
+  const rightIcon = (
+    <IconButton
+      onClick={togglePasswordVisibility}
+      onMouseDown={(e) => e.preventDefault()}
+      edge="end"
+    >
+      {showPassword ? <VisibilityOff /> : <Visibility />}
+    </IconButton>
+  );
 
   return (
     <Container
@@ -42,6 +75,7 @@ const Signup: React.FC = () => {
         alignItems: 'center',
         bgcolor: '#FFF',
         position: 'relative',
+        padding: 0,
       }}
     >
       <Box
@@ -65,108 +99,65 @@ const Signup: React.FC = () => {
             justifyContent: 'center',
             alignItems: 'center',
             gap: '10px',
-            width: '181.47px',
-            height: '36.9px',
+            mb: '30px',
           }}
         >
-          <AppLogo maxWidth="250px" />
+          <AppLogo maxWidth='250px' />
         </Box>
-        <Box sx={{ height: '75px' }} />
+        <Box sx={{ height: '100px' }} />
         <Formik
           initialValues={{
-            username: '',
+            
             email: '',
             password: '',
             confirmPassword: '',
           }}
           validationSchema={validationSchema}
-          onSubmit={async (values, { setSubmitting, setFieldError }) => {
-            try {
-              if (values.email === '' && values.password === '') {
-                navigate('/login');
-              } else {
-                setFieldError('email', t('auth.register.invalidCredentials'));
-                setFieldError(
-                  'password',
-                  t('auth.register.invalidCredentials'),
-                );
-              }
-            } catch {
-              setFieldError('email', t('auth.register.errorOccurred'));
-              setFieldError('password', t('auth.register.errorOccurred'));
-            } finally {
-              setSubmitting(false);
-            }
-          }}
+          onSubmit={handleSubmit}
         >
           {({ isSubmitting, touched, errors }) => (
-            <Form style={{ width: '350px' }}>
+            <Form style={{ width: '350px' }} >
               <Grid
                 container
-                spacing={1.5}
+                spacing={2}
                 direction="column"
                 justifyContent="center"
               >
                 <Grid item xs={12}>
-                  <Field
-                    as={InputAtom}
-                    name="username"
-                    variant="underlined"
-                    label={t('auth.register.usernameLabel')}
-                    placeholder={t('auth.register.usernamePlaceholder')}
-                    error={touched.username && !!errors.username}
-                    helperText={
-                      touched.username && errors.username ? errors.username : ''
-                    }
-                    fullWidth
-                    sx={{ width: '100%', maxWidth: '328px' }}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <Field
-                    as={InputAtom}
+                  <InputAtom
                     name="email"
+                    type="email"
+                    autoComplete="email"
                     variant="underlined"
                     label={t('auth.register.emailLabel')}
-                    placeholder={t('auth.register.emailPlaceholder')}
-                    error={touched.email && !!errors.email}
-                    helperText={
-                      touched.email && errors.email ? errors.email : ''
-                    }
+                    placeholder={t('auth.register.emailLabel')}
+                    errorMsg={errors.email}
                     fullWidth
                     sx={{ width: '100%', maxWidth: '328px' }}
                   />
                 </Grid>
                 <Grid item xs={12}>
-                  <Field
-                    as={InputAtom}
+                  <InputAtom
                     name="password"
-                    type="password"
+                    type={showPassword ? 'text' : 'password'}
+                    rightIcon={rightIcon}
                     variant="underlined"
                     label={t('auth.register.passwordLabel')}
-                    placeholder={t('auth.register.passwordPlaceholder')}
-                    error={touched.password && !!errors.password}
-                    helperText={
-                      touched.password && errors.password ? errors.password : ''
-                    }
+                    placeholder={t('auth.register.passwordLabel')}
+                    errorMsg={errors.password}
                     fullWidth
                     sx={{ width: '100%', maxWidth: '328px' }}
                   />
                 </Grid>
                 <Grid item xs={12}>
-                  <Field
-                    as={InputAtom}
+                  <InputAtom
                     name="confirmPassword"
-                    type="password"
+                    type={showPassword ? 'text' : 'password'}
+                    rightIcon={rightIcon}
                     variant="underlined"
                     label={t('auth.register.confirmPasswordLabel')}
-                    placeholder={t('auth.register.confirmPasswordPlaceholder')}
-                    error={touched.confirmPassword && !!errors.confirmPassword}
-                    helperText={
-                      touched.confirmPassword && errors.confirmPassword
-                        ? errors.confirmPassword
-                        : ''
-                    }
+                    placeholder={t('auth.register.confirmPasswordLabel')}
+                    errorMsg={errors.confirmPassword}
                     fullWidth
                     sx={{ width: '100%', maxWidth: '328px' }}
                   />
@@ -177,7 +168,6 @@ const Signup: React.FC = () => {
                     variant="filled"
                     fullWidth
                     disabled={isSubmitting}
-                    onClick={() => console.log('Button clicked!')}
                     sx={{
                       mt: 2,
                       width: '100%',
@@ -188,55 +178,7 @@ const Signup: React.FC = () => {
                     {t('auth.register.signup_title_button')}
                   </ButtonAtom>
                 </Grid>
-                <Box sx={{ height: '50px' }} />
-                <Grid
-                  item
-                  xs={12}
-                  sx={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    textAlign: 'center',
-                  }}
-                >
-                  <TextAtom
-                    variant="body"
-                    size="small"
-                    sx={{ fontSize: 'inherit' }}
-                  >
-                    {t('auth.register.agree_terms')}
-                    <ButtonAtom
-                      type="button"
-                      variant="text"
-                      onClick={() => console.log('Button clicked!')}
-                      sx={{
-                        display: 'inline',
-                        padding: 0,
-                        margin: '0 5px',
-                        fontSize: 'inherit',
-                        textTransform: 'none',
-                      }}
-                    >
-                      {t('auth.register.terms_of_service')}
-                    </ButtonAtom>
-                    {t('auth.register.and')}
-                    <ButtonAtom
-                      type="button"
-                      variant="text"
-                      onClick={() => console.log('Button clicked!')}
-                      sx={{
-                        display: 'inline',
-                        textTransform: 'none',
-                        fontSize: 'inherit',
-                        padding: 0,
-                        margin: '0 5px',
-                      }}
-                    >
-                      {t('auth.register.privacy_policy')}
-                    </ButtonAtom>
-                  </TextAtom>
-                </Grid>
-                <Box sx={{ height: '50px' }} />
+                <Box sx={{ height: '191px' }} />
                 <Grid
                   item
                   xs={12}
@@ -251,7 +193,11 @@ const Signup: React.FC = () => {
                   <TextAtom
                     variant="body"
                     size="small"
-                    sx={{ textAlign: 'center', fontSize: 'inherit' }}
+                    sx={{
+                      textAlign: 'center',
+                      textTransform: 'none',
+                      fontSize: 'inherit',
+                    }}
                   >
                     {t('auth.register.have_an_account')}
                     <ButtonAtom
