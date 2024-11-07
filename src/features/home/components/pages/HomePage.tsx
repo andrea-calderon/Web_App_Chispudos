@@ -2,9 +2,9 @@ import { UserLayout } from '../../../../components/templates/UserLayout';
 import { TextAtom } from '../../../../components/atoms';
 import ServicesCard from '../../../../components/atoms/ServicesCard';
 import { Box, Grid2 } from '@mui/material';
-import RequestForm from '../../../home/components/organisms/RequestForm';
 import Footer from '../../../../components/organisms/Footer';
 import HighlightedCategories from '../organisms/Categories';
+import SearchBar from '../../../../components/organisms/SearchBar';
 
 
 type ServicesSection = {
@@ -18,8 +18,6 @@ type ServicesSection = {
 };
 
 export const HomePage: React.FC = () => {
-  // const authState = useAppSelector(selectAuth);
-  // const { data } = useGetExampleDataQuery();
 
   const services: ServicesSection[] = [
     {
@@ -66,11 +64,11 @@ export const HomePage: React.FC = () => {
 
   return (
     <UserLayout>
+      <SearchBar />
       <TextAtom variant="display" size="medium" fontWeight="bold">
         Home Page
       </TextAtom>
       <HighlightedCategories />
-      {/* <RequestForm /> */}
       <Box sx={{ position: 'relative', padding: 4 }}>
         <TextAtom
           variant="title"
