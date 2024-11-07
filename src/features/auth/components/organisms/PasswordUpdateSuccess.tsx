@@ -1,6 +1,5 @@
 import React from 'react';
 import { Box, Container, Grid } from '@mui/material';
-import { Form, Formik } from 'formik';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { ButtonAtom, TextAtom } from '../../../../components/atoms';
@@ -43,84 +42,79 @@ const PasswordUpdateSuccess: React.FC = () => {
         }}
       >
         <Box sx={{ height: '100px' }} />
-        <Formik initialValues={{}} onSubmit={handleSubmit}>
-          {() => (
-            <Form style={{ width: '350px' }}>
-              <Container>
-                <img
-                  src={SuccessImage}
-                  alt="Ilustración de mujer sosteniendo un ícono de check"
-                  style={{
-                    alignSelf: 'flex-start',
-                    marginBottom: '20px',
-                  }}
-                />
-              </Container>
-              <Grid
-                container
-                spacing={2}
-                direction="column"
-                justifyContent="center"
+        <Grid
+          container
+          spacing={2}
+          direction="column"
+          justifyContent="center"
+          style={{ width: '350px' }}
+        >
+          <Grid item xs={12}>
+            <Container>
+              <img
+                src={SuccessImage}
+                alt="Ilustración de mujer sosteniendo un ícono de check"
+                style={{
+                  alignSelf: 'center',
+                  marginBottom: '20px',
+                }}
+              />
+            </Container>
+            <Box>
+              <TextAtom
+                variant="title"
+                size="large"
+                sx={{
+                  textAlign: 'left',
+                  textTransform: 'none',
+                  fontWeight: 'bold',
+                }}
               >
-                <Grid item xs={12}>
-                  <Box>
-                    <TextAtom
-                      variant="title"
-                      size="large"
-                      sx={{
-                        textAlign: 'left',
-                        textTransform: 'none',
-                        fontWeight: 'bold',
-                      }}
-                    >
-                      {t('auth.updateSuccess.title')}
-                    </TextAtom>
-                  </Box>
-                  <Box>
-                    <TextAtom
-                      variant="body"
-                      size="medium"
-                      sx={{
-                        textAlign: 'left',
-                        textTransform: 'none',
-                      }}
-                    >
-                      {t('auth.updateSuccess.body')}
-                    </TextAtom>
-                  </Box>
-                </Grid>
-                <Grid item xs={12}>
-                  <ButtonAtom
-                    type="submit"
-                    variant="filled"
-                    fullWidth
-                    sx={{
-                      mt: 2,
-                      width: '100%',
-                      maxWidth: '328px',
-                      textTransform: 'none',
-                    }}
-                  >
-                    {t('auth.updateSuccess.continue')}
-                  </ButtonAtom>
-                </Grid>
+                {t('auth.updateSuccess.title')}
+              </TextAtom>
+            </Box>
+            <Box>
+              <TextAtom
+                variant="body"
+                size="medium"
+                sx={{
+                  textAlign: 'left',
+                  textTransform: 'none',
+                }}
+              >
+                {t('auth.updateSuccess.body')}
+              </TextAtom>
+            </Box>
+            <Box>
+              <ButtonAtom
+                variant="filled"
+                fullWidth
+                onClick={handleSubmit}
+                sx={{
+                  mt: 2,
+                  width: '100%',
+                  maxWidth: '328px',
+                  textTransform: 'none',
+                }}
+              >
+                {t('auth.updateSuccess.continue')}
+              </ButtonAtom>
+            </Box>
+          </Grid>
 
-                <Box sx={{ height: '191px' }} />
-                <Grid
-                  item
-                  xs={12}
-                  sx={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    textAlign: 'center',
-                  }}
-                ></Grid>
-              </Grid>
-            </Form>
-          )}
-        </Formik>
+          <Box sx={{ height: '191px' }} />
+          <Grid
+            item
+            xs={12}
+            sx={{
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'center',
+              alignItems: 'center',
+              textAlign: 'center',
+            }}
+          ></Grid>
+        </Grid>
       </Box>
     </Container>
   );
