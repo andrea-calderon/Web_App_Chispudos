@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import ForgotPasswordForm from '../organisms/ForgotPasswordForm';
 import OTPVerification from '../organisms/OTPVerification';
-import PasswordResetSuccess from '../organisms/PasswordResetSuccess';
 import SetNewPassword from '../organisms/SetNewPassword';
 import PasswordUpdateSuccess from '../organisms/PasswordUpdateSuccess';
 import AuthLayout from '../templates/AuthLayout';
@@ -19,16 +18,12 @@ const PasswordRecovery = () => {
     setStep(2);
   };
 
-  const handleNextScreen = () => {
+  const handleNextToSetPassword = () => {
     setStep(3);
   };
 
-  const handleNextToSetPassword = () => {
-    setStep(4);
-  };
-
   const handlePasswordUpdated = () => {
-    setStep(5);
+    setStep(4);
   };
 
   return (
@@ -39,14 +34,13 @@ const PasswordRecovery = () => {
       {step === 2 && (
         <OTPVerification
           onOtpReceived={onOtpReceived}
-          onNext={handleNextScreen}
+          onNext={handleNextToSetPassword}
         />
       )}
-      {step === 3 && <PasswordResetSuccess onNext={handleNextToSetPassword} />}
-      {step === 4 && (
+      {step === 3 && (
         <SetNewPassword otp={otp} onSuccess={handlePasswordUpdated} />
       )}
-      {step === 5 && <PasswordUpdateSuccess />}
+      {step === 4 && <PasswordUpdateSuccess />}
     </AuthLayout>
   );
 };

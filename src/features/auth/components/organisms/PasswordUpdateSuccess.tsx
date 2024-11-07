@@ -1,37 +1,16 @@
-import React, { useCallback, useState } from 'react';
-import { Box, Container, Grid, IconButton } from '@mui/material';
-import { Form, Formik, useFormik, FormikHelpers } from 'formik';
+import React from 'react';
+import { Box, Container, Grid } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import * as Yup from 'yup';
 import { ButtonAtom, TextAtom } from '../../../../components/atoms';
-import { useAppDispatch } from '../../../../hooks/useAppDispatch';
-import { useLoginMutation } from '../../../../services/api';
 import SuccessImage from '../../../../assets/images/SuccessImage.svg';
 
 const PasswordUpdateSuccess: React.FC = () => {
   const { t } = useTranslation();
-  const dispatch = useAppDispatch();
-  const [login, { isLoading }] = useLoginMutation();
   const navigate = useNavigate();
 
-  const validationSchema = Yup.object({
-    otp: Yup.array()
-      .of(
-        Yup.string()
-          .matches(/^[0-9]$/, t('otp_error'))
-          .required(t('otp_required')),
-      )
-      .min(5, t('otp_complete'))
-      .required(),
-  });
-
-  const handleSubmit = async (
-    values: LoginValues,
-    { setSubmitting }: FormikHelpers<LoginValues>,
-  ) => {
-    await handleLogin(values);
-    setSubmitting(false);
+  const handleSubmit = () => {
+    navigate('/login');
   };
 
   return (
@@ -63,91 +42,79 @@ const PasswordUpdateSuccess: React.FC = () => {
         }}
       >
         <Box sx={{ height: '100px' }} />
-        <Formik
-          initialValues={{ email: '', password: '' }}
-          validationSchema={validationSchema}
-          onSubmit={handleSubmit}
+        <Grid
+          container
+          spacing={2}
+          direction="column"
+          justifyContent="center"
+          style={{ width: '350px' }}
         >
-          {({ isSubmitting, touched, errors }) => (
-            <Form style={{ width: '350px' }}>
-              <Container>
-                <img
-                  src={SuccessImage}
-                  alt="Ilustración de mujer sosteniendo un ícono de check"
-                  style={{
-                    alignSelf: 'flex-start',
-                    marginBottom: '20px',
-                  }}
-                />
-              </Container>
-              <Grid
-                container
-                spacing={2}
-                direction="column"
-                justifyContent="center"
+          <Grid item xs={12}>
+            <Container>
+              <img
+                src={SuccessImage}
+                alt="Ilustración de mujer sosteniendo un ícono de check"
+                style={{
+                  alignSelf: 'center',
+                  marginBottom: '20px',
+                }}
+              />
+            </Container>
+            <Box>
+              <TextAtom
+                variant="title"
+                size="large"
+                sx={{
+                  textAlign: 'left',
+                  textTransform: 'none',
+                  fontWeight: 'bold',
+                }}
               >
-                <Grid item xs={12}>
-                  <Box>
-                    <TextAtom
-                      variant="title"
-                      size="large"
-                      sx={{
-                        textAlign: 'left',
-                        textTransform: 'none',
-                        fontWeight: 'bold',
-                      }}
-                    >
-                      {t('auth.updateSuccess.title')}
-                    </TextAtom>
-                  </Box>
-                  <Box>
-                    <TextAtom
-                      variant="body"
-                      size="medium"
-                      sx={{
-                        textAlign: 'left',
-                        textTransform: 'none',
-                      }}
-                    >
-                      {t('auth.updateSuccess.body')}
-                    </TextAtom>
-                  </Box>
-                </Grid>
-                <Grid item xs={12}>
-                  <ButtonAtom
-                    type="submit"
-                    variant="filled"
-                    onClick={() => navigate('/login')}
-                    fullWidth
-                    disabled={isSubmitting}
-                    sx={{
-                      mt: 2,
-                      width: '100%',
-                      maxWidth: '328px',
-                      Height: '328px',
-                      textTransform: 'none',
-                    }}
-                  >
-                    {t('auth.updateSuccess.continue')}
-                  </ButtonAtom>
-                </Grid>
+                {t('auth.updateSuccess.title')}
+              </TextAtom>
+            </Box>
+            <Box>
+              <TextAtom
+                variant="body"
+                size="medium"
+                sx={{
+                  textAlign: 'left',
+                  textTransform: 'none',
+                }}
+              >
+                {t('auth.updateSuccess.body')}
+              </TextAtom>
+            </Box>
+            <Box>
+              <ButtonAtom
+                variant="filled"
+                fullWidth
+                onClick={handleSubmit}
+                sx={{
+                  mt: 2,
+                  width: '100%',
+                  maxWidth: '328px',
+                  textTransform: 'none',
+                }}
+              >
+                {t('auth.updateSuccess.continue')}
+              </ButtonAtom>
+            </Box>
+          </Grid>
 
-                <Box sx={{ height: '191px' }} />
-                <Grid
-                  item
-                  xs={12}
-                  sx={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    textAlign: 'center',
-                  }}
-                ></Grid>
-              </Grid>
-            </Form>
-          )}
-        </Formik>
+          <Box sx={{ height: '191px' }} />
+          <Grid
+            item
+            xs={12}
+            sx={{
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'center',
+              alignItems: 'center',
+              textAlign: 'center',
+            }}
+          ></Grid>
+        </Grid>
       </Box>
     </Container>
   );
