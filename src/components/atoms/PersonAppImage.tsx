@@ -14,6 +14,7 @@ export const PersonAppImage: React.FC<PersonAppImageProps> = ({
       alt="Initial screen"
       style={{
         borderRadius: '5%',
+        width: '90%',
       }}
     />
   );

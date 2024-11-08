@@ -6,10 +6,12 @@ import FeatureGuarantee from '../../components/organisms/FeatureGuarantee';
 import FeatureTestimonials from '../../components/organisms/FeatureTestimonials';
 import FeatureDownloadApp from '../../components/organisms/FeatureDownloadApp';
 import Footer from '../../../../components/organisms/Footer';
+import HighlightedCategories from '../../../home/components/organisms/Categories';
 
 export const LandingPage = () => {
   return (
     <LandingLayout>
+      <HighlightedCategories />
       <Grid2 container spacing={2} margin={3}>
         <Grid2 size={{ xs: 12, sm: 12, md: 6 }} mt={10}>
           <LandingForm />

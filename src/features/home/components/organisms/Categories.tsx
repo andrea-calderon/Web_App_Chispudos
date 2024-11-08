@@ -1,10 +1,9 @@
 import React from 'react';
 import {
-  Grid,
   Box,
   Card,
   CardContent,
-  Button,
+  IconButton,
   useMediaQuery,
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
@@ -27,12 +26,6 @@ const HighlightedCategories = () => {
   const { t } = useTranslation();
   const theme = useTheme();
 
-  const isDesktop = useMediaQuery(theme.breakpoints.up('lg'));
-  const isTablet = useMediaQuery(theme.breakpoints.between('sm', 'lg'));
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-
-  const itemsToShow = isDesktop ? 9 : isTablet ? 0 : 0;
-
   const categories = [
     { name: t('categories.cleaning'), icon: CleanIcon },
     { name: t('categories.mechanic'), icon: MechanicIcon },
@@ -47,8 +40,32 @@ const HighlightedCategories = () => {
     { name: t('categories.carwash'), icon: CarwashIcon },
   ];
 
+  const scrollContainerRef = React.useRef<HTMLDivElement>(null);
+
+  const scrollLeft = () => {
+    if (scrollContainerRef.current) {
+      const { scrollLeft, clientWidth, scrollWidth } = scrollContainerRef.current;
+      if (scrollLeft === 0) {
+        scrollContainerRef.current.scrollTo({ left: scrollWidth, behavior: 'smooth' });
+      } else {
+        scrollContainerRef.current.scrollBy({ left: -200, behavior: 'smooth' });
+      }
+    }
+  };
+
+  const scrollRight = () => {
+    if (scrollContainerRef.current) {
+      const { scrollLeft, clientWidth, scrollWidth } = scrollContainerRef.current;
+      if (scrollLeft + clientWidth >= scrollWidth) {
+        scrollContainerRef.current.scrollTo({ left: 0, behavior: 'smooth' });
+      } else {
+        scrollContainerRef.current.scrollBy({ left: 200, behavior: 'smooth' });
+      }
+    }
+  };
+
   return (
-    <Box sx={{ py: 5, position: 'relative' }}>
+    <Box sx={{ py: 5, position: 'relative', overflow: 'hidden' }}>
       <Box
         sx={{
           display: 'flex',
@@ -74,45 +91,60 @@ const HighlightedCategories = () => {
         </ButtonAtom>
       </Box>
 
-      {isDesktop && (
-        <Button
-          sx={{
-            position: 'absolute',
-            left: -20,
-            top: '60%',
-            transform: 'translateY(-50%)',
-            color: '#DADADA',
-            zIndex: 1,
-          }}
-        >
-          <ArrowBackIosIcon />
-        </Button>
-      )}
-
-      {isDesktop && (
-        <Button
-          sx={{
-            position: 'absolute',
-            right: -20,
-            top: '60%',
-            transform: 'translateY(-50%)',
-            color: '#DADADA',
-            zIndex: 1,
-          }}
-        >
-          <ArrowForwardIosIcon />
-        </Button>
-      )}
-
-      <Box
+      <IconButton
+        onClick={scrollLeft}
         sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          gap: 2,
-          overflowX: 'scroll',
+          position: 'absolute',
+          left: 10,
+          top: '50%',
+          transform: 'translateY(-50%)',
+          backgroundColor: 'rgba(255, 255, 255, 0.8)',
+          color: 'primary.main',
+          zIndex: 1,
+          '&:hover': {
+            backgroundColor: 'rgba(255, 255, 255, 1)',
+          },
+          padding: 1,
+          margin: 1,
         }}
       >
-        {categories.slice(0, itemsToShow).map((category, index) => (
+        <ArrowBackIosIcon />
+      </IconButton>
+
+      <IconButton
+        onClick={scrollRight}
+        sx={{
+          position: 'absolute',
+          right: 10,
+          top: '50%',
+          transform: 'translateY(-50%)',
+          backgroundColor: 'rgba(255, 255, 255, 0.8)',
+          color: 'primary.main',
+          zIndex: 1,
+          '&:hover': {
+            backgroundColor: 'rgba(255, 255, 255, 1)',
+          },
+          padding: 1,
+          margin: 1,
+        }}
+      >
+        <ArrowForwardIosIcon />
+      </IconButton>
+
+      <Box
+        ref={scrollContainerRef}
+        sx={{
+          display: 'flex',
+          overflowX: 'auto',
+          scrollbarWidth: 'none', // For Firefox
+          '&::-webkit-scrollbar': {
+            display: 'none', // For Chrome, Safari, and Opera
+          },
+          gap: 2,
+          padding: '10px 0',
+        }}
+      >
+        {categories.map((category, index) => (
           <Card
             key={index}
             sx={{
@@ -124,6 +156,7 @@ const HighlightedCategories = () => {
               boxShadow: 'none',
               minWidth: '125px',
               maxWidth: '125px',
+              flexShrink: 0,
             }}
           >
             <CardContent>
