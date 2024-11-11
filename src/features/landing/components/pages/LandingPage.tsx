@@ -7,6 +7,7 @@ import FeatureTestimonials from '../../components/organisms/FeatureTestimonials'
 import FeatureDownloadApp from '../../components/organisms/FeatureDownloadApp';
 import Footer from '../../../../components/organisms/Footer';
 import HighlightedCategories from '../../../home/components/organisms/Categories';
+import CategoriesSection from '../organisms/CategoriesSection';
 
 export const LandingPage = () => {
   return (
@@ -22,6 +23,7 @@ export const LandingPage = () => {
           </Box>
         </Grid2>
       </Grid2>
+      <CategoriesSection />
       <FeatureGuarantee />
       <FeatureTestimonials />
       <FeatureDownloadApp />
