@@ -89,7 +89,10 @@ const CategoriesSection: React.FC = () => {
             {categories.map((category, index) => (
               <SwiperSlide
                 key={index}
-                style={{ width: '350px', height: '400px' }}
+                style={{
+                  width: '350px',
+                  height: '400px',
+                }}
               >
                 <Box
                   sx={{
