@@ -8,7 +8,7 @@ interface Props {
 
 export const LandingLayout = ({ children }: Props) => {
   return (
-    <Box sx={{ flexGrow: 1 }} mx={15}>
+    <Box sx={{ flexGrow: 1 }} mx={2}>
       <ResponsiveAppBar />
       {children}
     </Box>
