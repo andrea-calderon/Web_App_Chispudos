@@ -100,6 +100,35 @@
       "category": "Garantía",
       "tittle": "Cuentas con una cobertura del 100% contratando y pagando con Chispudos.",
       "button": "Suscríbete ahora"
+      },
+      "searchForm": {
+      "title": "¿Qué necesitas?",
+      "body": "¡Chatea con 3 profesionales al momento y consigue tu presupuesto ideal!",
+      "categoryInput": "Categoría",
+      "selectCategory": "Elige una categoría",
+      "plumbers": "Plomeros",
+      "builders": "Albañiles",
+      "mechanics": "Mecánicos",
+      "serviceInput": "Servicio",
+      "selectService": "Elige un servicio",
+      "service1": "Servicio 1",
+      "service2": "Servicio 2",
+      "service3": "Servicio 3",
+      "location": "Ubicación",
+      "addLocation": "Agregar ubicación",
+      "location1": "Ubicación 1",
+      "location2": "Ubicación 2",
+      "priceRange": "Rango de precios",
+      "selectPriceRange": "Elige un rango de precio",
+      "low": "Bajo",
+      "medium": "Medio",
+      "high": "Alto",
+      "searchProfessional": "Buscar profesional",
+      "professional_image": "Imagen del profesional"
+    },
+      "categories": {
+      "category": "Categorías",
+      "title": "Los profesionales más buscados"
       }
     },
   "testimonials": {
