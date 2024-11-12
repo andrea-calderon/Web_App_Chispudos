@@ -12,14 +12,16 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import AppLogo from '../../../../components/molecules/AppLogo';
 import { ButtonAtom } from '../../../../components/atoms';
+import { useAppSelector } from '../../../../hooks/useAppSelector';
+import { selectAuth } from '../../../../redux/slices/authSlice';
 
 function ResponsiveAppBar() {
   const navigate = useNavigate();
+  const { isAuthenticated } = useAppSelector(selectAuth);
   const { t, i18n } = useTranslation();
   const theme = useTheme();
   const { palette } = theme;
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
-  const [isAuthenticated] = useState(false);
   const [language, setLanguage] = useState('en');
 
   const NAV_ITEMS = [

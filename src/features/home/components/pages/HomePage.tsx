@@ -5,6 +5,7 @@ import { Box, Grid2 } from '@mui/material';
 import Footer from '../../../../components/organisms/Footer';
 import HighlightedCategories from '../organisms/Categories';
 import SearchBar from '../../../../components/organisms/SearchBar';
+import { useGetUsersQuery } from '../../../../services/api';
 
 
 type ServicesSection = {
@@ -18,6 +19,8 @@ type ServicesSection = {
 };
 
 export const HomePage: React.FC = () => {
+ const {data } = useGetUsersQuery();
+ console.log('getUsers: ', data);
 
   const services: ServicesSection[] = [
     {
