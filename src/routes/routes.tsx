@@ -15,7 +15,7 @@ import PasswordRecovery from '../features/auth/components/pages/PasswordRecovery
 import RegisterPage from '../features/auth/components/pages/RegisterPage';
 
 const AppRoutes = () => {
-  const authState = useAppSelector(selectAuth);
+  const { isAuthenticated } = useAppSelector(selectAuth);
   return (
     <div>
       <Router>
@@ -24,7 +24,7 @@ const AppRoutes = () => {
           <Route
             path="/login"
             element={
-              authState.isAuthenticated ? (
+              isAuthenticated ? (
                 <Navigate to="/home" />
               ) : (
                 <LoginPage />

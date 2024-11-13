@@ -1,23 +1,45 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { RootState } from '../redux/store/store';
 import { selectAuth } from '../redux/slices/authSlice';
-import { UserResponseType, ApiResponseType} from '../types/api/apiResponses';
+import { UserResponseType, ApiResponseType } from '../types/api/apiResponses';
 import { LoginValues } from '../types/api/apiRequests';
+import { logout } from '../redux/slices/authSlice';
 
+const baseQuery = fetchBaseQuery({
+  baseUrl: import.meta.env.VITE_BASE_API_URL || 'http://localhost:8000/api/v1/',
+  prepareHeaders: (headers, { getState }) => {
+    const authState = selectAuth(getState() as RootState);
+    const token = authState.token;
+    if (token) headers.set('Authorization', `${token}`);
+    headers.set('Content-Type', 'application/json');
+    return headers;
+  },
+});
+
+// Custom baseQuery to handle 401/403 responses
+const baseQueryWithReauth: typeof baseQuery = async (
+  args,
+  api,
+  extraOptions,
+) => {
+  const result = await baseQuery(args, api, extraOptions);
+
+  // Check for 401 or 403 status codes
+  const errorStatus =
+    result.error?.status === 401 || result.error?.status === 403;
+  const errorOriginalStatus =
+    result.error?.originalStatus === 401 || result.error?.originalStatus === 403;
+  if (errorStatus || errorOriginalStatus) api.dispatch(logout());
+
+  return result;
+};
+
+// Create the API with the custom baseQuery
 export const api = createApi({
   reducerPath: 'api',
-  baseQuery: fetchBaseQuery({
-    baseUrl: 'http://localhost:8000/api/v1/',
-    prepareHeaders: (headers, { getState }) => {
-      const authState = selectAuth(getState() as RootState);
-      const token = authState.token;
-      if (token) headers.set('Authorization', `${token}`);
-      headers.set('Content-Type', 'application/json');
-      return headers;
-    },
-  }),
+  baseQuery: baseQueryWithReauth,
   endpoints: (builder) => ({
-    getExampleData: builder.query<ApiResponseType<UserResponseType[]>, void>({
+    getUsers: builder.query<ApiResponseType<UserResponseType[]>, void>({
       query: () => 'users/',
     }),
     login: builder.mutation<
@@ -37,7 +59,10 @@ export const api = createApi({
         body,
       }),
     }),
-    updatePassword: builder.mutation<void, { otp: string; newPassword: string }>({
+    updatePassword: builder.mutation<
+      void,
+      { otp: string; newPassword: string }
+    >({
       query: (body) => ({
         url: 'reset-password/',
         method: 'POST',
@@ -54,12 +79,11 @@ export const api = createApi({
         },
       }),
     }),
-    // Add other endpoints here
   }),
 });
 
 export const {
-  useGetExampleDataQuery,
+  useGetUsersQuery,
   useLoginMutation,
   useSignupMutation,
   useRequestPasswordResetMutation,

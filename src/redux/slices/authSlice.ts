@@ -3,7 +3,7 @@ import { RootState } from '../store/store';
 import {
   UserResponseType,
   LoginResponse,
-} from './../../types/api/apiResponses';
+} from '../../types/api/apiResponses';
 
 type AuthState = {
   isAuthenticated: boolean;
@@ -27,7 +27,6 @@ const authSlice = createSlice({
       state.isAuthenticated = true;
       state.user = action.payload.user;
       state.token = action.payload.token;
-      localStorage.setItem('token', action.payload.token);
       state.error = null;
     },
     loginFailure(state, action: PayloadAction<string>) {
@@ -40,7 +39,6 @@ const authSlice = createSlice({
       state.user = null;
       state.error = null;
       state.token = null;
-      localStorage.removeItem('token');
     },
   },
 });

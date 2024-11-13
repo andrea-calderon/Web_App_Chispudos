@@ -1,6 +1,9 @@
 import { useNavigate } from 'react-router-dom';
 import { UserLayout } from '../../../../components/templates/UserLayout';
 import ProfileCard from '../../../../components/atoms/ProfileCard';
+import { ButtonAtom } from '../../../../components/atoms';
+import { useAppDispatch } from '../../../../hooks/useAppDispatch';
+import { logout } from '../../../../redux/slices/authSlice';
 
 type Service = {
   name: string;
@@ -13,6 +16,7 @@ type Service = {
 
 export const ProfilePage: React.FC = () => {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   const services: Service[] = [
     {
@@ -42,9 +46,9 @@ export const ProfilePage: React.FC = () => {
         />
       ))}
       <br />
-      <button onClick={() => navigate('/home')}>Home</button>
-
-      <button onClick={() => navigate('/')}>Landing</button>
+      <ButtonAtom onClick={() => navigate('/home')}>Home</ButtonAtom>
+      <ButtonAtom onClick={() => navigate('/')}>Landing</ButtonAtom>
+      <ButtonAtom onClick={() => dispatch(logout()) }>Logout</ButtonAtom>
     </UserLayout>
   );
 };
