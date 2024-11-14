@@ -44,9 +44,13 @@ const HighlightedCategories = () => {
 
   const scrollLeft = () => {
     if (scrollContainerRef.current) {
-      const { scrollLeft, clientWidth, scrollWidth } = scrollContainerRef.current;
+      const { scrollLeft, clientWidth, scrollWidth } =
+        scrollContainerRef.current;
       if (scrollLeft === 0) {
-        scrollContainerRef.current.scrollTo({ left: scrollWidth, behavior: 'smooth' });
+        scrollContainerRef.current.scrollTo({
+          left: scrollWidth,
+          behavior: 'smooth',
+        });
       } else {
         scrollContainerRef.current.scrollBy({ left: -200, behavior: 'smooth' });
       }
@@ -55,7 +59,8 @@ const HighlightedCategories = () => {
 
   const scrollRight = () => {
     if (scrollContainerRef.current) {
-      const { scrollLeft, clientWidth, scrollWidth } = scrollContainerRef.current;
+      const { scrollLeft, clientWidth, scrollWidth } =
+        scrollContainerRef.current;
       if (scrollLeft + clientWidth >= scrollWidth) {
         scrollContainerRef.current.scrollTo({ left: 0, behavior: 'smooth' });
       } else {

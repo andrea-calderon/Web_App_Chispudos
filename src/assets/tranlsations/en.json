@@ -100,6 +100,20 @@
       "tittle": "Enjoy 100% coverage when you sign up and pay with Chispudos.",
       "button": "Subscribe now"
       },
+      "searchForm": {
+        "title": "What do you need?",
+        "body": "Chat with 3 professionals instantly and get your perfect quote!",
+        "categoryInput": "Category",
+        "selectCategory": "Select a category",
+        "serviceInput": "Service",
+        "selectService": "Select a service",
+        "location": "Location",
+        "addLocation": "Select your location",
+        "priceRange": "Price range",
+        "selectPriceRange": "Select a price range",
+        "searchProfessional": "Find professional",
+        "professional_image": "Professional image"
+      },
       "categories": {
       "category": "Categories",
       "title": "Professionals in high demand"

@@ -18,6 +18,37 @@ const SearchForm = () => {
   const { t } = useTranslation();
   const { data: categoriesData, isLoading, error } = useGetCategoriesQuery();
 
+  const departments = [
+    'Alta Verapaz',
+    'Baja Verapaz',
+    'Chimaltenango',
+    'Chiquimula',
+    'Guatemala',
+    'El Progreso',
+    'Escuintla',
+    'Huehuetenango',
+    'Izabal',
+    'Jalapa',
+    'Jutiapa',
+    'Petén',
+    'Quetzaltenango',
+    'Quiché',
+    'Retalhuleu',
+    'Sacatepéquez',
+    'San Marcos',
+    'Santa Rosa',
+    'Sololá',
+    'Suchitepéquez',
+    'Totonicapán',
+    'Zacapa',
+  ];
+
+  const priceRanges = [
+    { label: 'Bajo', value: 'low' },
+    { label: 'Medio', value: 'medium' },
+    { label: 'Alto', value: 'high' },
+  ];
+
   return (
     <Container sx={{ py: 4 }}>
       <Formik
@@ -47,7 +78,6 @@ const SearchForm = () => {
                     {t('landing.searchForm.body')}
                   </TextAtom>
 
-                  {/* Dropdown de categorías */}
                   <FormControl fullWidth>
                     <InputLabel>
                       {t('landing.searchForm.categoryInput')}
@@ -78,7 +108,6 @@ const SearchForm = () => {
                     </Select>
                   </FormControl>
 
-                  {/* Dropdown de servicios (usando description) */}
                   <FormControl fullWidth>
                     <InputLabel>
                       {t('landing.searchForm.serviceInput')}
@@ -109,7 +138,6 @@ const SearchForm = () => {
                     </Select>
                   </FormControl>
 
-                  {/* Otros campos */}
                   <FormControl fullWidth>
                     <InputLabel>{t('landing.searchForm.location')}</InputLabel>
                     <Select
@@ -121,8 +149,13 @@ const SearchForm = () => {
                       <MenuItem value="">
                         <em>{t('landing.searchForm.addLocation')}</em>
                       </MenuItem>
-                      <MenuItem value="location1">{t('location1')}</MenuItem>
-                      <MenuItem value="location2">{t('location2')}</MenuItem>
+                      {departments
+                        .filter((department) => department)
+                        .map((department, index) => (
+                          <MenuItem key={index} value={department}>
+                            {department}
+                          </MenuItem>
+                        ))}
                     </Select>
                   </FormControl>
 
@@ -139,9 +172,13 @@ const SearchForm = () => {
                       <MenuItem value="">
                         <em>{t('landing.searchForm.selectPriceRange')}</em>
                       </MenuItem>
-                      <MenuItem value="low">{t('low')}</MenuItem>
-                      <MenuItem value="medium">{t('medium')}</MenuItem>
-                      <MenuItem value="high">{t('high')}</MenuItem>
+                      {priceRanges
+                        .filter((priceRange) => priceRange)
+                        .map((priceRange, index) => (
+                          <MenuItem key={index} value={priceRange.value}>
+                            {priceRange.label}
+                          </MenuItem>
+                        ))}
                     </Select>
                   </FormControl>
 
@@ -149,7 +186,7 @@ const SearchForm = () => {
                     variant="filled"
                     type="submit"
                     fullWidth
-                    sx={{ width: '200px' }}
+                    sx={{ width: '300px' }}
                   >
                     {t('landing.searchForm.searchProfessional')}
                   </ButtonAtom>

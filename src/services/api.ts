@@ -79,7 +79,6 @@ export const api = createApi({
         },
       }),
     }),
-        // Nuevo endpoint para obtener categorías
         getCategories: builder.query<ApiResponseType<CategoryType[]>, void>({
           query: () => 'categoriesPublic/',
         }),
