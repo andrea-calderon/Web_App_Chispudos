@@ -78,7 +78,7 @@ const SearchForm = () => {
                     </Select>
                   </FormControl>
 
-                  {/* Otros campos */}
+                  {/* Dropdown de servicios (usando description) */}
                   <FormControl fullWidth>
                     <InputLabel>
                       {t('landing.searchForm.serviceInput')}
@@ -92,12 +92,24 @@ const SearchForm = () => {
                       <MenuItem value="">
                         <em>{t('landing.searchForm.selectService')}</em>
                       </MenuItem>
-                      <MenuItem value="service1">{t('service1')}</MenuItem>
-                      <MenuItem value="service2">{t('service2')}</MenuItem>
-                      <MenuItem value="service3">{t('service3')}</MenuItem>
+                      {isLoading ? (
+                        <MenuItem disabled>{t('loading')}</MenuItem>
+                      ) : error ? (
+                        <MenuItem disabled>
+                          {t('error_loading_services')}
+                        </MenuItem>
+                      ) : (
+                        Array.isArray(categoriesData?.data) &&
+                        categoriesData.data.map((category) => (
+                          <MenuItem key={category.id} value={category.id}>
+                            {category.description}
+                          </MenuItem>
+                        ))
+                      )}
                     </Select>
                   </FormControl>
 
+                  {/* Otros campos */}
                   <FormControl fullWidth>
                     <InputLabel>{t('landing.searchForm.location')}</InputLabel>
                     <Select
