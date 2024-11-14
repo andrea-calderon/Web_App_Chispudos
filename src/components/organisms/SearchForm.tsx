@@ -12,9 +12,11 @@ import { Formik, Form } from 'formik';
 import TextAtom from '../atoms/TextAtom';
 import ButtonAtom from '../atoms/ButtonAtom';
 import SampleImage from '../../../src/assets/images/intro_sliders/intro_1.png';
+import { useGetCategoriesQuery } from '../../services/api';
 
 const SearchForm = () => {
   const { t } = useTranslation();
+  const { data: categoriesData, isLoading, error } = useGetCategoriesQuery();
 
   return (
     <Container sx={{ py: 4 }}>
@@ -45,6 +47,7 @@ const SearchForm = () => {
                     {t('landing.searchForm.body')}
                   </TextAtom>
 
+                  {/* Dropdown de categorías */}
                   <FormControl fullWidth>
                     <InputLabel>
                       {t('landing.searchForm.categoryInput')}
@@ -58,18 +61,24 @@ const SearchForm = () => {
                       <MenuItem value="">
                         <em>{t('landing.searchForm.selectCategory')}</em>
                       </MenuItem>
-                      <MenuItem value="plumber">
-                        {t('landing.searchForm.plumbers')}
-                      </MenuItem>
-                      <MenuItem value="builder">
-                        {t('landing.searchForm.builders')}
-                      </MenuItem>
-                      <MenuItem value="mechanic">
-                        {t('landing.searchForm.mechanics')}
-                      </MenuItem>
+                      {isLoading ? (
+                        <MenuItem disabled>{t('loading')}</MenuItem>
+                      ) : error ? (
+                        <MenuItem disabled>
+                          {t('error_loading_categories')}
+                        </MenuItem>
+                      ) : (
+                        Array.isArray(categoriesData?.data) &&
+                        categoriesData.data.map((category) => (
+                          <MenuItem key={category.id} value={category.id}>
+                            {category.name}
+                          </MenuItem>
+                        ))
+                      )}
                     </Select>
                   </FormControl>
 
+                  {/* Otros campos */}
                   <FormControl fullWidth>
                     <InputLabel>
                       {t('landing.searchForm.serviceInput')}

@@ -79,6 +79,10 @@ export const api = createApi({
         },
       }),
     }),
+        // Nuevo endpoint para obtener categorías
+        getCategories: builder.query<ApiResponseType<CategoryType[]>, void>({
+          query: () => 'categoriesPublic/',
+        }),
   }),
 });
 
@@ -88,4 +92,5 @@ export const {
   useSignupMutation,
   useRequestPasswordResetMutation,
   useUpdatePasswordMutation,
+  useGetCategoriesQuery, // Nuevo hook para obtener categorías
 } = api;
