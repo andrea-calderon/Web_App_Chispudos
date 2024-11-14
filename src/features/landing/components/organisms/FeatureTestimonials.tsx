@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { Box, Typography, Avatar, IconButton, Rating } from '@mui/material';
+import { Box, Avatar, IconButton, Rating } from '@mui/material';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { useTranslation } from 'react-i18next';
 import { styled } from '@mui/system';
+import TextAtom from '../../../../components/atoms/TextAtom';
 
 const StyledContainer = styled(Box)(({ theme }) => ({
   padding: theme.spacing(4),
@@ -40,8 +41,8 @@ const Dots = styled(Box)(({ theme }) => ({
 }));
 
 const Dot = styled(Box)(({ active }) => ({
-  width: '20px',
-  height: '20px',
+  width: '15px',
+  height: '15px',
   borderRadius: '50%',
   backgroundColor: active ? '#019FE9' : '#ccc',
   margin: '10px',
@@ -85,17 +86,27 @@ const Testimonials = () => {
 
   return (
     <StyledContainer>
-      <Typography
-        variant="h7"
-        color="#019FE9"
-        fontWeight="bold"
-        textTransform="uppercase"
+      <Box>
+        <TextAtom
+          variant="label"
+          size="large"
+          sx={{
+            color: '#019FE9',
+            fontWeight: 'bold',
+            textTransform: 'uppercase',
+          }}
+        >
+          {t('testimonials.title')}
+        </TextAtom>
+      </Box>
+
+      <TextAtom
+        variant="headline"
+        size="large"
+        sx={{ fontWeight: 'bold', padding: '30px 0px', marginBottom: 2 }}
       >
-        {t('testimonials.title')}
-      </Typography>
-      <Typography variant="h4" fontWeight="bold" padding="30px 0px" mb={2}>
         {t('testimonials.subtitle')}
-      </Typography>
+      </TextAtom>
 
       <Box display="flex" justifyContent="center" alignItems="center">
         <CircleButton onClick={handlePrev} aria-label="prev">
@@ -108,16 +119,38 @@ const Testimonials = () => {
             src={testimonials[currentIndex].image}
             sx={{ width: 90, height: 90, margin: 'auto' }}
           />
-          <Typography variant="h6" color="secondary">
-            <span style={{ color: '#FF7043' }}>
+
+          <Box>
+            <TextAtom
+              variant="title"
+              size="medium"
+              sx={{ color: '#FF7043', display: 'inline' }}
+            >
               {testimonials[currentIndex].name}
-            </span>{' '}
-            / {testimonials[currentIndex].title}
-          </Typography>
-          <Rating value={5} readOnly />
-          <Typography color="#5F5F5F" variant="body1" mt={2}>
+            </TextAtom>
+
+            <TextAtom
+              variant="body"
+              size="large"
+              sx={{ color: 'secondary', display: 'inline' }}
+            >
+              {' '}
+              / {testimonials[currentIndex].title}
+            </TextAtom>
+          </Box>
+
+          <Box>
+            {' '}
+            <Rating value={5} readOnly />{' '}
+          </Box>
+
+          <TextAtom
+            variant="body"
+            size="medium"
+            sx={{ color: '#5F5F5F', marginTop: 2 }}
+          >
             {testimonials[currentIndex].comment}
-          </Typography>
+          </TextAtom>
         </Box>
 
         <CircleButton onClick={handleNext} aria-label="next">
