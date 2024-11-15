@@ -34,11 +34,11 @@ const Footer: React.FC = () => {
         <Grid container justifyContent="center" spacing={3}>
           <Grid item xs={12} md={6} textAlign="center">
             <Typography variant="h6" sx={{ paddingTop: '80px' }}>
-              {t('landing_footer.title')}
+              {t('footer.title')}
             </Typography>
             <TextField
               variant="outlined"
-              placeholder={t('landing_footer.placeholder')}
+              placeholder={t('footer.placeholder')}
               sx={{
                 mt: 2,
                 width: '60%',
@@ -115,7 +115,7 @@ const Footer: React.FC = () => {
             >
               byteCode
             </a>
-            : {t('landing_footer.copyright')}
+            : {t('footer.copyright')}
           </Typography>
         </Grid>
       </Box>

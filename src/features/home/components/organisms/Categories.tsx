@@ -27,17 +27,17 @@ const HighlightedCategories = () => {
   const theme = useTheme();
 
   const categories = [
-    { name: t('categories.cleaning'), icon: CleanIcon },
-    { name: t('categories.mechanic'), icon: MechanicIcon },
-    { name: t('categories.paint'), icon: PaintIcon },
-    { name: t('categories.carwash'), icon: CarwashIcon },
-    { name: t('categories.electrician'), icon: ElectricianIcon },
-    { name: t('categories.plumber'), icon: PlumberIcon },
-    { name: t('categories.gardener'), icon: GardenerIcon },
-    { name: t('categories.carpenter'), icon: BuilderIcon },
-    { name: t('categories.locksmith'), icon: LocksmithIcon },
-    { name: t('categories.paint'), icon: PaintIcon },
-    { name: t('categories.carwash'), icon: CarwashIcon },
+    { name: t('landing.categories.cleaning'), icon: CleanIcon },
+    { name: t('landing.categories.mechanic'), icon: MechanicIcon },
+    { name: t('landing.categories.paint'), icon: PaintIcon },
+    { name: t('landing.categories.carwash'), icon: CarwashIcon },
+    { name: t('landing.categories.electrician'), icon: ElectricianIcon },
+    { name: t('landing.categories.plumber'), icon: PlumberIcon },
+    { name: t('landing.categories.gardener'), icon: GardenerIcon },
+    { name: t('landing.categories.carpenter'), icon: BuilderIcon },
+    { name: t('landing.categories.locksmith'), icon: LocksmithIcon },
+    { name: t('landing.categories.paint'), icon: PaintIcon },
+    { name: t('landing.categories.carwash'), icon: CarwashIcon },
   ];
 
   const scrollContainerRef = React.useRef<HTMLDivElement>(null);
@@ -79,7 +79,7 @@ const HighlightedCategories = () => {
         }}
       >
         <TextAtom variant="title" size="large" fontWeight="bold">
-          {t('categories.title')}
+          {t('landing.categories.title')}
         </TextAtom>
 
         <ButtonAtom
@@ -91,7 +91,7 @@ const HighlightedCategories = () => {
           }}
         >
           <TextAtom variant="label" size="large">
-            {t('categories.button')}
+            {t('landing.categories.button')}
           </TextAtom>
         </ButtonAtom>
       </Box>

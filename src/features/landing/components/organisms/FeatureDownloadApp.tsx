@@ -34,10 +34,10 @@ const FeatureDownloadApp = () => {
           gutterBottom
           sx={{ fontWeight: 'bold' }}
         >
-          {t('landing_downloadSection.title')}
+          {t('landing.downloadSection.title')}
         </TextAtom>
         <TextAtom variant="body" size="medium" color="textSecondary">
-          {t('landing_downloadSection.description')}
+          {t('landing.downloadSection.description')}
         </TextAtom>
         <Grid container spacing={2}>
           <img

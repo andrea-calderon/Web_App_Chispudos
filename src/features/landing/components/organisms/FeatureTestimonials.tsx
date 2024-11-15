@@ -54,21 +54,21 @@ const Testimonials = () => {
 
   const testimonials = [
     {
-      name: t('testimonials.feedback.0.name'),
-      title: t('testimonials.feedback.0.title'),
-      comment: t('testimonials.feedback.0.comment'),
+      name: t('landing.testimonials.feedback.0.name'),
+      title: t('landing.testimonials.feedback.0.title'),
+      comment: t('landing.testimonials.feedback.0.comment'),
       image: 'src/assets/images/AnaF.webp',
     },
     {
-      name: t('testimonials.feedback.1.name'),
-      title: t('testimonials.feedback.1.title'),
-      comment: t('testimonials.feedback.1.comment'),
+      name: t('landing.testimonials.feedback.1.name'),
+      title: t('landing.testimonials.feedback.1.title'),
+      comment: t('landing.testimonials.feedback.1.comment'),
       image: 'src/assets/images/Juan.webp',
     },
     {
-      name: t('testimonials.feedback.2.name'),
-      title: t('testimonials.feedback.2.title'),
-      comment: t('testimonials.feedback.2.comment'),
+      name: t('landing.testimonials.feedback.2.name'),
+      title: t('landing.testimonials.feedback.2.title'),
+      comment: t('landing.testimonials.feedback.2.comment'),
       image: 'src/assets/images/Sofia.webp',
     },
   ];
@@ -96,7 +96,7 @@ const Testimonials = () => {
             textTransform: 'uppercase',
           }}
         >
-          {t('testimonials.title')}
+          {t('landing.testimonials.title')}
         </TextAtom>
       </Box>
 
@@ -105,7 +105,7 @@ const Testimonials = () => {
         size="large"
         sx={{ fontWeight: 'bold', padding: '30px 0px', marginBottom: 2 }}
       >
-        {t('testimonials.subtitle')}
+        {t('landing.testimonials.subtitle')}
       </TextAtom>
 
       <Box display="flex" justifyContent="center" alignItems="center">

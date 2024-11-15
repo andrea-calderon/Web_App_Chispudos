@@ -1,40 +1,22 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Box, Container, Grid, useMediaQuery, useTheme } from '@mui/material';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import { useTranslation } from 'react-i18next';
 import TextAtom from '../../../../components/atoms/TextAtom';
-
-interface Category {
-  id: number;
-  name: string;
-  description: string;
-  icon: string;
-  image: string;
-}
+import { useGetCategoriesQuery } from '../../../../services/api';
 
 const CategoriesSection: React.FC = () => {
   const { t } = useTranslation();
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const [categories, setCategories] = useState<Category[]>([]);
+  const { data, error, isLoading } = useGetCategoriesQuery();
 
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await fetch(
-          'http://localhost:8000/api/v1/categoriesPublic',
-        );
-        const data = await response.json();
-        setCategories(data.data);
-      } catch (error) {
-        console.error('Error fetching categories:', error);
-      }
-    };
+  const categories = data?.data || [];
 
-    fetchCategories();
-  }, []);
+  if (isLoading) return <p>{t('loading')}</p>;
+  if (error) return <p>{t('errorFetchingCategories')}</p>;
 
   return (
     <Container sx={{ py: 3 }}>
@@ -55,7 +37,7 @@ const CategoriesSection: React.FC = () => {
                 textTransform: 'uppercase',
               }}
             >
-              {t('landing.categories.category')}
+              {t('landing.highDemand.category')}
             </TextAtom>
           </Box>
           <Box sx={{ mt: 1 }}>
@@ -64,7 +46,7 @@ const CategoriesSection: React.FC = () => {
               size="large"
               sx={{ fontWeight: 'bold' }}
             >
-              {t('landing.categories.title')}
+              {t('landing.highDemand.title')}
             </TextAtom>
           </Box>
         </Grid>

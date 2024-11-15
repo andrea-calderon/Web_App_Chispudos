@@ -95,11 +95,20 @@
     }
     },
   "landing": {
-    "guarantee": {
-      "category": "Guarantee",
-      "tittle": "Enjoy 100% coverage when you sign up and pay with Chispudos.",
-      "button": "Subscribe now"
-      },
+    "categories": {
+      "title": "Servicios destacados",
+      "button": "Ver todos",
+      "mechanic": "Mecánico",
+        "electrician": "Electricista",
+        "mason": "Albañil",
+        "plumber": "Plomero",
+        "cleaning": "Limpieza",
+        "gardener": "Jardinero",
+        "locksmith": "Cerrajero",
+        "carpenter": "Carpintero",
+        "paint": "Pintor",
+        "carwash": "CarWash"
+        },
       "searchForm": {
         "title": "What do you need?",
         "body": "Chat with 3 professionals instantly and get your perfect quote!",
@@ -114,39 +123,43 @@
         "searchProfessional": "Find professional",
         "professional_image": "Professional image"
       },
-      "categories": {
+      "highDemand": {
       "category": "Categories",
       "title": "Professionals in high demand"
+      },
+      "guarantee": {
+        "category": "Guarantee",
+        "tittle": "Enjoy 100% coverage when you sign up and pay with Chispudos.",
+        "button": "Subscribe now"
+        },
+      "testimonials": {
+        "title": "Testimonials",
+        "subtitle": "Trust our clients",
+        "feedback": [
+          {
+            "name": "Sofía Rodriguez",
+            "title": "Marketing Analyst",
+            "comment": "I finally found an app where I can find trustworthy professionals at fair prices. It has been such a relief!"
+          },
+          {
+            "name": "Juan Pérez",
+            "title": "Software Engineer",
+            "comment": "Chispudos saved me so much time. I found an excellent plumber in minutes."
+          },
+          {
+            "name": "Ana Fernández",
+            "title": "Graphic Designer",
+            "comment": "Very useful and easy to use. I found a trustworthy electrician quickly."
+          }
+        ]
+      },
+    "downloadSection": {
+      "title": "Get our app today!",
+      "description": "Urgent need for an electrician? Trustworthy babysitter wanted? Find your perfect match in no time."
       }
     },
-  "landing_testimonials": {
-      },
-        "testimonials": {
-          "title": "Testimonials",
-          "subtitle": "Trust our clients",
-          "feedback": [
-            {
-              "name": "Sofía Rodriguez",
-              "title": "Marketing Analyst",
-              "comment": "I finally found an app where I can find trustworthy professionals at fair prices. It has been such a relief!"
-            },
-            {
-              "name": "Juan Pérez",
-              "title": "Software Engineer",
-              "comment": "Chispudos saved me so much time. I found an excellent plumber in minutes."
-            },
-            {
-              "name": "Ana Fernández",
-              "title": "Graphic Designer",
-              "comment": "Very useful and easy to use. I found a trustworthy electrician quickly."
-            }
-          ]
-        },
-"landing_downloadSection": {
-  "title": "Get our app today!",
-  "description": "Urgent need for an electrician? Trustworthy babysitter wanted? Find your perfect match in no time."
-              },
-"landing_footer": {
+
+"footer": {
   "title": "Subscribe to our Newsletter",
   "placeholder": "Your Email",
   "copyright": "Web and mobile development."

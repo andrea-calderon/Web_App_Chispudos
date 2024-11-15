@@ -95,12 +95,32 @@
       "continue": "Continuar"
     }
   },
+
   "landing": {
-    "guarantee": {
-      "category": "Garantía",
-      "tittle": "Cuentas con una cobertura del 100% contratando y pagando con Chispudos.",
-      "button": "Suscríbete ahora"
-      },
+    "categories": {
+  "title": "Servicios destacados",
+  "button": "Ver todos",
+  "mechanic": "Mecánico",
+    "electrician": "Electricista",
+    "mason": "Albañil",
+    "plumber": "Plomero",
+    "cleaning": "Limpieza",
+    "gardener": "Jardinero",
+    "locksmith": "Cerrajero",
+    "carpenter": "Carpintero",
+    "paint": "Pintor",
+    "carwash": "CarWash"
+    },
+  "form": {
+    "title": "¿Qué necesitas?",
+    "subtitle": "¡Chatea con 3 profesionales al momento y consigue tu presupuesto ideal!",
+    "category": "Categoría",
+    "titlePlaceholder": "Ej. Filtraciones en la cocina",
+    "descriptionPlaceholder": "Ej. Necesito reparar una filtración",
+    "locationPlaceholder": "Ej. Guatemala, zona 9",
+    "submit": "Pedir presupuesto",
+    "professionals": "Profesionales"
+  },
       "searchForm": {
       "title": "¿Qué necesitas?",
       "body": "¡Chatea con 3 profesionales al momento y consigue tu presupuesto ideal!",
@@ -115,63 +135,51 @@
       "searchProfessional": "Buscar profesional",
       "professional_image": "Imagen del profesional"
     },
-      "categories": {
+      "highDemand": {
       "category": "Categorías",
       "title": "Los profesionales más buscados"
+      },
+      "guarantee": {
+        "category": "Garantía",
+        "tittle": "Cuentas con una cobertura del 100% contratando y pagando con Chispudos.",
+        "button": "Suscríbete ahora"
+        },
+      "testimonials": {
+        "title": "Testimoniales",
+        "subtitle": "Confía en nuestros clientes",
+        "feedback": [
+          {
+            "name": "Sofía Rodriguez",
+            "title": "Analista de marketing",
+            "comment": "Por fin encontré una app donde puedo encontrar profesionales de confianza a precios justos. ¡Ha sido un gran alivio!"
+          },
+          {
+            "name": "Juan Pérez",
+            "title": "Ingeniero de Software",
+            "comment": "Chispudos me ha ahorrado mucho tiempo. Encontré un plomero excelente en minutos."
+          },
+          {
+            "name": "Ana Fernández",
+            "title": "Diseñadora gráfica",
+            "comment": "Muy útil y fácil de usar. Encontré un electricista de confianza rápidamente."
+          }
+        ]
+    },
+    "downloadSection": {
+      "title": "¡Descarga nuestra app ahora!",
+      "description": "¿Necesitas un electricista urgente? ¿O buscas una niñera de confianza? Encuentra al profesional perfecto en cuestión de minutos."
       }
     },
-  "testimonials": {
-          "title": "Testimoniales",
-          "subtitle": "Confía en nuestros clientes",
-          "feedback": [
-            {
-              "name": "Sofía Rodriguez",
-              "title": "Analista de marketing",
-              "comment": "Por fin encontré una app donde puedo encontrar profesionales de confianza a precios justos. ¡Ha sido un gran alivio!"
-            },
-            {
-              "name": "Juan Pérez",
-              "title": "Ingeniero de Software",
-              "comment": "Chispudos me ha ahorrado mucho tiempo. Encontré un plomero excelente en minutos."
-            },
-            {
-              "name": "Ana Fernández",
-              "title": "Diseñadora gráfica",
-              "comment": "Muy útil y fácil de usar. Encontré un electricista de confianza rápidamente."
-            }
-          ]
-        },
-  "landing_downloadSection": {
-  "title": "¡Descarga nuestra app ahora!",
-  "description": "¿Necesitas un electricista urgente? ¿O buscas una niñera de confianza? Encuentra al profesional perfecto en cuestión de minutos."
-      },
-  "landing_footer": {
+
+"footer": {
   "title": "Suscríbete a nuestro Newsletter",
   "placeholder": "Tu Email",
   "copyright": "Desarrollo web y móvil."
             },
-"categories": {
-  "title": "Servicios destacados",
-  "button": "Ver todos",
-  "mechanic": "Mecánico",
-    "electrician": "Electricista",
-    "mason": "Albañil",
-    "plumber": "Plomero",
-    "cleaning": "Limpieza",
-    "gardener": "Jardinero",
-    "locksmith": "Cerrajero",
-    "carpenter": "Carpintero",
-    "paint": "Pintor",
-    "carwash": "CarWash"
-    },
-"form": {
-    "title": "¿Qué necesitas?",
-    "subtitle": "¡Chatea con 3 profesionales al momento y consigue tu presupuesto ideal!",
-    "category": "Categoría",
-    "titlePlaceholder": "Ej. Filtraciones en la cocina",
-    "descriptionPlaceholder": "Ej. Necesito reparar una filtración",
-    "locationPlaceholder": "Ej. Guatemala, zona 9",
-    "submit": "Pedir presupuesto",
-    "professionals": "Profesionales"
+  "APIs": {
+    "categories":{
+      "loading": "Loading categories, please wait...",
+      "error": "An error occurred while loading the categories. Please try again later."
+  }
   }
 } 
