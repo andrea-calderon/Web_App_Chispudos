@@ -4,48 +4,19 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import { useTranslation } from 'react-i18next';
 import TextAtom from '../../../../components/atoms/TextAtom';
-import PlumberIcon from '../../../../assets/images/landing/plomeroIcono.png';
-import GardenerIcon from '../../../../assets/images/landing/jardineroIcono.png';
-import MechanicIcon from '../../../../assets/images/landing/mecanicoIcono.png';
-
-// Categorías hardcodeadas que deben venir de una API
-const categories = [
-  {
-    title: 'Plomero',
-    description: 'Soluciona fugas y averías en tuberías. ¡Contacta ahora!',
-    image: PlumberIcon,
-  },
-  {
-    title: 'Jardinero',
-    description: 'Transforma tus espacios verdes. ¡Solicita tu presupuesto!',
-    image: GardenerIcon,
-  },
-  {
-    title: 'Mecánico',
-    description: 'Soluciona fugas y averías en tuberías. ¡Contacta ahora!',
-    image: MechanicIcon,
-  },
-  {
-    title: 'Plomero',
-    description: 'Soluciona fugas y averías en tuberías. ¡Contacta ahora!',
-    image: PlumberIcon,
-  },
-  {
-    title: 'Jardinero',
-    description: 'Transforma tus espacios verdes. ¡Solicita tu presupuesto!',
-    image: GardenerIcon,
-  },
-  {
-    title: 'Mecánico',
-    description: 'Soluciona fugas y averías en tuberías. ¡Contacta ahora!',
-    image: MechanicIcon,
-  },
-];
+import { useGetCategoriesQuery } from '../../../../services/api';
 
 const CategoriesSection: React.FC = () => {
   const { t } = useTranslation();
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+
+  const { data, error, isLoading } = useGetCategoriesQuery();
+
+  const categories = data?.data || [];
+
+  if (isLoading) return <p>{t('loading')}</p>;
+  if (error) return <p>{t('errorFetchingCategories')}</p>;
 
   return (
     <Container sx={{ py: 3 }}>
@@ -56,12 +27,7 @@ const CategoriesSection: React.FC = () => {
         textAlign={isSmallScreen ? 'center' : 'left'}
       >
         <Grid item xs={12} md={3}>
-          <Box
-            sx={{
-              marginTop: '80px',
-              width: '100%',
-            }}
-          >
+          <Box sx={{ marginTop: '80px', width: '100%' }}>
             <TextAtom
               variant="body"
               size="large"
@@ -71,7 +37,7 @@ const CategoriesSection: React.FC = () => {
                 textTransform: 'uppercase',
               }}
             >
-              {t('landing.categories.category')}
+              {t('landing.highDemand.category')}
             </TextAtom>
           </Box>
           <Box sx={{ mt: 1 }}>
@@ -80,15 +46,15 @@ const CategoriesSection: React.FC = () => {
               size="large"
               sx={{ fontWeight: 'bold' }}
             >
-              {t('landing.categories.title')}
+              {t('landing.highDemand.title')}
             </TextAtom>
           </Box>
         </Grid>
         <Grid item xs={12} md={9}>
           <Swiper spaceBetween={16} slidesPerView={isSmallScreen ? 1.5 : 2.5}>
-            {categories.map((category, index) => (
+            {categories.map((category) => (
               <SwiperSlide
-                key={index}
+                key={category.id}
                 style={{
                   width: '350px',
                   height: '400px',
@@ -108,8 +74,8 @@ const CategoriesSection: React.FC = () => {
                   }}
                 >
                   <img
-                    src={category.image}
-                    alt={category.title}
+                    src={category.icon}
+                    alt={category.name}
                     style={{ height: '80px', marginBottom: '16px' }}
                   />
                   <TextAtom
@@ -118,10 +84,8 @@ const CategoriesSection: React.FC = () => {
                     sx={{ fontWeight: 'bold' }}
                   >
                     {t(
-                      `landing.categories.${category.title.toUpperCase()}.category`,
-                      {
-                        defaultValue: category.title,
-                      },
+                      `landing.categories.${category.name.toUpperCase()}.category`,
+                      { defaultValue: category.name },
                     )}
                   </TextAtom>
                   <TextAtom
@@ -130,7 +94,7 @@ const CategoriesSection: React.FC = () => {
                     sx={{ color: 'text.secondary', mt: 1 }}
                   >
                     {t(
-                      `categories.${category.title.toLowerCase()}.description`,
+                      `categories.${category.name.toLowerCase()}.description`,
                       { defaultValue: category.description },
                     )}
                   </TextAtom>

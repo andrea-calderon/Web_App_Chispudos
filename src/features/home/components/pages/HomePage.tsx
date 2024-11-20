@@ -6,7 +6,7 @@ import Footer from '../../../../components/organisms/Footer';
 import HighlightedCategories from '../organisms/Categories';
 import SearchBar from '../../../../components/organisms/SearchBar';
 import { useGetUsersQuery } from '../../../../services/api';
-
+import SearchForm from '../../../../components/organisms/SearchForm';
 
 type ServicesSection = {
   name: string;
@@ -19,8 +19,8 @@ type ServicesSection = {
 };
 
 export const HomePage: React.FC = () => {
- const {data } = useGetUsersQuery();
- console.log('getUsers: ', data);
+  const { data } = useGetUsersQuery();
+  console.log('getUsers: ', data);
 
   const services: ServicesSection[] = [
     {
@@ -68,10 +68,8 @@ export const HomePage: React.FC = () => {
   return (
     <UserLayout>
       <SearchBar />
-      <TextAtom variant="display" size="medium" fontWeight="bold">
-        Home Page
-      </TextAtom>
       <HighlightedCategories />
+      <SearchForm />
       <Box sx={{ position: 'relative', padding: 4 }}>
         <TextAtom
           variant="title"

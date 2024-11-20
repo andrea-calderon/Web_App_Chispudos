@@ -19,11 +19,10 @@ const Footer: React.FC = () => {
 
   return (
     <>
-      {/* Primer Box */}
       <Box
         sx={{
           backgroundColor: '#F3ECFF',
-          py: 15,
+          paddingBottom: 15,
           width: '100vw',
           position: 'relative',
           left: '50%',
@@ -34,10 +33,12 @@ const Footer: React.FC = () => {
       >
         <Grid container justifyContent="center" spacing={3}>
           <Grid item xs={12} md={6} textAlign="center">
-            <Typography variant="h6">{t('landing_footer.title')}</Typography>
+            <Typography variant="h6" sx={{ paddingTop: '80px' }}>
+              {t('footer.title')}
+            </Typography>
             <TextField
               variant="outlined"
-              placeholder={t('landing_footer.placeholder')}
+              placeholder={t('footer.placeholder')}
               sx={{
                 mt: 2,
                 width: '60%',
@@ -75,8 +76,10 @@ const Footer: React.FC = () => {
 
       <Box>
         <Grid item xs={12} textAlign="center">
-          <Box padding={8}><AppLogo maxWidth='250px' /></Box>
-          
+          <Box padding={8}>
+            <AppLogo maxWidth="250px" />
+          </Box>
+
           <Box>
             <IconButton
               href="https://www.instagram.com"
@@ -112,7 +115,7 @@ const Footer: React.FC = () => {
             >
               byteCode
             </a>
-            : {t('landing_footer.copyright')}
+            : {t('footer.copyright')}
           </Typography>
         </Grid>
       </Box>

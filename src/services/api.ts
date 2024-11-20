@@ -79,6 +79,9 @@ export const api = createApi({
         },
       }),
     }),
+        getCategories: builder.query<ApiResponseType<CategoryType[]>, void>({
+          query: () => 'categoriesPublic/',
+        }),
   }),
 });
 
@@ -88,4 +91,5 @@ export const {
   useSignupMutation,
   useRequestPasswordResetMutation,
   useUpdatePasswordMutation,
+  useGetCategoriesQuery, // Nuevo hook para obtener categorías
 } = api;

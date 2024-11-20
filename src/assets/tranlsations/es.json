@@ -95,73 +95,9 @@
       "continue": "Continuar"
     }
   },
+
   "landing": {
-    "guarantee": {
-      "category": "Garantía",
-      "tittle": "Cuentas con una cobertura del 100% contratando y pagando con Chispudos.",
-      "button": "Suscríbete ahora"
-      },
-      "searchForm": {
-      "title": "¿Qué necesitas?",
-      "body": "¡Chatea con 3 profesionales al momento y consigue tu presupuesto ideal!",
-      "categoryInput": "Categoría",
-      "selectCategory": "Elige una categoría",
-      "plumbers": "Plomeros",
-      "builders": "Albañiles",
-      "mechanics": "Mecánicos",
-      "serviceInput": "Servicio",
-      "selectService": "Elige un servicio",
-      "service1": "Servicio 1",
-      "service2": "Servicio 2",
-      "service3": "Servicio 3",
-      "location": "Ubicación",
-      "addLocation": "Agregar ubicación",
-      "location1": "Ubicación 1",
-      "location2": "Ubicación 2",
-      "priceRange": "Rango de precios",
-      "selectPriceRange": "Elige un rango de precio",
-      "low": "Bajo",
-      "medium": "Medio",
-      "high": "Alto",
-      "searchProfessional": "Buscar profesional",
-      "professional_image": "Imagen del profesional"
-    },
-      "categories": {
-      "category": "Categorías",
-      "title": "Los profesionales más buscados"
-      }
-    },
-  "testimonials": {
-          "title": "Testimoniales",
-          "subtitle": "Confía en nuestros clientes",
-          "feedback": [
-            {
-              "name": "Sofía Rodriguez",
-              "title": "Analista de marketing",
-              "comment": "Por fin encontré una app donde puedo encontrar profesionales de confianza a precios justos. ¡Ha sido un gran alivio!"
-            },
-            {
-              "name": "Juan Pérez",
-              "title": "Ingeniero de Software",
-              "comment": "Chispudos me ha ahorrado mucho tiempo. Encontré un plomero excelente en minutos."
-            },
-            {
-              "name": "Ana Fernández",
-              "title": "Diseñadora gráfica",
-              "comment": "Muy útil y fácil de usar. Encontré un electricista de confianza rápidamente."
-            }
-          ]
-        },
-  "landing_downloadSection": {
-  "title": "¡Descarga nuestra app ahora!",
-  "description": "¿Necesitas un electricista urgente? ¿O buscas una niñera de confianza? Encuentra al profesional perfecto en cuestión de minutos."
-      },
-  "landing_footer": {
-  "title": "Suscríbete a nuestro Newsletter",
-  "placeholder": "Tu Email",
-  "copyright": "Desarrollo web y móvil."
-            },
-"categories": {
+    "categories": {
   "title": "Servicios destacados",
   "button": "Ver todos",
   "mechanic": "Mecánico",
@@ -175,7 +111,7 @@
     "paint": "Pintor",
     "carwash": "CarWash"
     },
-"form": {
+  "form": {
     "title": "¿Qué necesitas?",
     "subtitle": "¡Chatea con 3 profesionales al momento y consigue tu presupuesto ideal!",
     "category": "Categoría",
@@ -184,5 +120,66 @@
     "locationPlaceholder": "Ej. Guatemala, zona 9",
     "submit": "Pedir presupuesto",
     "professionals": "Profesionales"
+  },
+      "searchForm": {
+      "title": "¿Qué necesitas?",
+      "body": "¡Chatea con 3 profesionales al momento y consigue tu presupuesto ideal!",
+      "categoryInput": "Categoría",
+      "selectCategory": "Elige una categoría",
+      "serviceInput": "Servicio",
+      "selectService": "Elige un servicio",
+      "location": "Ubicación",
+      "addLocation": "Agregar ubicación",
+      "priceRange": "Rango de precios",
+      "selectPriceRange": "Elige un rango de precio",
+      "searchProfessional": "Buscar profesional",
+      "professional_image": "Imagen del profesional"
+    },
+      "highDemand": {
+      "category": "Categorías",
+      "title": "Los profesionales más buscados"
+      },
+      "guarantee": {
+        "category": "Garantía",
+        "tittle": "Cuentas con una cobertura del 100% contratando y pagando con Chispudos.",
+        "button": "Suscríbete ahora"
+        },
+      "testimonials": {
+        "title": "Testimoniales",
+        "subtitle": "Confía en nuestros clientes",
+        "feedback": [
+          {
+            "name": "Sofía Rodriguez",
+            "title": "Analista de marketing",
+            "comment": "Por fin encontré una app donde puedo encontrar profesionales de confianza a precios justos. ¡Ha sido un gran alivio!"
+          },
+          {
+            "name": "Juan Pérez",
+            "title": "Ingeniero de Software",
+            "comment": "Chispudos me ha ahorrado mucho tiempo. Encontré un plomero excelente en minutos."
+          },
+          {
+            "name": "Ana Fernández",
+            "title": "Diseñadora gráfica",
+            "comment": "Muy útil y fácil de usar. Encontré un electricista de confianza rápidamente."
+          }
+        ]
+    },
+    "downloadSection": {
+      "title": "¡Descarga nuestra app ahora!",
+      "description": "¿Necesitas un electricista urgente? ¿O buscas una niñera de confianza? Encuentra al profesional perfecto en cuestión de minutos."
+      }
+    },
+
+"footer": {
+  "title": "Suscríbete a nuestro Newsletter",
+  "placeholder": "Tu Email",
+  "copyright": "Desarrollo web y móvil."
+            },
+  "APIs": {
+    "categories":{
+      "loading": "Loading categories, please wait...",
+      "error": "An error occurred while loading the categories. Please try again later."
+  }
   }
 } 

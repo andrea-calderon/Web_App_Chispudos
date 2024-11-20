@@ -12,9 +12,42 @@ import { Formik, Form } from 'formik';
 import TextAtom from '../atoms/TextAtom';
 import ButtonAtom from '../atoms/ButtonAtom';
 import SampleImage from '../../../src/assets/images/intro_sliders/intro_1.png';
+import { useGetCategoriesQuery } from '../../services/api';
 
 const SearchForm = () => {
   const { t } = useTranslation();
+  const { data: categoriesData, isLoading, error } = useGetCategoriesQuery();
+
+  const departments = [
+    'Alta Verapaz',
+    'Baja Verapaz',
+    'Chimaltenango',
+    'Chiquimula',
+    'Guatemala',
+    'El Progreso',
+    'Escuintla',
+    'Huehuetenango',
+    'Izabal',
+    'Jalapa',
+    'Jutiapa',
+    'Petén',
+    'Quetzaltenango',
+    'Quiché',
+    'Retalhuleu',
+    'Sacatepéquez',
+    'San Marcos',
+    'Santa Rosa',
+    'Sololá',
+    'Suchitepéquez',
+    'Totonicapán',
+    'Zacapa',
+  ];
+
+  const priceRanges = [
+    { label: 'Bajo', value: 'low' },
+    { label: 'Medio', value: 'medium' },
+    { label: 'Alto', value: 'high' },
+  ];
 
   return (
     <Container sx={{ py: 4 }}>
@@ -58,15 +91,20 @@ const SearchForm = () => {
                       <MenuItem value="">
                         <em>{t('landing.searchForm.selectCategory')}</em>
                       </MenuItem>
-                      <MenuItem value="plumber">
-                        {t('landing.searchForm.plumbers')}
-                      </MenuItem>
-                      <MenuItem value="builder">
-                        {t('landing.searchForm.builders')}
-                      </MenuItem>
-                      <MenuItem value="mechanic">
-                        {t('landing.searchForm.mechanics')}
-                      </MenuItem>
+                      {isLoading ? (
+                        <MenuItem disabled>{t('loading')}</MenuItem>
+                      ) : error ? (
+                        <MenuItem disabled>
+                          {t('error_loading_categories')}
+                        </MenuItem>
+                      ) : (
+                        Array.isArray(categoriesData?.data) &&
+                        categoriesData.data.map((category) => (
+                          <MenuItem key={category.id} value={category.id}>
+                            {category.name}
+                          </MenuItem>
+                        ))
+                      )}
                     </Select>
                   </FormControl>
 
@@ -83,9 +121,20 @@ const SearchForm = () => {
                       <MenuItem value="">
                         <em>{t('landing.searchForm.selectService')}</em>
                       </MenuItem>
-                      <MenuItem value="service1">{t('service1')}</MenuItem>
-                      <MenuItem value="service2">{t('service2')}</MenuItem>
-                      <MenuItem value="service3">{t('service3')}</MenuItem>
+                      {isLoading ? (
+                        <MenuItem disabled>{t('loading')}</MenuItem>
+                      ) : error ? (
+                        <MenuItem disabled>
+                          {t('error_loading_services')}
+                        </MenuItem>
+                      ) : (
+                        Array.isArray(categoriesData?.data) &&
+                        categoriesData.data.map((category) => (
+                          <MenuItem key={category.id} value={category.id}>
+                            {category.description}
+                          </MenuItem>
+                        ))
+                      )}
                     </Select>
                   </FormControl>
 
@@ -100,8 +149,13 @@ const SearchForm = () => {
                       <MenuItem value="">
                         <em>{t('landing.searchForm.addLocation')}</em>
                       </MenuItem>
-                      <MenuItem value="location1">{t('location1')}</MenuItem>
-                      <MenuItem value="location2">{t('location2')}</MenuItem>
+                      {departments
+                        .filter((department) => department)
+                        .map((department, index) => (
+                          <MenuItem key={index} value={department}>
+                            {department}
+                          </MenuItem>
+                        ))}
                     </Select>
                   </FormControl>
 
@@ -118,9 +172,13 @@ const SearchForm = () => {
                       <MenuItem value="">
                         <em>{t('landing.searchForm.selectPriceRange')}</em>
                       </MenuItem>
-                      <MenuItem value="low">{t('low')}</MenuItem>
-                      <MenuItem value="medium">{t('medium')}</MenuItem>
-                      <MenuItem value="high">{t('high')}</MenuItem>
+                      {priceRanges
+                        .filter((priceRange) => priceRange)
+                        .map((priceRange, index) => (
+                          <MenuItem key={index} value={priceRange.value}>
+                            {priceRange.label}
+                          </MenuItem>
+                        ))}
                     </Select>
                   </FormControl>
 
@@ -128,7 +186,7 @@ const SearchForm = () => {
                     variant="filled"
                     type="submit"
                     fullWidth
-                    sx={{ width: '200px' }}
+                    sx={{ width: '300px' }}
                   >
                     {t('landing.searchForm.searchProfessional')}
                   </ButtonAtom>
