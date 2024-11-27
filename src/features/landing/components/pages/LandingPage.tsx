@@ -12,7 +12,7 @@ export const LandingPage = () => {
     <LandingLayout>
       <HighlightedCategories />
       <SearchForm />
-      <CategoriesSection />
+
       <FeatureGuarantee />
       <FeatureTestimonials />
       <FeatureDownloadApp />

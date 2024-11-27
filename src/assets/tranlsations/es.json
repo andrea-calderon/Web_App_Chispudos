@@ -131,6 +131,7 @@
       "location": "Ubicación",
       "addLocation": "Agregar ubicación",
       "priceRange": "Rango de precios",
+      "priceLabel": "{{price}}",
       "selectPriceRange": "Elige un rango de precio",
       "searchProfessional": "Buscar profesional",
       "professional_image": "Imagen del profesional"
