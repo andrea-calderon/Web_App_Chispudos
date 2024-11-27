@@ -40,6 +40,9 @@ export const api = createApi({
     getProducts: builder.query<ProductType[], void>({
       query: () => 'public/products/',
     }),
+    getCategories: builder.query<ApiResponseType<CategoryType[]>, void>({
+      query: () => 'categoriesPublic/',
+    }),
     getUsers: builder.query<ApiResponseType<UserResponseType[]>, void>({
       query: () => 'users/',
     }),
@@ -90,4 +93,5 @@ export const {
   useRequestPasswordResetMutation,
   useUpdatePasswordMutation,
   useGetProductsQuery,
+  useGetCategoriesQuery,
 } = api;
