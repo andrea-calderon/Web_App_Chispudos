@@ -8,6 +8,7 @@ import ProtectedRoutesWrapper from '../components/molecules/ProtectedRoutesWrapp
 import { LoginPage } from '../features/auth/components/pages/LoginPage';
 import { LandingPage } from '../features/landing/components/pages/LandingPage';
 import { HomePage } from '../features/home/components/pages/HomePage';
+import { SearchProfessionalPage } from '../features/searchProfessional/components/pages/SearchProfessionalPage';
 import { useAppSelector } from '../hooks/useAppSelector';
 import { selectAuth } from '../redux/slices/authSlice';
 import { ProfilePage } from '../features/profile/components/pages/ProfilePage';
@@ -23,13 +24,7 @@ const AppRoutes = () => {
           {/* Public Route */}
           <Route
             path="/login"
-            element={
-              isAuthenticated ? (
-                <Navigate to="/home" />
-              ) : (
-                <LoginPage />
-              )
-            }
+            element={isAuthenticated ? <Navigate to="/home" /> : <LoginPage />}
           />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/" element={<LandingPage />} />
@@ -38,6 +33,11 @@ const AppRoutes = () => {
           {/* Protected Routes */}
           <Route element={<ProtectedRoutesWrapper />}>
             <Route path="/home" element={<HomePage />} />
+            <Route path="/home" element={<HomePage />} />
+            <Route
+              path="/search-professional"
+              element={<SearchProfessionalPage />}
+            />
             <Route path="/profile" element={<ProfilePage />} />
           </Route>
         </Routes>

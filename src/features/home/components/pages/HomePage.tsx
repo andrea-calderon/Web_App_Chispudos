@@ -4,7 +4,6 @@ import ServicesCard from '../../../../components/atoms/ServicesCard';
 import { Box, Grid2 } from '@mui/material';
 import Footer from '../../../../components/organisms/Footer';
 import HighlightedCategories from '../organisms/Categories';
-import SearchBar from '../../../../components/organisms/SearchBar';
 import { useGetUsersQuery } from '../../../../services/api';
 import SearchForm from '../../../../components/organisms/SearchForm';
 
@@ -67,7 +66,6 @@ export const HomePage: React.FC = () => {
 
   return (
     <UserLayout>
-      <SearchBar />
       <HighlightedCategories />
       <SearchForm />
       <Box sx={{ position: 'relative', padding: 4 }}>

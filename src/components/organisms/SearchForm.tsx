@@ -18,26 +18,37 @@ import { useState } from 'react';
 const SearchForm = () => {
   const { t } = useTranslation();
   const { data: productsData, isLoading, error } = useGetProductsQuery();
+  const [selectedService, setSelectedService] = useState<string | null>(null);
 
   const services = productsData?.map((product) => ({
     id: product.id,
     name: product.name,
   }));
-  const categories = productsData?.flatMap((product) => product.categories);
-  const locations = Array.from(
-    new Set(productsData?.map((product) => product.location)),
-  );
 
-  let priceRanges: { label: string; value: string }[] = [];
-  if (productsData && productsData.length > 0) {
-    const prices = productsData
-      .map((product) => product.price)
-      .filter((price) => price !== null);
+  const filteredCategories = selectedService
+    ? (productsData
+        ?.find((product) => product.id === selectedService)
+        ?.categories.map((cat) => ({ id: cat.id, name: cat.name })) ?? [])
+    : [];
+
+  const filteredLocations = selectedService
+    ? productsData
+        ?.filter((product) => product.id === selectedService)
+        ?.map((product) => product.location ?? product.locations?.name)
+    : [];
+
+  const priceRanges = (() => {
+    if (!selectedService) return [];
+    const selectedProduct = productsData?.find(
+      (product) => product.id === selectedService,
+    );
+    if (!selectedProduct?.price) return [];
+    const prices = [selectedProduct.price];
     const minPrice = Math.min(...prices);
     const maxPrice = Math.max(...prices);
     const midPrice = (minPrice + maxPrice) / 2;
 
-    priceRanges = [
+    return [
       {
         label: `Bajo (${minPrice.toFixed(2)} - ${(midPrice * 0.75).toFixed(2)})`,
         value: 'low',
@@ -51,23 +62,7 @@ const SearchForm = () => {
         value: 'high',
       },
     ];
-  }
-
-  const [selectedService, setSelectedService] = useState<string | null>(null);
-
-  const handleServiceChange = (
-    event: React.ChangeEvent<{ value: unknown }>,
-  ) => {
-    setSelectedService(event.target.value as string);
-  };
-
-  const filteredCategories = categories?.filter((category) =>
-    productsData.some(
-      (product) =>
-        product.id === selectedService &&
-        product.categories.some((cat) => cat.id === category.id),
-    ),
-  );
+  })();
 
   return (
     <Container sx={{ py: 4 }}>
@@ -107,8 +102,8 @@ const SearchForm = () => {
                       name="service"
                       value={values.service}
                       onChange={(e) => {
-                        handleServiceChange(e);
                         handleChange(e);
+                        setSelectedService(e.target.value as string);
                       }}
                       label={t('landing.searchForm.serviceInput')}
                     >
@@ -132,7 +127,7 @@ const SearchForm = () => {
                   </FormControl>
 
                   {/* Categorías */}
-                  <FormControl fullWidth>
+                  <FormControl fullWidth disabled={!selectedService}>
                     <InputLabel>
                       {t('landing.searchForm.categoryInput')}
                     </InputLabel>
@@ -145,24 +140,16 @@ const SearchForm = () => {
                       <MenuItem value="">
                         <em>{t('landing.searchForm.selectCategory')}</em>
                       </MenuItem>
-                      {isLoading ? (
-                        <MenuItem disabled>{t('loading')}</MenuItem>
-                      ) : error ? (
-                        <MenuItem disabled>
-                          {t('error_loading_categories')}
+                      {filteredCategories.map((category) => (
+                        <MenuItem key={category.id} value={category.id}>
+                          {category.name}
                         </MenuItem>
-                      ) : (
-                        filteredCategories?.map((category) => (
-                          <MenuItem key={category.id} value={category.id}>
-                            {category.name}
-                          </MenuItem>
-                        ))
-                      )}
+                      ))}
                     </Select>
                   </FormControl>
 
                   {/* Ubicaciones */}
-                  <FormControl fullWidth>
+                  <FormControl fullWidth disabled={!selectedService}>
                     <InputLabel>{t('landing.searchForm.location')}</InputLabel>
                     <Select
                       name="location"
@@ -173,7 +160,7 @@ const SearchForm = () => {
                       <MenuItem value="">
                         <em>{t('landing.searchForm.addLocation')}</em>
                       </MenuItem>
-                      {locations?.map((location, index) => (
+                      {filteredLocations?.map((location, index) => (
                         <MenuItem key={index} value={location}>
                           {location}
                         </MenuItem>
@@ -182,7 +169,7 @@ const SearchForm = () => {
                   </FormControl>
 
                   {/* Rangos de Precios */}
-                  <FormControl fullWidth>
+                  <FormControl fullWidth disabled={!selectedService}>
                     <InputLabel>
                       {t('landing.searchForm.priceRange')}
                     </InputLabel>
@@ -195,7 +182,7 @@ const SearchForm = () => {
                       <MenuItem value="">
                         <em>{t('landing.searchForm.selectPriceRange')}</em>
                       </MenuItem>
-                      {priceRanges?.map((priceRange, index) => (
+                      {priceRanges.map((priceRange, index) => (
                         <MenuItem key={index} value={priceRange.value}>
                           {t('landing.searchForm.priceLabel', {
                             price: priceRange.label,
@@ -205,7 +192,6 @@ const SearchForm = () => {
                     </Select>
                   </FormControl>
 
-                  {/* Botón de Búsqueda */}
                   <ButtonAtom
                     variant="filled"
                     type="submit"
