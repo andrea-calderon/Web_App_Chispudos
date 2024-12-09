@@ -1,14 +1,32 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { UserLayout } from '../../../../components/templates/UserLayout';
 import { Box } from '@mui/material';
 import Footer from '../../../../components/organisms/Footer';
 import SearchBar from '../../../../components/organisms/SearchBar';
 import { useGetProductsQuery } from '../../../../services/api'; // Hook generado por RTK Query
-import ProfessionalList from '../organisms/ProfessionalList';
+import ProfessionalList from '../organisms/ServicesList';
 
 export const SearchProfessionalPage: React.FC = () => {
-  // Hook de RTK Query para obtener datos
   const { data: products, isLoading, isError } = useGetProductsQuery();
+
+  const [searchFilters, setSearchFilters] = useState({});
+  const [filteredResults, setFilteredResults] = useState(products || []);
+
+  useEffect(() => {
+    if (!products) return;
+
+    let results = products;
+
+    if (searchFilters.textSearch) {
+      results = results.filter((product: any) =>
+        product.name
+          .toLowerCase()
+          .includes(searchFilters.textSearch.toLowerCase()),
+      );
+    }
+
+    setFilteredResults(results);
+  }, [searchFilters, products]);
 
   if (isLoading) {
     return (
@@ -34,15 +52,15 @@ export const SearchProfessionalPage: React.FC = () => {
 
   return (
     <UserLayout>
-      {/* Barra de búsqueda */}
-      <SearchBar />
+      <SearchBar
+        searchFilters={searchFilters}
+        setSearchFilters={setSearchFilters}
+      />
 
-      {/* Lista de profesionales */}
       <Box sx={{ padding: 4 }}>
-        <ProfessionalList professionals={products || []} />
+        <ProfessionalList professionals={filteredResults || []} />
       </Box>
 
-      {/* Pie de página */}
       <Footer />
     </UserLayout>
   );
