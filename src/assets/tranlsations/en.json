@@ -112,8 +112,7 @@
       "searchForm": {
         "title": "What do you need?",
         "body": "Chat with 3 experts instantly and get your perfect quote!",
-        "categoryInput": "Category",
-        "selectCategory": "Select a category",
+        "textPlaceholder": "Type what you're looking for...",
         "serviceInput": "Service",
         "selectService": "Select a service",
         "location": "Location",

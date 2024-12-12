@@ -1,42 +1,46 @@
 import React, { useContext } from 'react';
-import ProfessionalCard from './ServiceCard';
 import { Grid, Typography, Box } from '@mui/material';
+import { useGetProductsQuery } from '../../../../services/api';
+import ProfessionalCard from './ServiceCard';
 import { SearchContext } from '../../../../context/SearchContext';
 
-type ProfessionalListProps = {
-  professionals: {
-    id: string;
-    user: object;
-    name: string;
-    description?: string;
-    location?: string;
-    averageRating: number;
-    reviews: object;
-    category?: string; // Asegúrate de que los profesionales tengan esta propiedad
-  }[];
-};
-
-const ProfessionalList: React.FC<ProfessionalListProps> = ({
-  professionals,
-}) => {
+const ProfessionalList: React.FC = () => {
   const { filters } = useContext(SearchContext);
 
-  // Filtrar los profesionales según los filtros aplicados
-  const filteredProfessionals = professionals.filter((professional) => {
-    const matchesCategory =
-      !filters.categories?.length ||
-      filters.categories.includes(professional.category);
-    const matchesSearchText =
-      !filters.textSearch ||
-      professional.name
-        .toLowerCase()
-        .includes(filters.textSearch.toLowerCase());
-
-    return matchesCategory && matchesSearchText;
+  // Usar filtros dinámicos para obtener los datos desde la API
+  const {
+    data: professionals = [],
+    isLoading,
+    error,
+  } = useGetProductsQuery({
+    textSearch: filters?.textSearch || '',
+    categories: filters?.categories || [],
+    location: filters?.location || '',
+    price: filters?.price || { min: 0, max: 99999 },
   });
 
+  if (isLoading) {
+    return (
+      <Box sx={{ padding: 4 }}>
+        <Typography variant="h6" color="text.secondary" textAlign="center">
+          Cargando servicios...
+        </Typography>
+      </Box>
+    );
+  }
+
+  if (error) {
+    return (
+      <Box sx={{ padding: 4 }}>
+        <Typography variant="h6" color="error" textAlign="center">
+          Ocurrió un error al cargar los servicios.
+        </Typography>
+      </Box>
+    );
+  }
+
   // Si no hay profesionales que coincidan con los filtros
-  if (filteredProfessionals.length === 0) {
+  if (professionals.length === 0) {
     return (
       <Box sx={{ padding: 4 }}>
         <Typography variant="h6" color="text.secondary" textAlign="center">
@@ -48,7 +52,7 @@ const ProfessionalList: React.FC<ProfessionalListProps> = ({
 
   return (
     <Grid container spacing={6}>
-      {filteredProfessionals.map((professional) => (
+      {professionals.map((professional) => (
         <Grid item xs={12} sm={6} md={4} key={professional.id}>
           <ProfessionalCard {...professional} />
         </Grid>

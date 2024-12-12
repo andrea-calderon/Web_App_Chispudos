@@ -8,13 +8,18 @@ import {
   Stack,
   Menu,
   MenuItem,
+  CircularProgress,
 } from '@mui/material';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { SearchContext } from '../../context/SearchContext';
+import { useGetProductsQuery } from '../../services/api';
 
 const SearchBar = () => {
   const { filters, setFilters } = useContext(SearchContext);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
+  // Fetch data from the endpoint
+  const { data: products, isLoading, error } = useGetProductsQuery();
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFilters((prevFilters) => ({
@@ -78,7 +83,7 @@ const SearchBar = () => {
           fullWidth
           variant="outlined"
           placeholder="Buscar..."
-          value={filters.textSearch || ''}
+          value={filters?.textSearch || ''}
           onChange={handleSearchChange}
           InputProps={{
             endAdornment: (
@@ -98,7 +103,7 @@ const SearchBar = () => {
       </Box>
 
       <Stack direction="row" spacing={1} sx={{ mb: 2, flexWrap: 'wrap' }}>
-        {filters.categories?.map((filter) => (
+        {filters?.categories?.map((filter) => (
           <Chip
             key={filter}
             label={filter}
@@ -119,10 +124,22 @@ const SearchBar = () => {
         open={Boolean(anchorEl)}
         onClose={handleCloseMenu}
       >
-        <MenuItem onClick={() => handleFilterSelect('1')}>Plomero</MenuItem>
-        <MenuItem onClick={() => handleFilterSelect('2')}>
-          Electricista
-        </MenuItem>
+        {isLoading ? (
+          <MenuItem>
+            <CircularProgress size={24} />
+          </MenuItem>
+        ) : error ? (
+          <MenuItem>Error al cargar datos</MenuItem>
+        ) : (
+          products?.map((product: any) => (
+            <MenuItem
+              key={product.id}
+              onClick={() => handleFilterSelect(product.name)}
+            >
+              {product.name}
+            </MenuItem>
+          ))
+        )}
       </Menu>
     </Box>
   );

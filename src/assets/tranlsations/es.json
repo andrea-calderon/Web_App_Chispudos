@@ -124,8 +124,7 @@
       "searchForm": {
       "title": "¿Qué necesitas?",
       "body": "¡Chatea con 3 profesionales al momento y consigue tu presupuesto ideal!",
-      "categoryInput": "Categoría",
-      "selectCategory": "Elige una categoría",
+      "textPlaceholder": "Escribe qué estás buscando...",
       "serviceInput": "Servicio",
       "selectService": "Elige un servicio",
       "location": "Ubicación",

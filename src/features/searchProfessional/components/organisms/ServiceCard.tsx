@@ -5,7 +5,15 @@ import { ProductService } from '../../../../types/api/modelTypes';
 import { TextAtom } from '../../../../components/atoms';
 import { ButtonAtom } from '../../../../components/atoms';
 
-const ProfessionalCard: React.FC<ProductService> = ({ ...props }) => {
+const ProfessionalCard: React.FC<ProductService> = ({
+  image,
+  user,
+  name,
+  description,
+  location,
+  averageRating,
+  reviews = [],
+}) => {
   return (
     <Card
       sx={{
@@ -18,14 +26,16 @@ const ProfessionalCard: React.FC<ProductService> = ({ ...props }) => {
       <CardMedia
         component="img"
         height="180"
-        image={props?.image || 'https://picsum.photos/180/100?random=1'}
-        alt={`${'businessName'} service`}
+        image={image || 'https://picsum.photos/180/100?random=1'}
+        alt={`${name || 'Servicio desconocido'} image`}
       />
 
       <CardContent>
         <TextAtom variant="body" size="medium">
-          {props.user.name + ' ' + props.user.lastname}
-        </TextAtom>{' '}
+          {user?.name
+            ? `${user.name} ${user.lastname || ''}`
+            : 'Usuario desconocido'}
+        </TextAtom>
         <br />
         <TextAtom
           variant="title"
@@ -34,11 +44,11 @@ const ProfessionalCard: React.FC<ProductService> = ({ ...props }) => {
           gutterBottom
           sx={{ fontWeight: 'bold' }}
         >
-          {props.name}
+          {name || 'Servicio sin nombre'}
         </TextAtom>
         <br />
         <TextAtom variant="body" size="medium" color="text.secondary">
-          {props.description}
+          {description || 'Descripción no disponible.'}
         </TextAtom>
         <br />
         <TextAtom
@@ -47,12 +57,12 @@ const ProfessionalCard: React.FC<ProductService> = ({ ...props }) => {
           color="text.secondary"
           sx={{ fontWeight: 'bold' }}
         >
-          Ubicación: {props.location}
+          Ubicación: {location || 'No especificada'}
         </TextAtom>
         <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
           <StarIcon fontSize="medium" sx={{ color: 'gold', mr: 0.5 }} />
           <TextAtom variant="body" size="medium">
-            {props.averageRating} | {props.reviews.length} reseñas
+            {averageRating || 0} | {reviews.length} reseñas
           </TextAtom>
         </Box>
       </CardContent>
@@ -64,7 +74,6 @@ const ProfessionalCard: React.FC<ProductService> = ({ ...props }) => {
           size="small"
           color="primary"
           fullWidth
-          // onClick={'onQuoteRequest'}
         >
           Contactar
         </ButtonAtom>

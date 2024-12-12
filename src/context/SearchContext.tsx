@@ -1,35 +1,15 @@
-import React, { createContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 
-type SearchFilters = {
-  textSearch?: string;
-  categories?: string[];
-  location?: string[];
-  price?: {
-    min: number;
-    max: number;
-  };
-};
+export const SearchContext = createContext(null);
 
-type SearchContextType = {
-  filters: SearchFilters;
-  setFilters: React.Dispatch<React.SetStateAction<SearchFilters>>;
-};
-
-export const SearchContext = createContext<SearchContextType | undefined>(
-  undefined,
-);
-
-export const SearchProvider = ({ children }: { children: ReactNode }) => {
-  const [filters, setFilters] = useState<SearchFilters>({
-    textSearch: '',
-    categories: [],
-    location: [],
-    price: { min: 0, max: 0 },
-  });
+export const SearchProvider = ({ children }) => {
+  const [searchData, setSearchData] = useState(null);
 
   return (
-    <SearchContext.Provider value={{ filters, setFilters }}>
+    <SearchContext.Provider value={{ searchData, setSearchData }}>
       {children}
     </SearchContext.Provider>
   );
 };
+
+export const useSearch = () => useContext(SearchContext);
