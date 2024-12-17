@@ -113,7 +113,7 @@
     },
   "form": {
     "title": "¿Qué necesitas?",
-    "subtitle": "¡Chatea con 3 profesionales al momento y consigue tu presupuesto ideal!",
+    "subtitle": "¡Chatea con 3 expertos al momento y consigue tu presupuesto ideal!",
     "category": "Categoría",
     "titlePlaceholder": "Ej. Filtraciones en la cocina",
     "descriptionPlaceholder": "Ej. Necesito reparar una filtración",
@@ -124,24 +124,24 @@
       "searchForm": {
       "title": "¿Qué necesitas?",
       "body": "¡Chatea con 3 profesionales al momento y consigue tu presupuesto ideal!",
-      "categoryInput": "Categoría",
-      "selectCategory": "Elige una categoría",
+      "textPlaceholder": "Escribe qué estás buscando...",
       "serviceInput": "Servicio",
       "selectService": "Elige un servicio",
       "location": "Ubicación",
       "addLocation": "Agregar ubicación",
       "priceRange": "Rango de precios",
+      "priceLabel": "{{price}}",
       "selectPriceRange": "Elige un rango de precio",
       "searchProfessional": "Buscar profesional",
       "professional_image": "Imagen del profesional"
     },
       "highDemand": {
-      "category": "Categorías",
-      "title": "Los profesionales más buscados"
+      "category": "Top Rated",
+      "title": "Los servicios más buscados"
       },
       "guarantee": {
         "category": "Garantía",
-        "tittle": "Cuentas con una cobertura del 100% contratando y pagando con Chispudos.",
+        "tittle": "Cuentas con una cobertura del 100% contratando y pagando con Reco.",
         "button": "Suscríbete ahora"
         },
       "testimonials": {

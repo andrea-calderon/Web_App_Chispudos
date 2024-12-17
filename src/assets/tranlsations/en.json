@@ -111,9 +111,8 @@
         },
       "searchForm": {
         "title": "What do you need?",
-        "body": "Chat with 3 professionals instantly and get your perfect quote!",
-        "categoryInput": "Category",
-        "selectCategory": "Select a category",
+        "body": "Chat with 3 experts instantly and get your perfect quote!",
+        "textPlaceholder": "Type what you're looking for...",
         "serviceInput": "Service",
         "selectService": "Select a service",
         "location": "Location",
@@ -124,12 +123,12 @@
         "professional_image": "Professional image"
       },
       "highDemand": {
-      "category": "Categories",
-      "title": "Professionals in high demand"
+      "category": "Top Rated",
+      "title": "Services in high demand"
       },
       "guarantee": {
         "category": "Guarantee",
-        "tittle": "Enjoy 100% coverage when you sign up and pay with Chispudos.",
+        "tittle": "Enjoy 100% coverage when you sign up and pay with Reco.",
         "button": "Subscribe now"
         },
       "testimonials": {

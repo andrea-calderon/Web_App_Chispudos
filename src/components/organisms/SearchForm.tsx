@@ -7,62 +7,72 @@ import {
   Select,
   InputLabel,
   FormControl,
+  TextField,
+  Slider,
+  Checkbox,
+  ListItemText,
 } from '@mui/material';
 import { Formik, Form } from 'formik';
+import * as Yup from 'yup';
 import TextAtom from '../atoms/TextAtom';
 import ButtonAtom from '../atoms/ButtonAtom';
 import SampleImage from '../../../src/assets/images/intro_sliders/intro_1.png';
-import { useGetCategoriesQuery } from '../../services/api';
+import { useState } from 'react';
+import { useSearch } from '../../context/SearchContext';
+import { useGetProductsQuery } from '../../services/api';
 
 const SearchForm = () => {
   const { t } = useTranslation();
-  const { data: categoriesData, isLoading, error } = useGetCategoriesQuery();
+  const { setSearchData } = useSearch();
 
-  const departments = [
-    'Alta Verapaz',
-    'Baja Verapaz',
-    'Chimaltenango',
-    'Chiquimula',
-    'Guatemala',
-    'El Progreso',
-    'Escuintla',
-    'Huehuetenango',
-    'Izabal',
-    'Jalapa',
-    'Jutiapa',
-    'Petén',
-    'Quetzaltenango',
-    'Quiché',
-    'Retalhuleu',
-    'Sacatepéquez',
-    'San Marcos',
-    'Santa Rosa',
-    'Sololá',
-    'Suchitepéquez',
-    'Totonicapán',
-    'Zacapa',
-  ];
+  const [priceRange, setPriceRange] = useState<number[]>([0, 300]);
 
-  const priceRanges = [
-    { label: 'Bajo', value: 'low' },
-    { label: 'Medio', value: 'medium' },
-    { label: 'Alto', value: 'high' },
-  ];
+  const { data: products = [], isLoading, isError } = useGetProductsQuery();
+
+  const services = Array.from(
+    new Set(
+      products.flatMap(
+        (product) => product.categories?.map((category) => category.name) || [],
+      ),
+    ),
+  );
+
+  const locations = Array.from(
+    new Set(products.map((product) => product.location)),
+  );
+
+  const handlePriceChange = (event: Event, newValue: number | number[]) => {
+    setPriceRange(newValue as number[]);
+  };
+
+  const validationSchema = Yup.object().shape({
+    textSearch: Yup.string(),
+    service: Yup.array().of(Yup.string()),
+    location: Yup.array().of(Yup.string()).min(1, t('forms.commons.required')),
+  });
 
   return (
     <Container sx={{ py: 4 }}>
       <Formik
         initialValues={{
-          category: '',
-          service: '',
-          location: '',
-          price: '',
+          textSearch: '',
+          service: [],
+          location: [],
         }}
+        validationSchema={validationSchema}
         onSubmit={(values) => {
-          console.log(values);
+          const searchObject = {
+            textSearch: values.textSearch,
+            service: values.service,
+            location: values.location,
+            priceRange: { min: priceRange[0], max: priceRange[1] },
+          };
+
+          setSearchData(searchObject); // Update context with search data
+          console.log('Search Object:', searchObject);
         }}
       >
-        {({ values, handleChange }) => (
+        {({ values, handleChange, setFieldValue, errors, touched }) => (
           <Form>
             <Grid container spacing={2} alignItems="center">
               <Grid item xs={12} md={6}>
@@ -79,33 +89,12 @@ const SearchForm = () => {
                   </TextAtom>
 
                   <FormControl fullWidth>
-                    <InputLabel>
-                      {t('landing.searchForm.categoryInput')}
-                    </InputLabel>
-                    <Select
-                      name="category"
-                      value={values.category}
+                    <TextField
+                      name="textSearch"
+                      value={values.textSearch}
                       onChange={handleChange}
-                      label={t('landing.searchForm.categoryInput')}
-                    >
-                      <MenuItem value="">
-                        <em>{t('landing.searchForm.selectCategory')}</em>
-                      </MenuItem>
-                      {isLoading ? (
-                        <MenuItem disabled>{t('loading')}</MenuItem>
-                      ) : error ? (
-                        <MenuItem disabled>
-                          {t('error_loading_categories')}
-                        </MenuItem>
-                      ) : (
-                        Array.isArray(categoriesData?.data) &&
-                        categoriesData.data.map((category) => (
-                          <MenuItem key={category.id} value={category.id}>
-                            {category.name}
-                          </MenuItem>
-                        ))
-                      )}
-                    </Select>
+                      placeholder={t('landing.searchForm.textPlaceholder')}
+                    />
                   </FormControl>
 
                   <FormControl fullWidth>
@@ -114,73 +103,65 @@ const SearchForm = () => {
                     </InputLabel>
                     <Select
                       name="service"
+                      multiple
                       value={values.service}
-                      onChange={handleChange}
-                      label={t('landing.searchForm.serviceInput')}
+                      onChange={(e) => setFieldValue('service', e.target.value)}
+                      renderValue={(selected) => selected.join(', ')}
                     >
-                      <MenuItem value="">
-                        <em>{t('landing.searchForm.selectService')}</em>
-                      </MenuItem>
-                      {isLoading ? (
-                        <MenuItem disabled>{t('loading')}</MenuItem>
-                      ) : error ? (
-                        <MenuItem disabled>
-                          {t('error_loading_services')}
+                      {services.map((service) => (
+                        <MenuItem key={service} value={service}>
+                          <Checkbox
+                            checked={values.service.includes(service)}
+                          />
+                          <ListItemText primary={service} />
                         </MenuItem>
-                      ) : (
-                        Array.isArray(categoriesData?.data) &&
-                        categoriesData.data.map((category) => (
-                          <MenuItem key={category.id} value={category.id}>
-                            {category.description}
-                          </MenuItem>
-                        ))
-                      )}
+                      ))}
                     </Select>
                   </FormControl>
 
-                  <FormControl fullWidth>
+                  <FormControl
+                    fullWidth
+                    error={!!errors.location && touched.location}
+                  >
                     <InputLabel>{t('landing.searchForm.location')}</InputLabel>
                     <Select
                       name="location"
+                      multiple
                       value={values.location}
-                      onChange={handleChange}
-                      label={t('landing.searchForm.location')}
+                      onChange={(e) =>
+                        setFieldValue('location', e.target.value)
+                      }
+                      renderValue={(selected) => selected.join(', ')}
                     >
-                      <MenuItem value="">
-                        <em>{t('landing.searchForm.addLocation')}</em>
-                      </MenuItem>
-                      {departments
-                        .filter((department) => department)
-                        .map((department, index) => (
-                          <MenuItem key={index} value={department}>
-                            {department}
-                          </MenuItem>
-                        ))}
+                      {locations.map((location) => (
+                        <MenuItem key={location} value={location}>
+                          <Checkbox
+                            checked={values.location.includes(location)}
+                          />
+                          <ListItemText primary={location} />
+                        </MenuItem>
+                      ))}
                     </Select>
+                    {touched.location && errors.location && (
+                      <Box sx={{ color: 'red', fontSize: '0.8em', mt: 1 }}>
+                        {errors.location}
+                      </Box>
+                    )}
                   </FormControl>
 
-                  <FormControl fullWidth>
-                    <InputLabel>
+                  <Box>
+                    <TextAtom variant="body" size="large">
                       {t('landing.searchForm.priceRange')}
-                    </InputLabel>
-                    <Select
-                      name="price"
-                      value={values.price}
-                      onChange={handleChange}
-                      label={t('landing.searchForm.priceRange')}
-                    >
-                      <MenuItem value="">
-                        <em>{t('landing.searchForm.selectPriceRange')}</em>
-                      </MenuItem>
-                      {priceRanges
-                        .filter((priceRange) => priceRange)
-                        .map((priceRange, index) => (
-                          <MenuItem key={index} value={priceRange.value}>
-                            {priceRange.label}
-                          </MenuItem>
-                        ))}
-                    </Select>
-                  </FormControl>
+                    </TextAtom>
+                    <Slider
+                      value={priceRange}
+                      onChange={handlePriceChange}
+                      valueLabelDisplay="auto"
+                      min={0}
+                      max={1000}
+                      step={100}
+                    />
+                  </Box>
 
                   <ButtonAtom
                     variant="filled"

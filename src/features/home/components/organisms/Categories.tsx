@@ -4,84 +4,80 @@ import {
   Card,
   CardContent,
   IconButton,
-  useMediaQuery,
+  CircularProgress,
+  Typography,
 } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
+import { useGetCategoriesQuery } from '../../../../services/api';
 import TextAtom from '../../../../components/atoms/TextAtom';
 import ButtonAtom from '../../../../components/atoms/ButtonAtom';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import CleanIcon from '../../../../assets/images/categories_icons/CleanIcon.svg';
-import MechanicIcon from '../../../../assets/images/categories_icons/MecanicIcon.svg';
-import PaintIcon from '../../../../assets/images/categories_icons/PaintIcon.svg';
-import ElectricianIcon from '../../../../assets/images/categories_icons/ElectricianIcon.svg';
-import PlumberIcon from '../../../../assets/images/categories_icons/PlumberIcon.svg';
-import GardenerIcon from '../../../../assets/images/categories_icons/GardenerIcon.svg';
-import BuilderIcon from '../../../../assets/images/categories_icons/BuilderIcon.svg';
-import LocksmithIcon from '../../../../assets/images/categories_icons/LocksmithIcon.svg';
-import CarwashIcon from '../../../../assets/images/categories_icons/CarwashIcon.svg';
 
 const HighlightedCategories = () => {
   const { t } = useTranslation();
-  const theme = useTheme();
-
-  const categories = [
-    { name: t('landing.categories.cleaning'), icon: CleanIcon },
-    { name: t('landing.categories.mechanic'), icon: MechanicIcon },
-    { name: t('landing.categories.paint'), icon: PaintIcon },
-    { name: t('landing.categories.carwash'), icon: CarwashIcon },
-    { name: t('landing.categories.electrician'), icon: ElectricianIcon },
-    { name: t('landing.categories.plumber'), icon: PlumberIcon },
-    { name: t('landing.categories.gardener'), icon: GardenerIcon },
-    { name: t('landing.categories.carpenter'), icon: BuilderIcon },
-    { name: t('landing.categories.locksmith'), icon: LocksmithIcon },
-    { name: t('landing.categories.paint'), icon: PaintIcon },
-    { name: t('landing.categories.carwash'), icon: CarwashIcon },
-  ];
+  const navigate = useNavigate();
+  const { data, isLoading, isError } = useGetCategoriesQuery();
 
   const scrollContainerRef = React.useRef<HTMLDivElement>(null);
 
   const scrollLeft = () => {
     if (scrollContainerRef.current) {
-      const { scrollLeft, clientWidth, scrollWidth } =
-        scrollContainerRef.current;
-      if (scrollLeft === 0) {
-        scrollContainerRef.current.scrollTo({
-          left: scrollWidth,
-          behavior: 'smooth',
-        });
-      } else {
-        scrollContainerRef.current.scrollBy({ left: -200, behavior: 'smooth' });
-      }
+      scrollContainerRef.current.scrollBy({ left: -200, behavior: 'smooth' });
     }
   };
 
   const scrollRight = () => {
     if (scrollContainerRef.current) {
-      const { scrollLeft, clientWidth, scrollWidth } =
-        scrollContainerRef.current;
-      if (scrollLeft + clientWidth >= scrollWidth) {
-        scrollContainerRef.current.scrollTo({ left: 0, behavior: 'smooth' });
-      } else {
-        scrollContainerRef.current.scrollBy({ left: 200, behavior: 'smooth' });
-      }
+      scrollContainerRef.current.scrollBy({ left: 200, behavior: 'smooth' });
     }
   };
 
-  return (
-    <Box sx={{ py: 5, position: 'relative', overflow: 'hidden' }}>
+  const handleNavigate = () => {
+    navigate('/search-professional');
+  };
+
+  if (isLoading) {
+    return (
       <Box
         sx={{
           display: 'flex',
+          justifyContent: 'center',
           alignItems: 'center',
-          mb: 3,
+          height: 200,
         }}
       >
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  if (isError || !data?.data) {
+    return (
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: 200,
+        }}
+      >
+        <Typography variant="h6" color="error">
+          {t('error.loadingCategories')}
+        </Typography>
+      </Box>
+    );
+  }
+
+  const categories = data.data;
+
+  return (
+    <Box sx={{ py: 5, position: 'relative', overflow: 'hidden' }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
         <TextAtom variant="title" size="large" fontWeight="bold">
           {t('landing.categories.title')}
         </TextAtom>
-
         <ButtonAtom
           variant="text"
           sx={{
@@ -89,6 +85,7 @@ const HighlightedCategories = () => {
             color: 'primary.main',
             marginLeft: 2,
           }}
+          onClick={handleNavigate}
         >
           <TextAtom variant="label" size="large">
             {t('landing.categories.button')}
@@ -106,9 +103,7 @@ const HighlightedCategories = () => {
           backgroundColor: 'rgba(255, 255, 255, 0.8)',
           color: 'primary.main',
           zIndex: 1,
-          '&:hover': {
-            backgroundColor: 'rgba(255, 255, 255, 1)',
-          },
+          '&:hover': { backgroundColor: 'rgba(255, 255, 255, 1)' },
           padding: 1,
           margin: 1,
         }}
@@ -126,9 +121,7 @@ const HighlightedCategories = () => {
           backgroundColor: 'rgba(255, 255, 255, 0.8)',
           color: 'primary.main',
           zIndex: 1,
-          '&:hover': {
-            backgroundColor: 'rgba(255, 255, 255, 1)',
-          },
+          '&:hover': { backgroundColor: 'rgba(255, 255, 255, 1)' },
           padding: 1,
           margin: 1,
         }}
@@ -141,17 +134,15 @@ const HighlightedCategories = () => {
         sx={{
           display: 'flex',
           overflowX: 'auto',
-          scrollbarWidth: 'none', // For Firefox
-          '&::-webkit-scrollbar': {
-            display: 'none', // For Chrome, Safari, and Opera
-          },
+          scrollbarWidth: 'none',
+          '&::-webkit-scrollbar': { display: 'none' },
           gap: 2,
           padding: '10px 0',
         }}
       >
-        {categories.map((category, index) => (
+        {categories.map((category) => (
           <Card
-            key={index}
+            key={category.id}
             sx={{
               display: 'flex',
               backgroundColor: 'primary.light',
@@ -159,8 +150,8 @@ const HighlightedCategories = () => {
               borderRadius: '32px',
               padding: '15px',
               boxShadow: 'none',
-              minWidth: '125px',
-              maxWidth: '125px',
+              minWidth: '150px',
+              maxWidth: '150px',
               flexShrink: 0,
             }}
           >
@@ -171,6 +162,7 @@ const HighlightedCategories = () => {
                 width="30"
                 height="30"
               />
+              <br />
               <TextAtom
                 variant="body"
                 size="medium"

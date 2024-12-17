@@ -4,6 +4,7 @@ import { selectAuth } from '../redux/slices/authSlice';
 import { UserResponseType, ApiResponseType } from '../types/api/apiResponses';
 import { LoginValues } from '../types/api/apiRequests';
 import { logout } from '../redux/slices/authSlice';
+import { ProductType } from '../services/productTypes';
 
 const baseQuery = fetchBaseQuery({
   baseUrl: import.meta.env.VITE_BASE_API_URL || 'http://localhost:8000/api/v1/',
@@ -16,7 +17,6 @@ const baseQuery = fetchBaseQuery({
   },
 });
 
-// Custom baseQuery to handle 401/403 responses
 const baseQueryWithReauth: typeof baseQuery = async (
   args,
   api,
@@ -24,7 +24,6 @@ const baseQueryWithReauth: typeof baseQuery = async (
 ) => {
   const result = await baseQuery(args, api, extraOptions);
 
-  // Check for 401 or 403 status codes
   const errorStatus =
     result.error?.status === 401 || result.error?.status === 403;
   const errorOriginalStatus =
@@ -34,11 +33,16 @@ const baseQueryWithReauth: typeof baseQuery = async (
   return result;
 };
 
-// Create the API with the custom baseQuery
 export const api = createApi({
   reducerPath: 'api',
   baseQuery: baseQueryWithReauth,
   endpoints: (builder) => ({
+    getProducts: builder.query<ProductType[], void>({
+      query: () => 'public/products/',
+    }),
+    getCategories: builder.query<ApiResponseType<CategoryType[]>, void>({
+      query: () => 'public/categories/',
+    }),
     getUsers: builder.query<ApiResponseType<UserResponseType[]>, void>({
       query: () => 'users/',
     }),
@@ -79,9 +83,6 @@ export const api = createApi({
         },
       }),
     }),
-        getCategories: builder.query<ApiResponseType<CategoryType[]>, void>({
-          query: () => 'categoriesPublic/',
-        }),
   }),
 });
 
@@ -91,5 +92,6 @@ export const {
   useSignupMutation,
   useRequestPasswordResetMutation,
   useUpdatePasswordMutation,
-  useGetCategoriesQuery, // Nuevo hook para obtener categorías
+  useGetProductsQuery,
+  useGetCategoriesQuery,
 } = api;
