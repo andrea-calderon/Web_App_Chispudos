@@ -34,19 +34,20 @@ const IntroSlider: React.FC = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       handleNext();
-    }, 3000); // Change slide every 3 seconds
+    }, 3000);
 
-    return () => clearInterval(interval); // Clear interval on component unmount
+    return () => clearInterval(interval);
   }, []);
 
   return (
     <Grid
       item
       xs={12}
-      md={8}
+      md={6}
+      lg={8}
       sx={{
         backgroundColor: '#F4F4F4',
-        display: 'flex',
+        display: { xs: 'none', md: 'flex' },
         justifyContent: 'center',
         alignItems: 'center',
         flexDirection: 'column',
