@@ -8,7 +8,8 @@ import ProtectedRoutesWrapper from '../components/molecules/ProtectedRoutesWrapp
 import { LoginPage } from '../features/auth/components/pages/LoginPage';
 import { LandingPage } from '../features/landing/components/pages/LandingPage';
 import { HomePage } from '../features/home/components/pages/HomePage';
-import { SearchProfessionalPage } from '../features/searchProfessional/components/pages/SearchProfessionalPage';
+import { SearchServicesPage } from '../features/searchServices/components/pages/SearchServicesPage';
+import { ServiceDetailPage } from '../features/ServiceDetailPage/components/pages/ServiceDetailPage';
 import { useAppSelector } from '../hooks/useAppSelector';
 import { selectAuth } from '../redux/slices/authSlice';
 import { ProfilePage } from '../features/profile/components/pages/ProfilePage';
@@ -21,7 +22,7 @@ const AppRoutes = () => {
     <div>
       <Router>
         <Routes>
-          {/* Public Route */}
+          {/* Public Routes */}
           <Route
             path="/login"
             element={isAuthenticated ? <Navigate to="/home" /> : <LoginPage />}
@@ -33,12 +34,12 @@ const AppRoutes = () => {
           {/* Protected Routes */}
           <Route element={<ProtectedRoutesWrapper />}>
             <Route path="/home" element={<HomePage />} />
-            <Route path="/home" element={<HomePage />} />
-            <Route
-              path="/search-professional"
-              element={<SearchProfessionalPage />}
-            />
             <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/search-services" element={<SearchServicesPage />} />
+            <Route
+              path="/service-details/{id}"
+              element={<ServiceDetailPage />}
+            />
           </Route>
         </Routes>
       </Router>

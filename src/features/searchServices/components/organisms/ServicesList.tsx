@@ -4,7 +4,11 @@ import ServiceCard from './ServiceCard'; // Cambié el nombre a "ServiceCard" pa
 import { useSearch } from '../../../../context/SearchContext';
 import { useGetProductsQuery } from '../../../../services/api';
 
-const ServicesList: React.FC = () => {
+interface ServicesListProps {
+  onServiceClick: (id: string) => void; // Nueva prop para manejar clics
+}
+
+const ServicesList: React.FC<ServicesListProps> = ({ onServiceClick }) => {
   const { searchData } = useSearch();
 
   // Fetch data with dynamic filters from the SearchContext
@@ -54,7 +58,11 @@ const ServicesList: React.FC = () => {
     <Grid container spacing={4}>
       {services.map((service: any) => (
         <Grid item xs={12} sm={6} md={4} key={service.id}>
-          <ServiceCard {...service} />
+          <ServiceCard
+            {...service}
+            onClick={() => onServiceClick(service.id)}
+          />{' '}
+          {/* Maneja el clic */}
         </Grid>
       ))}
     </Grid>

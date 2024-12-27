@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom'; // Importa useNavigate
 import { UserLayout } from '../../../../components/templates/UserLayout';
 import { Box } from '@mui/material';
 import Footer from '../../../../components/organisms/Footer';
 import SearchBar from '../../../../components/organisms/SearchBar';
-import { useGetProductsQuery } from '../../../../services/api'; // Hook generado por RTK Query
-import ProfessionalList from '../organisms/ServicesList';
+import { useGetProductsQuery } from '../../../../services/api';
+import ServicesList from '../organisms/ServicesList';
 
-export const SearchProfessionalPage: React.FC = () => {
+export const SearchServicesPage: React.FC = () => {
   const { data: products, isLoading, isError } = useGetProductsQuery();
+  const navigate = useNavigate(); // Hook para navegar
 
   const [searchFilters, setSearchFilters] = useState({});
   const [filteredResults, setFilteredResults] = useState(products || []);
@@ -28,11 +30,15 @@ export const SearchProfessionalPage: React.FC = () => {
     setFilteredResults(results);
   }, [searchFilters, products]);
 
+  const handleServiceClick = (id: string) => {
+    navigate(`/services/${id}`); // Redirige a la página de detalles
+  };
+
   if (isLoading) {
     return (
       <UserLayout>
         <Box sx={{ padding: 4 }}>
-          <h2>Cargando profesionales...</h2>
+          <h2>Cargando servicios...</h2>
         </Box>
       </UserLayout>
     );
@@ -58,7 +64,10 @@ export const SearchProfessionalPage: React.FC = () => {
       />
 
       <Box sx={{ padding: 4 }}>
-        <ProfessionalList professionals={filteredResults || []} />
+        <ServicesList
+          professionals={filteredResults || []}
+          onServiceClick={handleServiceClick} // Pasa la función a la lista
+        />
       </Box>
 
       <Footer />

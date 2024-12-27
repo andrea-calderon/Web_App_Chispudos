@@ -35,7 +35,7 @@ const HighlightedCategories = () => {
   };
 
   const handleNavigate = () => {
-    navigate('/search-professional');
+    navigate('/search-services');
   };
 
   if (isLoading) {
