@@ -1,69 +1,68 @@
 import React from 'react';
+import { useParams } from 'react-router-dom';
+import { useGetProductByIdQuery } from '../../../../services/api';
 import { UserLayout } from '../../../../components/templates/UserLayout';
 import Footer from '../../../../components/organisms/Footer';
-import { Box, Grid } from '@mui/material';
+import { Box, Grid, CircularProgress, Typography } from '@mui/material';
 import { ServiceHeader } from '../organisms/ServiceHeader';
 import { ServiceSkills } from '../organisms/ServiceSkills';
 import { ServiceProjects } from '../organisms/ServiceProjects';
 import { ServiceReviews } from '../organisms/ServiceReviews';
 
-// Datos temporales para simular la información del servicio
-const serviceData = {
-  title: 'Plomería La Bendición',
-  providerName: 'José Pérez',
-  rating: 3.5,
-  image: 'https://picsum.photos/345/180?random=1',
-  skills: `José Pérez es un plomero experimentado y calificado. Tiene amplios conocimientos en la instalación y mantenimiento de sistemas de plomería.`,
-  recentProjects: [
-    {
-      title: 'Restaurante local',
-      img: 'https://images.offerup.com/9EDppmaWhmYpM92jEEJJFekPA8o=/768x1020/5ccd/5ccd2ed5a5134c67ab0d696df1e8f244.jpg',
-    },
-    { title: 'Remodelar baño', img: '/assets/project2.jpg' },
-    { title: 'Plomería de una cocina', img: '/assets/project3.jpg' },
-    { title: 'Sistema de plomería comercial', img: '/assets/project4.jpg' },
-  ],
-  reviews: [
-    {
-      name: 'Elizabeth Del Valle',
-      date: 'Hace un día',
-      comment: 'Recomiendo a José para cualquier necesidad de plomería.',
-      rating: 5,
-    },
-    {
-      name: 'Juan Gonzales',
-      date: 'Hace 5 días',
-      comment: 'Tiene una gran cantidad de conocimiento y experiencia.',
-      rating: 4,
-    },
-    {
-      name: 'Juan Gonzales',
-      date: 'Hace 5 días',
-      comment: 'Tiene una gran cantidad de conocimiento y experiencia.',
-      rating: 1,
-    },
-  ],
-};
-
 export const ServiceDetailPage = () => {
+  const { id } = useParams<{ id: string }>(); // Obtener el ID desde la URL
+  const { data: service, isLoading, isError } = useGetProductByIdQuery(id!); // Llamar a la API
+
+  if (isLoading) {
+    return (
+      <UserLayout>
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          height="100vh"
+        >
+          <CircularProgress />
+        </Box>
+      </UserLayout>
+    );
+  }
+
+  if (isError || !service) {
+    return (
+      <UserLayout>
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          height="100vh"
+        >
+          <Typography variant="h6" color="error">
+            Error loading service details. Please try again.
+          </Typography>
+        </Box>
+      </UserLayout>
+    );
+  }
+
   return (
     <UserLayout>
       <ServiceHeader
-        title={serviceData.title}
-        providerName={serviceData.providerName}
-        rating={serviceData.rating}
-        image={serviceData.image}
+        title={service.title}
+        providerName={service.providerName}
+        rating={service.rating}
+        image={service.image}
       />
       <Grid container spacing={2}>
         <Grid item xs={8}>
           <Box>
-            <ServiceSkills skills={serviceData.skills} />
-            <ServiceProjects projects={serviceData.recentProjects} />
+            <ServiceSkills skills={service.skills} />
+            <ServiceProjects projects={service.recentProjects} />
           </Box>
         </Grid>
         <Grid item xs={4}>
           <Box>
-            <ServiceReviews reviews={serviceData.reviews} />
+            <ServiceReviews reviews={service.reviews} />
           </Box>
         </Grid>
       </Grid>
