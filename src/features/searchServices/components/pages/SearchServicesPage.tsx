@@ -1,44 +1,56 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom'; // Importa useNavigate
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { UserLayout } from '../../../../components/templates/UserLayout';
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import Footer from '../../../../components/organisms/Footer';
-import SearchBar from '../../../../components/organisms/SearchBar';
-import { useGetProductsQuery } from '../../../../services/api';
+import SearchForm from '../../../../components/organisms/SearchForm';
+import { useSearch } from '../../../../context/SearchContext';
 import ServicesList from '../organisms/ServicesList';
+import { useGetProductsQuery } from '../../../../services/api';
 
 export const SearchServicesPage: React.FC = () => {
-  const { data: products, isLoading, isError } = useGetProductsQuery();
-  const navigate = useNavigate(); // Hook para navegar
+  const navigate = useNavigate();
+  const { searchData } = useSearch();
+  const [filteredResults, setFilteredResults] = useState([]);
 
-  const [searchFilters, setSearchFilters] = useState({});
-  const [filteredResults, setFilteredResults] = useState(products || []);
+  const { data: allServices = [], isLoading, isError } = useGetProductsQuery();
 
   useEffect(() => {
-    if (!products) return;
+    if (!allServices.length) return;
 
-    let results = products;
+    let results = allServices;
 
-    if (searchFilters.textSearch) {
-      results = results.filter((product: any) =>
-        product.name
-          .toLowerCase()
-          .includes(searchFilters.textSearch.toLowerCase()),
+    if (searchData?.service?.length) {
+      results = results.filter((service) =>
+        searchData.service.includes(service.categories?.[0]?.name),
+      );
+    }
+
+    if (searchData?.location?.length) {
+      results = results.filter((service) =>
+        searchData.location.includes(service.location),
+      );
+    }
+
+    if (searchData?.priceRange) {
+      const { min, max } = searchData.priceRange;
+      results = results.filter(
+        (service) => service.pricePerHour >= min && service.pricePerHour <= max,
       );
     }
 
     setFilteredResults(results);
-  }, [searchFilters, products]);
+  }, [searchData, allServices]);
 
   const handleServiceClick = (id: string) => {
-    navigate(`/services/${id}`); // Redirige a la página de detalles
+    navigate(`/services/${id}`);
   };
 
   if (isLoading) {
     return (
       <UserLayout>
         <Box sx={{ padding: 4 }}>
-          <h2>Cargando servicios...</h2>
+          <Typography variant="h6">Cargando servicios...</Typography>
         </Box>
       </UserLayout>
     );
@@ -48,9 +60,9 @@ export const SearchServicesPage: React.FC = () => {
     return (
       <UserLayout>
         <Box sx={{ padding: 4 }}>
-          <h2 style={{ color: 'red' }}>
-            Error al cargar los datos. Intenta de nuevo.
-          </h2>
+          <Typography variant="h6" color="error">
+            Ocurrió un error al cargar los servicios.
+          </Typography>
         </Box>
       </UserLayout>
     );
@@ -58,19 +70,22 @@ export const SearchServicesPage: React.FC = () => {
 
   return (
     <UserLayout>
-      <SearchBar
-        searchFilters={searchFilters}
-        setSearchFilters={setSearchFilters}
-      />
-
+      <SearchForm />
       <Box sx={{ padding: 4 }}>
-        <ServicesList
-          professionals={filteredResults || []}
-          onServiceClick={handleServiceClick} // Pasa la función a la lista
-        />
+        {filteredResults.length > 0 ? (
+          <ServicesList
+            professionals={filteredResults}
+            onServiceClick={handleServiceClick}
+          />
+        ) : (
+          <Typography variant="h6" color="textSecondary">
+            No se encontraron resultados para tu búsqueda.
+          </Typography>
+        )}
       </Box>
-
       <Footer />
     </UserLayout>
   );
 };
+
+export default SearchServicesPage;

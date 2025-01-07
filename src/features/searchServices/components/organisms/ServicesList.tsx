@@ -1,50 +1,17 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { Grid, Typography, Box, CircularProgress } from '@mui/material';
-import ServiceCard from './ServiceCard'; // Cambié el nombre a "ServiceCard" para consistencia
-import { useSearch } from '../../../../context/SearchContext';
-import { useGetProductsQuery } from '../../../../services/api';
+import ServiceCard from './ServiceCard'; // Componente reutilizable para mostrar detalles de un servicio
 
 interface ServicesListProps {
-  onServiceClick: (id: string) => void; // Nueva prop para manejar clics
+  professionals: any[]; // Lista de servicios a mostrar
+  onServiceClick: (id: string) => void; // Prop para manejar clics en un servicio
 }
 
-const ServicesList: React.FC<ServicesListProps> = ({ onServiceClick }) => {
-  const { searchData } = useSearch();
-
-  // Fetch data with dynamic filters from the SearchContext
-  const {
-    data: services = [],
-    isLoading,
-    error,
-  } = useGetProductsQuery({
-    textSearch: searchData.textSearch,
-    categories: searchData.categories,
-    location: searchData.location,
-    price: searchData.price,
-  });
-
-  if (isLoading) {
-    return (
-      <Box sx={{ padding: 4, textAlign: 'center' }}>
-        <CircularProgress />
-        <Typography variant="body1" color="text.secondary" sx={{ mt: 2 }}>
-          Cargando servicios...
-        </Typography>
-      </Box>
-    );
-  }
-
-  if (error) {
-    return (
-      <Box sx={{ padding: 4, textAlign: 'center' }}>
-        <Typography variant="h6" color="error">
-          Ocurrió un error al cargar los servicios.
-        </Typography>
-      </Box>
-    );
-  }
-
-  if (services.length === 0) {
+const ServicesList: React.FC<ServicesListProps> = ({
+  professionals,
+  onServiceClick,
+}) => {
+  if (!professionals.length) {
     return (
       <Box sx={{ padding: 4, textAlign: 'center' }}>
         <Typography variant="h6" color="text.secondary">
@@ -56,13 +23,18 @@ const ServicesList: React.FC<ServicesListProps> = ({ onServiceClick }) => {
 
   return (
     <Grid container spacing={4}>
-      {services.map((service: any) => (
+      {professionals.map((service) => (
         <Grid item xs={12} sm={6} md={4} key={service.id}>
           <ServiceCard
-            {...service}
-            onClick={() => onServiceClick(service.id)}
-          />{' '}
-          {/* Maneja el clic */}
+            id={service.id}
+            name={service.name}
+            image={service.image}
+            pricePerHour={service.pricePerHour}
+            rating={service.rating}
+            reviewCount={service.reviewCount}
+            jobsInQueue={service.jobsInQueue}
+            onClick={() => onServiceClick(service.id)} // Maneja el clic en el servicio
+          />
         </Grid>
       ))}
     </Grid>
