@@ -6,7 +6,7 @@ import { TextAtom } from '../../../../components/atoms';
 import { ButtonAtom } from '../../../../components/atoms';
 
 interface ServiceCardProps extends ProductService {
-  onClick?: () => void; // Nueva prop para manejar clics
+  onClick?: () => void;
 }
 
 const ServiceCard: React.FC<ServiceCardProps> = ({
@@ -17,7 +17,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
   location,
   averageRating,
   reviews = [],
-  onClick, // Recibimos la prop
+  onClick,
 }) => {
   return (
     <Card
@@ -26,11 +26,10 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
         margin: 2,
         boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.15)',
         borderRadius: '32px',
-        cursor: onClick ? 'pointer' : 'default', // Cambia el cursor si hay un clic disponible
+        cursor: onClick ? 'pointer' : 'default',
       }}
-      onClick={onClick} // Asignamos el evento al contenedor principal
+      onClick={onClick}
     >
-      {/* Imagen del servicio */}
       <CardMedia
         component="img"
         height="180"

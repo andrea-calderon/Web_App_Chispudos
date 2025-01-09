@@ -7,16 +7,28 @@ interface Project {
 }
 
 interface ServiceProjectsProps {
-  projects?: Project[]; // projects ahora es opcional para manejar estados indefinidos
+  projects?: Project[];
 }
 
 export const ServiceProjects: React.FC<ServiceProjectsProps> = ({
-  projects = [], // Valor por defecto para evitar errores si no se pasa la prop
+  projects = [
+    {
+      title: 'Reforma de baño',
+      img: 'https://via.placeholder.com/200x120?text=Reforma+de+baño',
+    },
+    {
+      title: 'Construcción de terraza',
+      img: 'https://via.placeholder.com/200x120?text=Construcción+de+terraza',
+    },
+    {
+      title: 'Pintura de fachada',
+      img: 'https://via.placeholder.com/200x120?text=Pintura+de+fachada',
+    },
+  ],
 }) => {
-  // Si no hay proyectos, mostramos un mensaje
   if (!projects.length) {
     return (
-      <Box marginY="6rem" marginLeft={16} textAlign="center">
+      <Box marginY="6rem" marginLeft={16} textAlign="left">
         <Typography variant="h5" fontWeight="bold" marginBottom="1rem">
           Proyectos recientes
         </Typography>
@@ -36,13 +48,17 @@ export const ServiceProjects: React.FC<ServiceProjectsProps> = ({
         {projects.map((project) => (
           <Card
             key={project.title}
-            sx={{ width: '200px', borderRadius: '8px' }}
+            sx={{
+              width: '200px',
+              borderRadius: '8px',
+              boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+            }}
           >
             <CardMedia
               component="img"
               image={project.img}
               alt={project.title}
-              sx={{ height: '120px', width: '200px', objectFit: 'cover' }}
+              sx={{ height: '120px', objectFit: 'cover' }}
             />
             <CardContent>
               <Typography variant="body1" textAlign="center">

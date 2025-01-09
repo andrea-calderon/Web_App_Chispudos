@@ -1,10 +1,10 @@
 import React from 'react';
 import { Grid, Typography, Box, CircularProgress } from '@mui/material';
-import ServiceCard from './ServiceCard'; // Componente reutilizable para mostrar detalles de un servicio
+import ServiceCard from './ServiceCard';
 
 interface ServicesListProps {
-  professionals: any[]; // Lista de servicios a mostrar
-  onServiceClick: (id: string) => void; // Prop para manejar clics en un servicio
+  professionals: any[];
+  onServiceClick: (id: string) => void;
 }
 
 const ServicesList: React.FC<ServicesListProps> = ({
@@ -33,7 +33,7 @@ const ServicesList: React.FC<ServicesListProps> = ({
             rating={service.rating}
             reviewCount={service.reviewCount}
             jobsInQueue={service.jobsInQueue}
-            onClick={() => onServiceClick(service.id)} // Maneja el clic en el servicio
+            onClick={() => onServiceClick(service.id)}
           />
         </Grid>
       ))}

@@ -29,16 +29,22 @@ export const ServiceHeader: React.FC<ServiceHeaderProps> = ({
         component="img"
         image={image}
         alt={title}
-        sx={{ width: '325px', height: '200px', borderRadius: '16px' }}
+        sx={{
+          width: '325px',
+          height: '200px',
+          borderRadius: '16px',
+        }}
       />
       <Box>
         <Typography variant="h4" fontWeight="bold">
-          {title}
+          {title || 'Servicio no disponible'}
         </Typography>
-        <Typography variant="h6">{providerName}</Typography>
+        <Typography variant="h6">
+          {providerName || 'Proveedor desconocido'}
+        </Typography>
         <Box display="flex" alignItems="center" gap="0.5rem">
           <Typography variant="h5" fontWeight="bold">
-            {rating}
+            {rating ? rating.toFixed(1) : 'Aún no tiene reseñas.'}
           </Typography>
           {[...Array(5)].map((_, i) => (
             <StarIcon
