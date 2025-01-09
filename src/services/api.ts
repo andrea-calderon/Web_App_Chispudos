@@ -41,7 +41,7 @@ export const api = createApi({
       query: () => 'public/products/',
     }),
     getProductById: builder.query<ProductType, string>({
-      query: (id) => `public/products/${id}/`,
+      query: (id) => `/products/${id}/`,
     }),
     getCategories: builder.query<ApiResponseType<CategoryType[]>, void>({
       query: () => 'public/categories/',
