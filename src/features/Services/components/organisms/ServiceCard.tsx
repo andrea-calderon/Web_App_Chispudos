@@ -5,7 +5,11 @@ import { ProductService } from '../../../../types/api/modelTypes';
 import { TextAtom } from '../../../../components/atoms';
 import { ButtonAtom } from '../../../../components/atoms';
 
-const ServiceCard: React.FC<ProductService> = ({
+interface ServiceCardProps extends ProductService {
+  onClick?: () => void;
+}
+
+const ServiceCard: React.FC<ServiceCardProps> = ({
   image,
   user,
   name,
@@ -13,6 +17,7 @@ const ServiceCard: React.FC<ProductService> = ({
   location,
   averageRating,
   reviews = [],
+  onClick,
 }) => {
   return (
     <Card
@@ -21,9 +26,10 @@ const ServiceCard: React.FC<ProductService> = ({
         margin: 2,
         boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.15)',
         borderRadius: '32px',
+        cursor: onClick ? 'pointer' : 'default',
       }}
+      onClick={onClick}
     >
-      {/* Imagen del servicio */}
       <CardMedia
         component="img"
         height="180"
@@ -81,6 +87,10 @@ const ServiceCard: React.FC<ProductService> = ({
           size="medium"
           color="primary"
           fullWidth
+          onClick={(e) => {
+            e.stopPropagation(); // Evitamos que el evento de clic en el botón propague al resto de la tarjeta
+            if (onClick) onClick();
+          }}
         >
           Contactar
         </ButtonAtom>

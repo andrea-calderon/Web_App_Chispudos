@@ -23,12 +23,17 @@ import { useGetProductsQuery } from '../../services/api';
 
 const SearchForm = () => {
   const { t } = useTranslation();
-  const { setSearchData } = useSearch();
+  const { searchData, updateSearchData } = useSearch();
 
-  const [priceRange, setPriceRange] = useState<number[]>([0, 300]);
+  const [priceRange, setPriceRange] = useState<number[]>([
+    searchData.price.min || 0,
+    searchData.price.max || 300,
+  ]);
 
-  const { data: products = [], isLoading, isError } = useGetProductsQuery();
+  // Consumo del endpoint utilizando `useGetProductsQuery`
+  const { data: products = [] } = useGetProductsQuery();
 
+  // Extracción de categorías y ubicaciones únicas.
   const services = Array.from(
     new Set(
       products.flatMap(
@@ -43,32 +48,37 @@ const SearchForm = () => {
 
   const handlePriceChange = (event: Event, newValue: number | number[]) => {
     setPriceRange(newValue as number[]);
+    updateSearchData('price', {
+      min: (newValue as number[])[0],
+      max: (newValue as number[])[1],
+    });
   };
 
   const validationSchema = Yup.object().shape({
     textSearch: Yup.string(),
     service: Yup.array().of(Yup.string()),
-    location: Yup.array().of(Yup.string()).min(1, t('forms.commons.required')),
+    location: Yup.array().of(Yup.string()),
   });
 
   return (
     <Container sx={{ py: 4 }}>
       <Formik
         initialValues={{
-          textSearch: '',
-          service: [],
-          location: [],
+          textSearch: searchData.textSearch || '',
+          service: searchData.service || [],
+          location: searchData.location || [],
         }}
         validationSchema={validationSchema}
         onSubmit={(values) => {
           const searchObject = {
-            textSearch: values.textSearch,
-            service: values.service,
-            location: values.location,
-            priceRange: { min: priceRange[0], max: priceRange[1] },
+            ...values,
+            price: { min: priceRange[0], max: priceRange[1] },
           };
 
-          setSearchData(searchObject); // Update context with search data
+          updateSearchData('textSearch', values.textSearch);
+          updateSearchData('categories', values.service);
+          updateSearchData('location', values.location);
+
           console.log('Search Object:', searchObject);
         }}
       >
@@ -92,7 +102,10 @@ const SearchForm = () => {
                     <TextField
                       name="textSearch"
                       value={values.textSearch}
-                      onChange={handleChange}
+                      onChange={(e) => {
+                        handleChange(e);
+                        updateSearchData('textSearch', e.target.value);
+                      }}
                       placeholder={t('landing.searchForm.textPlaceholder')}
                     />
                   </FormControl>
@@ -105,7 +118,10 @@ const SearchForm = () => {
                       name="service"
                       multiple
                       value={values.service}
-                      onChange={(e) => setFieldValue('service', e.target.value)}
+                      onChange={(e) => {
+                        setFieldValue('service', e.target.value);
+                        updateSearchData('categories', e.target.value);
+                      }}
                       renderValue={(selected) => selected.join(', ')}
                     >
                       {services.map((service) => (
@@ -119,18 +135,16 @@ const SearchForm = () => {
                     </Select>
                   </FormControl>
 
-                  <FormControl
-                    fullWidth
-                    error={!!errors.location && touched.location}
-                  >
+                  <FormControl fullWidth>
                     <InputLabel>{t('landing.searchForm.location')}</InputLabel>
                     <Select
                       name="location"
                       multiple
                       value={values.location}
-                      onChange={(e) =>
-                        setFieldValue('location', e.target.value)
-                      }
+                      onChange={(e) => {
+                        setFieldValue('location', e.target.value);
+                        updateSearchData('location', e.target.value);
+                      }}
                       renderValue={(selected) => selected.join(', ')}
                     >
                       {locations.map((location) => (

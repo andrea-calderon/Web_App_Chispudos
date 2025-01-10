@@ -4,7 +4,7 @@ import ServicesCard from '../../../../components/atoms/ServicesCard';
 import { Box, Grid2 } from '@mui/material';
 import Footer from '../../../../components/organisms/Footer';
 import HighlightedCategories from '../organisms/Categories';
-import { useGetUsersQuery } from '../../../../services/api';
+import { useSearch } from '../../../../context/SearchContext';
 import SearchForm from '../../../../components/organisms/SearchForm';
 
 type ServicesSection = {
@@ -18,10 +18,10 @@ type ServicesSection = {
 };
 
 export const HomePage: React.FC = () => {
-  const { data } = useGetUsersQuery();
-  console.log('getUsers: ', data);
+  const { searchData } = useSearch();
 
-  const services: ServicesSection[] = [
+  // Simulación de servicios basados en el filtro de búsqueda
+  const allServices: ServicesSection[] = [
     {
       name: 'José Perez',
       image: 'src/assets/images/services/Jose_Perez.svg',
@@ -64,6 +64,13 @@ export const HomePage: React.FC = () => {
     },
   ];
 
+  const filteredServices = allServices.filter((service) => {
+    if (searchData?.service?.length) {
+      return searchData.service.includes(service.name);
+    }
+    return true;
+  });
+
   return (
     <UserLayout>
       <HighlightedCategories />
@@ -91,7 +98,7 @@ export const HomePage: React.FC = () => {
             width: '100%',
           }}
         >
-          {services.map((service, index) => (
+          {filteredServices.map((service, index) => (
             <Grid2 key={index}>
               <ServicesCard {...service} />
             </Grid2>
@@ -102,3 +109,5 @@ export const HomePage: React.FC = () => {
     </UserLayout>
   );
 };
+
+export default HomePage;
