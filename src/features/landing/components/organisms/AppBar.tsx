@@ -1,12 +1,22 @@
 import React, { useState } from 'react';
 import {
-  AppBar, Box, Toolbar, Typography, Menu, MenuItem, Container, IconButton,
+  AppBar,
+  Box,
+  Toolbar,
+  Typography,
+  Menu,
+  MenuItem,
+  Container,
+  IconButton,
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import {
-  Menu as MenuIcon, Translate as TranslateIcon, AccountCircleOutlined as AccountIcon,
-  FavoriteBorderOutlined as FavoriteIcon, Engineering as EngineeringIcon,
-  Assignment as AssignmentIcon
+  Menu as MenuIcon,
+  Translate as TranslateIcon,
+  AccountCircleOutlined as AccountIcon,
+  FavoriteBorderOutlined as FavoriteIcon,
+  Engineering as EngineeringIcon,
+  Assignment as AssignmentIcon,
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -31,14 +41,26 @@ function ResponsiveAppBar() {
     { label: <TranslateIcon />, action: () => toggleLanguage() },
     { label: 'Iniciar sesión', path: '/login' },
     {
-      label: <ButtonAtom type="submit" variant="filled" fullWidth sx={{ maxWidth: '128px', maxHeight: '38px', textTransform: 'none' }}>
-        {t('auth.login.register')}
-      </ButtonAtom>, path: '/register',
+      label: (
+        <ButtonAtom
+          type="submit"
+          variant="filled"
+          fullWidth
+          sx={{ maxWidth: '128px', maxHeight: '38px', textTransform: 'none' }}
+        >
+          {t('auth.login.register')}
+        </ButtonAtom>
+      ),
+      path: '/register',
     },
   ];
 
   const AUTH_NAV_ITEMS = [
-    { label: '¿Eres profesional?', icon: <EngineeringIcon />, path: '/are-you-a-professional' },
+    {
+      label: '¿Eres profesional?',
+      icon: <EngineeringIcon />,
+      path: '/are-you-a-professional',
+    },
     { label: 'Tareas', icon: <AssignmentIcon />, path: '/tasks' },
     { label: 'Especialistas', icon: <FavoriteIcon />, path: '/specialists' },
     { label: <TranslateIcon />, action: () => toggleLanguage() },
@@ -64,16 +86,20 @@ function ResponsiveAppBar() {
     handleMenuClose();
   };
 
-  const renderMenuItems = (items) => (
+  const renderMenuItems = (items) =>
     items.map(({ label, icon, path, action }, index) => (
-      <MenuItem key={index} onClick={() => (action ? action() : handleNavigation(path))}>
-        <Typography sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
+      <MenuItem
+        key={index}
+        onClick={() => (action ? action() : handleNavigation(path))}
+      >
+        <Typography
+          sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}
+        >
           {icon && <IconButton>{icon}</IconButton>}
           {label}
         </Typography>
       </MenuItem>
-    ))
-  );
+    ));
 
   return (
     <AppBar position="static" color="transparent" sx={{ boxShadow: 'none' }}>
@@ -97,7 +123,13 @@ function ResponsiveAppBar() {
             </Menu>
           </Box>
           <AppLogo sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'flex-end' }}>
+          <Box
+            sx={{
+              flexGrow: 1,
+              display: { xs: 'none', md: 'flex' },
+              justifyContent: 'flex-end',
+            }}
+          >
             {renderMenuItems(isAuthenticated ? AUTH_NAV_ITEMS : NAV_ITEMS)}
           </Box>
         </Toolbar>
