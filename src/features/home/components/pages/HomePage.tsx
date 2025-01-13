@@ -4,7 +4,7 @@ import ServicesCard from '../../../../components/atoms/ServicesCard';
 import { Box, Grid2 } from '@mui/material';
 import Footer from '../../../../components/organisms/Footer';
 import HighlightedCategories from '../organisms/Categories';
-import { useSearch } from '../../../../context/SearchContext';
+import { useSearchServicesFormData } from '../../../../context/SearchContext';
 import SearchForm from '../../../../components/organisms/SearchForm';
 
 type ServicesSection = {
@@ -18,7 +18,7 @@ type ServicesSection = {
 };
 
 export const HomePage: React.FC = () => {
-  const { searchData } = useSearch();
+  const { searchData } = useSearchServicesFormData();
 
   // Simulación de servicios basados en el filtro de búsqueda
   const allServices: ServicesSection[] = [

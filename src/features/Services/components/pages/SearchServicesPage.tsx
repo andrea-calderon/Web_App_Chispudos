@@ -3,14 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import { UserLayout } from '../../../../components/templates/UserLayout';
 import { Box, Typography } from '@mui/material';
 import Footer from '../../../../components/organisms/Footer';
-import SearchForm from '../../../../components/organisms/SearchForm';
-import { useSearch } from '../../../../context/SearchContext';
+import { useSearchServicesFormData } from '../../../../context/SearchContext';
 import ServicesList from '../organisms/ServicesList';
 import { useGetProductsQuery } from '../../../../services/api';
+import SearchBar from '../../../../components/organisms/SearchBar';
 
 export const SearchServicesPage: React.FC = () => {
   const navigate = useNavigate();
-  const { searchData } = useSearch();
+  const { searchData } = useSearchServicesFormData();
   const [filteredResults, setFilteredResults] = useState([]);
 
   const { data: allServices = [], isLoading, isError } = useGetProductsQuery();
@@ -70,7 +70,7 @@ export const SearchServicesPage: React.FC = () => {
 
   return (
     <UserLayout>
-      <SearchForm />
+      <SearchBar />
       <Box sx={{ padding: 4 }}>
         {filteredResults.length > 0 ? (
           <ServicesList

@@ -1,31 +1,55 @@
 import React, { createContext, useContext, useState } from 'react';
 
-// Crear el contexto para la búsqueda
-export const SearchContext = createContext(null);
+// Tipo para definir el estado del contexto de búsqueda
+interface SearchData {
+  textSearch: string;
+  categories: string[];
+  location: string;
+  service: string[];
+  price: { min: number; max: number };
+}
 
-// Proveedor del contexto de búsqueda
+// Tipo para el contexto
+interface SearchContextType {
+  searchData: SearchData;
+  updateSearchData: (key: keyof SearchData, value: any) => void;
+  resetSearchData: () => void;
+}
+
+// Estado inicial
+const initialSearchData: SearchData = {
+  textSearch: '',
+  categories: [],
+  location: '',
+  service: [],
+  price: { min: 0, max: 0 },
+};
+
+// Crear el contexto
+export const SearchContext = createContext<SearchContextType | null>(null);
+
+// Proveedor del contexto
 export const SearchProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  // Estado inicial para los datos de búsqueda
-  const [searchData, setSearchData] = useState({
-    textSearch: '', // Texto ingresado por el usuario
-    categories: [], // IDs de categorías seleccionadas
-    location: '', // Ubicación seleccionada (puede ser una string como "Ciudad" o "Zona")
-    service: [], // Servicios seleccionados por el usuario
-    price: { min: 0, max: 0 }, // Rango de precios seleccionado
-  });
+  const [searchData, setSearchData] = useState<SearchData>(initialSearchData);
 
-  const updateSearchData = (key: string, value: any) => {
+  // Función para actualizar datos específicos
+  const updateSearchData = (key: keyof SearchData, value: any) => {
     setSearchData((prev) => ({
       ...prev,
       [key]: value,
     }));
   };
 
+  // Función para reiniciar el estado
+  const resetSearchData = () => {
+    setSearchData(initialSearchData);
+  };
+
   return (
     <SearchContext.Provider
-      value={{ searchData, setSearchData, updateSearchData }}
+      value={{ searchData, updateSearchData, resetSearchData }}
     >
       {children}
     </SearchContext.Provider>
@@ -33,4 +57,12 @@ export const SearchProvider: React.FC<{ children: React.ReactNode }> = ({
 };
 
 // Hook para usar el contexto de búsqueda
-export const useSearch = () => useContext(SearchContext);
+export const useSearchServicesFormData = () => {
+  const context = useContext(SearchContext);
+  if (!context) {
+    throw new Error(
+      'useSearchServicesFormData debe usarse dentro de un SearchProvider',
+    );
+  }
+  return context;
+};

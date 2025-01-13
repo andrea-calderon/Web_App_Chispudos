@@ -158,6 +158,12 @@
       }
     },
 
+    "services": {
+      "searchBar":{
+        "clearFilters": "Clear filters"
+    }
+    },
+
 "footer": {
   "title": "Subscribe to our Newsletter",
   "placeholder": "Your Email",
