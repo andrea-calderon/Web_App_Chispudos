@@ -1,7 +1,8 @@
 import { UserLayout } from '../../../../components/templates/UserLayout';
 import { TextAtom } from '../../../../components/atoms';
 import ServicesCard from '../../../../components/atoms/ServicesCard';
-import { Box, Grid2 } from '@mui/material';
+import { Box } from '@mui/material';
+import Grid from '@mui/material/Grid2';
 import Footer from '../../../../components/organisms/Footer';
 import HighlightedCategories from '../organisms/Categories';
 import { useSearchServicesFormData } from '../../../../context/SearchContext';
@@ -24,7 +25,7 @@ export const HomePage: React.FC = () => {
   const allServices: ServicesSection[] = [
     {
       name: 'José Perez',
-      image: 'src/assets/images/services/Jose_Perez.svg',
+      image: 'https://picsum.photos/345/180?random=1',
       pricePerHour: 'Q30',
       rating: 4.5,
       reviewCount: 4,
@@ -32,7 +33,7 @@ export const HomePage: React.FC = () => {
     },
     {
       name: 'Roberto Castro',
-      image: 'src/assets/images/services/Roberto_Castro.svg',
+      image: 'https://picsum.photos/345/180?random=1',
       pricePerHour: 'Q18',
       rating: 4.6,
       reviewCount: 5,
@@ -40,7 +41,7 @@ export const HomePage: React.FC = () => {
     },
     {
       name: 'Juan García',
-      image: 'src/assets/images/services/Juan_Garcia.svg',
+      image: 'https://picsum.photos/345/180?random=1',
       pricePerHour: 'Q18',
       rating: 4.5,
       reviewCount: 4,
@@ -48,7 +49,7 @@ export const HomePage: React.FC = () => {
     },
     {
       name: 'Carlos Blanco',
-      image: 'src/assets/images/services/Carlos_Blanco.svg',
+      image: 'https://picsum.photos/345/180?random=1',
       pricePerHour: 'Q18',
       rating: 4.5,
       reviewCount: 4,
@@ -56,20 +57,30 @@ export const HomePage: React.FC = () => {
     },
     {
       name: 'Pedro Martínez',
-      image: 'src/assets/images/services/Pedro_Martinez.svg',
+      image: 'https://picsum.photos/345/180?random=1',
       pricePerHour: 'Q18',
       rating: 4.5,
       reviewCount: 4,
       jobsInQueue: 1,
     },
-  ];
-
-  const filteredServices = allServices.filter((service) => {
-    if (searchData?.service?.length) {
-      return searchData.service.includes(service.name);
+    {
+      name: 'José Perez',
+      image: 'https://picsum.photos/345/180?random=1',
+      pricePerHour: 'Q30',
+      rating: 4.5,
+      reviewCount: 4,
+      jobsInQueue: 2,
+    },
+    {
+      name: 'Roberto Castro',
+      image: 'https://picsum.photos/345/180?random=1',
+      pricePerHour: 'Q18',
+      rating: 4.6,
+      reviewCount: 5,
+      jobsInQueue: 3,
     }
-    return true;
-  });
+    
+  ];
 
   return (
     <UserLayout>
@@ -85,25 +96,29 @@ export const HomePage: React.FC = () => {
           Recomendados para ti
         </TextAtom>
       </Box>
-
-      <Box sx={{ display: 'flex', alignItems: 'center', position: 'relative' }}>
-        <Grid2
+      <Box>
+      
+      <Box>
+         <Grid
           container
-          spacing={2}
+          spacing={1}
+
           sx={{
             overflowX: 'auto',
-            flexWrap: 'nowrap',
+            
             scrollBehavior: 'smooth',
             flexGrow: 1,
             width: '100%',
           }}
         >
-          {filteredServices.map((service, index) => (
-            <Grid2 key={index}>
+          {allServices.map((service, index) => (
+            <Grid key={index} size={{ xs: 6, md: 3 , lg:2}}>
               <ServicesCard {...service} />
-            </Grid2>
+            </Grid>
+            
           ))}
-        </Grid2>
+        </Grid>
+        </Box>
       </Box>
       <Footer />
     </UserLayout>
