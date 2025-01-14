@@ -1,170 +1,227 @@
-import React, { useState, useContext } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
-  TextField,
-  IconButton,
-  Chip,
   Box,
-  Typography,
-  Stack,
-  Menu,
+  Container,
+  Grid,
   MenuItem,
-  CircularProgress,
-  FormControlLabel,
-  Checkbox,
+  Select,
+  InputLabel,
+  FormControl,
+  TextField,
   Slider,
+  Checkbox,
+  ListItemText,
 } from '@mui/material';
-import FilterListIcon from '@mui/icons-material/FilterList';
-import { SearchContext } from '../../context/SearchContext';
+import { Formik, Form } from 'formik';
+import * as Yup from 'yup';
+import TextAtom from '../atoms/TextAtom';
+import ButtonAtom from '../atoms/ButtonAtom';
+import { Delete } from '@mui/icons-material';
+import { useState, useMemo } from 'react';
+import { useSearchServicesFormData } from '../../context/SearchContext';
 import { useGetProductsQuery } from '../../services/api';
 
 const SearchBar = () => {
-  const { filters, setFilters, handleLocationChange, handlePriceChange } =
-    useContext(SearchContext);
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const { t } = useTranslation();
+  const { searchData = {}, updateSearchData } = useSearchServicesFormData();
 
-  // Fetch data from the endpoint based on filters
-  const { data: products, isLoading, error } = useGetProductsQuery(filters);
+  const [priceRange, setPriceRange] = useState<number[]>([
+    searchData.price?.min || 0,
+    searchData.price?.max || 500,
+  ]);
 
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFilters((prevFilters) => ({
-      ...prevFilters,
-      textSearch: e.target.value,
-    }));
-  };
+  const { data: products = [] } = useGetProductsQuery();
 
-  const handleDeleteFilter = (filterToDelete: string) => {
-    setFilters((prevFilters) => ({
-      ...prevFilters,
-      categories: prevFilters.categories.filter(
-        (category) => category !== filterToDelete,
+  const services = useMemo(() => {
+    return Array.from(
+      new Set(
+        products.flatMap(
+          (product) => product.categories?.map((c) => c.name) || [],
+        ),
       ),
-    }));
+    );
+  }, [products]);
+
+  const locations = useMemo(() => {
+    return Array.from(new Set(products.map((product) => product.location)));
+  }, [products]);
+
+  const handlePriceChange = (event: Event, newValue: number | number[]) => {
+    setPriceRange(newValue as number[]);
+    updateSearchData('price', {
+      min: (newValue as number[])[0],
+      max: (newValue as number[])[1],
+    });
   };
 
-  const handleMenuClick = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
+  const clearForm = (resetForm: () => void) => {
+    resetForm();
+    setPriceRange([0, 500]);
+    updateSearchData('textSearch', '');
+    updateSearchData('categories', []);
+    updateSearchData('location', []);
+    updateSearchData('price', { min: 0, max: 500 });
   };
 
-  const handleCloseMenu = () => {
-    setAnchorEl(null);
-  };
-
-  const handleFilterSelect = (filter: string) => {
-    setFilters((prevFilters) => ({
-      ...prevFilters,
-      categories: [...prevFilters.categories, filter],
-    }));
-    handleCloseMenu();
-  };
+  const validationSchema = Yup.object().shape({
+    textSearch: Yup.string()
+      .min(3, t('errors.minLength', { length: 3 }))
+      .nullable(),
+    service: Yup.array().of(Yup.string()).nullable(),
+    location: Yup.array().of(Yup.string()).nullable(),
+  });
 
   return (
-    <Box
+    <Container
       sx={{
-        padding: '20px',
-        backgroundColor: '#f4ecff',
-        maxWidth: '100%',
-        margin: 'auto',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        textAlign: 'center',
+        py: 4,
+        px: { xs: 2, sm: 4 },
+        maxWidth: { xs: '80%', md: '60%' },
       }}
     >
-      <Typography variant="h6" sx={{ mb: 2 }}>
-        Buscar servicio o producto
-      </Typography>
+      <Formik
+        initialValues={{
+          textSearch: searchData.textSearch || '',
+          service: searchData.service || [],
+          location: searchData.location || [],
+        }}
+        validationSchema={validationSchema}
+        onSubmit={(values) => {
+          const searchObject = {
+            ...values,
+            price: { min: priceRange[0], max: priceRange[1] },
+          };
 
-      <Box
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          mb: 2,
-          width: '100%',
-          maxWidth: '600px',
+          updateSearchData('textSearch', values.textSearch);
+          updateSearchData('categories', values.service);
+          updateSearchData('location', values.location);
+
+          console.log('Search Object:', searchObject);
         }}
       >
-        <TextField
-          fullWidth
-          variant="outlined"
-          placeholder="Buscar..."
-          value={filters?.textSearch}
-          onChange={handleSearchChange}
-          InputProps={{
-            endAdornment: (
-              <IconButton
-                onClick={handleMenuClick}
-                sx={{ backgroundColor: '#5D50C6', color: 'white' }}
-              >
-                <FilterListIcon />
-              </IconButton>
-            ),
-          }}
-          sx={{
-            backgroundColor: 'white',
-            borderRadius: '50px',
-          }}
-        />
-      </Box>
+        {({
+          values,
+          handleChange,
+          setFieldValue,
+          errors,
+          touched,
+          resetForm,
+        }) => (
+          <Form>
+            <Grid>
+              <Grid item xs={12} md={6} lg={6}>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                  <TextAtom
+                    variant="display"
+                    size="small"
+                    sx={{ fontWeight: 'bold' }}
+                  >
+                    {t('landing.searchForm.title')}
+                  </TextAtom>
+                  <TextAtom variant="body" size="large">
+                    {t('landing.searchForm.body')}
+                  </TextAtom>
 
-      <Stack direction="row" spacing={1} sx={{ mb: 2, flexWrap: 'wrap' }}>
-        {filters?.categories.map((filter) => (
-          <Chip
-            key={filter}
-            label={filter}
-            onDelete={() => handleDeleteFilter(filter)}
-            sx={{
-              backgroundColor: '#6750A4',
-              color: 'white',
-              '& .MuiChip-deleteIcon': {
-                color: 'white',
-              },
-            }}
-          />
-        ))}
-      </Stack>
+                  <FormControl fullWidth>
+                    <TextField
+                      name="textSearch"
+                      value={values.textSearch}
+                      onChange={(e) => {
+                        handleChange(e);
+                        updateSearchData('textSearch', e.target.value);
+                      }}
+                      placeholder={t('landing.searchForm.textPlaceholder')}
+                    />
+                  </FormControl>
 
-      <Menu
-        anchorEl={anchorEl}
-        open={Boolean(anchorEl)}
-        onClose={handleCloseMenu}
-      >
-        {isLoading ? (
-          <MenuItem>
-            <CircularProgress size={24} />
-          </MenuItem>
-        ) : error ? (
-          <MenuItem>Error al cargar datos</MenuItem>
-        ) : (
-          <>
-            {/* Categorías */}
-            <MenuItem>
-              <FormControlLabel control={<Checkbox />} label="Categoría 1" />
-            </MenuItem>
-            {/* ... otras categorías */}
+                  <FormControl fullWidth>
+                    <InputLabel>
+                      {t('landing.searchForm.serviceInput')}
+                    </InputLabel>
+                    <Select
+                      name="service"
+                      multiple
+                      value={values.service}
+                      onChange={(e) => {
+                        setFieldValue('service', e.target.value);
+                        updateSearchData('categories', e.target.value);
+                      }}
+                      renderValue={(selected) => selected.join(', ')}
+                    >
+                      {services.map((service) => (
+                        <MenuItem key={service} value={service}>
+                          <Checkbox
+                            checked={values.service.includes(service)}
+                          />
+                          <ListItemText primary={service} />
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
 
-            {/* Ubicaciones */}
-            <MenuItem>
-              <FormControlLabel
-                control={<Checkbox />}
-                label="San José Pinula"
-              />
-            </MenuItem>
-            {/* ... otras ubicaciones */}
+                  <FormControl fullWidth>
+                    <InputLabel>{t('landing.searchForm.location')}</InputLabel>
+                    <Select
+                      name="location"
+                      multiple
+                      value={values.location}
+                      onChange={(e) => {
+                        setFieldValue('location', e.target.value);
+                        updateSearchData('location', e.target.value);
+                      }}
+                      renderValue={(selected) => selected.join(', ')}
+                    >
+                      {locations.map((location) => (
+                        <MenuItem key={location} value={location}>
+                          <Checkbox
+                            checked={values.location.includes(location)}
+                          />
+                          <ListItemText primary={location} />
+                        </MenuItem>
+                      ))}
+                    </Select>
+                    {touched.location && errors.location && (
+                      <Box sx={{ color: 'red', fontSize: '0.8em', mt: 1 }}>
+                        {errors.location}
+                      </Box>
+                    )}
+                  </FormControl>
 
-            {/* Rango de precios */}
-            <MenuItem>
-              <Slider
-                value={filters?.price}
-                onChange={handlePriceChange}
-                valueLabelDisplay="auto"
-                min={0}
-                max={2000}
-              />
-            </MenuItem>
-          </>
+                  <Box>
+                    <TextAtom variant="body" size="large">
+                      {t('landing.searchForm.priceRange')}
+                    </TextAtom>
+                    <Slider
+                      aria-labelledby="price-range-slider"
+                      value={priceRange}
+                      onChange={handlePriceChange}
+                      valueLabelDisplay="auto"
+                      min={0}
+                      max={500}
+                      step={50}
+                    />
+                  </Box>
+
+                  <ButtonAtom
+                    variant="outlined"
+                    type="button"
+                    onClick={() => clearForm(resetForm)}
+                    fullWidth
+                    sx={{
+                      width: '300px',
+                      textTransform: 'none',
+                    }}
+                  >
+                    <Delete sx={{ mr: 1 }} />
+                    {t('services.searchBar.clearFilters')}
+                  </ButtonAtom>
+                </Box>
+              </Grid>
+            </Grid>
+          </Form>
         )}
-      </Menu>
-    </Box>
+      </Formik>
+    </Container>
   );
 };
 

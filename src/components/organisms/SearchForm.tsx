@@ -14,50 +14,39 @@ import {
 } from '@mui/material';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
+import { useMemo } from 'react';
 import TextAtom from '../atoms/TextAtom';
 import ButtonAtom from '../atoms/ButtonAtom';
 import SampleImage from '../../../src/assets/images/intro_sliders/intro_1.png';
-import { useState } from 'react';
-import { useSearch } from '../../context/SearchContext';
+import { useNavigate } from 'react-router-dom';
+import { useSearchServicesFormData } from '../../context/SearchContext';
 import { useGetProductsQuery } from '../../services/api';
 
 const SearchForm = () => {
   const { t } = useTranslation();
-  const { searchData, updateSearchData } = useSearch();
+  const navigate = useNavigate();
+  const { searchData, updateSearchData } = useSearchServicesFormData();
 
-  const [priceRange, setPriceRange] = useState<number[]>([
-    searchData.price.min || 0,
-    searchData.price.max || 300,
-  ]);
-
-  // Consumo del endpoint utilizando `useGetProductsQuery`
   const { data: products = [] } = useGetProductsQuery();
 
-  // Extracción de categorías y ubicaciones únicas.
-  const services = Array.from(
-    new Set(
-      products.flatMap(
-        (product) => product.categories?.map((category) => category.name) || [],
+  const services = useMemo(() => {
+    return Array.from(
+      new Set(
+        products.flatMap(
+          (product) => product.categories?.map((cat) => cat.name) || [],
+        ),
       ),
-    ),
-  );
+    );
+  }, [products]);
 
-  const locations = Array.from(
-    new Set(products.map((product) => product.location)),
-  );
-
-  const handlePriceChange = (event: Event, newValue: number | number[]) => {
-    setPriceRange(newValue as number[]);
-    updateSearchData('price', {
-      min: (newValue as number[])[0],
-      max: (newValue as number[])[1],
-    });
-  };
+  const locations = useMemo(() => {
+    return Array.from(new Set(products.map((product) => product.location)));
+  }, [products]);
 
   const validationSchema = Yup.object().shape({
-    textSearch: Yup.string(),
-    service: Yup.array().of(Yup.string()),
-    location: Yup.array().of(Yup.string()),
+    textSearch: Yup.string().max(50, t('validation.maxLength')),
+    service: Yup.array().of(Yup.string()).min(1, t('validation.required')),
+    location: Yup.array().of(Yup.string()).min(1, t('validation.required')),
   });
 
   return (
@@ -65,21 +54,15 @@ const SearchForm = () => {
       <Formik
         initialValues={{
           textSearch: searchData.textSearch || '',
-          service: searchData.service || [],
+          service: searchData.categories || [],
           location: searchData.location || [],
         }}
         validationSchema={validationSchema}
         onSubmit={(values) => {
-          const searchObject = {
-            ...values,
-            price: { min: priceRange[0], max: priceRange[1] },
-          };
-
           updateSearchData('textSearch', values.textSearch);
           updateSearchData('categories', values.service);
           updateSearchData('location', values.location);
-
-          console.log('Search Object:', searchObject);
+          navigate('/search-services');
         }}
       >
         {({ values, handleChange, setFieldValue, errors, touched }) => (
@@ -102,11 +85,11 @@ const SearchForm = () => {
                     <TextField
                       name="textSearch"
                       value={values.textSearch}
-                      onChange={(e) => {
-                        handleChange(e);
-                        updateSearchData('textSearch', e.target.value);
-                      }}
+                      onChange={handleChange}
                       placeholder={t('landing.searchForm.textPlaceholder')}
+                      aria-label={t('landing.searchForm.textPlaceholder')}
+                      error={touched.textSearch && Boolean(errors.textSearch)}
+                      helperText={touched.textSearch && errors.textSearch}
                     />
                   </FormControl>
 
@@ -118,11 +101,9 @@ const SearchForm = () => {
                       name="service"
                       multiple
                       value={values.service}
-                      onChange={(e) => {
-                        setFieldValue('service', e.target.value);
-                        updateSearchData('categories', e.target.value);
-                      }}
+                      onChange={(e) => setFieldValue('service', e.target.value)}
                       renderValue={(selected) => selected.join(', ')}
+                      aria-label={t('landing.searchForm.serviceInput')}
                     >
                       {services.map((service) => (
                         <MenuItem key={service} value={service}>
@@ -133,6 +114,11 @@ const SearchForm = () => {
                         </MenuItem>
                       ))}
                     </Select>
+                    {touched.service && errors.service && (
+                      <Box sx={{ color: 'red', fontSize: '0.8em', mt: 1 }}>
+                        {errors.service}
+                      </Box>
+                    )}
                   </FormControl>
 
                   <FormControl fullWidth>
@@ -141,11 +127,11 @@ const SearchForm = () => {
                       name="location"
                       multiple
                       value={values.location}
-                      onChange={(e) => {
-                        setFieldValue('location', e.target.value);
-                        updateSearchData('location', e.target.value);
-                      }}
+                      onChange={(e) =>
+                        setFieldValue('location', e.target.value)
+                      }
                       renderValue={(selected) => selected.join(', ')}
+                      aria-label={t('landing.searchForm.location')}
                     >
                       {locations.map((location) => (
                         <MenuItem key={location} value={location}>
@@ -168,12 +154,16 @@ const SearchForm = () => {
                       {t('landing.searchForm.priceRange')}
                     </TextAtom>
                     <Slider
-                      value={priceRange}
-                      onChange={handlePriceChange}
+                      value={[searchData.price.min, searchData.price.max]}
+                      onChange={(_, newValue) => {
+                        const [min, max] = newValue as number[];
+                        updateSearchData('price', { min, max });
+                      }}
                       valueLabelDisplay="auto"
                       min={0}
                       max={1000}
                       step={100}
+                      aria-label={t('landing.searchForm.priceRange')}
                     />
                   </Box>
 
@@ -199,10 +189,7 @@ const SearchForm = () => {
                   <img
                     src={SampleImage}
                     alt={t('professional_image')}
-                    style={{
-                      width: '100%',
-                      maxWidth: '400px',
-                    }}
+                    style={{ width: '100%', maxWidth: '400px' }}
                   />
                 </Box>
               </Grid>

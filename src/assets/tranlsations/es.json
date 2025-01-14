@@ -171,6 +171,12 @@
       }
     },
 
+    "services": {
+      "searchBar":{
+        "clearFilters": "Limpiar filtros"
+    }
+    },
+
 "footer": {
   "title": "Suscríbete a nuestro Newsletter",
   "placeholder": "Tu Email",
