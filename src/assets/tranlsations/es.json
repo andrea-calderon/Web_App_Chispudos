@@ -6,6 +6,12 @@
       "login": "Iniciar sesión"
     }
   },
+  "buttonTab": {
+      "home": "Inicio",
+      "task": "Tarea",
+      "favorites": "Favoritos",
+      "profile": "Peril"
+  },
   "forms": {
     "commons": {
       "required": "Este campo es requerido",

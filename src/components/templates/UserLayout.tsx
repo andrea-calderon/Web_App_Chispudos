@@ -16,8 +16,8 @@ export const UserLayout = ({ children }: Props) => {
     <>
       {isLargeScreen ? (
         <>
-        <ResponsiveAppBar />
-        {children}
+          <ResponsiveAppBar />
+          {children}
         </>
       ) : (
         <ButtonTab children={children} />

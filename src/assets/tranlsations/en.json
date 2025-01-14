@@ -5,6 +5,14 @@
       "login": "Login"
     }
   },
+  
+  "buttonTab": {
+    "home": "Home",
+    "task": "Task",
+    "favorites": "Favorites",
+    "profile": "Profile"
+  },
+
   "forms": {
     "commons": {
       "required": "This field is required",
