@@ -1,54 +1,76 @@
-import { useNavigate } from 'react-router-dom';
 import { UserLayout } from '../../../../components/templates/UserLayout';
-import ProfileCard from '../../../../components/atoms/ProfileCard';
-import { ButtonAtom } from '../../../../components/atoms';
+import { ButtonAtom, TextAtom } from '../../../../components/atoms';
 import { useAppDispatch } from '../../../../hooks/useAppDispatch';
-import { logout } from '../../../../redux/slices/authSlice';
+import { logout, selectAuth } from '../../../../redux/slices/authSlice';
+import { useAppSelector } from '../../../../hooks/useAppSelector';
+import { Box, Avatar,List, ListItem, ListItemText, Divider } from '@mui/material';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import '../../../../assets/images/cards/Jose_Perez.svg'
 
-type Service = {
-  name: string;
-  description: string;
-  image: string;
-  rating: number;
-  reviewCount: number;
-  location: string;
-};
 
 export const ProfilePage: React.FC = () => {
-  const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const { user} = useAppSelector(selectAuth);
+  
 
-  const services: Service[] = [
-    {
-      name: 'José Pérez',
-      description:
-        'Se especializa en la instalación y mantenimiento de sistemas para agua potable, alcantarillado y drenaje en sistemas de plomería.',
-      image: 'src/assets/images/cards/Jose_Perez.svg',
-      rating: 4.5,
-      reviewCount: 4,
-      location: 'San José Pinula',
-    },
-  ];
-
+  
   return (
     <UserLayout>
-      <h1>Profile Page</h1>
+    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', p: 2 }}>
+      
+      <Avatar src={'Jose_Perez.svg'} sx={{ width: 80, height: 80, mb: 2 }} />
+      
+      
+      <TextAtom variant="title" size="medium">
+        {user?.name || 'Usuario Anónimo'}
+      </TextAtom>
+      <TextAtom variant="title" size='medium'>
+        {user?.email || 'Correo no disponible'}
+        
+      </TextAtom>
 
-      {services.map((service, i) => (
-        <ProfileCard
-          key={i}
-          name={service.name}
-          description={service.description}
-          image={service.image}
-          rating={service.rating}
-          reviewCount={service.reviewCount}
-          location={service.location}
-        />
-      ))}
-      <br />
-      <ButtonAtom onClick={() => navigate('/home')}>Home</ButtonAtom>
-      <ButtonAtom onClick={() => navigate('/')}>Landing</ButtonAtom>
-      <ButtonAtom onClick={() => dispatch(logout()) }>Logout</ButtonAtom>
+      
+      <List sx={{ width: '100%', mt: 3 }}>
+        {['Cambiar contraseña', 'Métodos de pago', 'Promociones', 'Notificaciones', 'Soporte'].map((item, index) => (
+          <ListItem key={index} component="button">
+            <ListItemText primary={item} />
+            <ArrowForwardIosIcon fontSize="small" />
+          </ListItem>
+        ))}
+      </List>
+
+      <Divider sx={{ my: 2 }} />
+
+      
+      <Box sx={{ width: '100%', textAlign: 'center' }}>
+        <ButtonAtom
+          
+          fullWidth
+          variant="text"
+          sx={{ mb: 2 }}
+        >
+         <TextAtom
+          variant="title"
+          size='medium'
+          sx={{ cursor: 'pointer', textDecoration: 'underline' }}
+        >
+          Convertirse en Especialista
+        </TextAtom>
+        </ButtonAtom>
+
+        <ButtonAtom
+          variant="text"
+          onClick={() => dispatch(logout())}
+          sx={{ color: 'red', fontWeight: 'bold' }}
+          fullWidth
+        >
+          Cerrar Sesión
+        </ButtonAtom>
+      </Box>
+
+      
+    </Box>
     </UserLayout>
+  
   );
 };
