@@ -1,6 +1,7 @@
 import { useParams } from 'react-router-dom';
 import { useState } from 'react';
 import { useGetProductByIdQuery } from '../../../../services/api';
+import { useNavigate } from 'react-router-dom';
 import { UserLayout } from '../../../../components/templates/UserLayout';
 import Footer from '../../../../components/organisms/Footer';
 import {
@@ -24,6 +25,18 @@ import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 export const ServiceDetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const { data: service, isLoading, isError } = useGetProductByIdQuery(id!);
+  const navigate = useNavigate();
+
+  const handleConfirm = () => {
+    if (selectedDateTime) {
+      navigate('/task-details', {
+        state: {
+          dateTime: selectedDateTime,
+          serviceTitle: service.name,
+        },
+      });
+    }
+  };
 
   const [openModal, setOpenModal] = useState(false);
   const [selectedDateTime, setSelectedDateTime] = useState(null);
@@ -123,13 +136,7 @@ export const ServiceDetailPage = () => {
             <Button onClick={handleCloseModal} sx={{ mr: 2 }}>
               Cancel
             </Button>
-            <Button
-              variant="contained"
-              onClick={() => {
-                handleCloseModal();
-                console.log('Selected DateTime:', selectedDateTime);
-              }}
-            >
+            <Button variant="contained" onClick={handleConfirm}>
               Confirm
             </Button>
           </Box>

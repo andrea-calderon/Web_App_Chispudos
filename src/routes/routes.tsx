@@ -10,6 +10,7 @@ import { LandingPage } from '../features/landing/components/pages/LandingPage';
 import { HomePage } from '../features/home/components/pages/HomePage';
 import { SearchServicesPage } from '../features/Services/components/pages/SearchServicesPage';
 import { ServiceDetailPage } from '../features/Services/components/pages/ServiceDetailPage';
+import { TaskDetailsPage } from '../features/Services/components/pages/TaskDetailsPage';
 import { useAppSelector } from '../hooks/useAppSelector';
 import { selectAuth } from '../redux/slices/authSlice';
 import { ProfilePage } from '../features/profile/components/pages/ProfilePage';
@@ -37,6 +38,7 @@ const AppRoutes = () => {
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/search-services" element={<SearchServicesPage />} />
             <Route path="/services/:id" element={<ServiceDetailPage />} />
+            <Route path="/task-details" element={<TaskDetailsPage />} />
           </Route>
         </Routes>
       </Router>
