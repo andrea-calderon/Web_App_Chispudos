@@ -1,17 +1,35 @@
 import { useParams } from 'react-router-dom';
+import { useState } from 'react';
 import { useGetProductByIdQuery } from '../../../../services/api';
 import { UserLayout } from '../../../../components/templates/UserLayout';
 import Footer from '../../../../components/organisms/Footer';
-import { Box, Grid, CircularProgress, Typography } from '@mui/material';
+import {
+  Box,
+  Grid,
+  CircularProgress,
+  Typography,
+  Button,
+  Modal,
+  TextField,
+} from '@mui/material';
 import { ServiceHeader } from '../organisms/ServiceDetailHeader';
 import { ServiceSkills } from '../organisms/ServiceDetailSkills';
 import { ServiceProjects } from '../organisms/ServiceDetailProjects';
 import { ServiceReviews } from '../organisms/ServiceDetailReviews';
 import { ServiceOtherSkills } from '../organisms/ServiceDetailOtherSkills';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 
 export const ServiceDetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const { data: service, isLoading, isError } = useGetProductByIdQuery(id!);
+
+  const [openModal, setOpenModal] = useState(false);
+  const [selectedDateTime, setSelectedDateTime] = useState(null);
+
+  const handleOpenModal = () => setOpenModal(true);
+  const handleCloseModal = () => setOpenModal(false);
 
   if (isLoading) {
     return (
@@ -57,6 +75,7 @@ export const ServiceDetailPage = () => {
         providerName={providerName}
         rating={rating}
         image={image}
+        onOpenModal={handleOpenModal} // Pasamos la función al componente
       />
       <Grid container spacing={2}>
         <Grid item xs={8}>
@@ -72,6 +91,51 @@ export const ServiceDetailPage = () => {
           </Box>
         </Grid>
       </Grid>
+
+      {/* Booking Modal */}
+      <Modal open={openModal} onClose={handleCloseModal}>
+        <Box
+          sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            bgcolor: 'background.paper',
+            boxShadow: 24,
+            p: 4,
+            borderRadius: 2,
+            width: '90%',
+            maxWidth: 500,
+          }}
+        >
+          <Typography variant="h6" mb={2}>
+            Select Date and Time
+          </Typography>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DateTimePicker
+              label="Date & Time"
+              value={selectedDateTime}
+              onChange={(newValue) => setSelectedDateTime(newValue)}
+              renderInput={(params) => <TextField {...params} fullWidth />}
+            />
+          </LocalizationProvider>
+          <Box display="flex" justifyContent="flex-end" mt={2}>
+            <Button onClick={handleCloseModal} sx={{ mr: 2 }}>
+              Cancel
+            </Button>
+            <Button
+              variant="contained"
+              onClick={() => {
+                handleCloseModal();
+                console.log('Selected DateTime:', selectedDateTime);
+              }}
+            >
+              Confirm
+            </Button>
+          </Box>
+        </Box>
+      </Modal>
+
       <Footer />
     </UserLayout>
   );
