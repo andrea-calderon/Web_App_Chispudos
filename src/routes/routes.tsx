@@ -38,7 +38,7 @@ const AppRoutes = () => {
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/search-services" element={<SearchServicesPage />} />
             <Route path="/services/:id" element={<ServiceDetailPage />} />
-            <Route path="/task-details" element={<TaskDetailsPage />} />
+            <Route path="/service-details" element={<TaskDetailsPage />} />
           </Route>
         </Routes>
       </Router>

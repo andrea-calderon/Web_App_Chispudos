@@ -29,12 +29,14 @@ export const ServiceDetailPage = () => {
 
   const handleConfirm = () => {
     if (selectedDateTime) {
-      navigate('/task-details', {
+      navigate('/service-details', {
         state: {
-          dateTime: selectedDateTime,
+          dateTime: selectedDateTime.toISOString(),
           serviceTitle: service.name,
         },
       });
+    } else {
+      alert('Please select a date and time.');
     }
   };
 
@@ -88,7 +90,7 @@ export const ServiceDetailPage = () => {
         providerName={providerName}
         rating={rating}
         image={image}
-        onOpenModal={handleOpenModal} // Pasamos la función al componente
+        onOpenModal={handleOpenModal}
       />
       <Grid container spacing={2}>
         <Grid item xs={8}>
@@ -105,7 +107,6 @@ export const ServiceDetailPage = () => {
         </Grid>
       </Grid>
 
-      {/* Booking Modal */}
       <Modal open={openModal} onClose={handleCloseModal}>
         <Box
           sx={{

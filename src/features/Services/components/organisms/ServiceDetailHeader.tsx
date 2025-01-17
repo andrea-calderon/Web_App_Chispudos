@@ -7,7 +7,7 @@ interface ServiceHeaderProps {
   providerName: string;
   rating: number;
   image: string;
-  onOpenModal: () => void; // Nueva prop para manejar la apertura del modal
+  onOpenModal: () => void;
 }
 
 export const ServiceHeader: React.FC<ServiceHeaderProps> = ({
@@ -15,7 +15,7 @@ export const ServiceHeader: React.FC<ServiceHeaderProps> = ({
   providerName,
   rating,
   image,
-  onOpenModal, // Se recibe como prop
+  onOpenModal,
 }) => {
   return (
     <Box

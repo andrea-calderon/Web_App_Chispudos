@@ -169,7 +169,14 @@
     "services": {
       "searchBar":{
         "clearFilters": "Clear filters"
-    }
+    },
+    "serviceDetails":{
+      "navigationTitle": "Task details",
+      "title": "Start the conversation",
+      "description": "You're almost there! Share some details to prepare your Specialist for the job.",
+      "time": "Time and date",
+      "button": "Complete application"
+  }
     },
 
 "footer": {
