@@ -1,28 +1,27 @@
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Grid, Box, TextField } from '@mui/material';
+import { Grid, Box } from '@mui/material';
 import { ChevronLeft, CalendarToday, AccessTime } from '@mui/icons-material';
 import { UserLayout } from '../../../../components/templates/UserLayout';
 import TextAtom from '../../../../components/atoms/TextAtom';
-import ButtonAtom from '../../../../components/atoms/ButtonAtom';
-import { useTranslation } from 'react-i18next';
 import Footer from '../../../../components/organisms/Footer';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useState } from 'react';
+import TaskDetailInput from '../organisms/TaskDetailInput';
+import TaskDetailCompleted from '../organisms/TaskDetailCompleted';
 
 export const TaskDetailsPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { t } = useTranslation();
   const { dateTime, serviceTitle } = location.state || {};
 
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const [isUpdated, setIsUpdated] = useState(false); // Estado para manejar los cambios
-  const [userText, setUserText] = useState(''); // Estado para guardar el texto del usuario
+  const [isFormCompleted, setIsFormCompleted] = useState(false); // Estado para manejar el flujo
+  const [userText, setUserText] = useState(''); // Texto ingresado por el usuario
 
   const styles = {
     marginLeft: isSmallScreen ? 4 : 24,
@@ -38,10 +37,6 @@ export const TaskDetailsPage = () => {
     locale: es,
   });
   const formattedTime = format(new Date(dateTime), 'hh:mm a', { locale: es });
-
-  const handleButtonClick = () => {
-    setIsUpdated(true); // Actualiza el estado para mostrar los nuevos datos
-  };
 
   return (
     <UserLayout>
@@ -66,7 +61,9 @@ export const TaskDetailsPage = () => {
           >
             <ChevronLeft />
             <TextAtom variant="title" size="medium" sx={{ marginLeft: 1 }}>
-              {t('services.serviceDetails.navigationTitle')}
+              {isFormCompleted
+                ? 'Revisar y confirmar'
+                : 'Detalles del servicio'}
             </TextAtom>
           </Box>
         </Grid>
@@ -74,7 +71,7 @@ export const TaskDetailsPage = () => {
 
       <Box sx={{ padding: '2rem', ...styles }}>
         <Grid container spacing={4}>
-          <Grid item xs={12} md={3} lg={3}>
+          <Grid item xs={12} md={3}>
             <Box sx={{ textAlign: 'center' }}>
               <img
                 src="https://picsum.photos/300/200?random=4"
@@ -100,16 +97,19 @@ export const TaskDetailsPage = () => {
                 sx={{ fontWeight: 'bold' }}
                 gutterBottom
               >
-                {!isUpdated
-                  ? t('services.serviceDetails.title')
-                  : t('services.serviceDetails.updatedTitle')}
+                {isFormCompleted ? 'Confirmación' : 'Ingresar detalles'}
               </TextAtom>
             </Box>
-            <TextAtom variant="body" size="large" gutterBottom>
-              {!isUpdated
-                ? t('services.serviceDetails.description')
-                : userText || t('services.serviceDetails.emptyMessage')}
-            </TextAtom>
+
+            {isFormCompleted ? (
+              <TaskDetailCompleted userText={userText} />
+            ) : (
+              <TaskDetailInput
+                userText={userText}
+                setUserText={setUserText}
+                onComplete={() => setIsFormCompleted(true)}
+              />
+            )}
           </Grid>
 
           <Grid item xs={12} md={4}>
@@ -120,7 +120,7 @@ export const TaskDetailsPage = () => {
                 sx={{ fontWeight: 'bold' }}
                 gutterBottom
               >
-                {t('services.serviceDetails.time')}
+                Fecha y hora
               </TextAtom>
             </Box>
             <Box
@@ -145,30 +145,6 @@ export const TaskDetailsPage = () => {
             </Box>
           </Grid>
         </Grid>
-
-        {!isUpdated && (
-          <Box sx={{ marginTop: '2rem', marginBottom: '4rem' }}>
-            <TextField
-              label={t('services.serviceDetails.textPlaceholder')}
-              multiline
-              rows={4}
-              fullWidth
-              variant="outlined"
-              sx={{ marginY: '1rem' }}
-              value={userText}
-              onChange={(e) => setUserText(e.target.value)} // Guarda el texto ingresado por el usuario
-            />
-            <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-              <ButtonAtom
-                variant="filled"
-                color="primary"
-                onClick={handleButtonClick}
-              >
-                {t('services.serviceDetails.button')}
-              </ButtonAtom>
-            </Box>
-          </Box>
-        )}
       </Box>
 
       <Footer />
