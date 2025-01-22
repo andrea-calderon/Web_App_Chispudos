@@ -171,11 +171,17 @@
         "clearFilters": "Clear filters"
     },
     "serviceDetails":{
-      "navigationTitle": "Task details",
+      "navigationInput": "Task details",
+      "navigationCompleted": "Review and confirm",
       "title": "Start the conversation",
       "description": "You're almost there! Share some details to prepare your Specialist for the job.",
       "time": "Time and date",
-      "button": "Complete application"
+      "label": "Write something...",
+      "buttonInput": "Complete application",
+      "buttonCompleted": "Confirm and chat",
+      "confirmationTitle": "You have scheduled with 'Limpieza de casas y apartamentos'",
+      "confirmationMessage": "Discover additional services offered by your favorite Specialist, or form a team of your favorite Specialists in the Favorites section.",
+      "continueButton": "Continue"
   }
     },
 

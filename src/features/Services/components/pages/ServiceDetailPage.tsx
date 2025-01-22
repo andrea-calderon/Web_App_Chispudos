@@ -9,7 +9,6 @@ import {
   Grid,
   CircularProgress,
   Typography,
-  Button,
   Modal,
   TextField,
 } from '@mui/material';
@@ -21,11 +20,14 @@ import { ServiceOtherSkills } from '../organisms/ServiceDetailOtherSkills';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import { ButtonAtom, TextAtom } from '../../../../components/atoms';
+import { useTranslation } from 'react-i18next';
 
 export const ServiceDetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const { data: service, isLoading, isError } = useGetProductByIdQuery(id!);
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const handleConfirm = () => {
     if (selectedDateTime) {
@@ -110,6 +112,8 @@ export const ServiceDetailPage = () => {
       <Modal open={openModal} onClose={handleCloseModal}>
         <Box
           sx={{
+            width: { xs: '400px', md: '550px' },
+            height: { xs: '400px', md: '300px' },
             position: 'absolute',
             top: '50%',
             left: '50%',
@@ -117,14 +121,25 @@ export const ServiceDetailPage = () => {
             bgcolor: 'background.paper',
             boxShadow: 24,
             p: 4,
-            borderRadius: 2,
-            width: '90%',
-            maxWidth: 500,
+            borderRadius: '0 0 12px 12px',
           }}
         >
-          <Typography variant="h6" mb={2}>
-            Select Date and Time
-          </Typography>
+          <Box
+            sx={{
+              width: '100%',
+              height: '8px',
+              backgroundColor: '#6750A4',
+              position: 'absolute',
+              top: 0,
+              left: 0,
+            }}
+          />
+          <Box mb={2}>
+            <TextAtom variant="title" size="large" sx={{ fontWeight: 'bold' }}>
+              {t('services.serviceDetails.dateModalTitle')}
+            </TextAtom>
+          </Box>
+
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DateTimePicker
               label="Date & Time"
@@ -133,13 +148,22 @@ export const ServiceDetailPage = () => {
               renderInput={(params) => <TextField {...params} fullWidth />}
             />
           </LocalizationProvider>
-          <Box display="flex" justifyContent="flex-end" mt={2}>
-            <Button onClick={handleCloseModal} sx={{ mr: 2 }}>
+          <Box display="flex" justifyContent="center" mt={8}>
+            <ButtonAtom
+              onClick={handleCloseModal}
+              variant="outlined"
+              color="primary"
+              sx={{ mr: 2 }}
+            >
               Cancel
-            </Button>
-            <Button variant="contained" onClick={handleConfirm}>
+            </ButtonAtom>
+            <ButtonAtom
+              variant="filled"
+              color="primary"
+              onClick={handleConfirm}
+            >
               Confirm
-            </Button>
+            </ButtonAtom>
           </Box>
         </Box>
       </Modal>
