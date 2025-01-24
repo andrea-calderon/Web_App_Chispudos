@@ -1,14 +1,49 @@
-import { Box } from '@mui/material';
-import TextAtom from '../atoms/TextAtom';
-import ButtonAtom from '../atoms/ButtonAtom';
+import React from 'react';
+import { Box, Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { UserLayout } from '../templates/UserLayout';
-import NotFoundImage from '../../assets/images/NotFoundPage/NotFoundImage.svg';
+import TextAtom from '../atoms/TextAtom';
+import ErrorImage from '../../assets/images/ErrorPage/ErrorImage.svg';
+// import ServerErrorImage from '../../assets/images/ServerErrorPage/ServerErrorImage.svg';
+// import ForbiddenImage from '../../assets/images/ForbiddenPage/ForbiddenImage.svg';
+// import UnauthorizedImage from '../../assets/images/UnauthorizedPage/UnauthorizedImage.svg';
+// import BadRequestImage from '../../assets/images/BadRequestPage/BadRequestImage.svg';
 
-const ErrorPage = () => {
+type ErrorPageProps = {
+  errorMsg?: string;
+  errorCode?: string;
+  errorImage?: string;
+};
+
+const ErrorPage: React.FC<ErrorPageProps> = ({
+  errorMsg,
+  errorCode = '404',
+  errorImage,
+}) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
+
+  const errorMessages = {
+    '404': t('errorPage.notFoundMessage'),
+    '500': t('errorPage.serverErrorMessage'),
+    '403': t('errorPage.forbiddenMessage'),
+    '401': t('errorPage.unauthorizedMessage'),
+    '400': t('errorPage.badRequestMessage'),
+  };
+
+  //Aquí se pueden agregar las imágenes personalizadas según cada error
+  const errorImages = {
+    '404': ErrorImage,
+    '500': ErrorImage,
+    '403': ErrorImage,
+    '401': ErrorImage,
+    '400': ErrorImage,
+  };
+
+  const message =
+    errorMsg || errorMessages[errorCode] || t('errorPage.defaultMessage');
+  const image = errorImage || errorImages[errorCode] || NotFoundImage;
 
   return (
     <UserLayout>
@@ -26,30 +61,24 @@ const ErrorPage = () => {
       >
         <Box
           component="img"
-          src={NotFoundImage}
-          alt={t('errorPage.ImageAlt')}
+          src={ErrorImage}
+          alt={t('errorPage.notFoundImageAlt')}
           sx={{
-            width: { xs: '100%', md: '60%' },
+            width: { xs: '90%', md: '70%' },
             height: 'auto',
             marginBottom: '2rem',
           }}
         />
 
         <TextAtom variant="headline" size="large" sx={{ marginBottom: 2 }}>
-          {t('errorPage.title')}
+          {`${errorCode} - ${t('errorPage.title')}`}
         </TextAtom>
-        <TextAtom variant="body" size="large" sx={{ marginBottom: 4 }}>
-          {t('errorPage.message')}
+        <TextAtom variant="body" size="medium" sx={{ marginBottom: 4 }}>
+          {message}
         </TextAtom>
-
-        <ButtonAtom
-          variant="filled"
-          color="primary"
-          onClick={() => navigate('/')}
-          sx={{ marginBottom: 2 }}
-        >
-          {t('errorPage.button')}
-        </ButtonAtom>
+        <Button variant="contained" onClick={() => navigate('/')}>
+          {t('errorPage.goHomeButton')}
+        </Button>
       </Box>
     </UserLayout>
   );

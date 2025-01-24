@@ -104,9 +104,9 @@
     },
 
     "errorPage": {
-      "title": "Oops Páge Not Found",
-      "message": "Sorry, the page you're looking for doesn't exist.",
-      "button": "Bring me to Home",
+      "title": "Oops Page Not Found",
+      "notFoundMessage": "Sorry, the page you're looking for doesn't exist.",
+      "goHomeButton": "Bring me to Home",
       "ImageAlt": "Illustration of aliens lost in space."
     },
 
