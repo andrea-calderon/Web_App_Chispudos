@@ -102,6 +102,14 @@
       "continue": "Continue"
     }
     },
+
+    "errorPage": {
+      "title": "Oops Páge Not Found",
+      "message": "Sorry, the page you're looking for doesn't exist.",
+      "button": "Bring me to Home",
+      "ImageAlt": "Illustration of aliens lost in space."
+    },
+
   "landing": {
     "categories": {
       "title": "Servicios destacados",

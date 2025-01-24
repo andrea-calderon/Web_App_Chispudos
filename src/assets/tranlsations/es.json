@@ -102,6 +102,13 @@
     }
   },
 
+  "errorPage": {
+    "title": "Ups, página no encontrada",
+    "message": "Lo sentimos, la página que buscas no existe.",
+    "button": "Volver a la página de inicio",
+    "ImageAlt": "Ilustración de aliens perdidos en el espacio"
+  },
+
   "landing": {
     "categories": {
   "title": "Servicios destacados",
