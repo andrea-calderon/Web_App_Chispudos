@@ -180,6 +180,21 @@
     "services": {
       "searchBar":{
         "clearFilters": "Limpiar filtros"
+                },
+        "serviceDetails":{
+        "dateModalTitle": "Seleccionar fecha y hora",
+        "navigationInput": "Detalles de la tarea",
+        "navigationCompleted": "Revisar y confirmar",
+        "title": "Inicia la conversación",
+        "description": "¡Estás casi listo! Comparte algunos detalles para preparar a tu Especialista para el trabajo.",
+        "time": "Hora y fecha",
+        "noDate": "Fecha no seleccionada",
+        "label": "Escribe algo...",
+        "buttonInput": "Completar solicitud",
+        "buttonCompleted": "Confirmar y chatear",
+        "confirmationTitle": "Has agendado con 'Limpieza de casas y apartamentos'",
+        "confirmationMessage": "Descubre servicios adicionales ofrecidos por tu Especialista favorito, o forma un equipo de tus Especialistas preferidos en la sección Favoritos.",
+        "continueButton": "Continuar"
     }
     },
 

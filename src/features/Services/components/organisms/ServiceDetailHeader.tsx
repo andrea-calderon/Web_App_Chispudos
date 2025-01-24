@@ -7,6 +7,7 @@ interface ServiceHeaderProps {
   providerName: string;
   rating: number;
   image: string;
+  onOpenModal: () => void;
 }
 
 export const ServiceHeader: React.FC<ServiceHeaderProps> = ({
@@ -14,6 +15,7 @@ export const ServiceHeader: React.FC<ServiceHeaderProps> = ({
   providerName,
   rating,
   image,
+  onOpenModal,
 }) => {
   return (
     <Box
@@ -55,10 +57,11 @@ export const ServiceHeader: React.FC<ServiceHeaderProps> = ({
         </Box>
         <Button
           variant="contained"
-          color="secondary"
-          sx={{ marginTop: '1rem' }}
+          color="primary"
+          onClick={onOpenModal}
+          sx={{ mt: 2 }}
         >
-          Contactar
+          Reservar Servicio
         </Button>
       </Box>
     </Box>
