@@ -21,7 +21,8 @@
       "min_value": "The value should be greater than or equal to {{min}}",
       "max_value": "The value should be less than or equal to {{max}}",
       "passwords_must_match": "Passwords must match",
-      "email": "The field should be a valid email"
+      "email": "The field should be a valid email",
+      "files": "This input require a {{type_file}} file"
     }
   },
   "auth": {
