@@ -51,6 +51,7 @@ export const ProfilePage: React.FC = () => {
     setPreviewImage(null);
     setErrorMsg(null);
   };
+ const URL_AVATAR_TEST='http://localhost:8000/api/v1'+user?.avatarUrl
 
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -98,6 +99,7 @@ export const ProfilePage: React.FC = () => {
     }
   };
 
+  console.error(URL_AVATAR_TEST)
   return (
     <UserLayout>
       <Grid
@@ -149,7 +151,7 @@ export const ProfilePage: React.FC = () => {
         >
           <Box sx={{ position: 'relative', display: 'inline-block', textAlign: 'center' }}>
             <Avatar
-              src={previewImage || '/default-avatar.png'}
+              src={URL_AVATAR_TEST}
               alt="Avatar"
               sx={{ width: 120, height: 120, mb: 2 }}
             />

@@ -8,6 +8,7 @@ export type UserResponseType = {
   createdAt: Date;
   updatedAt: Date;
   deletedAt: null;
+  avatarUrl: string;
 };
 
 
