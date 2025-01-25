@@ -17,6 +17,7 @@ import { ButtonAtom, TextAtom } from '../../../../components/atoms';
 import { useAppDispatch } from '../../../../hooks/useAppDispatch';
 import { logout, selectAuth } from '../../../../redux/slices/authSlice';
 import { useAppSelector } from '../../../../hooks/useAppSelector';
+import { useUpdateAvatarMutation } from '../../../../services/api';
 
 const modalUploadFileStyle = {
   position: 'absolute' as 'absolute',
@@ -39,8 +40,9 @@ export const ProfilePage: React.FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
-  const [loadingImage, setLoadingImage] = useState(false);
+ 
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [updateAvatar, { isLoading }] = useUpdateAvatarMutation ();
 
 
   const handleCloseModal = () => {
@@ -74,36 +76,25 @@ export const ProfilePage: React.FC = () => {
   };
 
   const handleSaveImage = async () => {
+    console.error(selectedImage);
     if (!selectedImage) return;
 
-    setLoadingImage(true);
+    
     setErrorMsg(null);
+    const formData = new FormData();
+    formData.append('file', selectedImage);
+    
 
     try {
-      const formData = new FormData();
-      formData.append('file', selectedImage);
-
-      //TODO: Connect to the API
-
-      const response = await fetch('//users/2/avatar', {
-        method: 'PUT',
-        body: formData,
-      });
-
-      if (!response.ok) {
-        throw new Error('Error al subir la imagen.');
-      }
-
-     
-      const data = await response.json();
-      console.log('Imagen actualizada:', data);
-
-      setLoadingImage(false);
+   
+      await updateAvatar (formData).unwrap();
+      
       handleCloseModal();
+
     } catch (error) {
       console.error(error);
       setErrorMsg('No se pudo guardar la imagen. Intenta de nuevo.');
-      setLoadingImage(false);
+   
     }
   };
 
@@ -317,7 +308,7 @@ export const ProfilePage: React.FC = () => {
                     id="fileInput"
                     type="file"
                     hidden
-                    accept="image/jpeg,image/png"
+                   
                     style={{display:'none'}}
                     onChange={handleImageChange}
                   />
@@ -330,9 +321,9 @@ export const ProfilePage: React.FC = () => {
                 <ButtonAtom
                   variant="outlined"
                   onClick={handleSaveImage}
-                  disabled={loadingImage}
+                  disabled={isLoading}
                 >
-                  {loadingImage ? <CircularProgress size={24} /> : 'Guardar'}
+                  {isLoading ? <CircularProgress size={24} /> : 'Guardar'}
                 </ButtonAtom>
               </Box>
             </Box>
