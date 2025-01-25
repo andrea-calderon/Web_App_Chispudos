@@ -16,31 +16,41 @@ import { selectAuth } from '../redux/slices/authSlice';
 import { ProfilePage } from '../features/profile/components/pages/ProfilePage';
 import PasswordRecovery from '../features/auth/components/pages/PasswordRecovery';
 import RegisterPage from '../features/auth/components/pages/RegisterPage';
+import ErrorBoundary from '../components/Generics/ErrorBoundary';
+import ErrorPage from '../components/organisms/ErrorPage';
 
 const AppRoutes = () => {
   const { isAuthenticated } = useAppSelector(selectAuth);
+
   return (
     <div>
       <Router>
-        <Routes>
-          {/* Public Routes */}
-          <Route
-            path="/login"
-            element={isAuthenticated ? <Navigate to="/home" /> : <LoginPage />}
-          />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/password-recovery" element={<PasswordRecovery />} />
+        <ErrorBoundary>
+          <Routes>
+            {/* Public Routes */}
+            <Route
+              path="/login"
+              element={
+                isAuthenticated ? <Navigate to="/home" /> : <LoginPage />
+              }
+            />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/password-recovery" element={<PasswordRecovery />} />
 
-          {/* Protected Routes */}
-          <Route element={<ProtectedRoutesWrapper />}>
-            <Route path="/home" element={<HomePage />} />
-            <Route path="/profile" element={<ProfilePage />} />
-            <Route path="/search-services" element={<SearchServicesPage />} />
-            <Route path="/services/:id" element={<ServiceDetailPage />} />
-            <Route path="/service-details" element={<TaskDetailsPage />} />
-          </Route>
-        </Routes>
+            {/* Protected Routes */}
+            <Route element={<ProtectedRoutesWrapper />}>
+              <Route path="/home" element={<HomePage />} />
+              <Route path="/profile" element={<ProfilePage />} />
+              <Route path="/search-services" element={<SearchServicesPage />} />
+              <Route path="/services/:id" element={<ServiceDetailPage />} />
+              <Route path="/service-details" element={<TaskDetailsPage />} />
+            </Route>
+
+            {/* Error Page */}
+            <Route path="*" element={<ErrorPage />} />
+          </Routes>
+        </ErrorBoundary>
       </Router>
     </div>
   );

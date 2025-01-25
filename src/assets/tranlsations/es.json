@@ -102,6 +102,19 @@
     }
   },
 
+  "errorPage": {
+    "title": "Ups, página no encontrada",
+    "notFoundMessage": "Lo sentimos, la página que buscas no existe.",
+    "serverErrorMessage": "¡Ups! Algo salió mal en nuestro lado. Por favor, inténtalo de nuevo más tarde.",
+    "forbiddenMessage": "No tienes permiso para acceder a esta página.",
+    "unauthorizedMessage": "Necesitas iniciar sesión para acceder a esta página.",
+    "badRequestMessage": "La solicitud es inválida o no puede ser procesada.",
+    "defaultMessage": "Ha ocurrido un error inesperado. Por favor, inténtalo de nuevo más tarde.",
+    "notFoundImageAlt": "Ilustración de página no encontrada",
+    "goHomeButton": "Volver a la página de inicio",
+    "ImageAlt": "Ilustración de aliens perdidos en el espacio"
+  },
+
   "landing": {
     "categories": {
   "title": "Servicios destacados",
