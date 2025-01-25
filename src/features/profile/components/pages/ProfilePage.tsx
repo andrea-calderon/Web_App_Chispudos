@@ -18,6 +18,7 @@ import { useAppDispatch } from '../../../../hooks/useAppDispatch';
 import { logout, selectAuth } from '../../../../redux/slices/authSlice';
 import { useAppSelector } from '../../../../hooks/useAppSelector';
 import { useUpdateAvatarMutation } from '../../../../services/api';
+//import { useNavigate } from 'react-router-dom';
 
 const modalUploadFileStyle = {
   position: 'absolute' as 'absolute',
@@ -51,7 +52,8 @@ export const ProfilePage: React.FC = () => {
     setPreviewImage(null);
     setErrorMsg(null);
   };
- const URL_AVATAR_TEST='http://localhost:8000/api/v1'+user?.avatarUrl
+  const URL_AVATAR_TEST='http://localhost:8000/api/v1'+user?.avatarUrl
+  //const navigate = useNavigate();
 
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -89,8 +91,8 @@ export const ProfilePage: React.FC = () => {
     try {
    
       await updateAvatar (formData).unwrap();
-      
       handleCloseModal();
+      //navigate('/profile');
 
     } catch (error) {
       console.error(error);
@@ -99,7 +101,7 @@ export const ProfilePage: React.FC = () => {
     }
   };
 
-  console.error(URL_AVATAR_TEST)
+  
   return (
     <UserLayout>
       <Grid
