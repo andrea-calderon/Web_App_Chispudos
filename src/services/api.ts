@@ -85,12 +85,11 @@ export const api = createApi({
         },
       }),
     }),
-    updateAvatar: builder.mutation<any, FormData>({
-      query: (FormData) => ({
-        url: '/users/4/avatar',
+    updateAvatar: builder.mutation<any, { userId: string; formData: FormData }>({
+      query: ({ userId, formData }) => ({
+        url: `/users/${userId}/avatar`,
         method: 'PUT',
-        body: FormData,
-        
+        body: formData,
       }),
     }),
   }),

@@ -52,7 +52,7 @@ export const ProfilePage: React.FC = () => {
     setPreviewImage(null);
     setErrorMsg(null);
   };
-  const URL_AVATAR_TEST='http://localhost:8000/api/v1'+user?.avatarUrl
+  const URL_AVATAR_TEST=import.meta.env.VITE_BASE_API_URL + user?.avatarUrl;
   //const navigate = useNavigate();
 
 
@@ -90,7 +90,7 @@ export const ProfilePage: React.FC = () => {
 
     try {
    
-      await updateAvatar (formData).unwrap();
+      await updateAvatar ( {userId: user.id, formData}).unwrap();
       handleCloseModal();
       //navigate('/profile');
 
