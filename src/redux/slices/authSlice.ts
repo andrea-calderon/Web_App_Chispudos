@@ -10,6 +10,7 @@ type AuthState = {
   token: string | null;
   user: UserResponseType | null;
   error: string | null;
+  
 };
 
 const initialState: AuthState = {

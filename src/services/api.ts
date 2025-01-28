@@ -12,7 +12,6 @@ const baseQuery = fetchBaseQuery({
     const authState = selectAuth(getState() as RootState);
     const token = authState.token;
     if (token) headers.set('Authorization', `${token}`);
-    headers.set('Content-Type', 'application/json');
     return headers;
   },
 });
@@ -86,6 +85,13 @@ export const api = createApi({
         },
       }),
     }),
+    updateAvatar: builder.mutation<any, { userId: string; formData: FormData }>({
+      query: ({ userId, formData }) => ({
+        url: `/users/${userId}/avatar`,
+        method: 'PUT',
+        body: formData,
+      }),
+    }),
   }),
 });
 
@@ -98,4 +104,5 @@ export const {
   useGetProductsQuery,
   useGetProductByIdQuery,
   useGetCategoriesQuery,
+  useUpdateAvatarMutation
 } = api;
