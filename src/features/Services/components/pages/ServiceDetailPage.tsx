@@ -22,12 +22,22 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { ButtonAtom, TextAtom } from '../../../../components/atoms';
 import { useTranslation } from 'react-i18next';
+import { useDateValidation } from '../../../../hooks/useDateValidation';
 
 export const ServiceDetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const { data: service, isLoading, isError } = useGetProductByIdQuery(id!);
   const navigate = useNavigate();
   const { t } = useTranslation();
+
+  const [openModal, setOpenModal] = useState(false);
+  const [selectedDateTime, setSelectedDateTime] = useState<Date | null>(null);
+
+  // Configuración del hook de validación de fechas
+  const { isDateEnabled } = useDateValidation({
+    disabledDates: [new Date(2025, 0, 1), new Date(2025, 11, 25)], // Año Nuevo y Navidad
+    disableWeekends: true, // Deshabilita sábados y domingos
+  });
 
   const handleConfirm = () => {
     if (selectedDateTime) {
@@ -41,9 +51,6 @@ export const ServiceDetailPage = () => {
       alert('Please select a date and time.');
     }
   };
-
-  const [openModal, setOpenModal] = useState(false);
-  const [selectedDateTime, setSelectedDateTime] = useState(null);
 
   const handleOpenModal = () => setOpenModal(true);
   const handleCloseModal = () => setOpenModal(false);
@@ -145,9 +152,11 @@ export const ServiceDetailPage = () => {
               label="Date & Time"
               value={selectedDateTime}
               onChange={(newValue) => setSelectedDateTime(newValue)}
+              shouldDisableDate={(date) => !isDateEnabled(date.toDate())} // Aplica la validación
               renderInput={(params) => <TextField {...params} fullWidth />}
             />
           </LocalizationProvider>
+
           <Box display="flex" justifyContent="center" mt={8}>
             <ButtonAtom
               onClick={handleCloseModal}
