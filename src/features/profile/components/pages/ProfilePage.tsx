@@ -81,7 +81,8 @@ export const ProfilePage: React.FC = () => {
     formData.append('file', selectedImage);
 
     try {
-      await updateAvatar({ userId: user.id, formData }).unwrap();
+   
+      await updateAvatar ( {userId: user?.id?.toString(), formData}).unwrap();
       handleCloseModal();
       //navigate('/profile');
     } catch (error) {
