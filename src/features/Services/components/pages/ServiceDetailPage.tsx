@@ -8,7 +8,6 @@ import {
   Box,
   Grid,
   CircularProgress,
-  Typography,
   Modal,
   TextField,
 } from '@mui/material';
@@ -24,6 +23,7 @@ import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { ButtonAtom, TextAtom } from '../../../../components/atoms';
 import { useTranslation } from 'react-i18next';
 import { useDateValidation } from '../../../../hooks/useDateValidation';
+import CustomError from '../../../../utils/CustomError';
 
 export const ServiceDetailPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -88,20 +88,7 @@ export const ServiceDetailPage = () => {
   }
 
   if (isError || !service) {
-    return (
-      <UserLayout>
-        <Box
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-          height="100vh"
-        >
-          <Typography variant="h6" color="error">
-            Error loading service details. Please try again.
-          </Typography>
-        </Box>
-      </UserLayout>
-    );
+    throw new CustomError('500', 'Server or API Error:  Try again later', 'Go Back', () => navigate('/'));
   }
 
   const title = service.name || 'Service not available';
