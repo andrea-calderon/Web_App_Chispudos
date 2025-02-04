@@ -9,15 +9,15 @@ import {
   List,
   ListItem,
 } from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import EditIcon from '@mui/icons-material/Edit';
 import Grid from '@mui/material/Grid2';
 import { UserLayout } from '../../../../components/templates/UserLayout';
 import { ButtonAtom, TextAtom } from '../../../../components/atoms';
 import { useAppDispatch } from '../../../../hooks/useAppDispatch';
 import { logout, selectAuth } from '../../../../redux/slices/authSlice';
 import { useAppSelector } from '../../../../hooks/useAppSelector';
-import { useUpdateAvatarMutation } from '../../../../services/api';
+import { useAvatarUpload } from '../../../../hooks/useAvatarUpload';
 
 const modalUploadFileStyle = {
   position: 'absolute' as 'absolute',
@@ -34,60 +34,27 @@ const modalUploadFileStyle = {
 export const ProfilePage: React.FC = () => {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector(selectAuth);
-
   const [modalOpen, setModalOpen] = useState(false);
-  const [selectedImage, setSelectedImage] = useState<File | null>(null);
-  const [previewImage, setPreviewImage] = useState<string | null>(null);
 
-  const [errorMsg, setErrorMsg] = useState<string | null>(null);
-  const [updateAvatar, { isLoading }] = useUpdateAvatarMutation();
+  const {
+    selectedImage,
+    previewImage,
+    errorMsg,
+    isLoading,
+    handleImageChange,
+    handleSaveImage,
+  } = useAvatarUpload(user?.id?.toString() || '');
 
   const handleCloseModal = () => {
     setModalOpen(false);
-    setSelectedImage(null);
-    setPreviewImage(null);
-    setErrorMsg(null);
-  };
-  const URL_AVATAR_TEST = import.meta.env.VITE_BASE_API_URL + user?.avatarUrl;
-  //const navigate = useNavigate();
-
-  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    const validFileTypes = ['image/jpeg', 'image/png'];
-    if (!validFileTypes.includes(file.type)) {
-      setErrorMsg('Solo se permiten archivos JPG o PNG.');
-      return;
-    }
-
-    if (file.size > 5 * 1024 * 1024) {
-      setErrorMsg('El archivo debe ser menor a 5MB.');
-      return;
-    }
-
-    setSelectedImage(file);
-    setPreviewImage(URL.createObjectURL(file));
-    setErrorMsg(null);
-    setModalOpen(true);
   };
 
-  const handleSaveImage = async () => {
-    console.error(selectedImage);
-    if (!selectedImage) return;
-
-    setErrorMsg(null);
-    const formData = new FormData();
-    formData.append('file', selectedImage);
-
-    try {
-   
-      await updateAvatar ( {userId: user?.id?.toString(), formData}).unwrap();
+ 
+  const handleSaveClick = async () => {
+    if (selectedImage) {
+     
+      await handleSaveImage();
       handleCloseModal();
-      //navigate('/profile');
-    } catch (error) {
-      console.error(error);
-      setErrorMsg('No se pudo guardar la imagen. Intenta de nuevo.');
     }
   };
 
@@ -119,10 +86,7 @@ export const ProfilePage: React.FC = () => {
           </TextAtom>
           <ButtonAtom
             variant="text"
-            sx={{
-              fontWeight: 'bold',
-              textTransform: 'none',
-            }}
+            sx={{ fontWeight: 'bold', textTransform: 'none' }}
             onClick={() => dispatch(logout())}
           >
             Salir
@@ -146,7 +110,7 @@ export const ProfilePage: React.FC = () => {
             }}
           >
             <Avatar
-              src={URL_AVATAR_TEST}
+              src={previewImage ? previewImage : user?.avatarUrl ?? undefined}
               alt="Avatar"
               sx={{ width: 120, height: 120, mb: 2 }}
             />
@@ -171,7 +135,10 @@ export const ProfilePage: React.FC = () => {
                 type="file"
                 hidden
                 accept="image/jpeg, image/png"
-                onChange={handleImageChange}
+                onChange={(e) => {
+                  handleImageChange(e);
+                  setModalOpen(true);
+                }}
               />
             </IconButton>
           </Box>
@@ -181,7 +148,7 @@ export const ProfilePage: React.FC = () => {
             </Typography>
           )}
           <TextAtom variant="title" size="large">
-            {user?.name || 'Name'}&nbsp;{user?.lastname || 'Lastname'}
+            {user?.name || 'Name'} {user?.lastname || 'Lastname'}
           </TextAtom>
         </Grid>
 
@@ -291,63 +258,30 @@ export const ProfilePage: React.FC = () => {
             </TextAtom>
           </ButtonAtom>
 
-          <Modal open={modalOpen} onClose={handleCloseModal}>
-            <Box sx={modalUploadFileStyle}>
-              <TextAtom variant="title" size="medium" mb={2}>
-                Cambiar foto de perfil
-              </TextAtom>
-              <Box
-                sx={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  gap: 2,
-                }}
-              >
-                {previewImage ? (
-                  <img
-                    src={previewImage}
-                    alt="Vista previa"
-                    style={{
-                      width: '100%',
-                      maxHeight: 200,
-                      objectFit: 'cover',
-                    }}
-                  />
-                ) : (
-                  <TextAtom variant="title" size="medium">
-                    No hay imagen seleccionada
-                  </TextAtom>
-                )}
-                <ButtonAtom
-                  variant="outlined"
-                  onClick={() => document.getElementById('fileInput')?.click()}
-                  sx={{ mt: 2 }}
-                >
-                  Seleccionar archivo
-                  <input
-                    id="fileInput"
-                    type="file"
-                    hidden
-                    style={{ display: 'none' }}
-                    onChange={handleImageChange}
-                  />
-                </ButtonAtom>
-                {errorMsg && (
-                  <TextAtom variant="title" size="medium" color="red">
-                    {errorMsg}
-                  </TextAtom>
-                )}
-                <ButtonAtom
-                  variant="outlined"
-                  onClick={handleSaveImage}
-                  disabled={isLoading}
-                >
-                  {isLoading ? <CircularProgress size={24} /> : 'Guardar'}
-                </ButtonAtom>
-              </Box>
-            </Box>
-          </Modal>
+        <Modal open={modalOpen} onClose={handleCloseModal}>
+          <Box sx={modalUploadFileStyle}>
+            <TextAtom variant="title" size='medium' mb={2}>
+              Cambiar foto de perfil
+            </TextAtom>
+            {previewImage ? (
+              <img
+                src={previewImage}
+                alt="Vista previa"
+                style={{ width: '100%', maxHeight: 200, objectFit: 'cover' }}
+              />
+            ) : (
+              <TextAtom variant="title" size="medium">No hay imagen seleccionada</TextAtom>
+            )}
+            {errorMsg && <Typography color='error'>{errorMsg}</Typography>}
+            <ButtonAtom
+              variant="outlined"
+              onClick={handleSaveClick} 
+              disabled={isLoading}
+            >
+              {isLoading ? <CircularProgress size={24} /> : 'Guardar'}
+            </ButtonAtom>
+          </Box>
+        </Modal>
         </Grid>
       </Grid>
     </UserLayout>
