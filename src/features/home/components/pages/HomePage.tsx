@@ -78,8 +78,7 @@ export const HomePage: React.FC = () => {
       rating: 4.6,
       reviewCount: 5,
       jobsInQueue: 3,
-    }
-    
+    },
   ];
 
   return (
@@ -97,27 +96,24 @@ export const HomePage: React.FC = () => {
         </TextAtom>
       </Box>
       <Box>
-      
-      <Box>
-         <Grid
-          container
-          spacing={1}
+        <Box>
+          <Grid
+            container
+            spacing={1}
+            sx={{
+              overflowX: 'auto',
 
-          sx={{
-            overflowX: 'auto',
-            
-            scrollBehavior: 'smooth',
-            flexGrow: 1,
-            width: '100%',
-          }}
-        >
-          {allServices.map((service, index) => (
-            <Grid key={index} size={{ xs: 6, md: 3 , lg:2}}>
-              <ServicesCard {...service} />
-            </Grid>
-            
-          ))}
-        </Grid>
+              scrollBehavior: 'smooth',
+              flexGrow: 1,
+              width: '100%',
+            }}
+          >
+            {allServices.map((service, index) => (
+              <Grid key={index} size={{ xs: 6, md: 3, lg: 2 }}>
+                <ServicesCard {...service} />
+              </Grid>
+            ))}
+          </Grid>
         </Box>
       </Box>
       <Footer />
