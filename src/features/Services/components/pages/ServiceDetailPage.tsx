@@ -33,10 +33,26 @@ export const ServiceDetailPage = () => {
   const [openModal, setOpenModal] = useState(false);
   const [selectedDateTime, setSelectedDateTime] = useState<Date | null>(null);
 
-  // Configuración del hook de validación de fechas
   const { isDateEnabled } = useDateValidation({
-    disabledDates: [new Date(2025, 0, 1), new Date(2025, 11, 25)], // Año Nuevo y Navidad
-    disableWeekends: true, // Deshabilita sábados y domingos
+    disabledDates: [
+      new Date(2025, 0, 1),
+      new Date(2025, 4, 1),
+      new Date(2025, 5, 30),
+      new Date(2025, 7, 15),
+      new Date(2025, 8, 15),
+      new Date(2025, 9, 20),
+      new Date(2025, 10, 1),
+      new Date(2025, 11, 25),
+    ],
+    disableWeekends: true,
+    customValidation: (date) => {
+      const month = date.getMonth();
+      const day = date.getDate();
+      if (month === 3 && day >= 17 && day <= 20) {
+        return false;
+      }
+      return true;
+    },
   });
 
   const handleConfirm = () => {
@@ -152,7 +168,7 @@ export const ServiceDetailPage = () => {
               label="Date & Time"
               value={selectedDateTime}
               onChange={(newValue) => setSelectedDateTime(newValue)}
-              shouldDisableDate={(date) => !isDateEnabled(date.toDate())} // Aplica la validación
+              shouldDisableDate={(date) => !isDateEnabled(date.toDate())}
               renderInput={(params) => <TextField {...params} fullWidth />}
             />
           </LocalizationProvider>
