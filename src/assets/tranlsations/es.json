@@ -1,17 +1,31 @@
 {
   "app_name": "Reco",
-  "welcome": "Bienvenido!",
+  "welcome": "¡Bienvenido!",
   "components": {
     "button": {
       "login": "Iniciar sesión"
     }
   },
+
+  "appBar": {
+    "navItems": {
+      "services": "Servicios",
+      "business": "Ofrecer mis servicios en Reco"
+    },
+    "authNavItems": {
+      "home": "Inicio",
+      "tasks": "Tareas",
+      "favorites": "Favoritos"
+    }
+},
+
   "buttonTab": {
       "home": "Inicio",
-      "task": "Tarea",
+      "task": "Tareas",
       "favorites": "Favoritos",
       "profile": "Peril"
   },
+
   "forms": {
     "commons": {
       "required": "Este campo es requerido",

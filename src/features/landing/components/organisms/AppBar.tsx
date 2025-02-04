@@ -16,7 +16,8 @@ import {
   AccountCircleOutlined as AccountIcon,
   FavoriteBorderOutlined as FavoriteIcon,
   Engineering as EngineeringIcon,
-  Assignment as AssignmentIcon,
+  HomeOutlined as HomeIcon,
+  AssignmentOutlined as TaskIcon,
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -35,11 +36,14 @@ function ResponsiveAppBar() {
   const [language, setLanguage] = useState('en');
 
   const NAV_ITEMS = [
-    { label: 'Cómo funciona', path: '/how-it-works' },
-    { label: '¿Eres profesional?', path: '/are-you-a-professional' },
-    { label: 'Servicios', path: '/services' },
+    {
+      label: t('appBar.navItems.business'),
+      icon: <EngineeringIcon />,
+      path: '/login',
+    },
+    { label: t('appBar.navItems.services'), path: '/services' },
     { label: <TranslateIcon />, action: () => toggleLanguage() },
-    { label: 'Iniciar sesión', path: '/login' },
+    { label: t('auth.login.title'), path: '/login' },
     {
       label: (
         <ButtonAtom
@@ -57,12 +61,25 @@ function ResponsiveAppBar() {
 
   const AUTH_NAV_ITEMS = [
     {
-      label: '¿Eres profesional?',
+      label: t('appBar.navItems.business'),
       icon: <EngineeringIcon />,
-      path: '/are-you-a-professional',
+      path: '/stepper',
     },
-    { label: 'Tareas', icon: <AssignmentIcon />, path: '/tasks' },
-    { label: 'Especialistas', icon: <FavoriteIcon />, path: '/specialists' },
+    {
+      label: t('appBar.authNavItems.home'),
+      icon: <HomeIcon />,
+      path: '/home',
+    },
+    {
+      label: t('appBar.authNavItems.tasks'),
+      icon: <TaskIcon />,
+      path: '/tasks',
+    },
+    {
+      label: t('appBar.authNavItems.favorites'),
+      icon: <FavoriteIcon />,
+      path: '/specialists',
+    },
     { label: <TranslateIcon />, action: () => toggleLanguage() },
     { label: <AccountIcon fontSize="large" />, path: '/profile' },
   ];
