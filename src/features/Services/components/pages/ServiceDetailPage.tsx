@@ -19,6 +19,7 @@ import { ServiceReviews } from '../organisms/ServiceDetailReviews';
 import { ServiceOtherSkills } from '../organisms/ServiceDetailOtherSkills';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import dayjs from 'dayjs';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { ButtonAtom, TextAtom } from '../../../../components/atoms';
 import { useTranslation } from 'react-i18next';
@@ -168,7 +169,9 @@ export const ServiceDetailPage = () => {
               label="Date & Time"
               value={selectedDateTime}
               onChange={(newValue) => setSelectedDateTime(newValue)}
-              shouldDisableDate={(date) => !isDateEnabled(date.toDate())}
+              shouldDisableDate={(date) =>
+                !isDateEnabled(date.toDate()) || date.isBefore(dayjs(), 'day')
+              }
               renderInput={(params) => <TextField {...params} fullWidth />}
             />
           </LocalizationProvider>
