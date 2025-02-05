@@ -15,9 +15,10 @@ import {
   Translate as TranslateIcon,
   AccountCircleOutlined as AccountIcon,
   FavoriteBorderOutlined as FavoriteIcon,
-  Engineering as EngineeringIcon,
   HomeOutlined as HomeIcon,
   AssignmentOutlined as TaskIcon,
+  BuildCircle as BuildIcon,
+  Storefront as StorefrontIcon,
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -38,7 +39,7 @@ function ResponsiveAppBar() {
   const NAV_ITEMS = [
     {
       label: t('appBar.navItems.business'),
-      icon: <EngineeringIcon />,
+      icon: <StorefrontIcon sx={{ color: theme.palette.primary.main }} />,
       path: '/login',
     },
     { label: t('appBar.navItems.services'), path: '/services' },
@@ -62,7 +63,7 @@ function ResponsiveAppBar() {
   const AUTH_NAV_ITEMS = [
     {
       label: t('appBar.navItems.business'),
-      icon: <EngineeringIcon />,
+      icon: <StorefrontIcon sx={{ color: theme.palette.primary.main }} />,
       path: '/stepper',
     },
     {

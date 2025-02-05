@@ -9,13 +9,12 @@
   "appBar": {
       "navItems": {
         "services": "Services",
-        "business": "List my services on Reco"
+        "business": "List My Services"
       },
       "authNavItems": {
-        "professional": "Are you a professional?",
         "home": "Home",
         "tasks": "Tasks",
-        "favorites": "Favorites"
+        "favorites": "Saved"
       }
   },
   

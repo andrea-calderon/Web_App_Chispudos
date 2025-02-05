@@ -10,19 +10,19 @@
   "appBar": {
     "navItems": {
       "services": "Servicios",
-      "business": "Ofrecer mis servicios en Reco"
+      "business": "Publicar mis servicios"
     },
     "authNavItems": {
       "home": "Inicio",
-      "tasks": "Tareas",
-      "favorites": "Favoritos"
+      "tasks": "Mis Trabajos",
+      "favorites": "Guardados"
     }
 },
 
   "buttonTab": {
       "home": "Inicio",
-      "task": "Tareas",
-      "favorites": "Favoritos",
+      "task": "Mis Trabajos",
+      "favorites": "Guardados",
       "profile": "Peril"
   },
 
