@@ -17,7 +17,6 @@ import {
   FavoriteBorderOutlined as FavoriteIcon,
   HomeOutlined as HomeIcon,
   AssignmentOutlined as TaskIcon,
-  BuildCircle as BuildIcon,
   Storefront as StorefrontIcon,
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
