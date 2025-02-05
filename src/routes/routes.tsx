@@ -18,6 +18,7 @@ import PasswordRecovery from '../features/auth/components/pages/PasswordRecovery
 import RegisterPage from '../features/auth/components/pages/RegisterPage';
 import ErrorBoundary from '../components/Generics/ErrorBoundary';
 import ErrorPage from '../components/organisms/ErrorPage';
+import ErrorBoundaryWrapper from '../components/Generics/ErrorBoundaryWrapper';
 
 const AppRoutes = () => {
   const { isAuthenticated } = useAppSelector(selectAuth);
@@ -25,7 +26,7 @@ const AppRoutes = () => {
   return (
     <div>
       <Router>
-        <ErrorBoundary>
+        <ErrorBoundaryWrapper>
           <Routes>
             {/* Public Routes */}
             <Route
@@ -48,9 +49,9 @@ const AppRoutes = () => {
             </Route>
 
             {/* Error Page */}
-            <Route path="*" element={<ErrorPage />} />
+            <Route path="*" element={<ErrorPage errorCode='404' />} />
           </Routes>
-        </ErrorBoundary>
+        </ErrorBoundaryWrapper>
       </Router>
     </div>
   );

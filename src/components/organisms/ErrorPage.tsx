@@ -14,12 +14,15 @@ type ErrorPageProps = {
   errorMsg?: string;
   errorCode?: string;
   errorImage?: string;
+  actionText?: string;
+  handleCustomAction?: () => void;
 };
 
 const ErrorPage: React.FC<ErrorPageProps> = ({
-  errorMsg,
-  errorCode = '404',
-  errorImage,
+  errorMsg = 'Something went wrong',
+  errorCode = '500',
+  actionText,
+  handleCustomAction,
 }) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -43,7 +46,7 @@ const ErrorPage: React.FC<ErrorPageProps> = ({
 
   const message =
     errorMsg || errorMessages[errorCode] || t('errorPage.defaultMessage');
-  const image = errorImage || errorImages[errorCode] || NotFoundImage;
+  const errorImage = errorImages[errorCode];
 
   return (
     <UserLayout>
@@ -61,7 +64,7 @@ const ErrorPage: React.FC<ErrorPageProps> = ({
       >
         <Box
           component="img"
-          src={ErrorImage}
+          src={errorImage}
           alt={t('errorPage.notFoundImageAlt')}
           sx={{
             width: { xs: '90%', md: '70%' },
@@ -71,13 +74,13 @@ const ErrorPage: React.FC<ErrorPageProps> = ({
         />
 
         <TextAtom variant="headline" size="large" sx={{ marginBottom: 2 }}>
-          {`${errorCode} - ${t('errorPage.title')}`}
+          {`${errorCode} - ${errorMessages[errorCode]}`}
         </TextAtom>
         <TextAtom variant="body" size="medium" sx={{ marginBottom: 4 }}>
           {message}
         </TextAtom>
-        <Button variant="contained" onClick={() => navigate('/')}>
-          {t('errorPage.goHomeButton')}
+        <Button variant="contained" onClick={handleCustomAction || (() => navigate('/'))}>
+          { actionText || t('errorPage.goHomeButton')}
         </Button>
       </Box>
     </UserLayout>
