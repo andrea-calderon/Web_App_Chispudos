@@ -5,6 +5,18 @@
       "login": "Login"
     }
   },
+
+  "appBar": {
+      "navItems": {
+        "services": "Services",
+        "business": "List My Services"
+      },
+      "authNavItems": {
+        "home": "Home",
+        "tasks": "Tasks",
+        "favorites": "Saved"
+      }
+  },
   
   "buttonTab": {
     "home": "Home",
