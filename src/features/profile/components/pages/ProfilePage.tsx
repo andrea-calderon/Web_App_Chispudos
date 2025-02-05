@@ -18,7 +18,6 @@ import { useAppDispatch } from '../../../../hooks/useAppDispatch';
 import { logout, selectAuth } from '../../../../redux/slices/authSlice';
 import { useAppSelector } from '../../../../hooks/useAppSelector';
 import { useUpdateAvatarMutation } from '../../../../services/api';
-//import { useNavigate } from 'react-router-dom';
 
 const modalUploadFileStyle = {
   position: 'absolute' as 'absolute',
@@ -32,8 +31,6 @@ const modalUploadFileStyle = {
   borderRadius: 2,
 };
 
-
-
 export const ProfilePage: React.FC = () => {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector(selectAuth);
@@ -41,10 +38,9 @@ export const ProfilePage: React.FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
- 
-  const [errorMsg, setErrorMsg] = useState<string | null>(null);
-  const [updateAvatar, { isLoading }] = useUpdateAvatarMutation ();
 
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [updateAvatar, { isLoading }] = useUpdateAvatarMutation();
 
   const handleCloseModal = () => {
     setModalOpen(false);
@@ -52,15 +48,13 @@ export const ProfilePage: React.FC = () => {
     setPreviewImage(null);
     setErrorMsg(null);
   };
-  const URL_AVATAR_TEST=import.meta.env.VITE_BASE_API_URL + user?.avatarUrl;
+  const URL_AVATAR_TEST = import.meta.env.VITE_BASE_API_URL + user?.avatarUrl;
   //const navigate = useNavigate();
-
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
-    
     const validFileTypes = ['image/jpeg', 'image/png'];
     if (!validFileTypes.includes(file.type)) {
       setErrorMsg('Solo se permiten archivos JPG o PNG.');
@@ -82,26 +76,20 @@ export const ProfilePage: React.FC = () => {
     console.error(selectedImage);
     if (!selectedImage) return;
 
-    
     setErrorMsg(null);
     const formData = new FormData();
     formData.append('file', selectedImage);
-    
 
     try {
-   
-      await updateAvatar ( {userId: user.id, formData}).unwrap();
+      await updateAvatar({ userId: user.id, formData }).unwrap();
       handleCloseModal();
       //navigate('/profile');
-
     } catch (error) {
       console.error(error);
       setErrorMsg('No se pudo guardar la imagen. Intenta de nuevo.');
-   
     }
   };
 
-  
   return (
     <UserLayout>
       <Grid
@@ -114,7 +102,6 @@ export const ProfilePage: React.FC = () => {
           position: 'relative',
         }}
       >
-        
         <Grid
           size={{ xs: 12, sm: 0 }}
           sx={{
@@ -141,7 +128,6 @@ export const ProfilePage: React.FC = () => {
           </ButtonAtom>
         </Grid>
 
-       
         <Grid
           size={{ xs: 12, md: 6, lg: 4, xl: 3 }}
           sx={{
@@ -151,7 +137,13 @@ export const ProfilePage: React.FC = () => {
             mb: { xs: 4, sm: 6 },
           }}
         >
-          <Box sx={{ position: 'relative', display: 'inline-block', textAlign: 'center' }}>
+          <Box
+            sx={{
+              position: 'relative',
+              display: 'inline-block',
+              textAlign: 'center',
+            }}
+          >
             <Avatar
               src={URL_AVATAR_TEST}
               alt="Avatar"
@@ -192,7 +184,6 @@ export const ProfilePage: React.FC = () => {
           </TextAtom>
         </Grid>
 
-        
         <Grid size={{ xs: 12, md: 8, lg: 6, xl: 5 }}>
           <List sx={{ width: '100%' }}>
             <ListItem disablePadding>
@@ -215,30 +206,40 @@ export const ProfilePage: React.FC = () => {
                 </TextAtom>
               </ButtonAtom>
             </ListItem>
-            {['Cambiar contraseña', 'Métodos de pago', 'Promociones', 'Notificaciones', 'Soporte'].map(
-              (item, index) => (
-                <ListItem key={index} disablePadding sx={{ borderBottom: '1px solid rgb(226, 226, 230)' }}>
-                  <ButtonAtom
-                    variant="text"
-                    fullWidth
-                    sx={{
-                      height: '50px',
-                      justifyContent: 'space-between',
-                      textTransform: 'none',
-                    }}
-                  >
-                    <TextAtom variant="title" size="medium">
-                      {item}
-                    </TextAtom>
-                    <ArrowForwardIosIcon fontSize="small" sx={{ color: '#6750A4' }} />
-                  </ButtonAtom>
-                </ListItem>
-              )
-            )}
+            {[
+              'Cambiar contraseña',
+              'Métodos de pago',
+              'Promociones',
+              'Notificaciones',
+              'Soporte',
+            ].map((item, index) => (
+              <ListItem
+                key={index}
+                disablePadding
+                sx={{ borderBottom: '1px solid rgb(226, 226, 230)' }}
+              >
+                <ButtonAtom
+                  variant="text"
+                  fullWidth
+                  sx={{
+                    height: '50px',
+                    justifyContent: 'space-between',
+                    textTransform: 'none',
+                  }}
+                >
+                  <TextAtom variant="title" size="medium">
+                    {item}
+                  </TextAtom>
+                  <ArrowForwardIosIcon
+                    fontSize="small"
+                    sx={{ color: '#6750A4' }}
+                  />
+                </ButtonAtom>
+              </ListItem>
+            ))}
           </List>
         </Grid>
 
-        
         <Grid
           size={{ xs: 12, md: 8, lg: 6, xl: 5 }}
           sx={{
@@ -253,7 +254,13 @@ export const ProfilePage: React.FC = () => {
         >
           <ButtonAtom
             variant="outlined"
-            sx={{ fontWeight: 'bold', mr: 2, mb: 2, mx: { xs: 'auto', sm: 0 }, width: { xs: '75%', sm: '200px' } }}
+            sx={{
+              fontWeight: 'bold',
+              mr: 2,
+              mb: 2,
+              mx: { xs: 'auto', sm: 0 },
+              width: { xs: '75%', sm: '200px' },
+            }}
           >
             <TextAtom
               variant="title"
@@ -267,7 +274,12 @@ export const ProfilePage: React.FC = () => {
           <ButtonAtom
             variant="filled"
             onClick={() => dispatch(logout())}
-            sx={{ fontWeight: 'bold', mb: 2, mx: { xs: 'auto', sm: 0 }, width: { xs: '75%', sm: '200px' } }}
+            sx={{
+              fontWeight: 'bold',
+              mb: 2,
+              mx: { xs: 'auto', sm: 0 },
+              width: { xs: '75%', sm: '200px' },
+            }}
           >
             <TextAtom
               variant="title"
@@ -280,7 +292,7 @@ export const ProfilePage: React.FC = () => {
 
           <Modal open={modalOpen} onClose={handleCloseModal}>
             <Box sx={modalUploadFileStyle}>
-              <TextAtom variant="title" size='medium' mb={2}>
+              <TextAtom variant="title" size="medium" mb={2}>
                 Cambiar foto de perfil
               </TextAtom>
               <Box
@@ -295,10 +307,14 @@ export const ProfilePage: React.FC = () => {
                   <img
                     src={previewImage}
                     alt="Vista previa"
-                    style={{ width: '100%', maxHeight: 200, objectFit: 'cover' }}
+                    style={{
+                      width: '100%',
+                      maxHeight: 200,
+                      objectFit: 'cover',
+                    }}
                   />
                 ) : (
-                  <TextAtom variant="title" size='medium'>
+                  <TextAtom variant="title" size="medium">
                     No hay imagen seleccionada
                   </TextAtom>
                 )}
@@ -312,13 +328,12 @@ export const ProfilePage: React.FC = () => {
                     id="fileInput"
                     type="file"
                     hidden
-                   
-                    style={{display:'none'}}
+                    style={{ display: 'none' }}
                     onChange={handleImageChange}
                   />
                 </ButtonAtom>
                 {errorMsg && (
-                  <TextAtom variant="title" size='medium' color='red'>
+                  <TextAtom variant="title" size="medium" color="red">
                     {errorMsg}
                   </TextAtom>
                 )}
@@ -337,4 +352,3 @@ export const ProfilePage: React.FC = () => {
     </UserLayout>
   );
 };
-

@@ -116,6 +116,20 @@
     }
     },
 
+    "businessStepper": {
+      "step1": {
+        "title": "Paso 1",
+        "heading": "Describe Your Business",
+        "description": "Tell us about the services you offer so clients can find you easily.",
+        "uploadPrompt": "Upload your business logo or profile picture.",
+        "businessNameLabel": "Business Name",
+        "businessNamePlaceholder": "What's your business called?",
+        "businessDescriptionLabel": "Description",
+        "businessDescriptionPlaceholder": "Example: Reliable plumbing services with 10+ years of experience. Free estimates!",
+        "businessDescriptionTooltip": "Pro tip: Mention what makes you unique! Example: 'Certified electrician serving Zone 10 since 2015'"
+      }
+    },
+
     "errorPage": {
       "title": "Oops Page Not Found",
       "notFoundMessage": "Sorry, the page you're looking for doesn't exist.",

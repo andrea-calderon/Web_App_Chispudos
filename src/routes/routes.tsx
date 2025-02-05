@@ -18,6 +18,7 @@ import PasswordRecovery from '../features/auth/components/pages/PasswordRecovery
 import RegisterPage from '../features/auth/components/pages/RegisterPage';
 import ErrorBoundary from '../components/Generics/ErrorBoundary';
 import ErrorPage from '../components/organisms/ErrorPage';
+import { BusinessStepper } from '../features/Business/Components/pages/BusinessStepperPage';
 import ErrorBoundaryWrapper from '../components/Generics/ErrorBoundaryWrapper';
 
 const AppRoutes = () => {
@@ -38,6 +39,7 @@ const AppRoutes = () => {
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/" element={<LandingPage />} />
             <Route path="/password-recovery" element={<PasswordRecovery />} />
+            <Route path="/services" element={<BusinessStepper />} />
 
             {/* Protected Routes */}
             <Route element={<ProtectedRoutesWrapper />}>
@@ -49,7 +51,7 @@ const AppRoutes = () => {
             </Route>
 
             {/* Error Page */}
-            <Route path="*" element={<ErrorPage errorCode='404' />} />
+            <Route path="*" element={<ErrorPage errorCode="404" />} />
           </Routes>
         </ErrorBoundaryWrapper>
       </Router>
