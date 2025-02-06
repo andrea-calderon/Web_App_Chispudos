@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import {
   Avatar,
   Box,
-  Modal,
   IconButton,
   Typography,
   CircularProgress,
@@ -10,7 +9,6 @@ import {
   ListItem,
 } from '@mui/material';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import EditIcon from '@mui/icons-material/Edit';
 import Grid from '@mui/material/Grid2';
 import { UserLayout } from '../../../../components/templates/UserLayout';
 import { ButtonAtom, TextAtom } from '../../../../components/atoms';
@@ -18,18 +16,8 @@ import { useAppDispatch } from '../../../../hooks/useAppDispatch';
 import { logout, selectAuth } from '../../../../redux/slices/authSlice';
 import { useAppSelector } from '../../../../hooks/useAppSelector';
 import { useAvatarUpload } from '../../../../hooks/useAvatarUpload';
-
-const modalUploadFileStyle = {
-  position: 'absolute' as 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 400,
-  bgcolor: 'background.paper',
-  boxShadow: 24,
-  p: 4,
-  borderRadius: 2,
-};
+import { ModalComponent } from '../../../../components/molecules';
+import AvatarUpload from '../organisms/AvatarUpload';
 
 export const ProfilePage: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -49,15 +37,13 @@ export const ProfilePage: React.FC = () => {
     setModalOpen(false);
   };
 
- 
   const handleSaveClick = async () => {
     if (selectedImage) {
-     
       await handleSaveImage();
       handleCloseModal();
     }
   };
-  
+
   return (
     <UserLayout>
       <Grid
@@ -102,51 +88,15 @@ export const ProfilePage: React.FC = () => {
             mb: { xs: 4, sm: 6 },
           }}
         >
-          <Box
-            sx={{
-              position: 'relative',
-              display: 'inline-block',
-              textAlign: 'center',
+          <AvatarUpload
+            previewImage={previewImage}
+            userAvatarUrl={user?.avatarUrl || ''}
+            handleImageChange={(e) => {
+              handleImageChange(e);
+              setModalOpen(true);
             }}
-          >
-            <Avatar
-              src={previewImage ? previewImage : import.meta.env.VITE_BASE_API_URL + user?.avatarUrl}
-              alt="Avatar"
-              sx={{ width: 120, height: 120, mb: 2 }}
-            />
-            <IconButton
-              component="label"
-              sx={{
-                position: 'absolute',
-                bottom: 0,
-                right: 0,
-                backgroundColor: '#6750A4',
-                color: 'white',
-                width: 32,
-                height: 32,
-                boxShadow: 2,
-                '&:hover': {
-                  backgroundColor: '#55379A',
-                },
-              }}
-            >
-              <EditIcon fontSize="small" />
-              <input
-                type="file"
-                hidden
-                accept="image/jpeg, image/png"
-                onChange={(e) => {
-                  handleImageChange(e);
-                  setModalOpen(true);
-                }}
-              />
-            </IconButton>
-          </Box>
-          {errorMsg && (
-            <Typography color="error" mt={2}>
-              {errorMsg}
-            </Typography>
-          )}
+            errorMsg={errorMsg}
+          />
           <TextAtom variant="title" size="large">
             {user?.name || 'Name'} {user?.lastname || 'Lastname'}
           </TextAtom>
@@ -258,32 +208,25 @@ export const ProfilePage: React.FC = () => {
             </TextAtom>
           </ButtonAtom>
 
-        <Modal open={modalOpen} onClose={handleCloseModal}>
-          <Box sx={modalUploadFileStyle}>
-            <TextAtom variant="title" size='medium' mb={2}>
-              Cambiar foto de perfil
-            </TextAtom>
-            {previewImage ? (
-              <img
-                src={previewImage}
-                alt="Vista previa"
-                style={{ width: '100%', maxHeight: 200, objectFit: 'cover' }}
-              />
-            ) : (
-              <TextAtom variant="title" size="medium">No hay imagen seleccionada</TextAtom>
-            )}
-            {errorMsg && <Typography color='error'>{errorMsg}</Typography>}
-            <ButtonAtom
-              variant="outlined"
-              onClick={handleSaveClick} 
-              disabled={isUploading}
-            >
-              {isUploading ? <CircularProgress size={24} /> : 'Guardar'}
-            </ButtonAtom>
-          </Box>
-        </Modal>
+          <ModalComponent
+            open={modalOpen}
+            onClose={handleCloseModal}
+            title="Cambiar foto de perfil"
+            onConfirm={handleSaveClick}
+            confirmButtonText="Actualizar"
+            isConfirmButtonLoading={isUploading}
+          >
+            <AvatarUpload
+              previewImage={previewImage}
+              userAvatarUrl={user?.avatarUrl || ''}
+              handleImageChange={handleImageChange}
+              errorMsg={errorMsg}
+            />
+          </ModalComponent>
         </Grid>
       </Grid>
     </UserLayout>
   );
 };
+
+export default ProfilePage;
