@@ -1,26 +1,35 @@
 import { useState } from 'react';
-import { useUpdateAvatarMutation } from '../services/api';
+import { useUpdateAvatarMutation } from '../services/api'; 
 
-export const useAvatarUpload = (userId: string) => {
+interface UseAvatarUploadProps {
+  userId: string;
+  maxFileSizeMB?: number;
+  validFileTypes?: string[];
+}
+
+export const useAvatarUpload = ({
+  userId,
+  maxFileSizeMB = 5,
+  validFileTypes = ['image/jpeg', 'image/png'],
+}: UseAvatarUploadProps) => {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  
-  const [updateAvatar] = useUpdateAvatarMutation();
+  const [isUploading, setIsUploading] = useState<boolean>(false);
+
+  const [updateAvatar] = useUpdateAvatarMutation(); 
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
-    const validFileTypes = ['image/jpeg', 'image/png'];
     if (!validFileTypes.includes(file.type)) {
-      setErrorMsg('Solo se permiten archivos JPG o PNG.');
+      setErrorMsg(`Solo se permiten archivos: ${validFileTypes.join(', ')}`);
       return;
     }
 
-    if (file.size > 5 * 1024 * 1024) {
-      setErrorMsg('El archivo debe ser menor a 5MB.');
+    if (file.size > maxFileSizeMB * 1024 * 1024) {
+      setErrorMsg(`El archivo debe ser menor a ${maxFileSizeMB}MB.`);
       return;
     }
 
@@ -32,18 +41,24 @@ export const useAvatarUpload = (userId: string) => {
   const handleSaveImage = async () => {
     if (!selectedImage) return;
 
-    setIsLoading(true);
+    setIsUploading(true);
     setErrorMsg(null);
-    
+
     const formData = new FormData();
     formData.append('file', selectedImage);
 
     try {
-      await updateAvatar({ userId, formData }).unwrap();
+      const response = await updateAvatar({ userId, formData }).unwrap();
+      const avatarUrl = response?.avatarUrl;
+
+      if (avatarUrl) {
+        setPreviewImage(avatarUrl); 
+      }
+      setSelectedImage(null);
     } catch (error) {
-      setErrorMsg('No se pudo guardar la imagen. Intenta de nuevo.');
+      setErrorMsg('Error al subir la imagen. Inténtalo de nuevo.');
     } finally {
-      setIsLoading(false);
+      setIsUploading(false);
     }
   };
 
@@ -51,7 +66,7 @@ export const useAvatarUpload = (userId: string) => {
     selectedImage,
     previewImage,
     errorMsg,
-    isLoading,
+    isUploading,
     handleImageChange,
     handleSaveImage,
   };

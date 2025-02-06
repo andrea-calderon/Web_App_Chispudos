@@ -40,10 +40,10 @@ export const ProfilePage: React.FC = () => {
     selectedImage,
     previewImage,
     errorMsg,
-    isLoading,
+    isUploading,
     handleImageChange,
     handleSaveImage,
-  } = useAvatarUpload(user?.id?.toString() || '');
+  } = useAvatarUpload({ userId: user?.id?.toString() || '' });
 
   const handleCloseModal = () => {
     setModalOpen(false);
@@ -57,7 +57,7 @@ export const ProfilePage: React.FC = () => {
       handleCloseModal();
     }
   };
-
+  
   return (
     <UserLayout>
       <Grid
@@ -110,7 +110,7 @@ export const ProfilePage: React.FC = () => {
             }}
           >
             <Avatar
-              src={previewImage ? previewImage : user?.avatarUrl ?? undefined}
+              src={previewImage ? previewImage : import.meta.env.VITE_BASE_API_URL + user?.avatarUrl}
               alt="Avatar"
               sx={{ width: 120, height: 120, mb: 2 }}
             />
@@ -276,9 +276,9 @@ export const ProfilePage: React.FC = () => {
             <ButtonAtom
               variant="outlined"
               onClick={handleSaveClick} 
-              disabled={isLoading}
+              disabled={isUploading}
             >
-              {isLoading ? <CircularProgress size={24} /> : 'Guardar'}
+              {isUploading ? <CircularProgress size={24} /> : 'Guardar'}
             </ButtonAtom>
           </Box>
         </Modal>
