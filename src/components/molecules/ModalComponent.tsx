@@ -49,30 +49,31 @@ const ModalComponent: React.FC<ModalComponentProps> = ({
           borderRadius: 2,
         }}
       >
+
+<IconButton
+            onClick={onClose}
+            sx={{ position: 'absolute', right: 0, top: 0 }}
+          >
+            <CloseIcon />
+          </IconButton>
         <Box
           sx={{
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
-            mb: 2,
+            mb: 4,
             position: 'relative',
           }}
         >
           <TextAtom
             variant="title"
-            size="large"
+            size="medium"
             sx={{ fontWeight: 'bold', textAlign: 'center' }}
           >
             {title}
           </TextAtom>
-          <IconButton
-            onClick={onClose}
-            sx={{ position: 'absolute', right: -30, top: -30 }}
-          >
-            <CloseIcon />
-          </IconButton>
         </Box>
-        <Box sx={{ mb: 2, textAlign: 'center' }}>{children}</Box>
+        <Box sx={{ m: 5, textAlign: 'center' }}>{children}</Box>
         <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1 }}>
             {!hideCancelbutton && (
                 <ButtonAtom variant="outlined" onClick={onClose}>
