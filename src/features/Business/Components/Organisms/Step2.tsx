@@ -22,8 +22,8 @@ export default function Step2({ onNext, onBack }) {
     );
   };
 
-  if (isLoading) return <p>Cargando categorías...</p>;
-  if (error) return <p>Error al cargar categorías</p>;
+  if (isLoading) return t('APIs.categories.loading');
+  if (error) return t('APIs.categories.error');
 
   return (
     <Box

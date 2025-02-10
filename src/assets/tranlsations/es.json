@@ -249,10 +249,11 @@
   "placeholder": "Tu Email",
   "copyright": "Desarrollo web y móvil."
             },
+
   "APIs": {
     "categories":{
-      "loading": "Loading categories, please wait...",
-      "error": "An error occurred while loading the categories. Please try again later."
+      "loading": "Cargando categorías, por favor espera...",
+      "error": "¡Uy! No pudimos cargar las categorias. Por favor intenta más tarde."
   }
   }
 } 

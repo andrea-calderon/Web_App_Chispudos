@@ -230,5 +230,12 @@
   "title": "Subscribe to our Newsletter",
   "placeholder": "Your Email",
   "copyright": "Web and mobile development."
-                          }
+                          },
+
+ "APIs": {
+    "categories":{
+        "loading": "Loading categories, please wait...",
+        "error": "An error occurred while loading the categories. Please try again later."
+   }
+  }
       }     
