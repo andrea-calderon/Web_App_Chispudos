@@ -127,6 +127,11 @@
       "businessDescriptionLabel": "Descripción",
       "businessDescriptionPlaceholder": "Ejemplo: Fontanero confiable con 10+ años de experiencia. ¡Presupuestos sin costo!",
       "businessDescriptionTooltip": "Tip clave: ¡Menciona qué te hace único! (Ej: 'Soy puntual o te devuelvo tu pisto')"
+    },
+    "step2": {
+      "title": "Paso 2",
+      "heading": "¿Qué servicios ofrecés?",
+      "description": "Elegí todas las categorías donde tu negocio destaque. ¡Podés escoger más de una! 💡"
     }
   },
 
@@ -244,10 +249,11 @@
   "placeholder": "Tu Email",
   "copyright": "Desarrollo web y móvil."
             },
+
   "APIs": {
     "categories":{
-      "loading": "Loading categories, please wait...",
-      "error": "An error occurred while loading the categories. Please try again later."
+      "loading": "Cargando categorías, por favor espera...",
+      "error": "¡Uy! No pudimos cargar las categorias. Por favor intenta más tarde."
   }
   }
 } 

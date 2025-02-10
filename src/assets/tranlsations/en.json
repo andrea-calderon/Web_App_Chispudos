@@ -127,7 +127,13 @@
         "businessDescriptionLabel": "Description",
         "businessDescriptionPlaceholder": "Example: Reliable plumbing services with 10+ years of experience. Free estimates!",
         "businessDescriptionTooltip": "Pro tip: Mention what makes you unique! Example: 'Certified electrician serving Zone 10 since 2015'"
-      }
+      },
+      "step2": {
+      "title": "Step 2",
+      "heading": "What’s your expertise?",
+      "description": "Choose all the categories where your business stands out. You can choose more than one! 💡"
+      
+    }
     },
 
     "errorPage": {
@@ -224,5 +230,12 @@
   "title": "Subscribe to our Newsletter",
   "placeholder": "Your Email",
   "copyright": "Web and mobile development."
-                          }
+                          },
+
+ "APIs": {
+    "categories":{
+        "loading": "Loading categories, please wait...",
+        "error": "An error occurred while loading the categories. Please try again later."
+   }
+  }
       }     
