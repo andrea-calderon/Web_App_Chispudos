@@ -2,62 +2,28 @@ import { useState } from 'react';
 import { Box, Grid, Paper } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import TextAtom from '../../../../components/atoms/TextAtom';
-import HandymanIcon from '@mui/icons-material/Handyman';
 import { ButtonAtom } from '../../../../components/atoms';
-
-const categories = [
-  // Oficios tradicionales
-  'Albañil',
-  'Plomero/Fontanero',
-  'Electricista',
-  'Carpintero',
-  'Herrero',
-  'Pintor profesional',
-  'Techador',
-  'Instalador de pisos',
-
-  // Mantenimiento del hogar
-  'Técnico en refrigeración',
-  'Reparación de electrodomésticos',
-  'Control de plagas',
-  'Limpieza residencial',
-  'Jardinería y paisajismo',
-  'Mudanzas y transporte',
-  'Tapicería y muebles',
-
-  // Servicios técnicos
-  'Instalación de cámaras de seguridad',
-  'Técnico en computadoras',
-  'Reparación de celulares',
-  'Instalación de redes WiFi',
-  'Mantenimiento de piscinas',
-
-  // Servicios especializados
-  'Cerrajería de emergencia',
-  'Soldadura profesional',
-  'Instalación de paneles solares',
-  'Servicio de gasfitería',
-  'Montacargas y andamios',
-
-  // Servicios para eventos
-  'Catering y cocina',
-  'Fotografía profesional',
-  'DJ y sonido',
-  'Decoración de eventos',
-  'Seguridad privada',
-];
+import { useGetCategoriesQuery } from '../../../../services/api';
 
 export default function Step2({ onNext, onBack }) {
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const { data, isLoading, error } = useGetCategoriesQuery();
+  const categories = data?.data || [];
+  const [selectedCategories, setSelectedCategories] = useState<
+    { id: any; name: any }[]
+  >([]);
+
   const { t } = useTranslation();
 
   const handleSelectCategory = (category) => {
     setSelectedCategories((prev) =>
-      prev.includes(category)
-        ? prev.filter((c) => c !== category)
-        : [...prev, category],
+      prev.some((c) => c.id === category.id)
+        ? prev.filter((c) => c.id !== category.id)
+        : [...prev, { id: category.id, name: category.name }],
     );
   };
+
+  if (isLoading) return <p>Cargando categorías...</p>;
+  if (error) return <p>Error al cargar categorías</p>;
 
   return (
     <Box
@@ -96,7 +62,7 @@ export default function Step2({ onNext, onBack }) {
       <Box sx={{ maxHeight: 375, overflowY: 'auto', pr: 1 }}>
         <Grid container spacing={2} justifyContent="left">
           {categories.map((category) => (
-            <Grid item key={category} xs={6} sm={4} md={3}>
+            <Grid item key={category.id} xs={6} sm={4} md={3}>
               <Paper
                 onClick={() => handleSelectCategory(category)}
                 sx={{
@@ -105,7 +71,9 @@ export default function Step2({ onNext, onBack }) {
                   flexDirection: 'column',
                   alignItems: 'center',
                   boxShadow: 0,
-                  backgroundColor: selectedCategories.includes(category)
+                  backgroundColor: selectedCategories.some(
+                    (c) => c.id === category.id,
+                  )
                     ? '#D0BCFF'
                     : '#F3ECFF',
                   cursor: 'pointer',
@@ -114,9 +82,13 @@ export default function Step2({ onNext, onBack }) {
                   height: '100px',
                 }}
               >
-                <HandymanIcon sx={{ color: '#2E1A47' }} />
+                <img
+                  src={category.icon}
+                  alt={category.name}
+                  style={{ width: 40, height: 40 }}
+                />
                 <TextAtom variant="body" size="medium" color="#2E1A47" mt={1}>
-                  {category}
+                  {category.name}
                 </TextAtom>
               </Paper>
             </Grid>
