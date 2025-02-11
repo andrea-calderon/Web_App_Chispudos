@@ -130,13 +130,11 @@
       "businessDescriptionPlaceholder": "Ejemplo: Fontanero confiable con 10+ años de experiencia. ¡Presupuestos sin costo!",
       "businessDescriptionTooltip": "Tip clave: ¡Menciona qué te hace único! (Ej: 'Soy puntual o te devuelvo tu pisto')"
     },
-    
     "step2": {
       "title": "Paso 2",
       "heading": "¿Qué servicios ofrecés?",
       "description": "Elegí todas las categorías donde tu negocio destaque. ¡Podés escoger más de una! 💡"
     },
-
     "step3": {
       "title": "Paso 3",
       "heading": "¿En qué zonas trabajás?",
@@ -153,6 +151,20 @@
       "selectAnotherCity": "Municipios adicionales donde trabajás",
       "secondDirectionTitle": "Zonas de servicio | ",
       "secondDirectionDescription": "Marca todas las áreas donde atendés a tus clientes."
+    },
+    "step4": {
+      "title": "Paso 4",
+      "heading": "¿Ofrecés otros servicios? 🌟",
+      "description": "Sumá todas tus habilidades: cuántas más agregués, más clientes te encuentran.",
+      "tagsInput": "Habilidad clave",
+      "tagsTextField": "Ej: Fontanería",
+      "tagsExample": "Otros ejemplos:",
+      "electrician": "Electricista ⚡",
+      "plumber": "Carpintería 🪚",
+      "titleInput": "Título",
+      "titleTextField": "Ej: 'Fontanero experto en emergencias'",
+      "descriptionInput": "Descripción",
+      "descriptionTextField": "Ej: '10 años resolviendo fugas en la capital. ¡Garantía por escrito!'"
     }
   },
 
