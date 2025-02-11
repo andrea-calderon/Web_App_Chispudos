@@ -34,7 +34,9 @@
       "min_value": "El valor deberia ser mayor o igual a {{min}}",
       "max_value": "El valor deberia ser menor o igual a {{max}}",
       "passwords_must_match": "Las contraseñas deben coincidir",
-      "email": "El campo deberia ser un email válido"
+      "email": "El campo deberia ser un email válido",
+      "remove": "Quitar",
+      "addAnother": "Agregar otra"
     }
   },
   "auth": {
@@ -128,10 +130,29 @@
       "businessDescriptionPlaceholder": "Ejemplo: Fontanero confiable con 10+ años de experiencia. ¡Presupuestos sin costo!",
       "businessDescriptionTooltip": "Tip clave: ¡Menciona qué te hace único! (Ej: 'Soy puntual o te devuelvo tu pisto')"
     },
+    
     "step2": {
       "title": "Paso 2",
       "heading": "¿Qué servicios ofrecés?",
       "description": "Elegí todas las categorías donde tu negocio destaque. ¡Podés escoger más de una! 💡"
+    },
+
+    "step3": {
+      "title": "Paso 3",
+      "heading": "¿En qué zonas trabajás?",
+      "invalidCity": "Uy, este municipio no existe en nuestro sistema 🧐",
+      "description": "Subí la dirección de tu negocio y marcá las zonas donde ofrecés servicios.",
+      "mainDirectionTitle": "Ubicación principal",
+      "textField": "¿Dónde está ubicado tu negocio?",
+      "inputDeparment": "Departamento",
+      "selectDepartment": "Seleccioná tu departamento",
+      "selectAnotherDepartment": "¿Trabajás en otros departamentos?",
+      "departmentTooltip": "Ej: Si sos electricista en Guatemala Ciudad pero atendés emergencias en Mixco, ¡marcá ambas zonas! 💡",
+      "inputCity": "Municipio",
+      "selectCity": "Elegí tu municipio",
+      "selectAnotherCity": "Municipios adicionales donde trabajás",
+      "secondDirectionTitle": "Zonas de servicio | ",
+      "secondDirectionDescription": "Marca todas las áreas donde atendés a tus clientes."
     }
   },
 

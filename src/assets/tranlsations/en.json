@@ -34,7 +34,9 @@
       "max_value": "The value should be less than or equal to {{max}}",
       "passwords_must_match": "Passwords must match",
       "email": "The field should be a valid email",
-      "files": "This input require a {{type_file}} file"
+      "files": "This input require a {{type_file}} file",
+      "remove": "Remove",
+      "addAnother": "Add another"
     }
   },
   "auth": {
@@ -132,8 +134,23 @@
       "title": "Step 2",
       "heading": "What’s your expertise?",
       "description": "Choose all the categories where your business stands out. You can choose more than one! 💡"
-      
-    }
+    },
+      "step3": {
+        "title": "Step 3",
+        "heading": "Where do you work?",
+        "invalidCity": "Oops! This city isn’t in our system 🌎",
+        "description": "Add your business address and mark the areas you serve.",
+        "mainDirectionTitle": "Primary Location",
+        "textField": "Where’s your business located?",
+        "inputDeparment": "Department",
+        "selectDepartment": "Select your department",
+        "selectAnotherDepartment": "Do you work in other departments?",
+        "inputCity": "City/Municipality",
+        "selectCity": "Choose your city",
+        "selectAnotherCity": "Additional cities you serve",
+        "secondDirectionTitle": "Service Areas | ",
+        "secondDirectionDescription": "Mark all areas you cover"
+      }
     },
 
     "errorPage": {
