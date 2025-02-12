@@ -5,7 +5,6 @@ import Step5 from '../Organisms/Step5';
 export const BusinessStepper = () => {
   return (
     <UserLayout>
-      <Step4 />
       <Step5 />
     </UserLayout>
   );

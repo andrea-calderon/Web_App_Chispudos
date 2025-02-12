@@ -164,8 +164,16 @@
         "titleTextField": "E.g.: 'Emergency Plumbing Expert'",
         "descriptionInput": "Description",
         "descriptionTextField": "E.g.: '10+ years fixing leaks in downtown. Written guarantee!'",
-        "deleteSkill": "Delete",
-        "addSkill": "Add Skill"
+        "deleteSkill": "Remove",
+        "addSkill": "Add another"
+      },
+      "step5": {
+        "title": "Step 5 |",
+        "subtitle": " Almost there!",
+        "heading": "What’s your daily rate? 💰",
+        "description": "Set your approximate daily rate. Don’t worry, you can adjust it later for each job.",
+        "priceTextField": "E.g.: 500",
+        "note": "💡 Reminder: This is just an estimate. You’ll agree on the final price with the client."
       }
     },
 

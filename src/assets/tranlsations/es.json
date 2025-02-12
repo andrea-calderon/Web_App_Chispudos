@@ -36,7 +36,8 @@
       "passwords_must_match": "Las contraseñas deben coincidir",
       "email": "El campo deberia ser un email válido",
       "remove": "Quitar",
-      "addAnother": "Agregar otra"
+      "addAnother": "Agregar otra",
+      "mustBeNumber": "Debe ser un número"
     }
   },
   "auth": {
@@ -165,6 +166,16 @@
       "titleTextField": "Ej: 'Fontanero experto en emergencias'",
       "descriptionInput": "Descripción",
       "descriptionTextField": "Ej: '10 años resolviendo fugas en la capital. ¡Garantía por escrito!'",
+      "deleteSkill": "Quitar",
+      "addSkill": "Agregar otra"
+    },
+    "step5": {
+      "title": "Paso 5 |",
+      "subtitle": " ¡Estás a un paso de terminar!",
+      "heading": "¿Cuánto cobrás por día? 💰",
+      "description": "Indicá tu tarifa diaria aproximada. Tranquilo, podés ajustarla después según cada trabajo.",
+      "priceTextField": "Ej: 350",
+      "note": "💡 Recordá: Este es solo un estimado. El precio final lo definís con el cliente.",
       "deleteSkill": "Quitar",
       "addSkill": "Agregar otra"
     }
