@@ -150,6 +150,22 @@
         "selectAnotherCity": "Additional cities you serve",
         "secondDirectionTitle": "Service Areas | ",
         "secondDirectionDescription": "Mark all areas you cover"
+      },
+      "step4": {
+        "title": "Step 4",
+        "heading": "Want more clients? 💼",
+        "description": "List every service you master — the more you add, the more jobs you get.",
+        "tagsInput": "Skills & Services",
+        "tagsTextField": "E.g.: Plumber",
+        "tagsExample": "Other examples:",
+        "electrician": "Electrician ⚡",
+        "plumber": "Carpentry 🪚",
+        "titleInput": "Service Title",
+        "titleTextField": "E.g.: 'Emergency Plumbing Expert'",
+        "descriptionInput": "Description",
+        "descriptionTextField": "E.g.: '10+ years fixing leaks in downtown. Written guarantee!'",
+        "deleteSkill": "Delete",
+        "addSkill": "Add Skill"
       }
     },
 

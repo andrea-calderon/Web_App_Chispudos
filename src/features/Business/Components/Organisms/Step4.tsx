@@ -1,12 +1,15 @@
-import { Box, Grid, useTheme } from '@mui/material';
+import { Box, Grid, useTheme, Button, IconButton } from '@mui/material';
 import { Chip } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { Formik, Form } from 'formik';
+import { Formik, Form, FieldArray } from 'formik';
 import * as Yup from 'yup';
 import TextAtom from '../../../../components/atoms/TextAtom';
 import InputAtom from '../../../../components/atoms/InputAtom';
 import constructionWorker from '../../../../assets/images/stepper/step4_constructionWorker.svg';
 import { useMediaQuery } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
+import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
+import { ButtonAtom } from '../../../../components/atoms';
 
 const Step4 = () => {
   const { t } = useTranslation();
@@ -14,17 +17,21 @@ const Step4 = () => {
   const isLargeScreen = useMediaQuery(theme.breakpoints.up('md'));
 
   const validationSchema = Yup.object().shape({
-    tagsTextField: Yup.string().required(t('forms.commons.required')),
-    titleTextField: Yup.string().required(t('forms.commons.required')),
-    descriptionTextField: Yup.string(),
+    skills: Yup.array().of(
+      Yup.object().shape({
+        tagsTextField: Yup.string().required(t('forms.commons.required')),
+        titleTextField: Yup.string().required(t('forms.commons.required')),
+        descriptionTextField: Yup.string(),
+      }),
+    ),
   });
 
   return (
     <Formik
       initialValues={{
-        tagsTextField: '',
-        titleTextField: '',
-        descriptionTextField: '',
+        skills: [
+          { tagsTextField: '', titleTextField: '', descriptionTextField: '' },
+        ],
       }}
       validationSchema={validationSchema}
       onSubmit={(values) => console.log(values)}
@@ -68,69 +75,135 @@ const Step4 = () => {
 
             <Grid container spacing={4}>
               <Grid item xs={12} md={6}>
-                <Box mb={4}>
-                  <TextAtom variant="title" size="medium" fontWeight="bold">
-                    {t('businessStepper.step4.tagsInput')}
-                  </TextAtom>
-                  <InputAtom
-                    name="tagsTextField"
-                    variant="standard"
-                    label={t('businessStepper.step4.tagsTextField')}
-                    fullWidth
-                    margin="normal"
-                    required
-                    error={
-                      touched.tagsTextField && Boolean(errors.tagsTextField)
-                    }
-                    helperText={touched.tagsTextField && errors.tagsTextField}
-                  />
-                  <TextAtom variant="title" size="medium">
-                    {t('businessStepper.step4.tagsExample')}{' '}
-                    <Chip label={t('businessStepper.step4.electrician')} />{' '}
-                    <Chip label={t('businessStepper.step4.plumber')} />{' '}
-                  </TextAtom>
+                <Box sx={{ maxHeight: 500, overflowY: 'auto', pr: 1 }}>
+                  <FieldArray name="skills">
+                    {({ push, remove }) => (
+                      <>
+                        {values.skills.map((_, index) => (
+                          <Grid container spacing={4} key={index}>
+                            <Grid item xs={12} md={12}>
+                              <Box mb={3}>
+                                <TextAtom
+                                  variant="title"
+                                  size="small"
+                                  fontWeight="bold"
+                                >
+                                  {t('businessStepper.step4.tagsInput')}
+                                </TextAtom>
+                                <InputAtom
+                                  name={`skills.${index}.tagsTextField`}
+                                  variant="standard"
+                                  label={t(
+                                    'businessStepper.step4.tagsTextField',
+                                  )}
+                                  fullWidth
+                                  required
+                                  error={
+                                    touched.skills?.[index]?.tagsTextField &&
+                                    Boolean(
+                                      errors.skills?.[index]?.tagsTextField,
+                                    )
+                                  }
+                                  helperText={
+                                    touched.skills?.[index]?.tagsTextField &&
+                                    errors.skills?.[index]?.tagsTextField
+                                  }
+                                  sx={{ mb: 1 }}
+                                />
+                                <TextAtom variant="title" size="small">
+                                  {t('businessStepper.step4.tagsExample')}{' '}
+                                  <Chip
+                                    label={t(
+                                      'businessStepper.step4.electrician',
+                                    )}
+                                  />{' '}
+                                  <Chip
+                                    label={t('businessStepper.step4.plumber')}
+                                  />
+                                </TextAtom>
+                              </Box>
+
+                              <TextAtom
+                                variant="title"
+                                size="small"
+                                fontWeight="bold"
+                              >
+                                {t('businessStepper.step4.titleInput')}
+                              </TextAtom>
+                              <InputAtom
+                                name={`skills.${index}.titleTextField`}
+                                variant="standard"
+                                label={t(
+                                  'businessStepper.step4.titleTextField',
+                                )}
+                                fullWidth
+                                required
+                                error={
+                                  touched.skills?.[index]?.titleTextField &&
+                                  Boolean(
+                                    errors.skills?.[index]?.titleTextField,
+                                  )
+                                }
+                                helperText={
+                                  touched.skills?.[index]?.titleTextField &&
+                                  errors.skills?.[index]?.titleTextField
+                                }
+                                sx={{ mb: 2 }}
+                              />
+
+                              <TextAtom
+                                variant="title"
+                                size="small"
+                                fontWeight="bold"
+                              >
+                                {t('businessStepper.step4.descriptionInput')}
+                              </TextAtom>
+                              <InputAtom
+                                name={`skills.${index}.descriptionTextField`}
+                                variant="standard"
+                                multiline
+                                rows={3}
+                                label={t(
+                                  'businessStepper.step4.descriptionTextField',
+                                )}
+                                fullWidth
+                              />
+
+                              <Box display="flex" justifyContent="left" pb={4}>
+                                {values.skills.length > 1 && (
+                                  <ButtonAtom
+                                    variant="text"
+                                    onClick={() => remove(index)}
+                                    color="error"
+                                    startIcon={<RemoveCircleOutlineIcon />}
+                                  >
+                                    {t('businessStepper.step4.deleteSkill')}
+                                  </ButtonAtom>
+                                )}
+                              </Box>
+                            </Grid>
+                          </Grid>
+                        ))}
+
+                        <Box display="flex" justifyContent="left">
+                          <Button
+                            onClick={() =>
+                              push({
+                                tagsTextField: '',
+                                titleTextField: '',
+                                descriptionTextField: '',
+                              })
+                            }
+                            variant="outlined"
+                            startIcon={<AddIcon />}
+                          >
+                            {t('businessStepper.step4.addSkill')}
+                          </Button>
+                        </Box>
+                      </>
+                    )}
+                  </FieldArray>
                 </Box>
-
-                <TextAtom variant="title" size="medium" fontWeight="bold">
-                  {t('businessStepper.step4.titleInput')}
-                </TextAtom>
-                <InputAtom
-                  name="titleTextField"
-                  variant="standard"
-                  label={t('businessStepper.step4.titleTextField')}
-                  fullWidth
-                  margin="normal"
-                  required
-                  error={
-                    touched.titleTextField && Boolean(errors.titleTextField)
-                  }
-                  helperText={touched.titleTextField && errors.titleTextField}
-                  onChange={(e) => {
-                    setFieldValue('titleTextField', e.target.value);
-                    if (e.target.value) {
-                      setFieldValue(
-                        'descriptionTextField',
-                        values.descriptionTextField,
-                      );
-                    } else {
-                      setFieldValue('descriptionTextField', '');
-                    }
-                  }}
-                />
-
-                <TextAtom variant="title" size="medium" fontWeight="bold">
-                  {t('businessStepper.step4.descriptionInput')}
-                </TextAtom>
-                <InputAtom
-                  name="descriptionTextField"
-                  variant="standard"
-                  multiline
-                  rows={4}
-                  label={t('businessStepper.step4.descriptionTextField')}
-                  fullWidth
-                  margin="normal"
-                  disabled={!values.titleTextField}
-                />
               </Grid>
 
               {isLargeScreen && (

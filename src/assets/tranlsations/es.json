@@ -164,7 +164,9 @@
       "titleInput": "Título",
       "titleTextField": "Ej: 'Fontanero experto en emergencias'",
       "descriptionInput": "Descripción",
-      "descriptionTextField": "Ej: '10 años resolviendo fugas en la capital. ¡Garantía por escrito!'"
+      "descriptionTextField": "Ej: '10 años resolviendo fugas en la capital. ¡Garantía por escrito!'",
+      "deleteSkill": "Quitar",
+      "addSkill": "Agregar otra"
     }
   },
 
