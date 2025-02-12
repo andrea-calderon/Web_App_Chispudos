@@ -174,6 +174,12 @@
         "description": "Set your approximate daily rate. Don’t worry, you can adjust it later for each job.",
         "priceTextField": "E.g.: 500",
         "note": "💡 Reminder: This is just an estimate. You’ll agree on the final price with the client."
+      },
+      "step6": {
+        "heading": "Congratulations!",
+        "description": "¡Your profile is now public! Get ready to connect with clients who value real skills.",
+        "tip": "Your profile will be visible in less than 24 hours (but usually within 1 hour) ⏱️",
+        "ctaBottom": "View My Profile"
       }
     },
 

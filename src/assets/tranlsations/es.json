@@ -178,6 +178,12 @@
       "note": "💡 Recordá: Este es solo un estimado. El precio final lo definís con el cliente.",
       "deleteSkill": "Quitar",
       "addSkill": "Agregar otra"
+    },
+    "step6": {
+      "heading": "¡Felicidades!",
+      "description": "¡Tu perfil ya está activo! Ahora los clientes te encontrarán como agua en verano. ",
+      "tip": "Tu perfil estará visible en menos de 24 horas (pero usualmente en 1 hora) ⏱️",
+      "ctaBottom": "Ver mi perfil"
     }
   },
 
