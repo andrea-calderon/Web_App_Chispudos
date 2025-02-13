@@ -1,11 +1,12 @@
 import { UserLayout } from '../../../../components/templates/UserLayout';
-import Step1 from '../Organisms/Step1';
-import Step3 from '../Organisms/Step3';
+import Step4 from '../Organisms/Step4';
+import Step5 from '../Organisms/Step5';
+import Step6 from '../Organisms/Step6';
 
 export const BusinessStepper = () => {
   return (
     <UserLayout>
-      <Step3 />
+      <Step6 />
     </UserLayout>
   );
 };

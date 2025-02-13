@@ -150,6 +150,36 @@
         "selectAnotherCity": "Additional cities you serve",
         "secondDirectionTitle": "Service Areas | ",
         "secondDirectionDescription": "Mark all areas you cover"
+      },
+      "step4": {
+        "title": "Step 4",
+        "heading": "Want more clients? 💼",
+        "description": "List every service you master — the more you add, the more jobs you get.",
+        "tagsInput": "Skills & Services",
+        "tagsTextField": "E.g.: Plumber",
+        "tagsExample": "Other examples:",
+        "electrician": "Electrician ⚡",
+        "plumber": "Carpentry 🪚",
+        "titleInput": "Service Title",
+        "titleTextField": "E.g.: 'Emergency Plumbing Expert'",
+        "descriptionInput": "Description",
+        "descriptionTextField": "E.g.: '10+ years fixing leaks in downtown. Written guarantee!'",
+        "deleteSkill": "Remove",
+        "addSkill": "Add another"
+      },
+      "step5": {
+        "title": "Step 5 |",
+        "subtitle": " Almost there!",
+        "heading": "What’s your daily rate? 💰",
+        "description": "Set your approximate daily rate. Don’t worry, you can adjust it later for each job.",
+        "priceTextField": "E.g.: 500",
+        "note": "💡 Reminder: This is just an estimate. You’ll agree on the final price with the client."
+      },
+      "step6": {
+        "heading": "Congratulations!",
+        "description": "¡Your profile is now public! Get ready to connect with clients who value real skills.",
+        "tip": "Your profile will be visible in less than 24 hours (but usually within 1 hour) ⏱️",
+        "ctaBottom": "View My Profile"
       }
     },
 
