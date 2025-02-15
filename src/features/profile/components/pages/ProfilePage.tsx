@@ -1,10 +1,5 @@
 import React, { useState } from 'react';
 import {
-  Avatar,
-  Box,
-  IconButton,
-  Typography,
-  CircularProgress,
   List,
   ListItem,
 } from '@mui/material';
@@ -18,11 +13,13 @@ import { useAppSelector } from '../../../../hooks/useAppSelector';
 import { useAvatarUpload } from '../../../../hooks/useAvatarUpload';
 import { ModalComponent } from '../../../../components/molecules';
 import AvatarUpload from '../organisms/AvatarUpload';
+import { useNavigate } from 'react-router-dom';
 
 export const ProfilePage: React.FC = () => {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector(selectAuth);
   const [modalOpen, setModalOpen] = useState(false);
+  const navigate = useNavigate();
 
   const {
     selectedImage,
@@ -172,6 +169,7 @@ export const ProfilePage: React.FC = () => {
         >
           <ButtonAtom
             variant="outlined"
+            onClick={()=> navigate('/services')}
             sx={{
               fontWeight: 'bold',
               mr: 2,
