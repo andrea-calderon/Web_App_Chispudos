@@ -20,19 +20,19 @@ import ButtonAtom from '../atoms/ButtonAtom';
 import SampleImage from '../../../src/assets/images/intro_sliders/intro_1.png';
 import { useNavigate } from 'react-router-dom';
 import { useSearchServicesFormData } from '../../context/SearchContext';
-import { useGetProductsQuery } from '../../services/api';
+import { useGetProductsQuery } from '../../services/productApi';
 
 const SearchForm = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { searchData, updateSearchData } = useSearchServicesFormData();
 
-  const { data: products = [] } = useGetProductsQuery();
+  const { data: products  } = useGetProductsQuery();
 
   const services = useMemo(() => {
     return Array.from(
       new Set(
-        products.flatMap(
+        products?.data?.items?.flatMap(
           (product) => product.categories?.map((cat) => cat.name) || [],
         ),
       ),
@@ -40,7 +40,7 @@ const SearchForm = () => {
   }, [products]);
 
   const locations = useMemo(() => {
-    return Array.from(new Set(products.map((product) => product.location)));
+    return Array.from(new Set(products?.data?.items.map((product) => product.location)));
   }, [products]);
 
   const validationSchema = Yup.object().shape({

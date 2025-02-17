@@ -4,7 +4,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import { useTranslation } from 'react-i18next';
 import TextAtom from '../../../../components/atoms/TextAtom';
-import { useGetCategoriesQuery } from '../../../../services/api';
+import { useGetCategoriesQuery } from '../../../../services/categoryApi';
 
 const CategoriesSection: React.FC = () => {
   const { t } = useTranslation();

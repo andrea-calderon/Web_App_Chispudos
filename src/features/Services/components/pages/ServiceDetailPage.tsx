@@ -1,15 +1,9 @@
 import { useParams } from 'react-router-dom';
 import { useState } from 'react';
-import { useGetProductByIdQuery } from '../../../../services/api';
 import { useNavigate } from 'react-router-dom';
 import { UserLayout } from '../../../../components/templates/UserLayout';
 import Footer from '../../../../components/organisms/Footer';
-import {
-  Box,
-  Grid,
-  CircularProgress,
-  TextField,
-} from '@mui/material';
+import { Box, Grid2 as Grid, CircularProgress, TextField } from '@mui/material';
 import { ServiceHeader } from '../organisms/ServiceDetailHeader';
 import { ServiceSkills } from '../organisms/ServiceDetailSkills';
 import { ServiceProjects } from '../organisms/ServiceDetailProjects';
@@ -23,10 +17,12 @@ import { useTranslation } from 'react-i18next';
 import { useDateValidation } from '../../../../hooks/useDateValidation';
 import CustomError from '../../../../utils/CustomError';
 import { ModalComponent } from '../../../../components/molecules';
+import { useGetProductByIdQuery } from '../../../../services/productApi';
 
 export const ServiceDetailPage = () => {
   const { id } = useParams<{ id: string }>();
-  const { data: service, isLoading, isError } = useGetProductByIdQuery(id!);
+  const { data, isLoading, isError } = useGetProductByIdQuery(id!);
+  const service = data?.data;
   const navigate = useNavigate();
   const { t } = useTranslation();
 
@@ -86,8 +82,13 @@ export const ServiceDetailPage = () => {
     );
   }
 
-  if (isError || !service) {
-    throw new CustomError('500', 'Server or API Error:  Try again later', 'Go Back', () => navigate('/'));
+  if (isError) {
+    throw new CustomError(
+      '500',
+      'Server or API Error: Try again later',
+      'Go Back',
+      () => navigate('/'),
+    );
   }
 
   const title = service.name || 'Service not available';
@@ -105,34 +106,37 @@ export const ServiceDetailPage = () => {
         onOpenModal={handleOpenModal}
       />
       <Grid container spacing={2}>
-        <Grid item xs={8}>
+        <Grid item xs={12} md={8}>
           <Box>
             <ServiceSkills skills={service.details || []} />
             <ServiceProjects projects={service.recentProjects || []} />
             <ServiceOtherSkills skills={service.otherSkills || []} />
           </Box>
         </Grid>
-        <Grid item xs={4}>
+        <Grid item xs={12} md={4}>
           <Box>
             <ServiceReviews reviews={service.reviews || []} />
           </Box>
         </Grid>
       </Grid>
 
-      <ModalComponent open={openModal} onClose={handleCloseModal} title={t('services.serviceDetails.dateModalTitle')}
-      onConfirm={handleConfirm}
+      <ModalComponent
+        open={openModal}
+        onClose={handleCloseModal}
+        title={t('services.serviceDetails.dateModalTitle')}
+        onConfirm={handleConfirm}
       >
         <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DateTimePicker
-              label="Date & Time"
-              value={selectedDateTime}
-              onChange={(newValue) => setSelectedDateTime(newValue)}
-              shouldDisableDate={(date) =>
-                !isDateEnabled(date.toDate()) || date.isBefore(dayjs(), 'day')
-              }
-              renderInput={(params) => <TextField {...params} fullWidth />}
-            />
-          </LocalizationProvider>
+          <DateTimePicker
+            label="Date & Time"
+            value={selectedDateTime}
+            onChange={(newValue) => setSelectedDateTime(newValue)}
+            shouldDisableDate={(date) =>
+              !isDateEnabled(date.toDate()) || date.isBefore(dayjs(), 'day')
+            }
+            renderInput={(params) => <TextField {...params} fullWidth />}
+          />
+        </LocalizationProvider>
       </ModalComponent>
 
       <Footer />

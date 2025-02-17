@@ -5,20 +5,21 @@ import { Box, Typography } from '@mui/material';
 import Footer from '../../../../components/organisms/Footer';
 import { useSearchServicesFormData } from '../../../../context/SearchContext';
 import ServicesList from '../organisms/ServicesList';
-import { useGetProductsQuery } from '../../../../services/api';
 import SearchBar from '../../../../components/organisms/SearchBar';
+import { useGetProductsQuery } from '../../../../services/productApi';
 
 export const SearchServicesPage: React.FC = () => {
   const navigate = useNavigate();
   const { searchData } = useSearchServicesFormData();
   const [filteredResults, setFilteredResults] = useState([]);
 
-  const { data: allServices = [], isLoading, isError } = useGetProductsQuery();
+  const { data: allServices, isLoading, isError } = useGetProductsQuery();
 
+  console.error('All services:', {allServices});
   useEffect(() => {
-    if (!allServices.length) return;
+    if (!allServices?.data?.items?.length) return;
 
-    let results = allServices;
+    let results = allServices?.data?.items;
 
     if (searchData?.service?.length) {
       results = results.filter((service) =>

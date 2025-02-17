@@ -3,7 +3,7 @@ import { Box, Grid, Paper } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import TextAtom from '../../../../components/atoms/TextAtom';
 import { ButtonAtom } from '../../../../components/atoms';
-import { useGetCategoriesQuery } from '../../../../services/api';
+import { useGetCategoriesQuery } from '../../../../services/categoryApi';
 
 export default function Step2({ onNext, onBack }) {
   const { data, isLoading, error } = useGetCategoriesQuery();

@@ -3,11 +3,17 @@ import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage'; // defaults to localStorage for web
 import { combineReducers } from 'redux';
 import authReducer from '../slices/authSlice';
-import { api } from '../../services/api';
+import { authApi } from '../../services/authApi';
+import { productApi } from '../../services/productApi';
+import { categoryApi } from '../../services/categoryApi';
+import { userApi } from '../../services/userApi';
 
 const rootReducer = combineReducers({
   auth: authReducer,
-  [api.reducerPath]: api.reducer,
+  [authApi.reducerPath]: authApi.reducer,
+  [productApi.reducerPath]: productApi.reducer,
+  [categoryApi.reducerPath]: categoryApi.reducer,
+  [userApi.reducerPath]: userApi.reducer,
   // Add other reducers here
 });
 
@@ -24,7 +30,12 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false,
-    }).concat(api.middleware),
+    }).concat(
+      authApi.middleware,
+      productApi.middleware,
+      categoryApi.middleware,
+      userApi.middleware
+    ),
 });
 
 export const persistor = persistStore(store);
