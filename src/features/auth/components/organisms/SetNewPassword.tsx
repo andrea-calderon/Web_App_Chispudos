@@ -8,9 +8,9 @@ import { useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 import { ButtonAtom, InputAtom, TextAtom } from '../../../../components/atoms';
 import { useAppDispatch } from '../../../../hooks/useAppDispatch';
-import { useUpdatePasswordMutation } from '../../../../services/api';
 import { logger } from '../../../../utils/logger';
 import AppLogo from '../../../../components/molecules/AppLogo';
+import { useUpdatePasswordMutation } from '../../../../services/authApi';
 
 interface SetNewPasswordProps {
   otp: string;

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Typography, Avatar, Divider } from '@mui/material';
+import { Box, Typography, Avatar, Divider, Grid2 as Grid, useMediaQuery, useTheme } from '@mui/material';
 import { Rating } from '@mui/material';
 
 interface Review {
@@ -14,6 +14,9 @@ interface ServiceReviewsProps {
 }
 
 export const ServiceReviews: React.FC<ServiceReviewsProps> = ({ reviews }) => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
   const calculateDaysAgo = (createdAt: string): string => {
     const reviewDate = new Date(createdAt);
     const today = new Date();
@@ -31,14 +34,11 @@ export const ServiceReviews: React.FC<ServiceReviewsProps> = ({ reviews }) => {
         {reviews.length > 0 ? (
           reviews.map((review, index) => (
             <Box key={index}>
-              <Box
-                display="flex"
-                alignItems="flex-start"
-                gap="1rem"
-                marginBottom="1.5rem"
-              >
-                <Avatar alt={review.name || 'Usuario'} />
-                <Box>
+              <Grid container spacing={2} alignItems="flex-start" marginBottom="1.5rem">
+                <Grid item xs={12} sm={2}>
+                  <Avatar alt={review.name || 'Usuario'} />
+                </Grid>
+                <Grid item xs={12} sm={10}>
                   <Typography fontWeight="bold">
                     {review.name || `Usuario Anónimo ${index + 1}`}
                   </Typography>
@@ -47,8 +47,8 @@ export const ServiceReviews: React.FC<ServiceReviewsProps> = ({ reviews }) => {
                   </Typography>
                   <Rating value={review.rating} readOnly size="small" />
                   <Typography>{review.comment}</Typography>
-                </Box>
-              </Box>
+                </Grid>
+              </Grid>
               {index < reviews.length - 1 && (
                 <Divider sx={{ marginTop: '1rem', marginBottom: '2rem' }} />
               )}

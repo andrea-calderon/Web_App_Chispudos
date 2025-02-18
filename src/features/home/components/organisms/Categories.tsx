@@ -9,11 +9,11 @@ import {
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { useGetCategoriesQuery } from '../../../../services/api';
 import TextAtom from '../../../../components/atoms/TextAtom';
 import ButtonAtom from '../../../../components/atoms/ButtonAtom';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import { useGetCategoriesQuery } from '../../../../services/categoryApi';
 
 const HighlightedCategories = () => {
   const { t } = useTranslation();

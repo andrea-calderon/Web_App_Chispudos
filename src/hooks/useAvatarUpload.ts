@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useUpdateAvatarMutation } from '../services/api'; 
+import { useUpdateAvatarMutation } from '../services/userApi';
 
 interface UseAvatarUploadProps {
   userId: string;

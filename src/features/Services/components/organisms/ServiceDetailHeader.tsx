@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Button, Typography, CardMedia } from '@mui/material';
+import { Box, Button, Typography, CardMedia, useMediaQuery, useTheme, Grid2 as Grid } from '@mui/material';
 import StarIcon from '@mui/icons-material/Star';
 
 interface ServiceHeaderProps {
@@ -17,53 +17,58 @@ export const ServiceHeader: React.FC<ServiceHeaderProps> = ({
   image,
   onOpenModal,
 }) => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
   return (
     <Box
-      display="flex"
-      alignItems="center"
-      justifyContent="center"
-      gap="2rem"
       marginBottom="2rem"
-      padding={8}
+      padding={isMobile ? 2 : 8}
       backgroundColor="#E8DEF8"
     >
-      <CardMedia
-        component="img"
-        image={image}
-        alt={title}
-        sx={{
-          width: '325px',
-          height: '200px',
-          borderRadius: '16px',
-        }}
-      />
-      <Box>
-        <Typography variant="h4" fontWeight="bold">
-          {title || 'Servicio no disponible'}
-        </Typography>
-        <Typography variant="h6">
-          {providerName || 'Proveedor desconocido'}
-        </Typography>
-        <Box display="flex" alignItems="center" gap="0.5rem">
-          <Typography variant="h5" fontWeight="bold">
-            {rating ? rating.toFixed(1) : 'Aún no tiene reseñas.'}
-          </Typography>
-          {[...Array(5)].map((_, i) => (
-            <StarIcon
-              key={i}
-              sx={{ color: i < Math.round(rating) ? '#FFD700' : '#DDD' }}
-            />
-          ))}
-        </Box>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={onOpenModal}
-          sx={{ mt: 2 }}
-        >
-          Reservar Servicio
-        </Button>
-      </Box>
+      <Grid container spacing={2} alignItems="center" justifyContent="center">
+        <Grid item xs={12} md={4}>
+          <CardMedia
+            component="img"
+            image={image}
+            alt={title}
+            sx={{
+              width: '100%',
+              height: 'auto',
+              borderRadius: '16px',
+            }}
+          />
+        </Grid>
+        <Grid item xs={12} md={8}>
+          <Box textAlign={isMobile ? 'center' : 'left'}>
+            <Typography variant={isMobile ? 'h5' : 'h4'} fontWeight="bold">
+              {title || 'Servicio no disponible'}
+            </Typography>
+            <Typography variant={isMobile ? 'subtitle1' : 'h6'}>
+              {providerName || 'Proveedor desconocido'}
+            </Typography>
+            <Box display="flex" alignItems="center" justifyContent={isMobile ? 'center' : 'flex-start'} gap="0.5rem">
+              <Typography variant={isMobile ? 'h6' : 'h5'} fontWeight="bold">
+                {rating ? rating.toFixed(1) : 'Aún no tiene reseñas.'}
+              </Typography>
+              {[...Array(5)].map((_, i) => (
+                <StarIcon
+                  key={i}
+                  sx={{ color: i < Math.round(rating) ? '#FFD700' : '#DDD' }}
+                />
+              ))}
+            </Box>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={onOpenModal}
+              sx={{ mt: 2 }}
+            >
+              Reservar Servicio
+            </Button>
+          </Box>
+        </Grid>
+      </Grid>
     </Box>
   );
 };

@@ -19,7 +19,8 @@ import ButtonAtom from '../atoms/ButtonAtom';
 import { Delete } from '@mui/icons-material';
 import { useState, useMemo } from 'react';
 import { useSearchServicesFormData } from '../../context/SearchContext';
-import { useGetProductsQuery } from '../../services/api';
+import { useGetProductsQuery } from '../../services/productApi';
+
 
 const SearchBar = () => {
   const { t } = useTranslation();
@@ -30,12 +31,13 @@ const SearchBar = () => {
     searchData.price?.max || 500,
   ]);
 
-  const { data: products = [] } = useGetProductsQuery();
+  const { data: products } = useGetProductsQuery();
+  console.error('Products:', {products});
 
   const services = useMemo(() => {
     return Array.from(
       new Set(
-        products.flatMap(
+        products?.data?.items.flatMap(
           (product) => product.categories?.map((c) => c.name) || [],
         ),
       ),
@@ -43,7 +45,7 @@ const SearchBar = () => {
   }, [products]);
 
   const locations = useMemo(() => {
-    return Array.from(new Set(products.map((product) => product.location)));
+    return Array.from(new Set(products?.data?.items.map((product) => product.location)));
   }, [products]);
 
   const handlePriceChange = (event: Event, newValue: number | number[]) => {

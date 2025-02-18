@@ -4,11 +4,11 @@ import { Form, Formik, FormikHelpers } from 'formik';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
-import { useSignupMutation } from '../../../../services/api';
 import { ButtonAtom, InputAtom, TextAtom } from '../../../../components/atoms';
 import { logger } from '../../../../utils/logger';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import AppLogo from '../../../../components/molecules/AppLogo';
+import { useSignupMutation } from '../../../../services/authApi';
 
 type SignupValues = {
   
