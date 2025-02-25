@@ -39,7 +39,6 @@ const AppRoutes = () => {
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/" element={<LandingPage />} />
             <Route path="/password-recovery" element={<PasswordRecovery />} />
-            <Route path="/services" element={<BusinessStepper />} />
 
             {/* Protected Routes */}
             <Route element={<ProtectedRoutesWrapper />}>
@@ -48,6 +47,7 @@ const AppRoutes = () => {
               <Route path="/search-services" element={<SearchServicesPage />} />
               <Route path="/services/:id" element={<ServiceDetailPage />} />
               <Route path="/service-details" element={<TaskDetailsPage />} />
+              <Route path="/stepper" element={<BusinessStepper />} />
             </Route>
 
             {/* Error Page */}

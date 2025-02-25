@@ -3,6 +3,7 @@ import {
   Avatar,
   IconButton,
   Stack,
+  Button,
   useTheme,
   useMediaQuery,
   Tooltip,
@@ -13,30 +14,80 @@ import * as Yup from 'yup';
 import TextAtom from '../../../../components/atoms/TextAtom';
 import InputAtom from '../../../../components/atoms/InputAtom';
 import EditIcon from '@mui/icons-material/Edit';
-
-const initialValues = {
-  businessName: '',
-  businessDescription: '',
-};
+import {
+  useCreateProductMutation,
+  useUploadProductImageMutation,
+} from '../../../../services/productApi';
+import { useState } from 'react';
 
 export default function Step1() {
   const { t } = useTranslation();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const [createProduct, { isLoading: isCreating }] = useCreateProductMutation();
+  const [uploadProductImage, { isLoading: isUploading }] =
+    useUploadProductImageMutation();
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(null);
+  const [productId, setProductId] = useState(null);
 
   const validationSchema = Yup.object({
     businessName: Yup.string().required(t('forms.commons.required')),
     businessDescription: Yup.string().required(t('forms.commons.required')),
   });
 
+  const handleImageChange = (event) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setSelectedImage(file);
+      setPreviewUrl(URL.createObjectURL(file));
+    }
+  };
+
+  const handleSubmit = async (values, { setSubmitting }) => {
+    try {
+      const payload = {
+        name: values.businessName,
+        description: values.businessDescription,
+      };
+      console.log('Enviando payload:', payload);
+
+      const productResponse = await createProduct(payload).unwrap();
+      console.log('Respuesta del backend:', productResponse);
+
+      if (productResponse?.productService?.id) {
+        setProductId(productResponse.productService.id);
+      } else {
+        throw new Error('El backend no devolvió un ID válido');
+      }
+
+      if (selectedImage) {
+        const formData = new FormData();
+        formData.append('image', selectedImage);
+
+        await uploadProductImage({
+          productId: productResponse.productService.id,
+          formData,
+        }).unwrap();
+      }
+    } catch (err) {
+      console.error('Error al procesar:', err);
+      if (err.data) {
+        console.error('Detalles del error:', err.data);
+      }
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   return (
     <Formik
-      initialValues={initialValues}
+      initialValues={{ businessName: '', businessDescription: '' }}
       validationSchema={validationSchema}
-      onSubmit={(values) => console.log('Form submitted:', values)}
+      onSubmit={handleSubmit}
     >
-      {({ handleSubmit }) => (
-        <Form onSubmit={handleSubmit}>
+      {({ isSubmitting }) => (
+        <Form>
           <Box
             display="flex"
             flexDirection={{ xs: 'column', md: 'row' }}
@@ -48,9 +99,7 @@ export default function Step1() {
           >
             <Box
               flex={1}
-              width={{ xs: '100%', md: 'auto' }}
               textAlign={{ xs: 'left', md: 'left' }}
-              mb={{ xs: 2, md: 0 }}
               display="flex"
               flexDirection="column"
               pt={{ xs: 12, sm: 12, md: 12, lg: 18 }}
@@ -64,7 +113,6 @@ export default function Step1() {
               >
                 {t('businessStepper.step1.title')}
               </TextAtom>
-
               <TextAtom
                 variant="display"
                 size="medium"
@@ -73,7 +121,6 @@ export default function Step1() {
               >
                 {t('businessStepper.step1.heading')}
               </TextAtom>
-
               <TextAtom
                 variant="body"
                 size="medium"
@@ -82,7 +129,6 @@ export default function Step1() {
                 {t('businessStepper.step1.description')}
               </TextAtom>
             </Box>
-
             <Stack
               flex={1}
               spacing={2}
@@ -94,43 +140,38 @@ export default function Step1() {
                 alignItems="center"
                 gap={3}
                 width="100%"
-                pb={{ xs: 4, md: 6, lg: 6 }}
+                pb={{ xs: 4, md: 6 }}
               >
                 <Box position="relative" display="inline-block">
                   <Avatar
-                    sx={{
-                      width: 80,
-                      height: 80,
-                      bgcolor: 'grey.300',
-                    }}
+                    src={previewUrl || ''}
+                    sx={{ width: 80, height: 80, bgcolor: 'grey.300' }}
                   />
-                  <IconButton
-                    aria-label={t('businessStepper.step1.editAvatar')}
-                    sx={{
-                      position: 'absolute',
-                      bottom: 0,
-                      right: -8,
-                      bgcolor: 'primary.main',
-                      color: 'white',
-                      transform: `scale(${isMobile ? 0.8 : 1})`,
-                      '&:hover': { bgcolor: 'primary.dark' },
-                    }}
-                  >
-                    <EditIcon fontSize={isMobile ? 'small' : 'small'} />
-                  </IconButton>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    style={{ display: 'none' }}
+                    id="upload-button"
+                    onChange={handleImageChange}
+                  />
+                  <label htmlFor="upload-button">
+                    <IconButton
+                      component="label"
+                      htmlFor="upload-button"
+                      sx={{
+                        position: 'absolute',
+                        bottom: 0,
+                        right: -8,
+                        bgcolor: 'primary.main',
+                        color: 'white',
+                        '&:hover': { bgcolor: 'primary.dark' },
+                      }}
+                    >
+                      <EditIcon fontSize="small" />
+                    </IconButton>
+                  </label>
                 </Box>
-
-                <TextAtom
-                  variant="body"
-                  size="medium"
-                  textAlign="Left"
-                  color="text.secondary"
-                  mr={16}
-                >
-                  {t('businessStepper.step1.uploadPrompt')}
-                </TextAtom>
               </Box>
-
               <Box width="100%">
                 <Field
                   name="businessName"
@@ -147,9 +188,7 @@ export default function Step1() {
                   name="businessName"
                   component="div"
                   style={{ color: 'red' }}
-                  size="extraSmall"
                 />
-
                 <Tooltip
                   title={t('businessStepper.step1.businessDescriptionTooltip')}
                 >
@@ -165,7 +204,7 @@ export default function Step1() {
                       )}
                       fullWidth
                       multiline
-                      rows="6"
+                      rows={6}
                       variant="standard"
                       size={isMobile ? 'small' : 'medium'}
                       sx={{ mt: 2 }}
@@ -178,6 +217,15 @@ export default function Step1() {
                   style={{ color: 'red' }}
                 />
               </Box>
+              <Button
+                type="submit"
+                variant="contained"
+                disabled={isCreating || isUploading || isSubmitting}
+              >
+                {isCreating || isUploading
+                  ? 'Guardando...'
+                  : 'Guardar y continuar'}
+              </Button>
             </Stack>
           </Box>
         </Form>

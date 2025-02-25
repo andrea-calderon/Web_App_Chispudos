@@ -95,22 +95,6 @@ export default function Step2({ onNext, onBack }) {
           ))}
         </Grid>
       </Box>
-
-      <Box mt={4} display="flex" justifyContent="space-between">
-        <ButtonAtom variant="outlined" onClick={onBack}>
-          Atrás
-        </ButtonAtom>
-        <ButtonAtom
-          variant="filled"
-          onClick={() => {
-            console.log('Selected Categories:', selectedCategories);
-            onNext(selectedCategories);
-          }}
-          disabled={selectedCategories.length === 0}
-        >
-          Siguiente
-        </ButtonAtom>
-      </Box>
     </Box>
   );
 }
