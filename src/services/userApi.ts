@@ -9,6 +9,13 @@ export const userApi = createApi({
     getUsers: builder.query<ApiResponseType<UserResponseType[]>, void>({
       query: () => 'users/',
     }),
+    createUser: builder.mutation<{ id: string }, { businessName: string; businessDescription: string }>({
+      query: (userData) => ({
+        url: 'users/',
+        method: 'POST',
+        body: userData,
+      }),
+    }),
     updateAvatar: builder.mutation<any, { userId: string; formData: FormData }>({
       query: ({ userId, formData }) => ({
         url: `/users/${userId}/avatar`,
@@ -21,5 +28,6 @@ export const userApi = createApi({
 
 export const {
   useGetUsersQuery,
+  useCreateUserMutation,
   useUpdateAvatarMutation,
 } = userApi;
