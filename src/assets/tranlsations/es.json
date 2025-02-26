@@ -187,6 +187,21 @@
     }
   },
 
+  "businessProfilePage":{
+      "tabs": {
+        "profile": "Mi perfil",
+        "chat": "Chat",
+        "tasks": "Detalle de tus tareas"
+      },
+      "profile": {
+        "dayPrice": "Tarifa por día",
+        "skillsTitle": "Habilidades y experiencia",
+        "recentsProjects": "Proyectos recientes",
+        "otherSkills": "Otras habilidades",
+        "editButton": "Editar"
+      }
+  },
+
   "errorPage": {
     "title": "Ups, página no encontrada",
     "notFoundMessage": "Lo sentimos, la página que buscas no existe.",

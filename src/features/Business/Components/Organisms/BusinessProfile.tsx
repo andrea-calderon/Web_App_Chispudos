@@ -21,9 +21,9 @@ const BusinessProfilePage = () => {
       <Box display="flex" flexDirection="column" alignItems="center" mb={4}>
         <Box position="relative">
           <Avatar
-            src="/path-to-image.jpg"
+            src="https://picsum.photos/300/200?random=4"
             alt={t('businessProfile.avatarAlt')}
-            sx={{ width: 100, height: 100 }}
+            sx={{ width: 150, height: 150 }}
           />
           <Button
             sx={{
@@ -40,54 +40,75 @@ const BusinessProfilePage = () => {
             <EditIcon fontSize="small" />
           </Button>
         </Box>
-        <Typography variant="h5" fontWeight="bold">
+        <TextAtom
+          variant="headline"
+          size="small"
+          fontWeight="bold"
+          sx={{ mt: 2 }}
+        >
           Fontanería La Bendición
-        </Typography>
+        </TextAtom>
         <Typography>
-          {t('businessProfile.rate')} <strong>Q300</strong>
+          {t('businessProfilePage.profile.dayPrice')} <strong>Q300</strong>
         </Typography>
       </Box>
 
       {/* Habilidades y experiencia */}
-      <Box mb={4}>
+      <Box mb={{ xs: 6, md: 8 }}>
         <Box
           display="flex"
           justifyContent="space-between"
-          alignItems="center"
+          alignItems="left"
           mb={1}
         >
-          <TextAtom variant="title" size="medium" fontWeight="bold">
-            {t('businessProfile.skillsTitle')}
-          </TextAtom>
-          <Button size="small" startIcon={<EditIcon />}>
-            {t('edit')}
-          </Button>
+          <Box display="flex" alignItems="center">
+            <TextAtom variant="title" size="large" fontWeight="bold">
+              {t('businessProfilePage.profile.skillsTitle')}
+            </TextAtom>
+            <Button
+              size="small"
+              startIcon={<EditIcon />}
+              sx={{ ml: 2, textTransform: 'none' }}
+            >
+              {t('businessProfilePage.profile.editButton')}
+            </Button>
+          </Box>
         </Box>
         <Typography>{t('businessProfile.skillsDescription')}</Typography>
       </Box>
 
       {/* Proyectos recientes */}
-      <Box mb={4}>
+      <Box mb={{ xs: 6, md: 8 }}>
         <Box
           display="flex"
           justifyContent="space-between"
           alignItems="center"
           mb={1}
         >
-          <TextAtom variant="title" size="medium" fontWeight="bold">
-            {t('businessProfile.recentProjects')}
-          </TextAtom>
-          <Button size="small" startIcon={<EditIcon />}>
-            {t('edit')}
-          </Button>
+          <Box display="flex" alignItems="center">
+            <TextAtom variant="title" size="large" fontWeight="bold">
+              {t('businessProfilePage.profile.recentsProjects')}
+            </TextAtom>
+            <Button
+              size="small"
+              startIcon={<EditIcon />}
+              sx={{ ml: 2, textTransform: 'none' }}
+            >
+              {t('businessProfilePage.profile.editButton')}
+            </Button>
+          </Box>
         </Box>
-        <Grid container spacing={2}>
-          {[1, 2, 3, 4, 5].map((project, index) => (
-            <Grid item xs={6} md={2.4} key={index}>
+        <Grid container spacing={4}>
+          {[1, 2, 3, 4].map((project, index) => (
+            <Grid item xs={6} md={3} lg={2.4} key={index}>
               <img
                 src="https://picsum.photos/300/200?random=4"
                 alt={t('businessProfile.projectAlt')}
+                style={{ width: '100%', borderRadius: '8px' }}
               />
+              <TextAtom variant="title" size="medium">
+                {t('businessProfilePage.profile.recentsProjects')}
+              </TextAtom>
             </Grid>
           ))}
         </Grid>
@@ -101,12 +122,18 @@ const BusinessProfilePage = () => {
           alignItems="center"
           mb={1}
         >
-          <TextAtom variant="title" size="medium" fontWeight="bold">
-            {t('businessProfile.otherSkills')}
-          </TextAtom>
-          <Button size="small" startIcon={<EditIcon />}>
-            {t('edit')}
-          </Button>
+          <Box display="flex" alignItems="center">
+            <TextAtom variant="title" size="large" fontWeight="bold">
+              {t('businessProfilePage.profile.otherSkills')}
+            </TextAtom>
+            <Button
+              size="small"
+              startIcon={<EditIcon />}
+              sx={{ ml: 2, textTransform: 'none' }}
+            >
+              {t('businessProfilePage.profile.editButton')}
+            </Button>
+          </Box>
         </Box>
         <Grid container spacing={2}>
           {[1, 2, 3].map((skill, index) => (
