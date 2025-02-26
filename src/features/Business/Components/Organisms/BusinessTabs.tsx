@@ -42,8 +42,8 @@ const BusinessTabs = () => {
       </Tabs>
 
       <Box sx={{ p: 3, bgcolor: 'white' }}>
-        {selectedTab === 0 && <BusinessProfile />}
-        {selectedTab === 1 && <BusinessProfile />}
+        {selectedTab === 0 && <div>{t('tabs.tasksContent')}</div>}
+        {selectedTab === 1 && <div>{t('tabs.chatContent')}</div>}
         {selectedTab === 2 && <BusinessProfile />}
       </Box>
     </Box>
