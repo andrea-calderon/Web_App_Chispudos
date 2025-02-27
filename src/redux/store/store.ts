@@ -3,6 +3,7 @@ import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage'; // defaults to localStorage for web
 import { combineReducers } from 'redux';
 import authReducer from '../slices/authSlice';
+import serviceStepperReducer from '../slices/serviceStepperSlice';
 import { authApi } from '../../services/authApi';
 import { productApi } from '../../services/productApi';
 import { categoryApi } from '../../services/categoryApi';
@@ -10,6 +11,7 @@ import { userApi } from '../../services/userApi';
 
 const rootReducer = combineReducers({
   auth: authReducer,
+  serviceStepper: serviceStepperReducer,
   [authApi.reducerPath]: authApi.reducer,
   [productApi.reducerPath]: productApi.reducer,
   [categoryApi.reducerPath]: categoryApi.reducer,
@@ -20,7 +22,7 @@ const rootReducer = combineReducers({
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['auth'], // Only persist the auth reducer
+  whitelist: ['auth', 'serviceStepper'], // Only persist the auth reducer
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
