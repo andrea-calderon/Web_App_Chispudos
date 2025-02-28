@@ -16,9 +16,9 @@ import { selectAuth } from '../redux/slices/authSlice';
 import { ProfilePage } from '../features/profile/components/pages/ProfilePage';
 import PasswordRecovery from '../features/auth/components/pages/PasswordRecovery';
 import RegisterPage from '../features/auth/components/pages/RegisterPage';
-import ErrorBoundary from '../components/Generics/ErrorBoundary';
 import ErrorPage from '../components/organisms/ErrorPage';
 import { BusinessStepper } from '../features/Business/Components/pages/BusinessStepperPage';
+import { BusinessProfilePage } from '../features/Business/Components/pages/BusinessProfilePage';
 import ErrorBoundaryWrapper from '../components/Generics/ErrorBoundaryWrapper';
 
 const AppRoutes = () => {
@@ -48,6 +48,10 @@ const AppRoutes = () => {
               <Route path="/services/:id" element={<ServiceDetailPage />} />
               <Route path="/service-details" element={<TaskDetailsPage />} />
               <Route path="/stepper" element={<BusinessStepper />} />
+              <Route
+                path="/businessProfile"
+                element={<BusinessProfilePage />}
+              />
             </Route>
 
             {/* Error Page */}
