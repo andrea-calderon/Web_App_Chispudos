@@ -11,22 +11,27 @@ import {
   ListItemAvatar,
   ListItemText,
   Divider,
+  Menu,
+  MenuItem,
 } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import CameraAltOutlinedIcon from '@mui/icons-material/CameraAltOutlined';
+import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
 
 const messagesMock = [
-  { id: 1, text: 'Buenos días', sender: 'user' },
-  { id: 2, text: '¿En qué puedo ayudarle?', sender: 'pro' },
+  { id: 1, text: 'Buenos días', sender: 'user', reactions: [] },
+  { id: 2, text: '¿En qué puedo ayudarle?', sender: 'pro', reactions: [] },
   {
     id: 3,
     text: 'Tengo un grifo que gotea en la cocina y necesito arreglarlo.',
     sender: 'user',
+    reactions: [],
   },
   {
     id: 4,
     text: 'De acuerdo, puedo agendar una cita. ¿Qué día y hora le queda mejor?',
     sender: 'pro',
+    reactions: [],
   },
 ];
 
@@ -50,9 +55,14 @@ const chatsMock = [
 ];
 
 export default function ChatComponent() {
-  const [messages, setMessages] = useState(messagesMock);
+  const [messages, setMessages] =
+    useState<
+      { id: number; text: string; sender: string; reactions: string[] }[]
+    >(messagesMock);
   const [newMessage, setNewMessage] = useState('');
   const [selectedChat, setSelectedChat] = useState(chatsMock[0]);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [selectedMessage, setSelectedMessage] = useState<number | null>(null);
 
   const handleSend = () => {
     if (!newMessage.trim()) return;
@@ -61,10 +71,37 @@ export default function ChatComponent() {
       id: messages.length + 1,
       text: newMessage,
       sender: 'pro',
+      reactions: [],
     };
 
     setMessages([...messages, newMsg]);
     setNewMessage('');
+  };
+
+  const handleReactionClick = (
+    event: React.MouseEvent<HTMLElement>,
+    messageId: number,
+  ) => {
+    setAnchorEl(event.currentTarget);
+    setSelectedMessage(messageId);
+  };
+
+  const handleReactionClose = () => {
+    setAnchorEl(null);
+    setSelectedMessage(null);
+  };
+
+  const handleAddReaction = (reaction: string) => {
+    if (selectedMessage !== null) {
+      setMessages((prevMessages) =>
+        prevMessages.map((msg) =>
+          msg.id === selectedMessage
+            ? { ...msg, reactions: [...msg.reactions, reaction] }
+            : msg,
+        ),
+      );
+    }
+    handleReactionClose();
   };
 
   return (
@@ -76,7 +113,7 @@ export default function ChatComponent() {
         flexDirection: 'column',
         height: '100vh',
         border: '1px solid #ccc',
-
+        borderRadius: '10px',
         overflow: 'hidden',
       }}
     >
@@ -173,17 +210,35 @@ export default function ChatComponent() {
                 {msg.sender === 'user' && (
                   <Avatar src={selectedChat.user.avatar} sx={{ mr: 1 }} />
                 )}
-                <Typography
-                  sx={{
-                    display: 'inline-block',
-                    p: 1,
-                    borderRadius: '10px',
-                    bgcolor: msg.sender === 'pro' ? '#673ab7' : '#F4F4F4',
-                    color: msg.sender === 'pro' ? '#fff' : '#000',
-                  }}
-                >
-                  {msg.text}
-                </Typography>
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                  {msg.sender === 'pro' && (
+                    <IconButton
+                      size="small"
+                      onClick={(event) => handleReactionClick(event, msg.id)}
+                    >
+                      <EmojiEmotionsIcon />
+                    </IconButton>
+                  )}
+                  <Typography
+                    sx={{
+                      display: 'inline-block',
+                      p: 1,
+                      borderRadius: '10px',
+                      bgcolor: msg.sender === 'pro' ? '#673ab7' : '#e0e0e0',
+                      color: msg.sender === 'pro' ? '#fff' : '#000',
+                    }}
+                  >
+                    {msg.text}
+                  </Typography>
+                  {msg.sender === 'user' && (
+                    <IconButton
+                      size="small"
+                      onClick={(event) => handleReactionClick(event, msg.id)}
+                    >
+                      <EmojiEmotionsIcon />
+                    </IconButton>
+                  )}
+                </Box>
                 {msg.sender === 'pro' && (
                   <Avatar src={selectedChat.pro.avatar} sx={{ ml: 1 }} />
                 )}
@@ -214,6 +269,21 @@ export default function ChatComponent() {
           </Box>
         </Grid>
       </Grid>
+
+      <Menu
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={handleReactionClose}
+      >
+        <Box sx={{ display: 'flex' }}>
+          <MenuItem onClick={() => handleAddReaction('👍')}>👍</MenuItem>
+          <MenuItem onClick={() => handleAddReaction('❤️')}>❤️</MenuItem>
+          <MenuItem onClick={() => handleAddReaction('😂')}>😂</MenuItem>
+          <MenuItem onClick={() => handleAddReaction('😮')}>😮</MenuItem>
+          <MenuItem onClick={() => handleAddReaction('😢')}>😢</MenuItem>
+          <MenuItem onClick={() => handleAddReaction('👏')}>👏</MenuItem>
+        </Box>
+      </Menu>
     </Box>
   );
 }
