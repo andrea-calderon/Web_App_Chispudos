@@ -2,10 +2,11 @@ import { useState } from 'react';
 import { Tabs, Tab, Box } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import BusinessProfile from './BusinessProfile';
+import BusinessChat from './BusinessChat';
 
 const BusinessTabs = () => {
   const { t } = useTranslation();
-  const [selectedTab, setSelectedTab] = useState(2);
+  const [selectedTab, setSelectedTab] = useState(1); // Establecer la pestaña de chat como la inicial
 
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
     setSelectedTab(newValue);
@@ -43,7 +44,7 @@ const BusinessTabs = () => {
 
       <Box sx={{ p: 3, bgcolor: 'white' }}>
         {selectedTab === 0 && <div>{t('tabs.tasksContent')}</div>}
-        {selectedTab === 1 && <div>{t('tabs.chatContent')}</div>}
+        {selectedTab === 1 && <BusinessChat />}
         {selectedTab === 2 && <BusinessProfile />}
       </Box>
     </Box>
