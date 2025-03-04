@@ -2,25 +2,53 @@ import { useState } from 'react';
 import { Box, Grid, Paper } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import TextAtom from '../../../../components/atoms/TextAtom';
-import { ButtonAtom } from '../../../../components/atoms';
 import { useGetCategoriesQuery } from '../../../../services/categoryApi';
+import { useAppDispatch } from '../../../../hooks/useAppDispatch';
+import { clearStepper, selectStepper, setServiceState } from '../../../../redux/slices/serviceStepperSlice';
+import { useAppSelector } from '../../../../hooks/useAppSelector';
+import CustomStepper from './Stepper';
+import { useUpdateProductMutation } from '../../../../services/productApi';
 
-export default function Step2({ onNext, onBack }) {
+export default function Step2() {
   const { data, isLoading, error } = useGetCategoriesQuery();
   const categories = data?.data || [];
   const [selectedCategories, setSelectedCategories] = useState<
-    { id: any; name: any }[]
+    { id: any; }[]
   >([]);
+  const [updateProduct, { isLoading: isUpdating}] = useUpdateProductMutation();
+  const dispatch = useAppDispatch();
+  //dispatch(clearStepper());
+  const { service } = useAppSelector(selectStepper);
+    console.error('debugStepper', {service, selectedCategories});
 
   const { t } = useTranslation();
 
   const handleSelectCategory = (category) => {
+    console.error('category', category);
     setSelectedCategories((prev) =>
-      prev.some((c) => c.id === category.id)
-        ? prev.filter((c) => c.id !== category.id)
-        : [...prev, { id: category.id, name: category.name }],
+      prev.some((c) => c === category.id)
+        ? prev.filter((c) => c !== category.id)
+        : [...prev, category.id ],
     );
   };
+
+  const handleSubmitCategories = async () => {
+    const responseUpdateProduct = await updateProduct({
+      productId: service?.id,
+      productData: {
+        type: 1,
+        categories: selectedCategories,
+      },
+    }).unwrap();
+    console.error('responseUpdateProduct', responseUpdateProduct);
+    if (responseUpdateProduct.success) {
+      dispatch(
+        setServiceState(responseUpdateProduct?.productService),
+      );
+    }
+  }
+
+  const isNextEnabled = selectedCategories.length > 0 || isUpdating;
 
   if (isLoading) return t('APIs.categories.loading');
   if (error) return t('APIs.categories.error');
@@ -72,7 +100,7 @@ export default function Step2({ onNext, onBack }) {
                   alignItems: 'center',
                   boxShadow: 0,
                   backgroundColor: selectedCategories.some(
-                    (c) => c.id === category.id,
+                    (c) => c === category.id,
                   )
                     ? '#D0BCFF'
                     : '#F3ECFF',
@@ -95,6 +123,7 @@ export default function Step2({ onNext, onBack }) {
           ))}
         </Grid>
       </Box>
+      <CustomStepper onHandleNext={handleSubmitCategories } isNextEnabled={isNextEnabled} />
     </Box>
   );
 }

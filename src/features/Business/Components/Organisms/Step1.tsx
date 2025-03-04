@@ -3,7 +3,6 @@ import {
   Avatar,
   IconButton,
   Stack,
-  Button,
   useTheme,
   useMediaQuery,
   Tooltip,
@@ -19,6 +18,15 @@ import {
   useUploadProductImageMutation,
 } from '../../../../services/productApi';
 import { useState } from 'react';
+import CustomStepper from './Stepper';
+import { useAppSelector } from '../../../../hooks/useAppSelector';
+import { selectAuth } from '../../../../redux/slices/authSlice';
+import {
+  clearStepper,
+  selectStepper,
+  setServiceState,
+} from '../../../../redux/slices/serviceStepperSlice';
+import { useAppDispatch } from '../../../../hooks/useAppDispatch';
 
 export default function Step1() {
   const { t } = useTranslation();
@@ -30,11 +38,17 @@ export default function Step1() {
   const [selectedImage, setSelectedImage] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
   const [productId, setProductId] = useState(null);
+  const debug = useAppSelector(selectAuth);
+  const debugStepper = useAppSelector(selectStepper);
+  console.error('debugStepper', debugStepper);
 
+  const dispatch = useAppDispatch();
   const validationSchema = Yup.object({
     businessName: Yup.string().required(t('forms.commons.required')),
     businessDescription: Yup.string().required(t('forms.commons.required')),
   });
+  console.error('Schema', validationSchema);
+  //dispatch(clearStepper());
 
   const handleImageChange = (event) => {
     const file = event.target.files?.[0];
@@ -46,14 +60,20 @@ export default function Step1() {
 
   const handleSubmit = async (values, { setSubmitting }) => {
     try {
-      const payload = {
+      const payloadServiceObject = {
         name: values.businessName,
         description: values.businessDescription,
+        type: 1, // 1 = Servicio, 2 = Producto
+        price: 0.0,
+        userId: 1,
       };
-      console.log('Enviando payload:', payload);
 
-      const productResponse = await createProduct(payload).unwrap();
-      console.log('Respuesta del backend:', productResponse);
+      console.log('Enviando payload:', payloadServiceObject);
+
+      const productResponse =
+        await createProduct(payloadServiceObject).unwrap();
+      console.log('productResponse', productResponse?.productService);
+      dispatch(setServiceState(productResponse?.productService));
 
       if (productResponse?.productService?.id) {
         setProductId(productResponse.productService.id);
@@ -86,149 +106,145 @@ export default function Step1() {
       validationSchema={validationSchema}
       onSubmit={handleSubmit}
     >
-      {({ isSubmitting }) => (
-        <Form>
-          <Box
-            display="flex"
-            flexDirection={{ xs: 'column', md: 'row' }}
-            alignItems={{ xs: 'center', md: 'flex-start' }}
-            gap={{ xs: 2, md: 4 }}
-            width="100%"
-            px={{ xs: 4, md: 10, lg: 24 }}
-            py={{ xs: 4, md: 10, lg: 16 }}
-          >
+      {({ isSubmitting, isValid, handleSubmit }) => (
+        <>
+          <Form>
             <Box
-              flex={1}
-              textAlign={{ xs: 'left', md: 'left' }}
               display="flex"
-              flexDirection="column"
-              pt={{ xs: 12, sm: 12, md: 12, lg: 18 }}
-              mr={{ md: 5, lg: 5 }}
-            >
-              <TextAtom
-                variant="title"
-                size="large"
-                fontWeight="bold"
-                sx={{ mb: 1 }}
-              >
-                {t('businessStepper.step1.title')}
-              </TextAtom>
-              <TextAtom
-                variant="display"
-                size="medium"
-                fontWeight="bold"
-                sx={{ mb: 1 }}
-              >
-                {t('businessStepper.step1.heading')}
-              </TextAtom>
-              <TextAtom
-                variant="body"
-                size="medium"
-                sx={{ color: 'text.secondary', mb: 1 }}
-              >
-                {t('businessStepper.step1.description')}
-              </TextAtom>
-            </Box>
-            <Stack
-              flex={1}
-              spacing={2}
-              width="100%"
+              flexDirection={{ xs: 'column', md: 'row' }}
               alignItems={{ xs: 'center', md: 'flex-start' }}
+              gap={{ xs: 2, md: 4 }}
+              width="100%"
+              px={{ xs: 4, md: 10, lg: 24 }}
+              py={{ xs: 4, md: 10, lg: 16 }}
             >
               <Box
+                flex={1}
+                textAlign={{ xs: 'left', md: 'left' }}
                 display="flex"
-                alignItems="center"
-                gap={3}
-                width="100%"
-                pb={{ xs: 4, md: 6 }}
+                flexDirection="column"
+                pt={{ xs: 12, sm: 12, md: 12, lg: 18 }}
+                mr={{ md: 5, lg: 5 }}
               >
-                <Box position="relative" display="inline-block">
-                  <Avatar
-                    src={previewUrl || ''}
-                    sx={{ width: 80, height: 80, bgcolor: 'grey.300' }}
-                  />
-                  <input
-                    type="file"
-                    accept="image/*"
-                    style={{ display: 'none' }}
-                    id="upload-button"
-                    onChange={handleImageChange}
-                  />
-                  <label htmlFor="upload-button">
-                    <IconButton
-                      component="label"
-                      htmlFor="upload-button"
-                      sx={{
-                        position: 'absolute',
-                        bottom: 0,
-                        right: -8,
-                        bgcolor: 'primary.main',
-                        color: 'white',
-                        '&:hover': { bgcolor: 'primary.dark' },
-                      }}
-                    >
-                      <EditIcon fontSize="small" />
-                    </IconButton>
-                  </label>
-                </Box>
-              </Box>
-              <Box width="100%">
-                <Field
-                  name="businessName"
-                  as={InputAtom}
-                  variant="standard"
-                  label={t('businessStepper.step1.businessNameLabel')}
-                  placeholder={t(
-                    'businessStepper.step1.businessNamePlaceholder',
-                  )}
-                  fullWidth
-                  size={isMobile ? 'small' : 'medium'}
-                />
-                <ErrorMessage
-                  name="businessName"
-                  component="div"
-                  style={{ color: 'red' }}
-                />
-                <Tooltip
-                  title={t('businessStepper.step1.businessDescriptionTooltip')}
+                <TextAtom
+                  variant="title"
+                  size="large"
+                  fontWeight="bold"
+                  sx={{ mb: 1 }}
                 >
-                  <Box>
-                    <Field
-                      name="businessDescription"
-                      as={InputAtom}
-                      label={t(
-                        'businessStepper.step1.businessDescriptionLabel',
-                      )}
-                      placeholder={t(
-                        'businessStepper.step1.businessDescriptionPlaceholder',
-                      )}
-                      fullWidth
-                      multiline
-                      rows={6}
-                      variant="standard"
-                      size={isMobile ? 'small' : 'medium'}
-                      sx={{ mt: 2 }}
-                    />
-                  </Box>
-                </Tooltip>
-                <ErrorMessage
-                  name="businessDescription"
-                  component="div"
-                  style={{ color: 'red' }}
-                />
+                  {t('businessStepper.step1.title')}
+                </TextAtom>
+                <TextAtom
+                  variant="display"
+                  size="medium"
+                  fontWeight="bold"
+                  sx={{ mb: 1 }}
+                >
+                  {t('businessStepper.step1.heading')}
+                </TextAtom>
+                <TextAtom
+                  variant="body"
+                  size="medium"
+                  sx={{ color: 'text.secondary', mb: 1 }}
+                >
+                  {t('businessStepper.step1.description')}
+                </TextAtom>
               </Box>
-              <Button
-                type="submit"
-                variant="contained"
-                disabled={isCreating || isUploading || isSubmitting}
+              <Stack
+                flex={1}
+                spacing={2}
+                width="100%"
+                alignItems={{ xs: 'center', md: 'flex-start' }}
               >
-                {isCreating || isUploading
-                  ? 'Guardando...'
-                  : 'Guardar y continuar'}
-              </Button>
-            </Stack>
-          </Box>
-        </Form>
+                <Box
+                  display="flex"
+                  alignItems="center"
+                  gap={3}
+                  width="100%"
+                  pb={{ xs: 4, md: 6 }}
+                >
+                  <Box position="relative" display="inline-block">
+                    <Avatar
+                      src={previewUrl || ''}
+                      sx={{ width: 80, height: 80, bgcolor: 'grey.300' }}
+                    />
+                    <input
+                      type="file"
+                      accept="image/*"
+                      style={{ display: 'none' }}
+                      id="upload-button"
+                      onChange={handleImageChange}
+                    />
+                    <label htmlFor="upload-button">
+                      <IconButton
+                        component="label"
+                        htmlFor="upload-button"
+                        sx={{
+                          position: 'absolute',
+                          bottom: 0,
+                          right: -8,
+                          bgcolor: 'primary.main',
+                          color: 'white',
+                          '&:hover': { bgcolor: 'primary.dark' },
+                        }}
+                      >
+                        <EditIcon fontSize="small" />
+                      </IconButton>
+                    </label>
+                  </Box>
+                </Box>
+                <Box width="100%">
+                  <Field
+                    name="businessName"
+                    as={InputAtom}
+                    variant="standard"
+                    label={t('businessStepper.step1.businessNameLabel')}
+                    placeholder={t(
+                      'businessStepper.step1.businessNamePlaceholder',
+                    )}
+                    fullWidth
+                    size={isMobile ? 'small' : 'medium'}
+                  />
+                  <ErrorMessage
+                    name="businessName"
+                    component="div"
+                    style={{ color: 'red' }}
+                  />
+                  <Tooltip
+                    title={t(
+                      'businessStepper.step1.businessDescriptionTooltip',
+                    )}
+                  >
+                    <Box>
+                      <Field
+                        name="businessDescription"
+                        as={InputAtom}
+                        label={t(
+                          'businessStepper.step1.businessDescriptionLabel',
+                        )}
+                        placeholder={t(
+                          'businessStepper.step1.businessDescriptionPlaceholder',
+                        )}
+                        fullWidth
+                        multiline
+                        rows={6}
+                        variant="standard"
+                        size={isMobile ? 'small' : 'medium'}
+                        sx={{ mt: 2 }}
+                      />
+                    </Box>
+                  </Tooltip>
+                  <ErrorMessage
+                    name="businessDescription"
+                    component="div"
+                    style={{ color: 'red' }}
+                  />
+                </Box>
+              </Stack>
+            </Box>
+          </Form>
+          <CustomStepper onHandleNext={handleSubmit} isNextEnabled={isValid && !isSubmitting} />
+        </>
       )}
     </Formik>
   );
