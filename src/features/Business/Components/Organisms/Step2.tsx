@@ -4,6 +4,8 @@ import { useTranslation } from 'react-i18next';
 import TextAtom from '../../../../components/atoms/TextAtom';
 import { ButtonAtom } from '../../../../components/atoms';
 import { useGetCategoriesQuery } from '../../../../services/categoryApi';
+import { useAppDispatch } from '../../../../hooks/useAppDispatch';
+import { clearStepper } from '../../../../redux/slices/serviceStepperSlice';
 
 export default function Step2({ onNext, onBack }) {
   const { data, isLoading, error } = useGetCategoriesQuery();
@@ -11,6 +13,8 @@ export default function Step2({ onNext, onBack }) {
   const [selectedCategories, setSelectedCategories] = useState<
     { id: any; name: any }[]
   >([]);
+  const dispatch = useAppDispatch();
+  dispatch(clearStepper());
 
   const { t } = useTranslation();
 
