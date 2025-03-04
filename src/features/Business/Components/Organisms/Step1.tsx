@@ -3,7 +3,6 @@ import {
   Avatar,
   IconButton,
   Stack,
-  Button,
   useTheme,
   useMediaQuery,
   Tooltip,
@@ -102,13 +101,13 @@ export default function Step1() {
   };
 
   return (
-    <>
-      <Formik
-        initialValues={{ businessName: '', businessDescription: '' }}
-        validationSchema={validationSchema}
-        onSubmit={handleSubmit}
-      >
-        {({ isSubmitting, isValid }) => (
+    <Formik
+      initialValues={{ businessName: '', businessDescription: '' }}
+      validationSchema={validationSchema}
+      onSubmit={handleSubmit}
+    >
+      {({ isSubmitting, isValid, handleSubmit }) => (
+        <>
           <Form>
             <Box
               display="flex"
@@ -241,21 +240,12 @@ export default function Step1() {
                     style={{ color: 'red' }}
                   />
                 </Box>
-                {/* <Button
-                  type="submit"
-                  variant="contained"
-                  disabled={isCreating || isUploading || isSubmitting}
-                >
-                  {isCreating || isUploading
-                    ? 'Guardando...'
-                    : 'Guardar y continuar'}
-                </Button> */}
               </Stack>
             </Box>
           </Form>
-        )}
-      </Formik>
-      <CustomStepper onHandleNext={handleSubmit} isNextEnabled={true} />
-    </>
+          <CustomStepper onHandleNext={handleSubmit} isNextEnabled={isValid && !isSubmitting} />
+        </>
+      )}
+    </Formik>
   );
 }

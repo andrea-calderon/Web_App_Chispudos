@@ -5,7 +5,8 @@ import TextAtom from '../../../../components/atoms/TextAtom';
 import { ButtonAtom } from '../../../../components/atoms';
 import { useGetCategoriesQuery } from '../../../../services/categoryApi';
 import { useAppDispatch } from '../../../../hooks/useAppDispatch';
-import { clearStepper } from '../../../../redux/slices/serviceStepperSlice';
+import { clearStepper, selectStepper } from '../../../../redux/slices/serviceStepperSlice';
+import { useAppSelector } from '../../../../hooks/useAppSelector';
 
 export default function Step2({ onNext, onBack }) {
   const { data, isLoading, error } = useGetCategoriesQuery();
@@ -14,7 +15,9 @@ export default function Step2({ onNext, onBack }) {
     { id: any; name: any }[]
   >([]);
   const dispatch = useAppDispatch();
-  dispatch(clearStepper());
+  //dispatch(clearStepper());
+  const debugStepper = useAppSelector(selectStepper);
+    console.error('debugStepper', debugStepper);
 
   const { t } = useTranslation();
 
