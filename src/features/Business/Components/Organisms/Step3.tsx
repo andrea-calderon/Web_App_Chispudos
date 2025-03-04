@@ -9,16 +9,42 @@ import TextAtom from '../../../../components/atoms/TextAtom';
 import InputAtom from '../../../../components/atoms/InputAtom';
 import ButtonAtom from '../../../../components/atoms/ButtonAtom';
 import { GUATEMALA_DEPARTMENTS } from '../../../../types/guatemalaTypes';
+import CustomStepper from './Stepper';
+import { useUpdateProductMutation } from '../../../../services/productApi';
+import { useAppDispatch } from '../../../../hooks/useAppDispatch';
+import { useAppSelector } from '../../../../hooks/useAppSelector';
+import { selectStepper, setServiceState } from '../../../../redux/slices/serviceStepperSlice';
 
 const Step3 = () => {
   const { t } = useTranslation();
   const theme = useTheme();
+  const [updateProduct, { isLoading: isUpdating}] = useUpdateProductMutation();
+    const dispatch = useAppDispatch();
+    //dispatch(clearStepper());
+    const { service } = useAppSelector(selectStepper);
+      console.error('debugStepper', {service});
 
   const getMunicipalities = (departmentName: string) => {
     return (
       GUATEMALA_DEPARTMENTS.find((dept) => dept.name === departmentName)
         ?.municipalities || []
     );
+  };
+
+  const handleSubmitLocations = async (values) => {
+    console.log(values);
+    const responseUpdateProduct = await updateProduct({
+          productId: service?.id,
+          productData: {
+            type: 1,
+          },
+        }).unwrap();
+        console.error('responseUpdateProduct', responseUpdateProduct);
+        if (responseUpdateProduct.success) {
+          // dispatch(
+          //   setServiceState(responseUpdateProduct?.productService),
+          // );
+        }
   };
 
   // Validación Yup
@@ -59,9 +85,9 @@ const Step3 = () => {
         coverageAreas: [{ department: '', city: '' }],
       }}
       validationSchema={validationSchema}
-      onSubmit={(values) => console.log(values)}
+      onSubmit={handleSubmitLocations}
     >
-      {({ values, errors, touched, setFieldValue }) => (
+      {({ values, errors, touched, isValid, handleSubmit, setFieldValue }) => (
         <Form>
           <Box
             alignItems={{ xs: 'center', md: 'flex-start' }}
@@ -272,6 +298,10 @@ const Step3 = () => {
               </Grid>
             </Grid>
           </Box>
+          <CustomStepper
+            onHandleNext={() => console.log('function here')}
+            isNextEnabled={isValid}
+          />
         </Form>
       )}
     </Formik>

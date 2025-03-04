@@ -11,11 +11,11 @@ import { useUpdateProductMutation } from '../../../../services/productApi';
 
 export default function Step2() {
   const { data, isLoading, error } = useGetCategoriesQuery();
-  const [updateProduct, { isLoading: isUpdating}] = useUpdateProductMutation();
   const categories = data?.data || [];
   const [selectedCategories, setSelectedCategories] = useState<
     { id: any; }[]
   >([]);
+  const [updateProduct, { isLoading: isUpdating}] = useUpdateProductMutation();
   const dispatch = useAppDispatch();
   //dispatch(clearStepper());
   const { service } = useAppSelector(selectStepper);
