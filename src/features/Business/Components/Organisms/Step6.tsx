@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import TextAtom from '../../../../components/atoms/TextAtom';
 import ButtonAtom from '../../../../components/atoms/ButtonAtom';
 import congratsImage from '../../../../assets/images/stepper/step6_congratsImage.svg';
+import CustomStepper from './Stepper';
 
 const Step6 = () => {
   const { t } = useTranslation();
@@ -60,6 +61,10 @@ const Step6 = () => {
       <ButtonAtom variant="filled" color="primary" sx={{ mt: 4 }}>
         {t('businessStepper.step6.ctaBottom')}
       </ButtonAtom>
+      <CustomStepper
+        onHandleNext={() => console.log('function here')}
+        isNextEnabled={false}
+      />
     </Box>
   );
 };

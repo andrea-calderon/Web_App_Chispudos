@@ -5,6 +5,7 @@ import * as Yup from 'yup';
 import TextAtom from '../../../../components/atoms/TextAtom';
 import InputAtom from '../../../../components/atoms/InputAtom';
 import dollarImage from '../../../../assets/images/stepper/step5_dollarImage.svg';
+import CustomStepper from './Stepper';
 
 const Step5 = () => {
   const { t } = useTranslation();
@@ -93,6 +94,10 @@ const Step5 = () => {
               </Grid>
             </Grid>
           </Box>
+          <CustomStepper
+            onHandleNext={() => console.log('function here')}
+            isNextEnabled={true}
+          />
         </Form>
       )}
     </Formik>
