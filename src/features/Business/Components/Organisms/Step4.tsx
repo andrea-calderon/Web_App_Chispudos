@@ -10,11 +10,22 @@ import { useMediaQuery } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import { ButtonAtom } from '../../../../components/atoms';
+import CustomStepper from './Stepper';
+import { useAppDispatch } from '../../../../hooks/useAppDispatch';
+import { useAppSelector } from '../../../../hooks/useAppSelector';
+import {
+  selectStepper,
+  setServiceState,
+} from '../../../../redux/slices/serviceStepperSlice';
+import { useUpdateProductMutation } from '../../../../services/productApi';
 
 const Step4 = () => {
   const { t } = useTranslation();
   const theme = useTheme();
   const isLargeScreen = useMediaQuery(theme.breakpoints.up('md'));
+  const dispatch = useAppDispatch();
+  const stepperState = useAppSelector(selectStepper);
+  const [updateProduct, { isLoading: isUpdating }] = useUpdateProductMutation();
 
   const validationSchema = Yup.object().shape({
     skills: Yup.array().of(
@@ -26,6 +37,36 @@ const Step4 = () => {
     ),
   });
 
+  const handleUpdate = async (values, { setSubmitting }) => {
+    try {
+      const payload = {
+        ...stepperState.service,
+        id: stepperState.service?.id, // Asegúrate de que el id está aquí
+        details: values.skills.map((skill) => ({
+          label: skill.tagsTextField,
+          value: skill.titleTextField,
+          description: skill.descriptionTextField,
+        })),
+      };
+
+      console.log('Enviando payload:', payload);
+
+      const response = await updateProduct({
+        productId: stepperState.service.id, // Aquí debe ir el ID con el nombre correcto
+        productData: payload, // Aquí va el payload
+      }).unwrap();
+      console.log('Respuesta del backend:', response);
+      dispatch(setServiceState(response.productService));
+    } catch (err) {
+      console.error('Error al procesar:', err);
+      if (err.data) {
+        console.error('Detalles del error:', err.data);
+      }
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   return (
     <Formik
       initialValues={{
@@ -34,9 +75,17 @@ const Step4 = () => {
         ],
       }}
       validationSchema={validationSchema}
-      onSubmit={(values) => console.log(values)}
+      onSubmit={handleUpdate}
     >
-      {({ values, errors, touched, setFieldValue }) => (
+      {({
+        values,
+        errors,
+        touched,
+        setFieldValue,
+        isSubmitting,
+        isValid,
+        handleSubmit,
+      }) => (
         <Form>
           <Box
             alignItems={{ xs: 'center', md: 'flex-start' }}
@@ -223,6 +272,10 @@ const Step4 = () => {
               )}
             </Grid>
           </Box>
+          <CustomStepper
+            onHandleNext={handleSubmit}
+            isNextEnabled={isValid && !isSubmitting && !isUpdating}
+          />
         </Form>
       )}
     </Formik>
