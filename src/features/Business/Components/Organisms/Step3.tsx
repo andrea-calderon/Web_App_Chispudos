@@ -13,16 +13,19 @@ import CustomStepper from './Stepper';
 import { useUpdateProductMutation } from '../../../../services/productApi';
 import { useAppDispatch } from '../../../../hooks/useAppDispatch';
 import { useAppSelector } from '../../../../hooks/useAppSelector';
-import { selectStepper, setServiceState } from '../../../../redux/slices/serviceStepperSlice';
+import {
+  selectStepper,
+  setServiceState,
+} from '../../../../redux/slices/serviceStepperSlice';
 
 const Step3 = () => {
   const { t } = useTranslation();
   const theme = useTheme();
-  const [updateProduct, { isLoading: isUpdating}] = useUpdateProductMutation();
-    const dispatch = useAppDispatch();
-    //dispatch(clearStepper());
-    const { service } = useAppSelector(selectStepper);
-      console.error('debugStepper', {service});
+  const [updateProduct, { isLoading: isUpdating }] = useUpdateProductMutation();
+  const dispatch = useAppDispatch();
+
+  const { service } = useAppSelector(selectStepper);
+  console.error('debugStepper', { service });
 
   const getMunicipalities = (departmentName: string) => {
     return (
@@ -34,17 +37,17 @@ const Step3 = () => {
   const handleSubmitLocations = async (values) => {
     console.log(values);
     const responseUpdateProduct = await updateProduct({
-          productId: service?.id,
-          productData: {
-            type: 1,
-          },
-        }).unwrap();
-        console.error('responseUpdateProduct', responseUpdateProduct);
-        if (responseUpdateProduct.success) {
-          // dispatch(
-          //   setServiceState(responseUpdateProduct?.productService),
-          // );
-        }
+      productId: service?.id,
+      productData: {
+        type: 1,
+      },
+    }).unwrap();
+    console.error('responseUpdateProduct', responseUpdateProduct);
+    if (responseUpdateProduct.success) {
+      // dispatch(
+      //   setServiceState(responseUpdateProduct?.productService),
+      // );
+    }
   };
 
   // Validación Yup

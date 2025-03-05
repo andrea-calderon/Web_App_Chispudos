@@ -14,7 +14,6 @@ import CustomStepper from './Stepper';
 import { useAppDispatch } from '../../../../hooks/useAppDispatch';
 import { useAppSelector } from '../../../../hooks/useAppSelector';
 import {
-  clearStepper,
   selectStepper,
   setServiceState,
 } from '../../../../redux/slices/serviceStepperSlice';
@@ -27,7 +26,6 @@ const Step4 = () => {
   const dispatch = useAppDispatch();
   const stepperState = useAppSelector(selectStepper);
   const [updateProduct, { isLoading: isUpdating }] = useUpdateProductMutation();
-  //  dispatch(clearStepper());
 
   const validationSchema = Yup.object().shape({
     skills: Yup.array().of(
@@ -54,8 +52,8 @@ const Step4 = () => {
       console.log('Enviando payload:', payload);
 
       const response = await updateProduct({
-        productId: stepperState.service.id, // Aquí debe ir el ID con el nombre correcto
-        productData: payload, // Aquí va el payload
+        productId: stepperState.service.id,
+        productData: payload,
       }).unwrap();
       console.log('Respuesta del backend:', response);
       dispatch(setServiceState(response.productService));
