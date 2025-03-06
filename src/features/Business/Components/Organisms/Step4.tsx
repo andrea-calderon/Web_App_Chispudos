@@ -41,7 +41,7 @@ const Step4 = () => {
     try {
       const payload = {
         ...stepperState.service,
-        id: stepperState.service?.id, // Asegúrate de que el id está aquí
+        id: stepperState.service?.id,
         details: values.skills.map((skill) => ({
           label: skill.tagsTextField,
           value: skill.titleTextField,
@@ -52,8 +52,8 @@ const Step4 = () => {
       console.log('Enviando payload:', payload);
 
       const response = await updateProduct({
-        productId: stepperState.service.id, // Aquí debe ir el ID con el nombre correcto
-        productData: payload, // Aquí va el payload
+        productId: stepperState.service.id,
+        productData: payload,
       }).unwrap();
       console.log('Respuesta del backend:', response);
       dispatch(setServiceState(response.productService));

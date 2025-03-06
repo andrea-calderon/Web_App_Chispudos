@@ -1,5 +1,6 @@
 import { Box, Divider } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import TextAtom from '../../../../components/atoms/TextAtom';
 import ButtonAtom from '../../../../components/atoms/ButtonAtom';
 import congratsImage from '../../../../assets/images/stepper/step6_congratsImage.svg';
@@ -7,6 +8,11 @@ import CustomStepper from './Stepper';
 
 const Step6 = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+
+  const handleFinish = () => {
+    navigate('/businessProfile');
+  };
 
   return (
     <Box
@@ -58,13 +64,15 @@ const Step6 = () => {
         </TextAtom>
       </Box>
 
-      <ButtonAtom variant="filled" color="primary" sx={{ mt: 4 }}>
+      <ButtonAtom
+        variant="filled"
+        color="primary"
+        sx={{ mt: 4 }}
+        onClick={handleFinish}
+      >
         {t('businessStepper.step6.ctaBottom')}
       </ButtonAtom>
-      <CustomStepper
-        onHandleNext={() => console.log('function here')}
-        isNextEnabled={false}
-      />
+      <CustomStepper onHandleNext={handleFinish} isNextEnabled={true} />
     </Box>
   );
 };

@@ -1,4 +1,4 @@
-import { Box, Grid, useTheme } from '@mui/material';
+import { Box, Grid } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
@@ -6,25 +6,60 @@ import TextAtom from '../../../../components/atoms/TextAtom';
 import InputAtom from '../../../../components/atoms/InputAtom';
 import dollarImage from '../../../../assets/images/stepper/step5_dollarImage.svg';
 import CustomStepper from './Stepper';
+import { useAppDispatch } from '../../../../hooks/useAppDispatch';
+import { useAppSelector } from '../../../../hooks/useAppSelector';
+import {
+  clearStepper,
+  selectStepper,
+  setServiceState,
+} from '../../../../redux/slices/serviceStepperSlice';
+import { useUpdateProductMutation } from '../../../../services/productApi';
 
 const Step5 = () => {
   const { t } = useTranslation();
+  const dispatch = useAppDispatch();
+  const stepperState = useAppSelector(selectStepper);
+  const [updateProduct, { isLoading: isUpdating }] = useUpdateProductMutation();
+  //dispatch(clearStepper());
 
   const validationSchema = Yup.object().shape({
-    tagsTextField: Yup.number()
+    price: Yup.number()
       .typeError(t('forms.commons.mustBeNumber'))
       .required(t('forms.commons.required')),
   });
 
+  const handleUpdate = async (values, { setSubmitting }) => {
+    try {
+      const payload = {
+        price: values.price,
+      };
+      console.log('Enviando payload:', payload);
+
+      const response = await updateProduct({
+        productId: stepperState.service.id,
+        productData: payload,
+      }).unwrap();
+      console.log('Respuesta del backend:', response);
+      dispatch(setServiceState(response.productService));
+    } catch (err) {
+      console.error('Error al procesar:', err);
+      if (err.data) {
+        console.error('Detalles del error:', err.data);
+      }
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   return (
     <Formik
       initialValues={{
-        tagsTextField: '',
+        price: '',
       }}
       validationSchema={validationSchema}
-      onSubmit={(values) => console.log(values)}
+      onSubmit={handleUpdate}
     >
-      {({ errors, touched }) => (
+      {({ errors, touched, isSubmitting, isValid, handleSubmit }) => (
         <Form>
           <Box px={{ xs: 4, md: 10, lg: 24 }}>
             <Grid container spacing={4}>
@@ -61,15 +96,13 @@ const Step5 = () => {
                   </TextAtom>
                   <Box mb={3}>
                     <InputAtom
-                      name="tagsTextField"
+                      name="price"
                       variant="standard"
                       label={t('businessStepper.step5.priceTextField')}
                       fullWidth
                       required
-                      error={
-                        touched.tagsTextField && Boolean(errors.tagsTextField)
-                      }
-                      helperText={touched.tagsTextField && errors.tagsTextField}
+                      error={touched.price && Boolean(errors.price)}
+                      helperText={touched.price && errors.price}
                       sx={{ mb: 1 }}
                     />
                     <TextAtom variant="title" size="small">
@@ -83,7 +116,7 @@ const Step5 = () => {
                   display="flex"
                   justifyContent="center"
                   alignItems="center"
-                  Height="100%"
+                  height="100%"
                   mt={{ xs: -4, sm: 0, md: 12, lg: 16 }}
                 >
                   <img
@@ -95,8 +128,8 @@ const Step5 = () => {
             </Grid>
           </Box>
           <CustomStepper
-            onHandleNext={() => console.log('function here')}
-            isNextEnabled={true}
+            onHandleNext={handleSubmit}
+            isNextEnabled={isValid && !isSubmitting && !isUpdating}
           />
         </Form>
       )}
