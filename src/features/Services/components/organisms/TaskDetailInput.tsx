@@ -8,10 +8,10 @@ import { useTranslation } from 'react-i18next';
 const TaskDetailInput = ({
   date,
   time,
-  serviceTitle,
   userText,
   setUserText,
   onComplete,
+  service,
 }) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -59,7 +59,7 @@ const TaskDetailInput = ({
                 }}
               />
               <TextAtom variant="title" size="medium">
-                {serviceTitle || 'Servicio'}
+                {service?.name || 'Servicio'}
               </TextAtom>
             </Box>
           </Grid>

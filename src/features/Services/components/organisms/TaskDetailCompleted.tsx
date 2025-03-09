@@ -13,24 +13,40 @@ import Avatar from '@mui/material/Avatar';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
+import { useCreateOrderMutation } from '../../../../services/ordersApi';
 
-const TaskDetailCompleted = ({
-  date,
-  time,
-  serviceTitle,
-  userText,
-  onBack,
-}) => {
+const TaskDetailCompleted = ({ date, time, service, userText, onBack }) => {
   const navigate = useNavigate();
+  const [createOrder] = useCreateOrderMutation();
   const { t } = useTranslation();
   const [openModal, setOpenModal] = useState(false);
 
-  const handleOpenModal = () => {
+  const handleConfirm = async () => {
+    const body = {
+      userId: 1,
+      totalAmount: service.price,
+      status: 1, //active /complted/ //cancel
+      comment: 'This is a test order',
+      startDate: date,
+      endDate: '2025-02-20T00:00:00.000Z',
+      details: [
+        {
+          productServiceId: service.id,
+          quantity: 1,
+          price: service.price,
+          discount: 0,
+          charge: 0,
+          comment: userText,
+        },
+      ],
+    };
+    await createOrder(body);
     setOpenModal(true);
   };
 
   const handleCloseModal = () => {
     setOpenModal(false);
+    navigate('/businessProfile');
   };
 
   return (
@@ -76,7 +92,7 @@ const TaskDetailCompleted = ({
                 }}
               />
               <TextAtom variant="title" size="medium">
-                {serviceTitle || 'Servicio'}
+                {service?.name || 'Servicio'}
               </TextAtom>
             </Box>
           </Grid>
@@ -135,7 +151,7 @@ const TaskDetailCompleted = ({
             <ButtonAtom
               variant="filled"
               color="primary"
-              onClick={handleOpenModal}
+              onClick={handleConfirm}
             >
               {t('services.serviceDetails.buttonCompleted')}
             </ButtonAtom>

@@ -10,11 +10,11 @@ import Footer from '../../../../components/organisms/Footer';
 
 export const TaskDetailsPage = () => {
   const location = useLocation();
-  const { dateTime, serviceTitle } = location.state || {};
+  const { dateTime, service } = location.state || {};
   const [userText, setUserText] = useState('');
   const [isCompleted, setIsCompleted] = useState(false);
 
-  if (!dateTime || !serviceTitle) {
+  if (!dateTime || !service) {
     return <div>No data available</div>;
   }
 
@@ -34,7 +34,7 @@ export const TaskDetailsPage = () => {
           <TaskDetailInput
             date={formattedDate}
             time={formattedTime}
-            serviceTitle={serviceTitle}
+            service={service}
             userText={userText}
             setUserText={setUserText}
             onComplete={() => setIsCompleted(true)}
@@ -43,7 +43,7 @@ export const TaskDetailsPage = () => {
           <TaskDetailCompleted
             date={formattedDate}
             time={formattedTime}
-            serviceTitle={serviceTitle}
+            service={service}
             userText={userText}
             onBack={handleBackToInput}
           />
