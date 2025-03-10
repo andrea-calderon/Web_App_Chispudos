@@ -1,10 +1,6 @@
 import {
   Box,
   Grid,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
 } from '@mui/material';
 import TextAtom from '../../../../components/atoms/TextAtom';
 import ButtonAtom from '../../../../components/atoms/ButtonAtom';
@@ -14,8 +10,9 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
 import { useCreateOrderMutation } from '../../../../services/ordersApi';
+import { ModalComponent } from '../../../../components/molecules';
 
-const TaskDetailCompleted = ({ date, time, service, userText, onBack }) => {
+const TaskDetailCompleted = ({ date, dateTime, time, service, userText, onBack }) => {
   const navigate = useNavigate();
   const [createOrder] = useCreateOrderMutation();
   const { t } = useTranslation();
@@ -27,7 +24,7 @@ const TaskDetailCompleted = ({ date, time, service, userText, onBack }) => {
       totalAmount: service.price,
       status: 1, //active /complted/ //cancel
       comment: 'This is a test order',
-      startDate: date,
+      startDate: dateTime,
       endDate: '2025-02-20T00:00:00.000Z',
       details: [
         {
@@ -150,7 +147,6 @@ const TaskDetailCompleted = ({ date, time, service, userText, onBack }) => {
           >
             <ButtonAtom
               variant="filled"
-              color="primary"
               onClick={handleConfirm}
             >
               {t('services.serviceDetails.buttonCompleted')}
@@ -158,64 +154,35 @@ const TaskDetailCompleted = ({ date, time, service, userText, onBack }) => {
           </Box>
         </Grid>
       </Box>
-
-      <Dialog
+      <ModalComponent
         open={openModal}
+        onConfirm={handleCloseModal}
         onClose={handleCloseModal}
-        PaperProps={{
-          sx: {
-            backgroundColor: '#EEE8F4',
-            borderRadius: '16px',
-          },
-        }}
+        hideCancelbutton
+        title={t('services.serviceDetails.confirmationTitle')}
+        confirmButtonText={t('services.serviceDetails.continueButton')}
+
       >
-        <Box sx={{ display: 'flex', justifyContent: 'center', paddingTop: 8 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
           <Avatar
             src="https://picsum.photos/300/200?random=4"
             alt="Service Profile"
             sx={{ width: 70, height: 70 }}
           />
         </Box>
-        <DialogTitle
+        <Box
           sx={{
             display: 'flex',
             textAlign: 'center',
-            paddingLeft: 5,
-            paddingRight: 5,
-          }}
-        >
-          <TextAtom variant="title" size="large">
-            {t('services.serviceDetails.confirmationTitle')}
-          </TextAtom>
-        </DialogTitle>
-        <DialogContent
-          sx={{
-            display: 'flex',
-            textAlign: 'center',
-            paddingLeft: 10,
-            paddingRight: 10,
+            px: 5,
+            pt: 5,
           }}
         >
           <TextAtom variant="body" size="medium">
             {t('services.serviceDetails.confirmationMessage')}
           </TextAtom>
-        </DialogContent>
-        <DialogActions
-          sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            paddingBottom: 8,
-          }}
-        >
-          <ButtonAtom
-            onClick={handleCloseModal}
-            variant="filled"
-            color="primary"
-          >
-            {t('services.serviceDetails.continueButton')}
-          </ButtonAtom>
-        </DialogActions>
-      </Dialog>
+        </Box>
+       </ModalComponent>
     </Box>
   );
 };

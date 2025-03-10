@@ -34,6 +34,7 @@ export const TaskDetailsPage = () => {
           <TaskDetailInput
             date={formattedDate}
             time={formattedTime}
+            dateTime={dateTime}
             service={service}
             userText={userText}
             setUserText={setUserText}
@@ -43,6 +44,7 @@ export const TaskDetailsPage = () => {
           <TaskDetailCompleted
             date={formattedDate}
             time={formattedTime}
+            dateTime={dateTime}
             service={service}
             userText={userText}
             onBack={handleBackToInput}

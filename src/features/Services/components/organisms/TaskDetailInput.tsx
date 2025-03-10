@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 
 const TaskDetailInput = ({
   date,
+  dateTime,
   time,
   userText,
   setUserText,

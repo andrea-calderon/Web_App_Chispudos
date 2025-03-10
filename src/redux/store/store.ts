@@ -8,6 +8,7 @@ import { authApi } from '../../services/authApi';
 import { productApi } from '../../services/productApi';
 import { categoryApi } from '../../services/categoryApi';
 import { userApi } from '../../services/userApi';
+import { ordersApi } from '../../services/ordersApi';
 
 const rootReducer = combineReducers({
   auth: authReducer,
@@ -16,6 +17,7 @@ const rootReducer = combineReducers({
   [productApi.reducerPath]: productApi.reducer,
   [categoryApi.reducerPath]: categoryApi.reducer,
   [userApi.reducerPath]: userApi.reducer,
+  [ordersApi.reducerPath]: ordersApi.reducer,
   // Add other reducers here
 });
 
@@ -36,7 +38,8 @@ export const store = configureStore({
       authApi.middleware,
       productApi.middleware,
       categoryApi.middleware,
-      userApi.middleware
+      userApi.middleware,
+      ordersApi.middleware
     ),
 });
 
