@@ -28,13 +28,6 @@ const Step3 = () => {
   const { service } = useAppSelector(selectStepper);
   console.error('debugStepper', { service });
 
-  // const getMunicipalities = (departmentName: string) => {
-  //   return (
-  //     GUATEMALA_DEPARTMENTS.find((dept) => dept.name === departmentName)
-  //       ?.municipalities || []
-  //   );
-  // };
-
   const getDepartamentsCities = (departamentId: number) => {
     return cities?.data.filter((city) => city.stateId === departamentId) || [];
   };
@@ -55,18 +48,20 @@ const Step3 = () => {
             name: 'Main address',
             description: values.mainAddress,
             type: 1,
-            cityId: 123, // Hardcoded cityId for testing
+            cityId: values.cityId,
             latitude: 0,
             longitude: 0,
           },
-          ...values.coverageAreas.map((area) => ({
-            name: 'Service zones',
-            description: null,
-            type: 2,
-            cityId: 123, // Hardcoded cityId for testing
-            latitude: 0,
-            longitude: 0,
-          })),
+          ...values.coverageAreas
+            .filter((area) => area.department && area.city)
+            .map((area) => ({
+              name: 'Service zones',
+              description: null,
+              type: 2,
+              cityId: area.cityId,
+              latitude: 0,
+              longitude: 0,
+            })),
         ],
       };
 
@@ -95,7 +90,7 @@ const Step3 = () => {
     coverageAreas: Yup.array().of(
       Yup.object().shape({
         department: Yup.string(),
-        city: Yup.string().required(t('forms.commons.required')),
+        city: Yup.string(),
       }),
     ),
   });
@@ -207,7 +202,7 @@ const Step3 = () => {
                     {t('businessStepper.step3.selectCity')}
                   </MenuItem>
                   {getDepartamentsCities(values.department || 1).map((city) => (
-                    <MenuItem key={city} value={city.id}>
+                    <MenuItem key={city.id} value={city.id}>
                       {city.name}
                     </MenuItem>
                   ))}
@@ -278,16 +273,6 @@ const Step3 = () => {
                       }
                       disabled={!values.coverageAreas[index].department}
                       onChange={(e) => {
-                        setFieldValue(
-                          `coverageAreas.${index}.city`,
-                          e.target.value,
-                        );
-                        setFieldValue(
-                          `coverageAreas.${index}.cityId`,
-                          e.target.value,
-                        );
-                      }}
-                      onChange={(e) => {
                         const selectedCity = getDepartamentsCities(
                           values.coverageAreas[index].department,
                         ).find((city) => city.id === e.target.value);
@@ -300,21 +285,6 @@ const Step3 = () => {
                           selectedCity ? selectedCity.id : null,
                         );
                       }}
-                      // onChange={(e) => {
-                      //   const selectedCity = getMunicipalities(
-                      //     values.coverageAreas[index].department,
-                      //   ).find(
-                      //     (municipality) => municipality === e.target.value,
-                      //   );
-                      //   setFieldValue(
-                      //     `coverageAreas.${index}.city`,
-                      //     e.target.value,
-                      //   );
-                      //   setFieldValue(
-                      //     `coverageAreas.${index}.cityId`,
-                      //     selectedCity ? selectedCity.id : null,
-                      //   );
-                      // }}
                     >
                       <MenuItem value="">
                         {t('businessStepper.step3.selectAnotherCity')}
@@ -355,11 +325,6 @@ const Step3 = () => {
                     ])
                   }
                   sx={{ mt: 2 }}
-                  disabled={
-                    !values.coverageAreas[values.coverageAreas.length - 1]
-                      .department ||
-                    !values.coverageAreas[values.coverageAreas.length - 1].city
-                  }
                   startIcon={<AddIcon />}
                 >
                   {t('forms.commons.addAnother')}

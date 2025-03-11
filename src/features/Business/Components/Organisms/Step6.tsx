@@ -64,14 +64,14 @@ const Step6 = () => {
         </TextAtom>
       </Box>
 
-      <ButtonAtom
+      {/* <ButtonAtom
         variant="filled"
         color="primary"
         sx={{ mt: 4 }}
         onClick={handleFinish}
       >
         {t('businessStepper.step6.ctaBottom')}
-      </ButtonAtom>
+      </ButtonAtom> */}
       <CustomStepper onHandleNext={handleFinish} isNextEnabled={true} />
     </Box>
   );
