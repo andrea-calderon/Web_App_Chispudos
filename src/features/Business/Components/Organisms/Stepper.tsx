@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Stepper, Step, StepLabel, Box } from '@mui/material';
 import { ButtonAtom } from '../../../../components/atoms';
 import { useAppDispatch } from '../../../../hooks/useAppDispatch';
@@ -12,10 +12,7 @@ interface StepperProps {
   icon?: React.ReactNode;
   isNextEnabled?: boolean;
   onHandleNext: () => void | Promise<void>;
-  //steps: StepData[];
-  // onStepChange?: (step: number) => void;
   isLinear?: boolean;
-  // isValidStep?: (step: number) => boolean; //conditional to enable next | back button
   totalSteps?: number;
 }
 
@@ -32,11 +29,10 @@ const CustomStepper: React.FC<StepperProps> = ({
 
   const handleNextStep = () => {
     onHandleNext();
-    dispatch(setCurrentStep(activeStep + 1));
+    dispatch(setCurrentStep(activeStep === totalSteps -1 ? 0 : activeStep + 1));
   };
 
   const handleBackStep = () => {
-    //dispatch(setCurrentStep(prevStep));
     dispatch(setCurrentStep(activeStep - 1));
   };
 

@@ -19,6 +19,8 @@ import CustomError from '../../../../utils/CustomError';
 import { ModalComponent } from '../../../../components/molecules';
 import { useGetProductByIdQuery } from '../../../../services/productApi';
 
+//TODO: Review and implement if needed ServiceOtherSkills
+
 export const ServiceDetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const { data, isLoading, isError } = useGetProductByIdQuery(id!);
@@ -57,6 +59,7 @@ export const ServiceDetailPage = () => {
         state: {
           dateTime: selectedDateTime.toISOString(),
           serviceTitle: service.name,
+          service
         },
       });
     } else {
@@ -110,7 +113,8 @@ export const ServiceDetailPage = () => {
           <Box>
             <ServiceSkills skills={service.details || []} />
             <ServiceProjects projects={service.recentProjects || []} />
-            <ServiceOtherSkills skills={service.otherSkills || []} />
+            
+            {/* <ServiceOtherSkills skills={service.otherSkills || []} /> */}
           </Box>
         </Grid>
         <Grid item xs={12} md={4}>

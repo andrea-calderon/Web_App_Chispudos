@@ -3,6 +3,7 @@ import { Tabs, Tab, Box } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import BusinessProfile from './BusinessProfile';
 import BusinessChat from './BusinessChat';
+import BusinessOrderPage from './BusinessOrders';
 
 const BusinessTabs = () => {
   const { t } = useTranslation();
@@ -43,7 +44,7 @@ const BusinessTabs = () => {
       </Tabs>
 
       <Box sx={{ p: 3, bgcolor: 'white' }}>
-        {selectedTab === 0 && <div>{t('tabs.tasksContent')}</div>}
+        {selectedTab === 0 && <BusinessOrderPage />}
         {selectedTab === 1 && <BusinessChat />}
         {selectedTab === 2 && <BusinessProfile />}
       </Box>
