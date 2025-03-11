@@ -3,6 +3,7 @@ import { productApi } from './productApi';
 import { categoryApi } from './categoryApi';
 import { userApi } from './userApi';
 import { ordersApi } from './ordersApi';
+import { locationsApi } from './locationsApi';
 
 export const api = {
   authApi,
@@ -10,4 +11,5 @@ export const api = {
   categoryApi,
   ordersApi,
   userApi,
+  locationsApi,
 };

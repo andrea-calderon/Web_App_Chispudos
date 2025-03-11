@@ -8,9 +8,12 @@ import * as Yup from 'yup';
 import TextAtom from '../../../../components/atoms/TextAtom';
 import InputAtom from '../../../../components/atoms/InputAtom';
 import ButtonAtom from '../../../../components/atoms/ButtonAtom';
-import { GUATEMALA_DEPARTMENTS } from '../../../../types/guatemalaTypes';
 import CustomStepper from './Stepper';
 import { useUpdateProductMutation } from '../../../../services/productApi';
+import {
+  useGetAllCitiesQuery,
+  useGetStatesQuery,
+} from '../../../../services/locationsApi';
 import { useAppDispatch } from '../../../../hooks/useAppDispatch';
 import { useAppSelector } from '../../../../hooks/useAppSelector';
 import {
@@ -25,17 +28,28 @@ const Step3 = () => {
   const { service } = useAppSelector(selectStepper);
   console.error('debugStepper', { service });
 
-  const getMunicipalities = (departmentName: string) => {
-    return (
-      GUATEMALA_DEPARTMENTS.find((dept) => dept.name === departmentName)
-        ?.municipalities || []
-    );
+  // const getMunicipalities = (departmentName: string) => {
+  //   return (
+  //     GUATEMALA_DEPARTMENTS.find((dept) => dept.name === departmentName)
+  //       ?.municipalities || []
+  //   );
+  // };
+
+  const getDepartamentsCities = (departamentId: number) => {
+    return cities?.data.filter((city) => city.stateId === departamentId) || [];
   };
 
+  const { data: states } = useGetStatesQuery();
+  const { data: cities } = useGetAllCitiesQuery();
+  console.log('Estados:', states);
+  console.log('Ciudades:', cities);
+
+  const GUATEMALA_DEPARTMENTS = states?.data || [];
   const handleUpdate = async (values, { setSubmitting }) => {
     try {
       const payload = {
-        ...service,
+        type: 1,
+        price: 0,
         locations: [
           {
             name: 'Main address',
@@ -76,28 +90,12 @@ const Step3 = () => {
 
   const validationSchema = Yup.object().shape({
     mainAddress: Yup.string().required(t('forms.commons.required')),
-    department: Yup.string().required(t('forms.commons.required')),
-    city: Yup.string()
-      .required(t('forms.commons.required'))
-      .test(
-        'valid-city',
-        t('businessStepper.step3.invalidCity'),
-        function (value) {
-          return getMunicipalities(this.parent.department).includes(value);
-        },
-      ),
+    department: Yup.number().required(t('forms.commons.required')),
+    city: Yup.number().required(t('forms.commons.required')),
     coverageAreas: Yup.array().of(
       Yup.object().shape({
         department: Yup.string(),
-        city: Yup.string()
-          .required(t('forms.commons.required'))
-          .test(
-            'valid-coverage-city',
-            t('businessStepper.step3.invalidCity'),
-            function (value) {
-              return getMunicipalities(this.parent.department).includes(value);
-            },
-          ),
+        city: Yup.string().required(t('forms.commons.required')),
       }),
     ),
   });
@@ -185,7 +183,7 @@ const Step3 = () => {
                     {t('businessStepper.step3.selectDepartment')}
                   </MenuItem>
                   {GUATEMALA_DEPARTMENTS.map((dept) => (
-                    <MenuItem key={dept.name} value={dept.name}>
+                    <MenuItem key={dept.name} value={dept.id}>
                       {dept.name}
                     </MenuItem>
                   ))}
@@ -201,22 +199,16 @@ const Step3 = () => {
                   helperText={touched.city && errors.city}
                   disabled={!values.department}
                   onChange={(e) => {
-                    const selectedCity = getMunicipalities(
-                      values.department,
-                    ).find((municipality) => municipality === e.target.value);
                     setFieldValue('city', e.target.value);
-                    setFieldValue(
-                      'cityId',
-                      selectedCity ? selectedCity.id : null,
-                    );
+                    setFieldValue('cityId', e.target.value);
                   }}
                 >
                   <MenuItem value="">
                     {t('businessStepper.step3.selectCity')}
                   </MenuItem>
-                  {getMunicipalities(values.department).map((municipality) => (
-                    <MenuItem key={municipality} value={municipality}>
-                      {municipality}
+                  {getDepartamentsCities(values.department || 1).map((city) => (
+                    <MenuItem key={city} value={city.id}>
+                      {city.name}
                     </MenuItem>
                   ))}
                 </InputAtom>
@@ -263,7 +255,7 @@ const Step3 = () => {
                           {t('businessStepper.step3.selectAnotherDepartment')}
                         </MenuItem>
                         {GUATEMALA_DEPARTMENTS.map((dept) => (
-                          <MenuItem key={dept.name} value={dept.name}>
+                          <MenuItem key={dept.name} value={dept.id}>
                             {dept.name}
                           </MenuItem>
                         ))}
@@ -286,11 +278,19 @@ const Step3 = () => {
                       }
                       disabled={!values.coverageAreas[index].department}
                       onChange={(e) => {
-                        const selectedCity = getMunicipalities(
-                          values.coverageAreas[index].department,
-                        ).find(
-                          (municipality) => municipality === e.target.value,
+                        setFieldValue(
+                          `coverageAreas.${index}.city`,
+                          e.target.value,
                         );
+                        setFieldValue(
+                          `coverageAreas.${index}.cityId`,
+                          e.target.value,
+                        );
+                      }}
+                      onChange={(e) => {
+                        const selectedCity = getDepartamentsCities(
+                          values.coverageAreas[index].department,
+                        ).find((city) => city.id === e.target.value);
                         setFieldValue(
                           `coverageAreas.${index}.city`,
                           e.target.value,
@@ -300,15 +300,30 @@ const Step3 = () => {
                           selectedCity ? selectedCity.id : null,
                         );
                       }}
+                      // onChange={(e) => {
+                      //   const selectedCity = getMunicipalities(
+                      //     values.coverageAreas[index].department,
+                      //   ).find(
+                      //     (municipality) => municipality === e.target.value,
+                      //   );
+                      //   setFieldValue(
+                      //     `coverageAreas.${index}.city`,
+                      //     e.target.value,
+                      //   );
+                      //   setFieldValue(
+                      //     `coverageAreas.${index}.cityId`,
+                      //     selectedCity ? selectedCity.id : null,
+                      //   );
+                      // }}
                     >
                       <MenuItem value="">
                         {t('businessStepper.step3.selectAnotherCity')}
                       </MenuItem>
-                      {getMunicipalities(
+                      {getDepartamentsCities(
                         values.coverageAreas[index].department,
-                      ).map((municipality) => (
-                        <MenuItem key={municipality} value={municipality}>
-                          {municipality}
+                      ).map((city) => (
+                        <MenuItem key={city.id} value={city.id}>
+                          {city.name}
                         </MenuItem>
                       ))}
                     </InputAtom>
