@@ -1,4 +1,4 @@
-import { Box, Grid, MenuItem, useTheme } from '@mui/material';
+import { Box, Grid, MenuItem } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import { useTranslation } from 'react-i18next';
@@ -20,10 +20,8 @@ import {
 
 const Step3 = () => {
   const { t } = useTranslation();
-  const theme = useTheme();
   const [updateProduct, { isLoading: isUpdating }] = useUpdateProductMutation();
   const dispatch = useAppDispatch();
-
   const { service } = useAppSelector(selectStepper);
   console.error('debugStepper', { service });
 
@@ -34,23 +32,48 @@ const Step3 = () => {
     );
   };
 
-  const handleSubmitLocations = async (values) => {
-    console.log(values);
-    const responseUpdateProduct = await updateProduct({
-      productId: service?.id,
-      productData: {
-        type: 1,
-      },
-    }).unwrap();
-    console.error('responseUpdateProduct', responseUpdateProduct);
-    if (responseUpdateProduct.success) {
-      // dispatch(
-      //   setServiceState(responseUpdateProduct?.productService),
-      // );
+  const handleUpdate = async (values, { setSubmitting }) => {
+    try {
+      const payload = {
+        ...service,
+        locations: [
+          {
+            name: 'Main address',
+            description: values.mainAddress,
+            type: 1,
+            cityId: 123, // Hardcoded cityId for testing
+            latitude: 0,
+            longitude: 0,
+          },
+          ...values.coverageAreas.map((area) => ({
+            name: 'Service zones',
+            description: null,
+            type: 2,
+            cityId: 123, // Hardcoded cityId for testing
+            latitude: 0,
+            longitude: 0,
+          })),
+        ],
+      };
+
+      console.log('Enviando payload:', payload);
+
+      const response = await updateProduct({
+        productId: service.id,
+        productData: payload,
+      }).unwrap();
+      console.log('Respuesta del backend:', response);
+      dispatch(setServiceState(response.productService));
+    } catch (err) {
+      console.error('Error al procesar:', err);
+      if (err.data) {
+        console.error('Detalles del error:', err.data);
+      }
+    } finally {
+      setSubmitting(false);
     }
   };
 
-  // Validación Yup
   const validationSchema = Yup.object().shape({
     mainAddress: Yup.string().required(t('forms.commons.required')),
     department: Yup.string().required(t('forms.commons.required')),
@@ -85,10 +108,11 @@ const Step3 = () => {
         mainAddress: '',
         department: '',
         city: '',
-        coverageAreas: [{ department: '', city: '' }],
+        cityId: null,
+        coverageAreas: [{ department: '', city: '', cityId: null }],
       }}
       validationSchema={validationSchema}
-      onSubmit={handleSubmitLocations}
+      onSubmit={handleUpdate}
     >
       {({ values, errors, touched, isValid, handleSubmit, setFieldValue }) => (
         <Form>
@@ -154,6 +178,7 @@ const Step3 = () => {
                   onChange={(e) => {
                     setFieldValue('department', e.target.value);
                     setFieldValue('city', '');
+                    setFieldValue('cityId', null);
                   }}
                 >
                   <MenuItem value="">
@@ -175,6 +200,16 @@ const Step3 = () => {
                   error={!!errors.city && touched.city}
                   helperText={touched.city && errors.city}
                   disabled={!values.department}
+                  onChange={(e) => {
+                    const selectedCity = getMunicipalities(
+                      values.department,
+                    ).find((municipality) => municipality === e.target.value);
+                    setFieldValue('city', e.target.value);
+                    setFieldValue(
+                      'cityId',
+                      selectedCity ? selectedCity.id : null,
+                    );
+                  }}
                 >
                   <MenuItem value="">
                     {t('businessStepper.step3.selectCity')}
@@ -221,6 +256,7 @@ const Step3 = () => {
                             e.target.value,
                           );
                           setFieldValue(`coverageAreas.${index}.city`, '');
+                          setFieldValue(`coverageAreas.${index}.cityId`, null);
                         }}
                       >
                         <MenuItem value="">
@@ -249,6 +285,21 @@ const Step3 = () => {
                         errors.coverageAreas?.[index]?.city
                       }
                       disabled={!values.coverageAreas[index].department}
+                      onChange={(e) => {
+                        const selectedCity = getMunicipalities(
+                          values.coverageAreas[index].department,
+                        ).find(
+                          (municipality) => municipality === e.target.value,
+                        );
+                        setFieldValue(
+                          `coverageAreas.${index}.city`,
+                          e.target.value,
+                        );
+                        setFieldValue(
+                          `coverageAreas.${index}.cityId`,
+                          selectedCity ? selectedCity.id : null,
+                        );
+                      }}
                     >
                       <MenuItem value="">
                         {t('businessStepper.step3.selectAnotherCity')}
@@ -285,7 +336,7 @@ const Step3 = () => {
                   onClick={() =>
                     setFieldValue('coverageAreas', [
                       ...values.coverageAreas,
-                      { department: '', city: '' },
+                      { department: '', city: '', cityId: null },
                     ])
                   }
                   sx={{ mt: 2 }}
@@ -302,8 +353,14 @@ const Step3 = () => {
             </Grid>
           </Box>
           <CustomStepper
-            onHandleNext={() => console.log('function here')}
-            isNextEnabled={isValid}
+            onHandleNext={handleSubmit}
+            isNextEnabled={
+              !!values.mainAddress &&
+              !!values.department &&
+              !!values.city &&
+              isValid &&
+              !isUpdating
+            }
           />
         </Form>
       )}
