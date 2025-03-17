@@ -63,27 +63,29 @@ export default function Step1() {
       const payloadServiceObject = {
         name: values.businessName,
         description: values.businessDescription,
-        type: 1, // 1 = Servicio, 2 = Producto
+        type: 1,
         price: 0.0,
         userId: 1,
       };
 
       console.log('Enviando payload:', payloadServiceObject);
-
       const productResponse =
         await createProduct(payloadServiceObject).unwrap();
+
       console.log('productResponse', productResponse?.productService);
       dispatch(setServiceState(productResponse?.productService));
 
-      if (productResponse?.productService?.id) {
-        setProductId(productResponse.productService.id);
-      } else {
+      if (!productResponse?.productService?.id) {
         throw new Error('El backend no devolvió un ID válido');
       }
+
+      setProductId(productResponse.productService.id);
 
       if (selectedImage) {
         const formData = new FormData();
         formData.append('image', selectedImage);
+
+        console.log('Enviando FormData:', formData.entries());
 
         await uploadProductImage({
           productId: productResponse.productService.id,
@@ -243,7 +245,10 @@ export default function Step1() {
               </Stack>
             </Box>
           </Form>
-          <CustomStepper onHandleNext={handleSubmit} isNextEnabled={isValid && !isSubmitting} />
+          <CustomStepper
+            onHandleNext={handleSubmit}
+            isNextEnabled={isValid && !isSubmitting}
+          />
         </>
       )}
     </Formik>
