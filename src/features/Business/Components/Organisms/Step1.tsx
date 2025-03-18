@@ -20,9 +20,7 @@ import {
 import { useState } from 'react';
 import CustomStepper from './Stepper';
 import { useAppSelector } from '../../../../hooks/useAppSelector';
-import { selectAuth } from '../../../../redux/slices/authSlice';
 import {
-  clearStepper,
   selectStepper,
   setServiceState,
 } from '../../../../redux/slices/serviceStepperSlice';
@@ -38,7 +36,6 @@ export default function Step1() {
   const [selectedImage, setSelectedImage] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
   const [productId, setProductId] = useState(null);
-  const debug = useAppSelector(selectAuth);
   const debugStepper = useAppSelector(selectStepper);
   console.error('debugStepper', debugStepper);
 
@@ -47,8 +44,6 @@ export default function Step1() {
     businessName: Yup.string().required(t('forms.commons.required')),
     businessDescription: Yup.string().required(t('forms.commons.required')),
   });
-  console.error('Schema', validationSchema);
-  //dispatch(clearStepper());
 
   const handleImageChange = (event) => {
     const file = event.target.files?.[0];
@@ -83,7 +78,7 @@ export default function Step1() {
 
       if (selectedImage) {
         const formData = new FormData();
-        formData.append('image', selectedImage);
+        formData.append('file', selectedImage);
 
         console.log('Enviando FormData:', formData.entries());
 
