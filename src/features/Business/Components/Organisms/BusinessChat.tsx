@@ -17,6 +17,7 @@ import {
 import SendIcon from '@mui/icons-material/Send';
 import CameraAltOutlinedIcon from '@mui/icons-material/CameraAltOutlined';
 import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
+import { useGetChatByIdQuery, useGetChatsByUserIdQuery } from '../../../../services/chatApi';
 
 const messagesMock = [
   { id: 1, text: 'Buenos días', sender: 'user', reactions: [] },
@@ -54,6 +55,9 @@ const chatsMock = [
   },
 ];
 
+
+
+
 export default function ChatComponent() {
   const [messages, setMessages] =
     useState<
@@ -63,6 +67,11 @@ export default function ChatComponent() {
   const [selectedChat, setSelectedChat] = useState(chatsMock[0]);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [selectedMessage, setSelectedMessage] = useState<number | null>(null);
+  const { data: chat } = useGetChatByIdQuery(1);
+  const { data: chatUser} = useGetChatsByUserIdQuery(1);
+  const messagesApi = chat?.data || []
+  console.log('chats', chat?.data);
+  console.log('chatUser',chatUser);
 
   const handleSend = () => {
     if (!newMessage.trim()) return;
