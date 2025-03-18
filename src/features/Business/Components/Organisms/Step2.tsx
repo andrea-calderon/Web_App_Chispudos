@@ -4,7 +4,10 @@ import { useTranslation } from 'react-i18next';
 import TextAtom from '../../../../components/atoms/TextAtom';
 import { useGetCategoriesQuery } from '../../../../services/categoryApi';
 import { useAppDispatch } from '../../../../hooks/useAppDispatch';
-import { clearStepper, selectStepper, setServiceState } from '../../../../redux/slices/serviceStepperSlice';
+import {
+  selectStepper,
+  setServiceState,
+} from '../../../../redux/slices/serviceStepperSlice';
 import { useAppSelector } from '../../../../hooks/useAppSelector';
 import CustomStepper from './Stepper';
 import { useUpdateProductMutation } from '../../../../services/productApi';
@@ -12,14 +15,13 @@ import { useUpdateProductMutation } from '../../../../services/productApi';
 export default function Step2() {
   const { data, isLoading, error } = useGetCategoriesQuery();
   const categories = data?.data || [];
-  const [selectedCategories, setSelectedCategories] = useState<
-    { id: any; }[]
-  >([]);
-  const [updateProduct, { isLoading: isUpdating}] = useUpdateProductMutation();
+  const [selectedCategories, setSelectedCategories] = useState<{ id: any }[]>(
+    [],
+  );
+  const [updateProduct, { isLoading: isUpdating }] = useUpdateProductMutation();
   const dispatch = useAppDispatch();
-  //dispatch(clearStepper());
   const { service } = useAppSelector(selectStepper);
-    console.error('debugStepper', {service, selectedCategories});
+  console.error('debugStepper', { service, selectedCategories });
 
   const { t } = useTranslation();
 
@@ -28,7 +30,7 @@ export default function Step2() {
     setSelectedCategories((prev) =>
       prev.some((c) => c === category.id)
         ? prev.filter((c) => c !== category.id)
-        : [...prev, category.id ],
+        : [...prev, category.id],
     );
   };
 
@@ -42,11 +44,9 @@ export default function Step2() {
     }).unwrap();
     console.error('responseUpdateProduct', responseUpdateProduct);
     if (responseUpdateProduct.success) {
-      dispatch(
-        setServiceState(responseUpdateProduct?.productService),
-      );
+      dispatch(setServiceState(responseUpdateProduct?.productService));
     }
-  }
+  };
 
   const isNextEnabled = selectedCategories.length > 0 || isUpdating;
 
@@ -123,7 +123,10 @@ export default function Step2() {
           ))}
         </Grid>
       </Box>
-      <CustomStepper onHandleNext={handleSubmitCategories } isNextEnabled={isNextEnabled} />
+      <CustomStepper
+        onHandleNext={handleSubmitCategories}
+        isNextEnabled={isNextEnabled}
+      />
     </Box>
   );
 }

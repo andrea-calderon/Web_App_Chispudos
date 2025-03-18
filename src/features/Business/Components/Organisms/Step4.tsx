@@ -40,7 +40,8 @@ const Step4 = () => {
   const handleUpdate = async (values, { setSubmitting }) => {
     try {
       const payload = {
-        ...stepperState.service,
+        type: 1,
+        price: 0,
         id: stepperState.service?.id,
         details: values.skills.map((skill) => ({
           label: skill.tagsTextField,

@@ -30,6 +30,7 @@ export const productApi = createApi({
         url: `products/${productId}/image`,
         method: 'PUT',
         body: formData,
+        formData: true,
       }),
     }),
   }),
