@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import {
   Box,
   Typography,
@@ -11,79 +10,54 @@ import {
   ListItemAvatar,
   ListItemText,
   Divider,
-  Menu,
-  MenuItem,
+  CircularProgress,
 } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import CameraAltOutlinedIcon from '@mui/icons-material/CameraAltOutlined';
-import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
-import { useGetChatByIdQuery, useGetChatsByUserIdQuery } from '../../../../services/chatApi';
-
-const messagesMock = [
-  { id: 1, text: 'Buenos días', sender: 'user', reactions: [] },
-  { id: 2, text: '¿En qué puedo ayudarle?', sender: 'pro', reactions: [] },
-  {
-    id: 3,
-    text: 'Tengo un grifo que gotea en la cocina y necesito arreglarlo.',
-    sender: 'user',
-    reactions: [],
-  },
-  {
-    id: 4,
-    text: 'De acuerdo, puedo agendar una cita. ¿Qué día y hora le queda mejor?',
-    sender: 'pro',
-    reactions: [],
-  },
-];
-
-const chatsMock = [
-  {
-    id: 1,
-    user: { name: 'José', avatar: 'https://picsum.photos/50/50?random=1' },
-    pro: { name: 'Rolando', avatar: 'https://picsum.photos/50/50?random=2' },
-    lastMessage: 'De acuerdo, puedo agendar una cita.',
-    date: '2025-02-27',
-    time: '10:30 AM',
-  },
-  {
-    id: 2,
-    user: { name: 'Ana', avatar: 'https://picsum.photos/50/50?random=3' },
-    pro: { name: 'Rolando', avatar: 'https://picsum.photos/50/50?random=2' },
-    lastMessage: 'Gracias, nos vemos mañana.',
-    date: '2025-02-26',
-    time: '3:45 PM',
-  },
-];
-
-
-
+import {
+  useGetChatByIdQuery,
+  useGetChatsByUserIdQuery,
+} from '../../../../services/chatApi';
+import { useState } from 'react';
+import { useAppSelector } from '../../../../hooks/useAppSelector';
+import { selectAuth } from '../../../../redux/slices/authSlice';
 
 export default function ChatComponent() {
-  const [messages, setMessages] =
-    useState<
-      { id: number; text: string; sender: string; reactions: string[] }[]
-    >(messagesMock);
+  const [selectedChat, setSelectedChat] = useState(null);
   const [newMessage, setNewMessage] = useState('');
-  const [selectedChat, setSelectedChat] = useState(chatsMock[0]);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [selectedMessage, setSelectedMessage] = useState<number | null>(null);
-  const { data: chat } = useGetChatByIdQuery(1);
-  const { data: chatUser} = useGetChatsByUserIdQuery(1);
-  const messagesApi = chat?.data || []
-  console.log('chats', chat?.data);
-  console.log('chatUser',chatUser);
+  const auth = useAppSelector(selectAuth);
+  const userID = auth?.user?.id;
+
+  const getAvatarUrl = (avatarUrl) => {
+    const baseUrl = 'http://localhost:8000/api/v1'; // Reemplaza con la URL base de tu servidor
+    return avatarUrl?.startsWith('http') ? avatarUrl : `${baseUrl}${avatarUrl}`;
+  };
+
+  const {
+    data: chatUser,
+    isLoading,
+    error,
+  } = useGetChatsByUserIdQuery(userID, {
+    skip: !userID,
+  });
+  const chats = chatUser?.data || [];
 
   const handleSend = () => {
     if (!newMessage.trim()) return;
 
     const newMsg = {
-      id: messages.length + 1,
+      id: Date.now(),
       text: newMessage,
       sender: 'pro',
       reactions: [],
     };
 
-    setMessages([...messages, newMsg]);
+    setSelectedChat((prevChat) => ({
+      ...prevChat,
+      messages: [...(prevChat?.messages || []), newMsg],
+    }));
     setNewMessage('');
   };
 
@@ -102,13 +76,14 @@ export default function ChatComponent() {
 
   const handleAddReaction = (reaction: string) => {
     if (selectedMessage !== null) {
-      setMessages((prevMessages) =>
-        prevMessages.map((msg) =>
+      setSelectedChat((prevChat) => ({
+        ...prevChat,
+        messages: prevChat?.messages.map((msg) =>
           msg.id === selectedMessage
             ? { ...msg, reactions: [...msg.reactions, reaction] }
             : msg,
         ),
-      );
+      }));
     }
     handleReactionClose();
   };
@@ -127,6 +102,7 @@ export default function ChatComponent() {
       }}
     >
       <Grid container sx={{ height: '100%' }}>
+        {/* Left Section: Chat List */}
         <Grid
           item
           xs={12}
@@ -138,161 +114,159 @@ export default function ChatComponent() {
             flexDirection: 'column',
           }}
         >
-          <List sx={{ height: '100%', overflowY: 'auto' }}>
-            {chatsMock.map((chat) => (
-              <ListItem
-                key={chat.id}
-                button
-                onClick={() => setSelectedChat(chat)}
-                selected={selectedChat.id === chat.id}
-              >
-                <ListItemAvatar sx={{ display: 'flex', pr: 2 }}>
-                  <Avatar src={chat.user.avatar} />{' '}
-                  <Avatar src={chat.pro.avatar} />
-                </ListItemAvatar>
-                <ListItemText
-                  primary={`${chat.user.name}, ${chat.pro.name}`}
-                  secondary={
-                    <>
-                      <Typography
-                        component="span"
-                        variant="body2"
-                        color="textPrimary"
-                      >
-                        {chat.date}
-                      </Typography>
-                      <br />
-                      <Typography
-                        component="span"
-                        variant="body2"
-                        color="textSecondary"
-                      >
-                        {chat.time}
-                      </Typography>
-                    </>
-                  }
-                />
-              </ListItem>
-            ))}
-          </List>
+          {isLoading ? (
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: '100%',
+              }}
+            >
+              <CircularProgress />
+            </Box>
+          ) : error ? (
+            <Typography color="error" sx={{ textAlign: 'center', mt: 2 }}>
+              Error al cargar las conversaciones.
+            </Typography>
+          ) : (
+            <List sx={{ height: '100%', overflowY: 'auto' }}>
+              {chats.map((chat) => (
+                <ListItem
+                  key={chat.id}
+                  button
+                  onClick={() => setSelectedChat(chat)}
+                  selected={selectedChat?.id === chat.id}
+                >
+                  <ListItemAvatar sx={{ display: 'flex', pr: 2 }}>
+                    {/* Usar getAvatarUrl para construir las URLs de los avatares */}
+                    <Avatar
+                      src={getAvatarUrl(chat.user1.avatarUrl)}
+                      alt={chat.user1.name}
+                    />
+                    <Avatar
+                      src={getAvatarUrl(chat.user2.avatarUrl)}
+                      alt={chat.user2.name}
+                    />
+                  </ListItemAvatar>
+                  <ListItemText
+                    primary={`${chat.user1.name}, ${chat.user2.name}`}
+                    secondary={
+                      <>
+                        <Typography
+                          component="span"
+                          variant="body2"
+                          color="textPrimary"
+                        >
+                          {new Date(chat.updatedAt).toLocaleDateString()}
+                        </Typography>
+                        <br />
+                        <Typography
+                          component="span"
+                          variant="body2"
+                          color="textSecondary"
+                        >
+                          {new Date(chat.updatedAt).toLocaleTimeString()}
+                        </Typography>
+                      </>
+                    }
+                  />
+                </ListItem>
+              ))}
+            </List>
+          )}
         </Grid>
+
+        {/* Right Section: Chat Messages */}
         <Grid
           item
           xs={12}
           md={8}
           sx={{ display: 'flex', flexDirection: 'column' }}
         >
-          <Box
-            sx={{
-              px: 2,
-              py: 4,
-              display: 'flex',
-              alignItems: 'center',
-            }}
-          >
-            <Avatar src={selectedChat.user.avatar} />
-            <Avatar src={selectedChat.pro.avatar} />
-            <Typography variant="h6" sx={{ ml: 2 }}>
-              {selectedChat.user.name}, {selectedChat.pro.name}
-            </Typography>
-          </Box>
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Divider sx={{ ml: 5, flexGrow: 1 }} />
-            <Typography variant="body2" sx={{ textAlign: 'center', mx: 1 }}>
-              {selectedChat.date}
-            </Typography>
-            <Divider sx={{ mr: 5, flexGrow: 1 }} />
-          </Box>
-
-          <Box sx={{ flex: 1, overflowY: 'auto', p: 2 }}>
-            {messages.map((msg) => (
+          {selectedChat ? (
+            <>
               <Box
-                key={msg.id}
                 sx={{
+                  px: 2,
+                  py: 4,
                   display: 'flex',
                   alignItems: 'center',
-                  justifyContent:
-                    msg.sender === 'pro' ? 'flex-end' : 'flex-start',
-                  mb: 2,
                 }}
               >
-                {msg.sender === 'user' && (
-                  <Avatar src={selectedChat.user.avatar} sx={{ mr: 1 }} />
-                )}
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                  {msg.sender === 'pro' && (
-                    <IconButton
-                      size="small"
-                      onClick={(event) => handleReactionClick(event, msg.id)}
-                    >
-                      <EmojiEmotionsIcon />
-                    </IconButton>
-                  )}
-                  <Typography
+                {/* Mostrar los avatares de los usuarios */}
+                <Avatar src={getAvatarUrl(selectedChat.user1.avatarUrl)} />
+                <Avatar src={getAvatarUrl(selectedChat.user2.avatarUrl)} />
+                <Typography variant="h6" sx={{ ml: 2 }}>
+                  {selectedChat.user1.name}, {selectedChat.user2.name}
+                </Typography>
+              </Box>
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <Divider sx={{ ml: 5, flexGrow: 1 }} />
+                <Typography variant="body2" sx={{ textAlign: 'center', mx: 1 }}>
+                  {new Date(selectedChat.updatedAt).toLocaleDateString()}
+                </Typography>
+                <Divider sx={{ mr: 5, flexGrow: 1 }} />
+              </Box>
+
+              <Box sx={{ flex: 1, overflowY: 'auto', p: 2 }}>
+                {selectedChat.messages.map((msg) => (
+                  <Box
+                    key={msg.id}
                     sx={{
-                      display: 'inline-block',
-                      p: 1,
-                      borderRadius: '10px',
-                      bgcolor: msg.sender === 'pro' ? '#673ab7' : '#e0e0e0',
-                      color: msg.sender === 'pro' ? '#fff' : '#000',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent:
+                        msg.senderId === userID ? 'flex-end' : 'flex-start',
+                      mb: 2,
                     }}
                   >
-                    {msg.text}
-                  </Typography>
-                  {msg.sender === 'user' && (
-                    <IconButton
-                      size="small"
-                      onClick={(event) => handleReactionClick(event, msg.id)}
-                    >
-                      <EmojiEmotionsIcon />
-                    </IconButton>
-                  )}
-                </Box>
-                {msg.sender === 'pro' && (
-                  <Avatar src={selectedChat.pro.avatar} sx={{ ml: 1 }} />
-                )}
+                    {/* Mostrar avatar del otro usuario si el mensaje no es del usuario autenticado */}
+                    {msg.senderId !== userID && (
+                      <Avatar
+                        src={
+                          msg.senderId === selectedChat.user1.id
+                            ? getAvatarUrl(selectedChat.user1.avatarUrl)
+                            : getAvatarUrl(selectedChat.user2.avatarUrl)
+                        }
+                        sx={{ mr: 1 }}
+                      />
+                    )}
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                      <Typography
+                        sx={{
+                          display: 'inline-block',
+                          p: 1,
+                          borderRadius: '10px',
+                          bgcolor:
+                            msg.senderId === userID ? '#673ab7' : '#e0e0e0',
+                          color: msg.senderId === userID ? '#fff' : '#000',
+                        }}
+                      >
+                        {msg.content}
+                      </Typography>
+                    </Box>
+                    {/* Mostrar avatar del usuario autenticado si el mensaje es suyo */}
+                    {msg.senderId === userID && (
+                      <Avatar
+                        src={getAvatarUrl(selectedChat.user1.avatarUrl)}
+                        sx={{ ml: 1 }}
+                      />
+                    )}
+                  </Box>
+                ))}
               </Box>
-            ))}
-          </Box>
-
-          <Box sx={{ display: 'flex', p: 2, bgcolor: '#fff' }}>
-            <IconButton color="#625B71" onClick={() => {}}>
-              <CameraAltOutlinedIcon />
-            </IconButton>
-            <TextField
-              fullWidth
-              placeholder="Escribe un mensaje..."
-              value={newMessage}
-              onChange={(e) => setNewMessage(e.target.value)}
-              sx={{
-                '& .MuiOutlinedInput-root': {
-                  '& fieldset': {
-                    borderRadius: '32px',
-                  },
-                },
-              }}
-            />
-            <IconButton color="primary" onClick={handleSend}>
-              <SendIcon />
-            </IconButton>
-          </Box>
+            </>
+          ) : (
+            <Typography
+              variant="h6"
+              sx={{ textAlign: 'center', mt: 4, color: 'text.secondary' }}
+            >
+              Selecciona una conversación para comenzar.
+            </Typography>
+          )}
         </Grid>
       </Grid>
-
-      <Menu
-        anchorEl={anchorEl}
-        open={Boolean(anchorEl)}
-        onClose={handleReactionClose}
-      >
-        <Box sx={{ display: 'flex' }}>
-          <MenuItem onClick={() => handleAddReaction('👍')}>👍</MenuItem>
-          <MenuItem onClick={() => handleAddReaction('❤️')}>❤️</MenuItem>
-          <MenuItem onClick={() => handleAddReaction('😂')}>😂</MenuItem>
-          <MenuItem onClick={() => handleAddReaction('😮')}>😮</MenuItem>
-          <MenuItem onClick={() => handleAddReaction('😢')}>😢</MenuItem>
-          <MenuItem onClick={() => handleAddReaction('👏')}>👏</MenuItem>
-        </Box>
-      </Menu>
     </Box>
   );
 }

@@ -25,6 +25,7 @@ import {
   setServiceState,
 } from '../../../../redux/slices/serviceStepperSlice';
 import { useAppDispatch } from '../../../../hooks/useAppDispatch';
+import { selectAuth } from '../../../../redux/slices/authSlice';
 
 export default function Step1() {
   const { t } = useTranslation();
@@ -37,7 +38,8 @@ export default function Step1() {
   const [previewUrl, setPreviewUrl] = useState(null);
   const [productId, setProductId] = useState(null);
   const debugStepper = useAppSelector(selectStepper);
-  console.error('debugStepper', debugStepper);
+  const debugAuth = useAppSelector(selectAuth);
+  console.error('debugAuthID.', debugAuth?.user?.id);
 
   const dispatch = useAppDispatch();
   const validationSchema = Yup.object({
@@ -59,8 +61,8 @@ export default function Step1() {
         name: values.businessName,
         description: values.businessDescription,
         type: 1,
-        price: 0.0,
-        userId: 1,
+        price: 0,
+        userId: debugAuth?.user?.id,
       };
 
       console.log('Enviando payload:', payloadServiceObject);
