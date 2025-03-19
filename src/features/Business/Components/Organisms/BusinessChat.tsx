@@ -15,7 +15,7 @@ import {
 import SendIcon from '@mui/icons-material/Send';
 import CameraAltOutlinedIcon from '@mui/icons-material/CameraAltOutlined';
 import {
-  useGetChatByIdQuery,
+  useSendMessageMutation,
   useGetChatsByUserIdQuery,
 } from '../../../../services/chatApi';
 import { useState } from 'react';
@@ -27,40 +27,62 @@ export default function ChatComponent() {
   const [newMessage, setNewMessage] = useState('');
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [selectedMessage, setSelectedMessage] = useState<number | null>(null);
+
+  // Usuario autenticado
   const auth = useAppSelector(selectAuth);
   const userID = auth?.user?.id;
 
-  const getAvatarUrl = (avatarUrl) => {
-    const baseUrl = 'http://localhost:8000/api/v1'; // Reemplaza con la URL base de tu servidor
-    return avatarUrl?.startsWith('http') ? avatarUrl : `${baseUrl}${avatarUrl}`;
-  };
+  // Hook para enviar mensajes
+  const [sendMessage, { isLoading: isSending, error: sendError }] =
+    useSendMessageMutation();
 
+  // Hook para obtener las conversaciones
   const {
     data: chatUser,
     isLoading,
     error,
-  } = useGetChatsByUserIdQuery(userID, {
-    skip: !userID,
-  });
+  } = useGetChatsByUserIdQuery(userID, { skip: !userID });
   const chats = chatUser?.data || [];
 
-  const handleSend = () => {
-    if (!newMessage.trim()) return;
-
-    const newMsg = {
-      id: Date.now(),
-      text: newMessage,
-      sender: 'pro',
-      reactions: [],
-    };
-
-    setSelectedChat((prevChat) => ({
-      ...prevChat,
-      messages: [...(prevChat?.messages || []), newMsg],
-    }));
-    setNewMessage('');
+  // Función para construir URLs completas de avatares
+  const getAvatarUrl = (avatarUrl) => {
+    const baseUrl = 'http://localhost:8000/api/v1';
+    return avatarUrl?.startsWith('http') ? avatarUrl : `${baseUrl}${avatarUrl}`;
   };
 
+  // Función para enviar mensajes
+  const handleSend = async () => {
+    if (!newMessage.trim() || !selectedChat) return;
+
+    try {
+      const payload = {
+        conversationId: selectedChat.id,
+        senderId: userID,
+        content: newMessage,
+      };
+
+      const response = await sendMessage(payload).unwrap();
+
+      setSelectedChat((prevChat) => ({
+        ...prevChat,
+        messages: [...(prevChat?.messages || []), response.data],
+      }));
+
+      setNewMessage('');
+    } catch (err) {
+      console.error('Error al enviar el mensaje:', err);
+    }
+  };
+
+  // Función para manejar el envío con la tecla Enter
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault(); // Evitar salto de línea
+      handleSend();
+    }
+  };
+
+  // Funciones relacionadas con reacciones (sin cambios)
   const handleReactionClick = (
     event: React.MouseEvent<HTMLElement>,
     messageId: number,
@@ -139,7 +161,6 @@ export default function ChatComponent() {
                   selected={selectedChat?.id === chat.id}
                 >
                   <ListItemAvatar sx={{ display: 'flex', pr: 2 }}>
-                    {/* Usar getAvatarUrl para construir las URLs de los avatares */}
                     <Avatar
                       src={getAvatarUrl(chat.user1.avatarUrl)}
                       alt={chat.user1.name}
@@ -194,7 +215,6 @@ export default function ChatComponent() {
                   alignItems: 'center',
                 }}
               >
-                {/* Mostrar los avatares de los usuarios */}
                 <Avatar src={getAvatarUrl(selectedChat.user1.avatarUrl)} />
                 <Avatar src={getAvatarUrl(selectedChat.user2.avatarUrl)} />
                 <Typography variant="h6" sx={{ ml: 2 }}>
@@ -221,7 +241,6 @@ export default function ChatComponent() {
                       mb: 2,
                     }}
                   >
-                    {/* Mostrar avatar del otro usuario si el mensaje no es del usuario autenticado */}
                     {msg.senderId !== userID && (
                       <Avatar
                         src={
@@ -246,7 +265,6 @@ export default function ChatComponent() {
                         {msg.content}
                       </Typography>
                     </Box>
-                    {/* Mostrar avatar del usuario autenticado si el mensaje es suyo */}
                     {msg.senderId === userID && (
                       <Avatar
                         src={getAvatarUrl(selectedChat.user1.avatarUrl)}
@@ -258,11 +276,48 @@ export default function ChatComponent() {
               </Box>
             </>
           ) : (
-            <Typography
-              variant="h6"
-              sx={{ textAlign: 'center', mt: 4, color: 'text.secondary' }}
+            <Box
+              sx={{
+                display: 'flex',
+                p: 4,
+                justifyContent: 'center',
+                alignItems: 'top',
+                flexGrow: 1,
+              }}
             >
-              Selecciona una conversación para comenzar.
+              <Typography variant="h6">Selecciona una conversación</Typography>
+            </Box>
+          )}
+          <Box sx={{ display: 'flex', p: 2, bgcolor: '#fff' }}>
+            <IconButton color="#625B71" onClick={() => {}}>
+              <CameraAltOutlinedIcon />
+            </IconButton>
+            <TextField
+              fullWidth
+              placeholder="Escribe un mensaje..."
+              value={newMessage}
+              onChange={(e) => setNewMessage(e.target.value)}
+              onKeyDown={handleKeyDown} // Detectar tecla Enter
+              disabled={isSending}
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  '& fieldset': {
+                    borderRadius: '32px',
+                  },
+                },
+              }}
+            />
+            <IconButton
+              color="primary"
+              onClick={handleSend}
+              disabled={isSending}
+            >
+              <SendIcon />
+            </IconButton>
+          </Box>
+          {sendError && (
+            <Typography color="error" sx={{ textAlign: 'center', mt: 1 }}>
+              Error al enviar el mensaje.
             </Typography>
           )}
         </Grid>

@@ -25,6 +25,13 @@ export const chatApi = createApi({
         body: chatData,
       }),
     }),
+    sendMessage: builder.mutation({
+      query: (messageData) => ({
+        url: 'chat/message', // Endpoint para enviar mensajes
+        method: 'POST',
+        body: messageData,
+      }),
+    }),
   }),
 });
 
@@ -32,5 +39,6 @@ export const {
   useGetChatByIdQuery,
   useGetChatsByUserIdQuery,
   useCreateChatMutation,
-  useUpdateChatMutation
+  useUpdateChatMutation,
+  useSendMessageMutation,
 } = chatApi;
