@@ -117,7 +117,7 @@ export default function ChatComponent() {
         marginX: { xs: 4, md: 20 },
         display: 'flex',
         flexDirection: 'column',
-        height: '100vh',
+        height: '70vh',
         border: '1px solid #ccc',
         borderRadius: '10px',
         overflow: 'hidden',
