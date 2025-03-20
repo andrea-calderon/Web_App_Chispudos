@@ -13,7 +13,6 @@ import { ServiceDetailPage } from '../features/Services/components/pages/Service
 import { TaskDetailsPage } from '../features/Services/components/pages/TaskDetailsPage';
 import { useAppSelector } from '../hooks/useAppSelector';
 import { selectAuth } from '../redux/slices/authSlice';
-import { ProfilePage } from '../features/profile/components/pages/ProfilePage';
 import PasswordRecovery from '../features/auth/components/pages/PasswordRecovery';
 import RegisterPage from '../features/auth/components/pages/RegisterPage';
 import ErrorPage from '../components/organisms/ErrorPage';
@@ -43,15 +42,11 @@ const AppRoutes = () => {
             {/* Protected Routes */}
             <Route element={<ProtectedRoutesWrapper />}>
               <Route path="/home" element={<HomePage />} />
-              <Route path="/profile" element={<ProfilePage />} />
               <Route path="/search-services" element={<SearchServicesPage />} />
               <Route path="/services/:id" element={<ServiceDetailPage />} />
               <Route path="/service-details" element={<TaskDetailsPage />} />
               <Route path="/stepper" element={<BusinessStepper />} />
-              <Route
-                path="/businessProfile"
-                element={<BusinessProfilePage />}
-              />
+              <Route path="/profile" element={<BusinessProfilePage />} />
             </Route>
 
             {/* Error Page */}
