@@ -1,9 +1,9 @@
 {
   "name": "projectx-web-vite",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
   "type": "module",
-  "homepage": ".",
+  "homepage": "https://recolatam.com",
   "scripts": {
     "dev": "vite",
     "build": "tsc --noEmit && vite build",

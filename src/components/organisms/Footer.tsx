@@ -13,9 +13,11 @@ import FacebookIcon from '@mui/icons-material/Facebook';
 import PinterestIcon from '@mui/icons-material/Pinterest';
 import { useTranslation } from 'react-i18next';
 import AppLogo from '../molecules/AppLogo';
+import packageJson from '../../../package.json';
 
 const Footer: React.FC = () => {
   const { t } = useTranslation();
+  const {version} = packageJson;
 
   return (
     <>
@@ -109,13 +111,16 @@ const Footer: React.FC = () => {
           <Typography variant="body2" color="textSecondary">
             © {new Date().getFullYear()} -
             <a
-              href="https://www.bytecode.com"
+              href="https://www.bytecodelatam.com"
               target="_blank"
               style={{ textDecoration: 'none' }}
             >
               byteCode
             </a>
             : {t('footer.copyright')}
+          </Typography>
+          <Typography variant="body2" color="textSecondary">
+            Version: {version}
           </Typography>
         </Grid>
       </Box>
