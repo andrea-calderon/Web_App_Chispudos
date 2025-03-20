@@ -37,9 +37,7 @@ export default function Step1() {
   const [selectedImage, setSelectedImage] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
   const [productId, setProductId] = useState(null);
-  const debugStepper = useAppSelector(selectStepper);
   const debugAuth = useAppSelector(selectAuth);
-  console.error('debugAuthID.', debugAuth?.user?.id);
 
   const dispatch = useAppDispatch();
   const validationSchema = Yup.object({
@@ -65,11 +63,9 @@ export default function Step1() {
         userId: debugAuth?.user?.id,
       };
 
-      console.log('Enviando payload:', payloadServiceObject);
       const productResponse =
         await createProduct(payloadServiceObject).unwrap();
 
-      console.log('productResponse', productResponse?.productService);
       dispatch(setServiceState(productResponse?.productService));
 
       if (!productResponse?.productService?.id) {
@@ -82,17 +78,14 @@ export default function Step1() {
         const formData = new FormData();
         formData.append('file', selectedImage);
 
-        console.log('Enviando FormData:', formData.entries());
-
         await uploadProductImage({
           productId: productResponse.productService.id,
           formData,
         }).unwrap();
       }
     } catch (err) {
-      console.error('Error al procesar:', err);
       if (err.data) {
-        console.error('Detalles del error:', err.data);
+        // Manejo de errores si es necesario
       }
     } finally {
       setSubmitting(false);
