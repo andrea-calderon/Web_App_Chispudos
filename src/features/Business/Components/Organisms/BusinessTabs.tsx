@@ -8,7 +8,7 @@ import { ProfilePage } from '../../../profile/components/pages/ProfilePage';
 
 const BusinessTabs = () => {
   const { t } = useTranslation();
-  const [selectedTab, setSelectedTab] = useState(3);
+  const [selectedTab, setSelectedTab] = useState(2);
 
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
     setSelectedTab(newValue);
