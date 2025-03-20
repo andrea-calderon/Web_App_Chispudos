@@ -190,6 +190,7 @@
   "businessProfilePage":{
       "tabs": {
         "profile": "Mi perfil",
+        "services": "Mis servicios",
         "chat": "Chat",
         "tasks": "Detalle de tus tareas"
       },

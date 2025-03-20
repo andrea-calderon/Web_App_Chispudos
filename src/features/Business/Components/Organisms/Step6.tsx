@@ -11,7 +11,7 @@ const Step6 = () => {
   const navigate = useNavigate();
 
   const handleFinish = () => {
-    navigate('/businessProfile');
+    navigate('/profile');
   };
 
   return (
