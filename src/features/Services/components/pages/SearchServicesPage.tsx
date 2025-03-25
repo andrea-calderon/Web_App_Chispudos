@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { UserLayout } from '../../../../components/templates/UserLayout';
 import { Box, Typography } from '@mui/material';
-import Footer from '../../../../components/organisms/Footer';
 import { useSearchServicesFormData } from '../../../../context/SearchContext';
 import ServicesList from '../organisms/ServicesList';
 import SearchBar from '../../../../components/organisms/SearchBar';
@@ -15,7 +14,7 @@ export const SearchServicesPage: React.FC = () => {
 
   const { data: allServices, isLoading, isError } = useGetProductsQuery();
 
-  console.error('All services:', {allServices});
+  console.error('All services:', { allServices });
   useEffect(() => {
     if (!allServices?.data?.items?.length) return;
 
@@ -84,7 +83,6 @@ export const SearchServicesPage: React.FC = () => {
           </Typography>
         )}
       </Box>
-      <Footer />
     </UserLayout>
   );
 };

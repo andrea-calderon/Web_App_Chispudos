@@ -6,7 +6,6 @@ import { es } from 'date-fns/locale';
 import { UserLayout } from '../../../../components/templates/UserLayout';
 import TaskDetailInput from '../organisms/TaskDetailInput';
 import TaskDetailCompleted from '../organisms/TaskDetailCompleted';
-import Footer from '../../../../components/organisms/Footer';
 
 export const TaskDetailsPage = () => {
   const location = useLocation();
@@ -51,7 +50,6 @@ export const TaskDetailsPage = () => {
           />
         )}
       </Box>
-      <Footer />
     </UserLayout>
   );
 };

@@ -7,6 +7,7 @@ import Footer from '../../../../components/organisms/Footer';
 import HighlightedCategories from '../organisms/Categories';
 import { useSearchServicesFormData } from '../../../../context/SearchContext';
 import SearchForm from '../../../../components/organisms/SearchForm';
+import NewsletterSubscription from '../../../../components/organisms/NewsletterSubscription';
 
 type ServicesSection = {
   name: string;
@@ -116,7 +117,7 @@ export const HomePage: React.FC = () => {
           </Grid>
         </Box>
       </Box>
-      <Footer />
+      <NewsletterSubscription />
     </UserLayout>
   );
 };

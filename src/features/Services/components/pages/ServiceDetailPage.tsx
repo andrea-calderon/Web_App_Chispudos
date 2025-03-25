@@ -2,7 +2,6 @@ import { useParams } from 'react-router-dom';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { UserLayout } from '../../../../components/templates/UserLayout';
-import Footer from '../../../../components/organisms/Footer';
 import { Box, Grid2 as Grid, CircularProgress, TextField } from '@mui/material';
 import { ServiceHeader } from '../organisms/ServiceDetailHeader';
 import { ServiceSkills } from '../organisms/ServiceDetailSkills';
@@ -59,7 +58,7 @@ export const ServiceDetailPage = () => {
         state: {
           dateTime: selectedDateTime.toISOString(),
           serviceTitle: service.name,
-          service
+          service,
         },
       });
     } else {
@@ -113,7 +112,7 @@ export const ServiceDetailPage = () => {
           <Box>
             <ServiceSkills skills={service.details || []} />
             <ServiceProjects projects={service.recentProjects || []} />
-            
+
             {/* <ServiceOtherSkills skills={service.otherSkills || []} /> */}
           </Box>
         </Grid>
@@ -142,8 +141,6 @@ export const ServiceDetailPage = () => {
           />
         </LocalizationProvider>
       </ModalComponent>
-
-      <Footer />
     </UserLayout>
   );
 };
