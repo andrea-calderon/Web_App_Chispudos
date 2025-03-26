@@ -22,23 +22,41 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
   return (
     <Card
       sx={{
-        maxWidth: 345,
-        margin: 2,
-        boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.15)',
-        borderRadius: '32px',
+        maxWidth: 400,
+        margin: '16px auto',
+        boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
+        borderRadius: '24px',
         cursor: onClick ? 'pointer' : 'default',
       }}
       onClick={onClick}
     >
-      <CardMedia
-        component="img"
-        height="180"
-        image={image || 'https://picsum.photos/345/180?random=1'}
-        alt={`${name || 'Servicio desconocido'} image`}
-      />
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          //pt: 2,
+        }}
+      >
+        <CardMedia
+          component="img"
+          height="180"
+          image={image || 'https://picsum.photos/345/180?random=1'}
+          alt={`${name || 'Servicio desconocido'} image`}
+          sx={{
+            width: 400,
+            height: 200,
+            //borderRadius: '0%', // Imagen circular
+            objectFit: 'cover',
+          }}
+        />
+      </Box>
 
-      <CardContent>
-        {/* Nombre del usuario */}
+      <CardContent
+        sx={{
+          px: 5,
+        }}
+      >
         <TextAtom variant="body" size="medium">
           {user?.name
             ? `${user.name} ${user.lastname || ''}`
@@ -80,7 +98,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
       </CardContent>
 
       {/* Botón de acción */}
-      <CardActions>
+      <CardActions sx={{ px: 4, py: 2 }}>
         <ButtonAtom
           variant="outlined"
           type="button"
