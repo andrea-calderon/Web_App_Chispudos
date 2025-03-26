@@ -63,7 +63,6 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
             : 'Usuario desconocido'}
         </TextAtom>
         <br />
-        {/* Nombre del servicio */}
         <TextAtom
           variant="title"
           size="large"
@@ -74,12 +73,10 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
           {name || 'Servicio sin nombre'}
         </TextAtom>
         <br />
-        {/* Descripción del servicio */}
         <TextAtom variant="body" size="medium" color="text.secondary">
           {description || 'Descripción no disponible.'}
         </TextAtom>
         <br />
-        {/* Ubicación */}
         <TextAtom
           variant="body"
           size="medium"
@@ -88,7 +85,6 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
         >
           Ubicación: {location || 'No especificada'}
         </TextAtom>
-        {/* Calificación promedio */}
         <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
           <StarIcon fontSize="medium" sx={{ color: 'gold', mr: 0.5 }} />
           <TextAtom variant="body" size="medium">
@@ -97,7 +93,6 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
         </Box>
       </CardContent>
 
-      {/* Botón de acción */}
       <CardActions sx={{ px: 4, py: 2 }}>
         <ButtonAtom
           variant="outlined"
