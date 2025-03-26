@@ -8,14 +8,23 @@ type AppLogoProps = {
   sx?: SxProps<Theme>;
 };
 
-const AppLogo = ({ maxWidth= '150px', sx }: AppLogoProps) => {
+const AppLogo = ({ maxWidth = '150px', sx }: AppLogoProps) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const theme = useTheme();
   const { palette } = theme;
 
   return (
-    <Box display="flex" justifyContent="center" alignItems="center" sx={sx} onClick={() => navigate('/')}>
+    <Box
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
+      sx={{
+        cursor: 'pointer',
+        ...sx,
+      }}
+      onClick={() => navigate('/')}
+    >
       <img
         src={RecoLogo}
         alt={t('app_name')}

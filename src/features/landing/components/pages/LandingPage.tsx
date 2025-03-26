@@ -6,6 +6,7 @@ import Footer from '../../../../components/organisms/Footer';
 import HighlightedCategories from '../../../home/components/organisms/Categories';
 import CategoriesSection from '../organisms/CategoriesSection';
 import SearchForm from '../../../../components/organisms/SearchForm';
+import NewsletterSubscription from '../../../../components/organisms/NewsletterSubscription';
 
 export const LandingPage = () => {
   return (
@@ -16,6 +17,7 @@ export const LandingPage = () => {
       <FeatureGuarantee />
       <FeatureTestimonials />
       <FeatureDownloadApp />
+      <NewsletterSubscription />
       <Footer />
     </LandingLayout>
   );

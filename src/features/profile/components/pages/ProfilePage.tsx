@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { List, ListItem } from '@mui/material';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import Grid from '@mui/material/Grid2';
-import { UserLayout } from '../../../../components/templates/UserLayout';
 import { ButtonAtom, TextAtom } from '../../../../components/atoms';
 import { useAppDispatch } from '../../../../hooks/useAppDispatch';
 import { logout, selectAuth } from '../../../../redux/slices/authSlice';
