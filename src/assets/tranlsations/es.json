@@ -312,6 +312,10 @@
     }
     },
 
+"recommendedServices": {
+  "title": "Recomendados para ti"
+            },
+
 "footer": {
   "title": "Suscríbete a nuestro Newsletter",
   "placeholder": "Tu Email",

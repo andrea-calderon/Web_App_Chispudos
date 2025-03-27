@@ -273,6 +273,10 @@
   }
     },
 
+  "recommendedServices": {
+  "title": "Recomendados para ti"
+    },
+
 "footer": {
   "title": "Subscribe to our Newsletter",
   "placeholder": "Your Email",
