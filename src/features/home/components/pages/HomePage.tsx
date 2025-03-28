@@ -4,6 +4,7 @@ import HighlightedCategories from '../organisms/Categories';
 import SearchForm from '../../../../components/organisms/SearchForm';
 import NewsletterSubscription from '../../../../components/organisms/NewsletterSubscription';
 import RecommendedServices from '../organisms/RecommendedServices';
+import { Box } from '@mui/material';
 
 export const HomePage: React.FC = () => {
   return (
