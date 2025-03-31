@@ -86,6 +86,7 @@
       "emailText": "Ingresa tu correo",
       "resetPassword": "Reset Password"
     },
+    
   "OTPVerification": {
       "title": "Check you email",
       "body": "Almost done! We'll send you an email with a 6-digit code. Use it here to create a new password and continue enjoying Reco.",
@@ -116,7 +117,7 @@
       "body": "¡Congratulations! Your password has been changed. Click continue to login",
       "continue": "Continue"
     }
-    },
+    }, 
 
     "businessStepper": {
       "step1": {

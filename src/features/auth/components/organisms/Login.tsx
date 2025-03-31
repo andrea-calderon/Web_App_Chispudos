@@ -1,5 +1,6 @@
 import React, { useCallback, useState } from 'react';
-import { Box, Container, Grid, IconButton } from '@mui/material';
+import { Box, Container,IconButton, Alert } from '@mui/material';
+import Grid from '@mui/material/Grid2'
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { Form, Formik, FormikHelpers } from 'formik';
 import { useTranslation } from 'react-i18next';
@@ -20,6 +21,7 @@ const Login: React.FC = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
+  const [successMsg, setSuccessMsg] = useState('');
 
   const validationSchema = Yup.object({
     email: Yup.string()
@@ -36,6 +38,7 @@ const Login: React.FC = () => {
       if (result.success) {
         const { token, user } = result.data;
         dispatch(loginSuccess({ user, token }));
+        setSuccessMsg(t('auth.login.success'));
         navigate('/home');
       } else {
         setErrorMsg(result.message);
@@ -122,7 +125,7 @@ const Login: React.FC = () => {
                 direction="column"
                 justifyContent="center"
               >
-                <Grid item xs={12}>
+                <Grid size={{xs: 12}}>
                   <InputAtom
                     name="email"
                     type="email"
@@ -134,7 +137,7 @@ const Login: React.FC = () => {
                     sx={{ width: '100%', maxWidth: '328px' }}
                   />
                 </Grid>
-                <Grid item xs={12}>
+                <Grid size={{xs: 12}}>
                   <InputAtom
                     name="password"
                     type={showPassword ? 'text' : 'password'}
@@ -147,7 +150,14 @@ const Login: React.FC = () => {
                     sx={{ width: '100%', maxWidth: '328px' }}
                   />
                 </Grid>
-                <Grid item xs={12}>
+                <Grid size={{xs: 12}}>
+                  {(errorMsg || successMsg) && (
+                    <Alert severity={errorMsg ? 'error' : 'success'}>
+                      {errorMsg || successMsg}
+                    </Alert>
+                  )}
+                </Grid>
+                <Grid size={{xs: 12}}>
                   <ButtonAtom
                     type="submit"
                     variant="filled"
@@ -163,7 +173,7 @@ const Login: React.FC = () => {
                     {t('auth.login.title')}
                   </ButtonAtom>
                 </Grid>
-                <Grid item xs={12}>
+                <Grid size={{xs: 12}}>
                   <ButtonAtom
                     type="button"
                     variant="text"
@@ -179,9 +189,7 @@ const Login: React.FC = () => {
                   </ButtonAtom>
                 </Grid>
                 <Box sx={{ height: '191px' }} />
-                <Grid
-                  item
-                  xs={12}
+                <Grid size={{xs: 12}}
                   sx={{
                     display: 'flex',
                     flexDirection: 'row',
