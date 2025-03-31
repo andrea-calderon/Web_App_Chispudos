@@ -23,19 +23,19 @@ const HighlightedCategories = () => {
   const scrollContainerRef = React.useRef<HTMLDivElement>(null);
 
   const scrollLeft = () => {
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollBy({ left: -200, behavior: 'smooth' });
-    }
+    scrollContainerRef.current?.scrollBy({ left: -200, behavior: 'smooth' });
   };
 
   const scrollRight = () => {
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollBy({ left: 200, behavior: 'smooth' });
-    }
+    scrollContainerRef.current?.scrollBy({ left: 200, behavior: 'smooth' });
   };
 
   const handleNavigate = () => {
     navigate('/search-services');
+  };
+
+  const handleCategoryClick = (categoryId) => {
+    navigate(`/search-services?category=${categoryId}`);
   };
 
   if (isLoading) {
@@ -80,11 +80,7 @@ const HighlightedCategories = () => {
         </TextAtom>
         <ButtonAtom
           variant="text"
-          sx={{
-            textTransform: 'none',
-            color: 'primary.main',
-            marginLeft: 2,
-          }}
+          sx={{ textTransform: 'none', color: 'primary.main', marginLeft: 2 }}
           onClick={handleNavigate}
         >
           <TextAtom variant="label" size="large">
@@ -153,7 +149,14 @@ const HighlightedCategories = () => {
               minWidth: '150px',
               maxWidth: '150px',
               flexShrink: 0,
+              cursor: 'pointer', // Hace que parezca clickeable
+              '&:hover': { backgroundColor: '#EADDFF', color: 'white' }, // Efecto visual
             }}
+            onClick={() =>
+              navigate(
+                `/search-services?category=${encodeURIComponent(category.name)}`,
+              )
+            } // Manejo del click
           >
             <CardContent>
               <img

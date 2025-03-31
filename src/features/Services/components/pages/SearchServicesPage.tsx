@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { UserLayout } from '../../../../components/templates/UserLayout';
 import { Box, Typography } from '@mui/material';
 import { useSearchServicesFormData } from '../../../../context/SearchContext';
@@ -9,17 +9,28 @@ import { useGetProductsQuery } from '../../../../services/productApi';
 
 export const SearchServicesPage: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { searchData } = useSearchServicesFormData();
   const [filteredResults, setFilteredResults] = useState([]);
-
   const { data: allServices, isLoading, isError } = useGetProductsQuery();
 
-  console.error('All services:', { allServices });
+  // Obtener el parámetro de la categoría desde la URL
+  const searchParams = new URLSearchParams(location.search);
+  const selectedCategory = searchParams.get('category');
+
   useEffect(() => {
     if (!allServices?.data?.items?.length) return;
 
     let results = allServices?.data?.items;
 
+    // Filtrar por la categoría seleccionada desde la URL
+    if (selectedCategory) {
+      results = results.filter((service) =>
+        service.categories?.some((cat) => cat.name === selectedCategory),
+      );
+    }
+
+    // Filtrar por el contexto de búsqueda (búsqueda de texto, ubicación, precio)
     if (searchData?.service?.length) {
       results = results.filter((service) =>
         searchData.service.includes(service.categories?.[0]?.name),
@@ -40,29 +51,13 @@ export const SearchServicesPage: React.FC = () => {
     }
 
     setFilteredResults(results);
-  }, [searchData, allServices]);
-
-  const handleServiceClick = (id: string) => {
-    navigate(`/services/${id}`);
-  };
+  }, [searchData, allServices, selectedCategory]);
 
   if (isLoading) {
     return (
       <UserLayout>
         <Box sx={{ padding: 4 }}>
           <Typography variant="h6">Cargando servicios...</Typography>
-        </Box>
-      </UserLayout>
-    );
-  }
-
-  if (isError) {
-    return (
-      <UserLayout>
-        <Box sx={{ padding: 4 }}>
-          <Typography variant="h6" color="error">
-            Ocurrió un error al cargar los servicios.
-          </Typography>
         </Box>
       </UserLayout>
     );
@@ -75,11 +70,11 @@ export const SearchServicesPage: React.FC = () => {
         {filteredResults.length > 0 ? (
           <ServicesList
             professionals={filteredResults}
-            onServiceClick={handleServiceClick}
+            onServiceClick={(id) => navigate(`/services/${id}`)}
           />
         ) : (
           <Typography variant="h6" color="textSecondary">
-            No se encontraron resultados para tu búsqueda.
+            No se encontraron resultados.
           </Typography>
         )}
       </Box>

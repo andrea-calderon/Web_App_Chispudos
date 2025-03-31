@@ -1,11 +1,17 @@
 import React from 'react';
-import { Grid, Typography, Box, CircularProgress } from '@mui/material';
+import { Grid, Typography, Box } from '@mui/material';
 import ServiceCard from './ServiceCard';
+import DEFAULT_IMAGE from '../../../../assets/images/DEFAULT_IMAGE.png';
 
 interface ServicesListProps {
   professionals: any[];
   onServiceClick: (id: string) => void;
 }
+
+const getFullImageUrl = (url: string | null) => {
+  const baseUrl = 'http://localhost:8000/api/v1';
+  return url?.startsWith('http') ? url : `${baseUrl}${url}`;
+};
 
 const ServicesList: React.FC<ServicesListProps> = ({
   professionals,
@@ -26,13 +32,20 @@ const ServicesList: React.FC<ServicesListProps> = ({
       {professionals.map((service) => (
         <Grid item xs={12} sm={6} md={4} key={service.id}>
           <ServiceCard
-            id={service.id}
-            name={service.name}
-            image={service.image}
-            pricePerHour={service.pricePerHour}
-            rating={service.rating}
-            reviewCount={service.reviewCount}
-            jobsInQueue={service.jobsInQueue}
+            image={
+              service.urlImage
+                ? getFullImageUrl(service.urlImage)
+                : DEFAULT_IMAGE
+            }
+            user={{
+              name: service.user?.name || 'Usuario desconocido',
+              lastname: service.user?.lastname || '',
+            }}
+            name={service.name || 'Servicio sin nombre'}
+            description={service.description || 'Descripción no disponible.'}
+            location={service.locations?.[0]?.description || 'No especificada'}
+            averageRating={service.averageRating || 0}
+            reviews={service.reviews || []}
             onClick={() => onServiceClick(service.id)}
           />
         </Grid>
