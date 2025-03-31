@@ -1,5 +1,13 @@
 import React from 'react';
-import { Box, Typography, Avatar, Divider, Grid2 as Grid, useMediaQuery, useTheme } from '@mui/material';
+import {
+  Box,
+  Typography,
+  Avatar,
+  Divider,
+  Grid2 as Grid,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material';
 import { Rating } from '@mui/material';
 
 interface Review {
@@ -26,7 +34,12 @@ export const ServiceReviews: React.FC<ServiceReviewsProps> = ({ reviews }) => {
   };
 
   return (
-    <Box bgcolor="#FFFBFE" padding="2rem" borderRadius="8px">
+    <Box
+      bgcolor="rgba(234, 221, 255, 0.3)"
+      paddinTop="3rem"
+      padding="2rem"
+      borderRadius="8px"
+    >
       <Typography variant="h5" fontWeight="bold" marginBottom="1rem">
         Reseñas
       </Typography>
@@ -34,7 +47,12 @@ export const ServiceReviews: React.FC<ServiceReviewsProps> = ({ reviews }) => {
         {reviews.length > 0 ? (
           reviews.map((review, index) => (
             <Box key={index}>
-              <Grid container spacing={2} alignItems="flex-start" marginBottom="1.5rem">
+              <Grid
+                container
+                spacing={2}
+                alignItems="flex-start"
+                marginBottom="1.5rem"
+              >
                 <Grid item xs={12} sm={2}>
                   <Avatar alt={review.name || 'Usuario'} />
                 </Grid>

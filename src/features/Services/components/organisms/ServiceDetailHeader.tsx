@@ -1,5 +1,13 @@
 import React from 'react';
-import { Box, Button, Typography, CardMedia, useMediaQuery, useTheme, Grid2 as Grid } from '@mui/material';
+import {
+  Box,
+  Button,
+  Typography,
+  CardMedia,
+  useMediaQuery,
+  useTheme,
+  Grid2 as Grid,
+} from '@mui/material';
 import StarIcon from '@mui/icons-material/Star';
 
 interface ServiceHeaderProps {
@@ -21,11 +29,7 @@ export const ServiceHeader: React.FC<ServiceHeaderProps> = ({
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   return (
-    <Box
-      marginBottom="2rem"
-      padding={isMobile ? 2 : 8}
-      backgroundColor="#E8DEF8"
-    >
+    <Box padding={isMobile ? 2 : 8} backgroundColor="#E8DEF8">
       <Grid container spacing={2} alignItems="center" justifyContent="center">
         <Grid item xs={12} md={4}>
           <CardMedia
@@ -33,9 +37,10 @@ export const ServiceHeader: React.FC<ServiceHeaderProps> = ({
             image={image}
             alt={title}
             sx={{
-              width: '100%',
+              maxWidth: '300px',
               height: 'auto',
               borderRadius: '16px',
+              mt: isMobile ? 4 : 0,
             }}
           />
         </Grid>
@@ -47,7 +52,12 @@ export const ServiceHeader: React.FC<ServiceHeaderProps> = ({
             <Typography variant={isMobile ? 'subtitle1' : 'h6'}>
               {providerName || 'Proveedor desconocido'}
             </Typography>
-            <Box display="flex" alignItems="center" justifyContent={isMobile ? 'center' : 'flex-start'} gap="0.5rem">
+            <Box
+              display="flex"
+              alignItems="center"
+              justifyContent={isMobile ? 'center' : 'flex-start'}
+              gap="0.5rem"
+            >
               <Typography variant={isMobile ? 'h6' : 'h5'} fontWeight="bold">
                 {rating ? rating.toFixed(1) : 'Aún no tiene reseñas.'}
               </Typography>
@@ -62,7 +72,7 @@ export const ServiceHeader: React.FC<ServiceHeaderProps> = ({
               variant="contained"
               color="primary"
               onClick={onOpenModal}
-              sx={{ mt: 2 }}
+              sx={{ mt: 2, mb: 4 }}
             >
               Reservar Servicio
             </Button>

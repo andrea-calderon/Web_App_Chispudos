@@ -1,61 +1,49 @@
-import React, { useState, useEffect } from 'react';
-import { Box, Typography, Chip, Grid2 as Grid } from '@mui/material';
+import React from 'react';
+import { Box, Typography, Chip, Grid } from '@mui/material';
+import { TextAtom } from '../../../../components/atoms';
 
-const randomSkills = [
-  'Limpieza a fondo',
-  'Organización de espacios',
-  'Mantenimiento de jardines',
-  'Pintura',
-  'Albañilería básica',
-  'Reparación de grifería',
-  'Instalación de luminarias',
-  'Carpintería básica',
-  'Electricidad básica',
-  'Reparación de electrodomésticos',
-  'Soldadura',
-  'Impermeabilización',
-  'Instalación de pisos',
-  'Mantenimiento de aires acondicionados',
-  'Reparación de techos',
-];
+interface Detail {
+  label: string;
+  value: string;
+  description: string;
+}
 
 interface ServiceOtherSkillsProps {
-  skills: string[];
+  skills: Detail[];
 }
 
 export const ServiceOtherSkills: React.FC<ServiceOtherSkillsProps> = ({
   skills,
 }) => {
-  const [randomSkillsList, setRandomSkillsList] = useState<string[]>([]);
-
-  useEffect(() => {
-    const generateRandomSkills = () => {
-      const selectedSkills = [];
-      while (selectedSkills.length < 6) {
-        const randomIndex = Math.floor(Math.random() * randomSkills.length);
-        const randomSkill = randomSkills[randomIndex];
-        if (!selectedSkills.includes(randomSkill)) {
-          selectedSkills.push(randomSkill);
-        }
-      }
-      setRandomSkillsList(selectedSkills);
-    };
-
-    generateRandomSkills();
-  }, []);
-
   return (
-    <Box marginY="2rem" paddingX={{ xs: 2, md: 8 }}>
-      <Typography variant="h5" fontWeight="bold" marginBottom="1rem">
+    <Box>
+      <TextAtom variant="headline" size="small" fontWeight="bold">
         Otras Habilidades
-      </Typography>
-      <Grid container spacing={2}>
-        {randomSkillsList.map((skill) => (
-          <Grid item xs={6} md={4} key={skill}>
-            <Chip label={skill} variant="outlined" fullWidth />
-          </Grid>
-        ))}
-      </Grid>
+      </TextAtom>
+      <Box marginBottom="2rem" />
+      {skills.length > 0 ? (
+        <Grid container spacing={3}>
+          {skills.map((skill, index) => (
+            <Grid item xs={12} sm={6} md={4} key={index}>
+              <Chip
+                label={skill.label}
+                variant="outlined"
+                sx={{ marginBottom: '0.5rem' }}
+              />
+              <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
+                {skill.value}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                {skill.description}
+              </Typography>
+            </Grid>
+          ))}
+        </Grid>
+      ) : (
+        <Typography variant="body1" color="text.secondary" marginTop="1rem">
+          Este comercio aún no ha agregado otras habilidades o servicios.
+        </Typography>
+      )}
     </Box>
   );
 };

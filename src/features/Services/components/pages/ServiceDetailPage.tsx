@@ -1,4 +1,5 @@
 import { useParams } from 'react-router-dom';
+import { useEffect } from 'react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { UserLayout } from '../../../../components/templates/UserLayout';
@@ -17,8 +18,10 @@ import { useDateValidation } from '../../../../hooks/useDateValidation';
 import CustomError from '../../../../utils/CustomError';
 import { ModalComponent } from '../../../../components/molecules';
 import { useGetProductByIdQuery } from '../../../../services/productApi';
-
-//TODO: Review and implement if needed ServiceOtherSkills
+import DEFAULT_IMAGE from '../../../../assets/images/DEFAULT_IMAGE.png';
+import { ArrowBack } from '@mui/icons-material';
+import { IconButton } from '@mui/material';
+import { TextAtom } from '../../../../components/atoms';
 
 export const ServiceDetailPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -29,6 +32,10 @@ export const ServiceDetailPage = () => {
 
   const [openModal, setOpenModal] = useState(false);
   const [selectedDateTime, setSelectedDateTime] = useState<Date | null>(null);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const { isDateEnabled } = useDateValidation({
     disabledDates: [
@@ -69,6 +76,10 @@ export const ServiceDetailPage = () => {
   const handleOpenModal = () => setOpenModal(true);
   const handleCloseModal = () => setOpenModal(false);
 
+  const handleGoBack = () => {
+    navigate('/search-services');
+  };
+
   if (isLoading) {
     return (
       <UserLayout>
@@ -95,8 +106,11 @@ export const ServiceDetailPage = () => {
 
   const title = service.name || 'Service not available';
   const providerName = `${service.user?.name || 'Unknown'} ${service.user?.lastname || ''}`;
+  const { description } = service;
   const rating = service.averageRating || 0;
-  const image = service.image || 'https://picsum.photos/300/200?random=4';
+  const image = service.urlImage
+    ? `${import.meta.env.VITE_BASE_API_URL}${service.urlImage}`
+    : DEFAULT_IMAGE;
 
   return (
     <UserLayout>
@@ -108,16 +122,35 @@ export const ServiceDetailPage = () => {
         onOpenModal={handleOpenModal}
       />
       <Grid container spacing={2}>
-        <Grid item xs={12} md={8}>
-          <Box>
-            <ServiceSkills skills={service.details || []} />
+        <Grid item xs={12} md={10} lg={10}>
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              paddingX: '4rem',
+              marginTop: '2rem',
+            }}
+          >
+            <IconButton onClick={handleGoBack} aria-label="Go back">
+              <ArrowBack />
+            </IconButton>
+            <TextAtom variant="body" size="large" marginLeft="0.5rem">
+              Regresar a la búsqueda
+            </TextAtom>
+          </Box>
+          <Box paddingX={'4rem'} paddingY={'4rem'}>
+            <ServiceSkills description={description || ''} />
             <ServiceProjects projects={service.recentProjects || []} />
-
-            {/* <ServiceOtherSkills skills={service.otherSkills || []} /> */}
+            <ServiceOtherSkills skills={service.details || []} />
           </Box>
         </Grid>
-        <Grid item xs={12} md={4}>
-          <Box>
+        <Grid item xs={12} md={2} lg={2}>
+          <Box
+            sx={{
+              paddingTop: { xs: '0rem', sm: '0rem', md: '4rem' },
+              paddingX: '4rem',
+            }}
+          >
             <ServiceReviews reviews={service.reviews || []} />
           </Box>
         </Grid>

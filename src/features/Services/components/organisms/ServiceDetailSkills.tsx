@@ -1,29 +1,31 @@
 import React from 'react';
-import { Box, Typography } from '@mui/material';
+import { Box } from '@mui/material';
+import { TextAtom } from '../../../../components/atoms';
+import { useTranslation } from 'react-i18next';
 
 interface ServiceSkillsProps {
-  skills: { value: string }[];
+  description: string;
 }
 
-export const ServiceSkills: React.FC<ServiceSkillsProps> = ({ skills }) => {
+export const ServiceSkills: React.FC<ServiceSkillsProps> = ({
+  description,
+}) => {
+  const { t } = useTranslation();
+
   return (
-    <Box marginY="2rem" marginLeft={16} marginBottom={8} marginRight={8}>
-      <Typography variant="h5" fontWeight="bold" marginBottom="1rem">
-        Habilidades y experiencia
-      </Typography>
-      {skills.length ? (
-        <ul>
-          {skills.map((skill, index) => (
-            <li key={index}>
-              <Typography>{skill.value}</Typography>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <Typography color="textSecondary">
-          No hay habilidades disponibles para este servicio.
-        </Typography>
-      )}
+    <Box marginBottom={'4rem'}>
+      <TextAtom
+        variant="headline"
+        size="small"
+        fontWeight="bold"
+        marginBottom="1rem"
+      >
+        {t('services.detailsPage.skillsAndExperience')}
+      </TextAtom>
+      <Box marginBottom="1rem" />
+      <TextAtom variant="body" size="large" color="text.secondary">
+        {description || 'No hay descripción disponible para este servicio.'}
+      </TextAtom>
     </Box>
   );
 };

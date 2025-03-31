@@ -283,9 +283,9 @@
 
     "services": {
       "searchBar":{
-        "clearFilters": "Limpiar filtros"
-                },
-        "serviceDetails":{
+      "clearFilters": "Limpiar filtros"
+         },
+      "serviceDetails":{
         "dateModalTitle": "Seleccionar fecha y hora",
         "navigationInput": "Detalles de la tarea",
         "navigationCompleted": "Revisar y confirmar",
@@ -299,8 +299,16 @@
         "confirmationTitle": "Has agendado con 'Limpieza de casas y apartamentos'",
         "confirmationMessage": "Descubre servicios adicionales ofrecidos por tu Especialista favorito, o forma un equipo de tus Especialistas preferidos en la sección Favoritos.",
         "continueButton": "Continuar"
-    }
     },
+    "detailsPage": {
+      "skillsAndExperience": "Habilidades y experiencia"
+    }
+  },
+
+
+"recommendedServices": {
+  "title": "Recomendados para ti"
+            },
 
 "footer": {
   "title": "Suscríbete a nuestro Newsletter",

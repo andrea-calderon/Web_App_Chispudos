@@ -260,7 +260,14 @@
       "confirmationTitle": "You have scheduled with 'Limpieza de casas y apartamentos'",
       "confirmationMessage": "Discover additional services offered by your favorite Specialist, or form a team of your favorite Specialists in the Favorites section.",
       "continueButton": "Continue"
+  },
+  "detailsPage": {
+    "skillsAndExperience": "Skills and Experience"
   }
+},
+
+  "recommendedServices": {
+  "title": "Recomendados para ti"
     },
 
 "footer": {
