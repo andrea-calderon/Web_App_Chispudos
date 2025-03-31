@@ -1,5 +1,6 @@
 import React from 'react';
-import { Box, Card, CardContent, CardMedia, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
+import { TextAtom } from '../../../../components/atoms';
 
 interface Project {
   title: string;
@@ -11,39 +12,42 @@ interface ServiceProjectsProps {
 }
 
 export const ServiceProjects: React.FC<ServiceProjectsProps> = ({
-  projects = [
-    {
-      title: 'Reforma de baño',
-      img: 'https://via.placeholder.com/200x120?text=Reforma+de+baño',
-    },
-    {
-      title: 'Construcción de terraza',
-      img: 'https://via.placeholder.com/200x120?text=Construcción+de+terraza',
-    },
-    {
-      title: 'Pintura de fachada',
-      img: 'https://via.placeholder.com/200x120?text=Pintura+de+fachada',
-    },
-  ],
+  projects = [],
 }) => {
   if (!projects.length) {
     return (
-      <Box marginY="6rem" marginLeft={16} textAlign="left">
-        <Typography variant="h5" fontWeight="bold" marginBottom="1rem">
+      <Box marginBottom={'4rem'}>
+        <TextAtom
+          variant="headline"
+          size="small"
+          fontWeight="bold"
+          marginBottom="1rem"
+        >
           Proyectos recientes
-        </Typography>
-        <Typography variant="body1" color="textSecondary">
+        </TextAtom>
+        <Box marginBottom="1rem" />
+        <TextAtom
+          variant="body"
+          size="large"
+          color="textSecondary"
+          marginBottom="1rem"
+        >
           No hay proyectos disponibles en este momento.
-        </Typography>
+        </TextAtom>
       </Box>
     );
   }
 
   return (
     <Box marginY="6rem" marginLeft={16}>
-      <Typography variant="h5" fontWeight="bold" marginBottom="1rem">
+      <TextAtom
+        variant="title"
+        size="large"
+        fontWeight="bold"
+        marginBottom="1rem"
+      >
         Proyectos recientes
-      </Typography>
+      </TextAtom>
       <Box display="flex" gap="1rem" flexWrap="wrap">
         {projects.map((project) => (
           <Card
