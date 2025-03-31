@@ -1,4 +1,5 @@
 import { useParams } from 'react-router-dom';
+import { useEffect } from 'react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { UserLayout } from '../../../../components/templates/UserLayout';
@@ -31,6 +32,10 @@ export const ServiceDetailPage = () => {
 
   const [openModal, setOpenModal] = useState(false);
   const [selectedDateTime, setSelectedDateTime] = useState<Date | null>(null);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const { isDateEnabled } = useDateValidation({
     disabledDates: [

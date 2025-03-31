@@ -15,6 +15,7 @@ import { useGetProductsQuery } from '../../../../services/productApi';
 import DEFAULT_IMAGE from '../../../../assets/images/DEFAULT_IMAGE.png';
 import { TextAtom } from '../../../../components/atoms';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
 const RecommendedServices: React.FC = () => {
   const { t } = useTranslation();
@@ -22,6 +23,7 @@ const RecommendedServices: React.FC = () => {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const isMediumScreen = useMediaQuery(theme.breakpoints.between('sm', 'md'));
+  const navigate = useNavigate();
 
   const topRatedServices = data?.data?.items
     ?.slice() // Crear una copia del array para evitar modificar el original
@@ -35,6 +37,10 @@ const RecommendedServices: React.FC = () => {
       const scrollAmount = direction === 'left' ? -300 : 300;
       scrollRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
     }
+  };
+
+  const handleCardClick = (id: number) => {
+    navigate(`/services/${id}`); // Redirigir a la página de detalles con el ID
   };
 
   if (isLoading) {
@@ -123,7 +129,9 @@ const RecommendedServices: React.FC = () => {
                     sx={{
                       flex: '0 0 auto',
                       width: isSmallScreen ? '65%' : '40%',
+                      cursor: 'pointer',
                     }}
+                    onClick={() => handleCardClick(service.id)}
                   >
                     <ServicesCard
                       name={service.name || 'Servicio sin nombre'}
@@ -167,7 +175,16 @@ const RecommendedServices: React.FC = () => {
               }}
             >
               {topRatedServices.map((service: any) => (
-                <Grid item xs={12} sm={6} md={4} lg={2} key={service.id}>
+                <Grid
+                  item
+                  xs={12}
+                  sm={6}
+                  md={4}
+                  lg={2}
+                  key={service.id}
+                  sx={{ cursor: 'pointer' }}
+                  onClick={() => handleCardClick(service.id)}
+                >
                   <ServicesCard
                     name={service.name || 'Servicio sin nombre'}
                     image={

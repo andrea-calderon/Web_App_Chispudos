@@ -6,6 +6,7 @@ import { useSearchServicesFormData } from '../../../../context/SearchContext';
 import ServicesList from '../organisms/ServicesList';
 import SearchBar from '../../../../components/organisms/SearchBar';
 import { useGetProductsQuery } from '../../../../services/productApi';
+import RecommendedServices from '../../../home/components/organisms/RecommendedServices';
 
 export const SearchServicesPage: React.FC = () => {
   const navigate = useNavigate();
@@ -83,6 +84,7 @@ export const SearchServicesPage: React.FC = () => {
           </Typography>
         )}
       </Box>
+      <RecommendedServices />
     </UserLayout>
   );
 };
