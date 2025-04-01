@@ -40,12 +40,10 @@ const Login: React.FC = () => {
         dispatch(loginSuccess({ user, token }));
         setSuccessMsg(t('auth.login.success'));
         navigate('/home');
-      } else {
-        setErrorMsg(result.message);
-      }
+      } 
     } catch (error) {
       logger('error', error, 'Login.tsx.handleLogin', 'Web');
-      setErrorMsg(t('auth.login.form.error.invalid_acc'));
+      setErrorMsg(error.data.message);
     }
   };
 

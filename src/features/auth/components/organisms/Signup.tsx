@@ -10,6 +10,9 @@ import { logger } from '../../../../utils/logger';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import AppLogo from '../../../../components/molecules/AppLogo';
 import { useSignupMutation } from '../../../../services/authApi';
+import { useLoginMutation } from '../../../../services/authApi';
+import { useAppDispatch } from '../../../../hooks/useAppDispatch';
+import { loginSuccess } from '../../../../redux/slices/authSlice';
 
 type SignupValues = {
   
@@ -24,6 +27,8 @@ const Signup: React.FC = () => {
   const [successMsg, setSuccessMsg] = useState('');
   const { t } = useTranslation();
   const [onSignup] = useSignupMutation();
+  const [login, { isLoading }] = useLoginMutation();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const validationSchema = Yup.object({
@@ -38,18 +43,39 @@ const Signup: React.FC = () => {
       .required(t('forms.commons.required')),
   });
 
-  const handleSignup = async (values: SignupValues) => {
+  const handleLogin = async (values: SignupValues) => {
     try {
-      await onSignup(values).unwrap();
-      setSuccessMsg(t('auth.register.signup_success'));
+      const result = await login(values).unwrap();
+      if (result.success) {
+        const { token, user } = result.data;
+        dispatch(loginSuccess({ user, token }));
+        setSuccessMsg(t('auth.login.success'));
+        navigate('/home');
+      } else {
+        setErrorMsg(result.message);
+      }
     } catch (error) {
-      logger('error', error, 'Signup.tsx.handleSignup', 'Web');
-      setErrorMsg(t('auth.register.signup_error')); 
+      logger('error', error, 'Login.tsx.handleLogin', 'Web');
+      setErrorMsg(error.data.message)
     }
   };
 
+  const handleSignup = async (values: SignupValues) => {
+    try {
+      const signupResponse = await onSignup(values).unwrap();
+      setSuccessMsg(t('auth.register.signup_success'));
+      if(signupResponse.success){
+        handleLogin(values)
+      }
+    } catch (error) {
+      logger('error', error, 'Signup.tsx.handleSignup', 'Web');
+      setErrorMsg(error.data.message) 
+    }
+  };
+
+  
+
   const handleSubmit = async (values: SignupValues, { setSubmitting }: FormikHelpers<SignupValues>) => {
-    console.log('values', values);
     await handleSignup(values);
     setSubmitting(false);
   }
@@ -120,7 +146,7 @@ const Signup: React.FC = () => {
           validationSchema={validationSchema}
           onSubmit={handleSubmit}
         >
-          {({ isSubmitting, touched, errors }) => (
+          {({ isSubmitting, errors }) => (
             <Form style={{ width: '350px' }} >
               <Grid
                 container
