@@ -27,6 +27,9 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
         boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
         borderRadius: '24px',
         cursor: onClick ? 'pointer' : 'default',
+        display: 'flex', // Asegurar que el contenido se distribuya en columnas
+        flexDirection: 'column', // Forzar que los elementos internos estén en columna
+        height: '100%', // Asegurar que todas las tarjetas tengan la misma altura
       }}
       onClick={onClick}
     >
@@ -35,7 +38,6 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-          //pt: 2,
         }}
       >
         <CardMedia
@@ -46,7 +48,6 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
           sx={{
             width: 400,
             height: 200,
-            //borderRadius: '0%', // Imagen circular
             objectFit: 'cover',
           }}
         />
@@ -55,6 +56,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
       <CardContent
         sx={{
           px: 5,
+          flexGrow: 1, // Permitir que el contenido crezca para llenar el espacio disponible
         }}
       >
         <TextAtom variant="body" size="medium">
@@ -101,7 +103,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
           color="primary"
           fullWidth
           onClick={(e) => {
-            e.stopPropagation(); // Evitamos que el evento de clic en el botón propague al resto de la tarjeta
+            e.stopPropagation(); // Evitar que el clic en el botón propague al resto de la tarjeta
             if (onClick) onClick();
           }}
         >

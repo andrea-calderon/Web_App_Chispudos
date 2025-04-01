@@ -152,11 +152,7 @@ const HighlightedCategories = () => {
               cursor: 'pointer', // Hace que parezca clickeable
               '&:hover': { backgroundColor: '#EADDFF', color: 'white' }, // Efecto visual
             }}
-            onClick={() =>
-              navigate(
-                `/search-services?category=${encodeURIComponent(category.name)}`,
-              )
-            } // Manejo del click
+            onClick={() => handleCategoryClick(category.id)}
           >
             <CardContent>
               <img

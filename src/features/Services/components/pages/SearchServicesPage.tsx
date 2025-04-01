@@ -18,7 +18,6 @@ export const SearchServicesPage: React.FC = () => {
   // Obtener el parámetro de la categoría desde la URL
   const searchParams = new URLSearchParams(location.search);
   const selectedCategory = searchParams.get('category');
-
   useEffect(() => {
     if (!allServices?.data?.items?.length) return;
 
@@ -26,8 +25,11 @@ export const SearchServicesPage: React.FC = () => {
 
     // Filtrar por la categoría seleccionada desde la URL
     if (selectedCategory) {
+      const selectedCategoryId = parseInt(selectedCategory, 10); // Convertir el parámetro a número
       results = results.filter((service) =>
-        service.categories?.some((cat) => cat.name === selectedCategory),
+        service.categories?.some(
+          (category) => category.id === selectedCategoryId,
+        ),
       );
     }
 
