@@ -9,7 +9,7 @@ export const productApi = createApi({
       query: () => 'public/products/',
     }),
     getProductById: builder.query({
-      query: (id) => `/products/${id}/`,
+      query: (id) => `public/products/${id}/`,
     }),
     createProduct: builder.mutation({
       query: (productData) => ({
