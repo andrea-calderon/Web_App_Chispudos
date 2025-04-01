@@ -25,7 +25,7 @@ import { TextAtom } from '../../../../components/atoms';
 
 export const ServiceDetailPage = () => {
   const { id } = useParams<{ id: string }>();
-  const { data, isLoading, isError } = useGetProductByIdQuery(id!);
+  const { data, isLoading, isError, error } = useGetProductByIdQuery(id!);
   const service = data?.data;
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -97,8 +97,8 @@ export const ServiceDetailPage = () => {
 
   if (isError) {
     throw new CustomError(
-      '500',
-      'Server or API Error: Try again later',
+      error?.originalStatus,
+      error?.data,
       'Go Back',
       () => navigate('/'),
     );

@@ -1,5 +1,6 @@
 import React, { useCallback, useState } from 'react';
-import { Box, Container, Grid, IconButton } from '@mui/material';
+import { Box, Container,IconButton, Alert } from '@mui/material';
+import Grid from '@mui/material/Grid2'
 import { Form, Formik, FormikHelpers } from 'formik';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -9,6 +10,9 @@ import { logger } from '../../../../utils/logger';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import AppLogo from '../../../../components/molecules/AppLogo';
 import { useSignupMutation } from '../../../../services/authApi';
+import { useLoginMutation } from '../../../../services/authApi';
+import { useAppDispatch } from '../../../../hooks/useAppDispatch';
+import { loginSuccess } from '../../../../redux/slices/authSlice';
 
 type SignupValues = {
   
@@ -20,8 +24,11 @@ type SignupValues = {
 const Signup: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
+  const [successMsg, setSuccessMsg] = useState('');
   const { t } = useTranslation();
   const [onSignup] = useSignupMutation();
+  const [login, { isLoading }] = useLoginMutation();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const validationSchema = Yup.object({
@@ -36,16 +43,39 @@ const Signup: React.FC = () => {
       .required(t('forms.commons.required')),
   });
 
+  const handleLogin = async (values: SignupValues) => {
+    try {
+      const result = await login(values).unwrap();
+      if (result.success) {
+        const { token, user } = result.data;
+        dispatch(loginSuccess({ user, token }));
+        setSuccessMsg(t('auth.login.success'));
+        navigate('/home');
+      } else {
+        setErrorMsg(result.message);
+      }
+    } catch (error) {
+      logger('error', error, 'Login.tsx.handleLogin', 'Web');
+      setErrorMsg(error.data.message)
+    }
+  };
+
   const handleSignup = async (values: SignupValues) => {
     try {
-      await onSignup(values);
+      const signupResponse = await onSignup(values).unwrap();
+      setSuccessMsg(t('auth.register.signup_success'));
+      if(signupResponse.success){
+        handleLogin(values)
+      }
     } catch (error) {
       logger('error', error, 'Signup.tsx.handleSignup', 'Web');
+      setErrorMsg(error.data.message) 
     }
-  }
+  };
+
+  
 
   const handleSubmit = async (values: SignupValues, { setSubmitting }: FormikHelpers<SignupValues>) => {
-    console.log('values', values);
     await handleSignup(values);
     setSubmitting(false);
   }
@@ -105,6 +135,7 @@ const Signup: React.FC = () => {
           <AppLogo maxWidth='250px' />
         </Box>
         <Box sx={{ height: '100px' }} />
+        
         <Formik
           initialValues={{
             
@@ -115,7 +146,7 @@ const Signup: React.FC = () => {
           validationSchema={validationSchema}
           onSubmit={handleSubmit}
         >
-          {({ isSubmitting, touched, errors }) => (
+          {({ isSubmitting, errors }) => (
             <Form style={{ width: '350px' }} >
               <Grid
                 container
@@ -123,7 +154,7 @@ const Signup: React.FC = () => {
                 direction="column"
                 justifyContent="center"
               >
-                <Grid item xs={12}>
+                <Grid size={{xs: 12}}>
                   <InputAtom
                     name="email"
                     type="email"
@@ -136,7 +167,7 @@ const Signup: React.FC = () => {
                     sx={{ width: '100%', maxWidth: '328px' }}
                   />
                 </Grid>
-                <Grid item xs={12}>
+                <Grid size={{xs: 12}}>
                   <InputAtom
                     name="password"
                     type={showPassword ? 'text' : 'password'}
@@ -149,7 +180,7 @@ const Signup: React.FC = () => {
                     sx={{ width: '100%', maxWidth: '328px' }}
                   />
                 </Grid>
-                <Grid item xs={12}>
+                <Grid size={{xs: 12}}>
                   <InputAtom
                     name="confirmPassword"
                     type={showPassword ? 'text' : 'password'}
@@ -162,7 +193,16 @@ const Signup: React.FC = () => {
                     sx={{ width: '100%', maxWidth: '328px' }}
                   />
                 </Grid>
-                <Grid item xs={12}>
+
+                <Grid size={{xs: 12}}>
+                  {(errorMsg || successMsg) && (
+                    <Alert severity={errorMsg ? 'error' : 'success'}>
+                      {errorMsg || successMsg}
+                    </Alert>
+                  )}
+                </Grid>
+
+                <Grid size={{xs: 12}}>
                   <ButtonAtom
                     type="submit"
                     variant="filled"
@@ -180,8 +220,7 @@ const Signup: React.FC = () => {
                 </Grid>
                 <Box sx={{ height: '191px' }} />
                 <Grid
-                  item
-                  xs={12}
+                  size={{xs: 12}}
                   sx={{
                     display: 'flex',
                     flexDirection: 'row',
