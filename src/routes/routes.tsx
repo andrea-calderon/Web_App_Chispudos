@@ -29,6 +29,7 @@ const AppRoutes = () => {
         <ErrorBoundaryWrapper>
           <Routes>
             {/* Public Routes */}
+            <Route path="/" element={<LandingPage />} />
             <Route
               path="/login"
               element={
@@ -36,14 +37,15 @@ const AppRoutes = () => {
               }
             />
             <Route path="/register" element={<RegisterPage />} />
-            <Route path="/" element={<LandingPage />} />
             <Route path="/password-recovery" element={<PasswordRecovery />} />
+
+            {/* Publicly accessible pages (FIX) */}
+            <Route path="/home" element={<HomePage />} />
+            <Route path="/search-services" element={<SearchServicesPage />} />
+            <Route path="/services/:id" element={<ServiceDetailPage />} />
 
             {/* Protected Routes */}
             <Route element={<ProtectedRoutesWrapper />}>
-              <Route path="/home" element={<HomePage />} />
-              <Route path="/search-services" element={<SearchServicesPage />} />
-              <Route path="/services/:id" element={<ServiceDetailPage />} />
               <Route path="/service-details" element={<TaskDetailsPage />} />
               <Route path="/stepper" element={<BusinessStepper />} />
               <Route path="/profile" element={<BusinessProfilePage />} />
