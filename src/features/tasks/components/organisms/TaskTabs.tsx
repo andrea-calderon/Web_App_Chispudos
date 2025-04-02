@@ -1,14 +1,12 @@
 import { useState } from 'react';
 import { Tabs, Tab, Box } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import BusinessProfile from './BusinessProfile';
-import BusinessChat from './BusinessChat';
-import BusinessOrderPage from './BusinessOrders';
-import { ProfilePage } from '../../../profile/components/pages/ProfilePage';
+import BusinessOrderPage from '../../../Business/Components/Organisms/BusinessOrders';
+import ChatComponent from '../../../Business/Components/Organisms/BusinessChat';
 
 const BusinessTabs = () => {
   const { t } = useTranslation();
-  const [selectedTab, setSelectedTab] = useState(2);
+  const [selectedTab, setSelectedTab] = useState(0);
 
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
     setSelectedTab(newValue);
@@ -31,7 +29,7 @@ const BusinessTabs = () => {
         textColor="primary"
         TabIndicatorProps={{ sx: { backgroundColor: '#4B2E83', height: 4 } }}
         sx={{
-          flexWrap: 'wrap',
+          flexWrap: 'wrap', // Permitir que las pestañas se ajusten en pantallas pequeñas
           '.MuiTab-root': {
             fontSize: { xs: '12px', md: '14px' },
             minWidth: { xs: '40px', md: '150px' }, // Ajustar el ancho mínimo de las pestañas
@@ -39,16 +37,12 @@ const BusinessTabs = () => {
         }}
       >
         <Tab
-          label={t('businessProfilePage.tabs.chat')}
+          label={t('tasksPage.tabs.summary')}
           sx={{ color: selectedTab === 0 ? 'black' : 'gray' }}
         />
         <Tab
-          label={t('businessProfilePage.tabs.services')}
+          label={t('tasksPage.tabs.chat')}
           sx={{ color: selectedTab === 1 ? 'black' : 'gray' }}
-        />
-        <Tab
-          label={t('businessProfilePage.tabs.profile')}
-          sx={{ color: selectedTab === 2 ? 'black' : 'gray' }}
         />
       </Tabs>
 
@@ -58,12 +52,11 @@ const BusinessTabs = () => {
           bgcolor: 'white',
           borderRadius: '8px',
           overflowY: 'auto',
-          height: { xs: 'calc(100vh - 150px)', md: 'auto' },
+          height: { xs: 'calc(100vh - 150px)', md: 'auto' }, // Ajustar altura en mobile
         }}
       >
-        {selectedTab === 0 && <BusinessChat />}
-        {selectedTab === 1 && <BusinessProfile />}
-        {selectedTab === 2 && <ProfilePage />}
+        {selectedTab === 0 && <BusinessOrderPage />}
+        {selectedTab === 1 && <ChatComponent />}
       </Box>
     </Box>
   );
