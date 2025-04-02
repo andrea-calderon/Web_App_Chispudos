@@ -276,9 +276,7 @@
 },
 
 "favoritesPage":{
-  "title": "Favorites",
-  "details": "Detalle de tarea",
-  "chat": "Chat"
+  "title": "Favorites"
 },
 
 "recommendedServices": {

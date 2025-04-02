@@ -314,9 +314,7 @@
   },
 
   "favoritesPage":{
-      "title": "Favoritos",
-      "details": "Detalle de tarea",
-      "chat": "Chat"
+      "title": "Favoritos"
   },
 
 "recommendedServices": {
