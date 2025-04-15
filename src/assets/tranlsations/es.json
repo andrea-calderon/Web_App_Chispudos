@@ -305,6 +305,17 @@
     }
   },
 
+  "tasksPage":{
+    "tabs": {
+      "summary": "Resumen de tareas",
+      "details": "Detalle de tarea",
+      "chat": "Chat"
+    }
+  },
+
+  "favoritesPage":{
+      "title": "Favoritos"
+  },
 
 "recommendedServices": {
   "title": "Recomendados para ti"

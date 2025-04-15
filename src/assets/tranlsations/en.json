@@ -267,9 +267,21 @@
   }
 },
 
-  "recommendedServices": {
+"tasksPage":{
+  "tabs": {
+    "summary": "Tasks Summary",
+    "details": "Task Details",
+    "chat": "Chat"
+  }
+},
+
+"favoritesPage":{
+  "title": "Favorites"
+},
+
+"recommendedServices": {
   "title": "Recomendados para ti"
-    },
+},
 
 "footer": {
   "title": "Subscribe to our Newsletter",

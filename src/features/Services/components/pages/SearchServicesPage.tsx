@@ -13,19 +13,36 @@ export const SearchServicesPage: React.FC = () => {
   const location = useLocation();
   const { searchData } = useSearchServicesFormData();
   const [filteredResults, setFilteredResults] = useState([]);
-  const { data: allServices, isLoading, isError } = useGetProductsQuery();
+  const { data: allServices, isLoading } = useGetProductsQuery();
 
-  // Obtener el parámetro de la categoría desde la URL
+  const [favorites, setFavorites] = useState<ProductService[]>(() => {
+    // Recuperar favoritos almacenados como objetos
+    return JSON.parse(localStorage.getItem('favoriteServices') || '[]');
+  });
+
+  // 🔥 Función para agregar/eliminar favoritos
+  const toggleFavorite = (service: ProductService) => {
+    let updatedFavorites;
+    if (favorites.some((fav) => fav.id === service.id)) {
+      // Si ya está en favoritos, eliminarlo
+      updatedFavorites = favorites.filter((fav) => fav.id !== service.id);
+    } else {
+      // Si no está en favoritos, agregarlo
+      updatedFavorites = [...favorites, service];
+    }
+    setFavorites(updatedFavorites);
+    localStorage.setItem('favoriteServices', JSON.stringify(updatedFavorites)); // Guardar en localStorage
+  };
+
   const searchParams = new URLSearchParams(location.search);
   const selectedCategory = searchParams.get('category');
+
   useEffect(() => {
     if (!allServices?.data?.items?.length) return;
-
     let results = allServices?.data?.items;
 
-    // Filtrar por la categoría seleccionada desde la URL
     if (selectedCategory) {
-      const selectedCategoryId = parseInt(selectedCategory, 10); // Convertir el parámetro a número
+      const selectedCategoryId = parseInt(selectedCategory, 10);
       results = results.filter((service) =>
         service.categories?.some(
           (category) => category.id === selectedCategoryId,
@@ -33,7 +50,6 @@ export const SearchServicesPage: React.FC = () => {
       );
     }
 
-    // Filtrar por el contexto de búsqueda (búsqueda de texto, ubicación, precio)
     if (searchData?.service?.length) {
       results = results.filter((service) =>
         searchData.service.includes(service.categories?.[0]?.name),
@@ -73,6 +89,11 @@ export const SearchServicesPage: React.FC = () => {
         {filteredResults.length > 0 ? (
           <ServicesList
             professionals={filteredResults}
+            favorites={favorites.map((fav) => fav.id)} // Pasar solo los IDs de favoritos
+            onToggleFavorite={(id) => {
+              const service = filteredResults.find((s) => s.id === id);
+              if (service) toggleFavorite(service);
+            }}
             onServiceClick={(id) => navigate(`/services/${id}`)}
           />
         ) : (

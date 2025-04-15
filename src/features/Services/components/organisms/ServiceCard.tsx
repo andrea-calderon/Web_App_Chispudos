@@ -1,15 +1,27 @@
 import React from 'react';
-import { Card, CardMedia, CardContent, CardActions, Box } from '@mui/material';
+import {
+  Card,
+  CardMedia,
+  CardContent,
+  CardActions,
+  Box,
+  IconButton,
+} from '@mui/material';
 import StarIcon from '@mui/icons-material/Star';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { ProductService } from '../../../../types/api/modelTypes';
 import { TextAtom } from '../../../../components/atoms';
 import { ButtonAtom } from '../../../../components/atoms';
 
 interface ServiceCardProps extends ProductService {
   onClick?: () => void;
+  isFavorite: boolean; // ✅ Prop para saber si está en favoritos
+  onToggleFavorite: (id: string) => void; // ✅ Función para marcar/desmarcar favoritos
 }
 
 const ServiceCard: React.FC<ServiceCardProps> = ({
+  id,
   image,
   user,
   name,
@@ -18,6 +30,8 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
   averageRating,
   reviews = [],
   onClick,
+  isFavorite,
+  onToggleFavorite,
 }) => {
   return (
     <Card
@@ -27,18 +41,36 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
         boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
         borderRadius: '24px',
         cursor: onClick ? 'pointer' : 'default',
-        display: 'flex', // Asegurar que el contenido se distribuya en columnas
-        flexDirection: 'column', // Forzar que los elementos internos estén en columna
-        height: '100%', // Asegurar que todas las tarjetas tengan la misma altura
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+        position: 'relative', // ✅ Para posicionar el ícono de favoritos
       }}
       onClick={onClick}
     >
-      <Box
+      <IconButton
         sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
+          position: 'absolute',
+          top: 10,
+          right: 10,
+          zIndex: 2,
+          backgroundColor: isFavorite ? 'error.main' : 'rgba(0, 0, 0, 0.6)', // Fondo rojo si está en favoritos, gris oscuro si no
+          color: 'white', // Color del contorno blanco
+          border: '2px solid white', // Contorno blanco
+          '&:hover': {
+            backgroundColor: isFavorite ? 'error.dark' : 'rgba(0, 0, 0, 0.8)', // Cambiar el fondo al pasar el mouse
+          },
         }}
+        onClick={(e) => {
+          e.stopPropagation(); // Evita que el clic afecte la navegación
+          onToggleFavorite(id); // Llama a la función para marcar/desmarcar favoritos
+        }}
+      >
+        {isFavorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
+      </IconButton>
+
+      <Box
+        sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
       >
         <CardMedia
           component="img"
@@ -53,12 +85,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
         />
       </Box>
 
-      <CardContent
-        sx={{
-          px: 5,
-          flexGrow: 1, // Permitir que el contenido crezca para llenar el espacio disponible
-        }}
-      >
+      <CardContent sx={{ px: 5, flexGrow: 1 }}>
         <TextAtom variant="body" size="medium">
           {user?.name
             ? `${user.name} ${user.lastname || ''}`

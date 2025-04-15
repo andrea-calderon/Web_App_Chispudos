@@ -78,7 +78,7 @@ function ResponsiveAppBar() {
     {
       label: t('appBar.authNavItems.favorites'),
       icon: <FavoriteIcon />,
-      path: '/specialists',
+      path: '/favorites',
     },
     { label: <TranslateIcon />, action: () => toggleLanguage() },
     { label: <AccountIcon fontSize="large" />, path: '/profile' },

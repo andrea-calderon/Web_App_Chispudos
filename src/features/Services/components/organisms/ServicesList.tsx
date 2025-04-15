@@ -5,17 +5,21 @@ import DEFAULT_IMAGE from '../../../../assets/images/DEFAULT_IMAGE.png';
 
 interface ServicesListProps {
   professionals: any[];
+  favorites: string[]; // IDs de servicios favoritos
   onServiceClick: (id: string) => void;
+  onToggleFavorite: (id: string) => void; // Función para manejar favoritos
 }
 
 const getFullImageUrl = (url: string | null) => {
-  const baseUrl = 'http://localhost:8000/api/v1';
+  const baseUrl = import.meta.env.VITE_BASE_API_URL; // Usar variable de entorno
   return url?.startsWith('http') ? url : `${baseUrl}${url}`;
 };
 
 const ServicesList: React.FC<ServicesListProps> = ({
   professionals,
+  favorites,
   onServiceClick,
+  onToggleFavorite,
 }) => {
   if (!professionals.length) {
     return (
@@ -46,7 +50,9 @@ const ServicesList: React.FC<ServicesListProps> = ({
             location={service.locations?.[0]?.description || 'No especificada'}
             averageRating={service.averageRating || 0}
             reviews={service.reviews || []}
-            onClick={() => onServiceClick(service.id)}
+            isFavorite={favorites.includes(service.id)} // Verificar si está en favoritos
+            onToggleFavorite={() => onToggleFavorite(service.id)} // Manejar favoritos
+            onClick={() => onServiceClick(service.id)} // Navegar al detalle del servicio
           />
         </Grid>
       ))}
