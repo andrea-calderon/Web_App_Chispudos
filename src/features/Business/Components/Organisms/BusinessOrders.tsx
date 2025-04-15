@@ -16,12 +16,25 @@ import { ButtonAtom } from '../../../../components/atoms';
 import React, { useMemo } from 'react';
 import { useGetOrdersQuery } from '../../../../services/ordersApi';
 import { format } from 'date-fns';
+import ChatIcon from '@mui/icons-material/Chat';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import { IconButton, Tooltip } from '@mui/material';
+import { useUserRole } from '../../../../features/auth/hooks/authHooks';
+import DEFAULT_IMAGE from '../../../../assets/images/DEFAULT_IMAGE.png';
+
+const getFullImageUrl = (url: string | null) => {
+  const baseUrl = import.meta.env.VITE_BASE_API_URL || 'http://localhost:8000';
+  return url?.startsWith('http') ? url : `${baseUrl}${url}`;
+};
 
 const BusinessOrderPage = () => {
   const { t } = useTranslation();
   const theme = useTheme();
   const { data, isLoading } = useGetOrdersQuery();
   const [orderStatus, setOrderStatus] = React.useState(1);
+
+  const userRole = useUserRole();
+  console.log('Rol del usuario:', userRole);
 
   const handleStatusChange = (status: number) => {
     setOrderStatus(status);
@@ -33,32 +46,40 @@ const BusinessOrderPage = () => {
     return orders?.filter((order) => order.status === orderStatus);
   }, [orders, orderStatus]);
 
-  const FILTER_OPTIONS = useMemo(() => [
-    {
-      label: 'Empiezan pronto',
-      status: 1,
-      value: orders?.filter((order) => order.status === 1).length,
-    },
-    {
-      label: 'En curso',
-      status: 2,
-      value: orders?.filter((order) => order.status === 2).length,
-    },
-    {
-      label: 'Completadas',
-      status: 3,
-      value: orders?.filter((order) => order.status === 3).length,
-    },
-    {
-      label: 'Canceladas',
-      status: 4,
-      value: orders?.filter((order) => order.status === 4).length,
-    },
-  ], [orders]);
+  const FILTER_OPTIONS = useMemo(
+    () => [
+      {
+        label: 'Empiezan pronto',
+        status: 1,
+        value: orders?.filter((order) => order.status === 1).length,
+      },
+      {
+        label: 'En curso',
+        status: 2,
+        value: orders?.filter((order) => order.status === 2).length,
+      },
+      {
+        label: 'Completadas',
+        status: 3,
+        value: orders?.filter((order) => order.status === 3).length,
+      },
+      {
+        label: 'Canceladas',
+        status: 4,
+        value: orders?.filter((order) => order.status === 4).length,
+      },
+    ],
+    [orders],
+  );
 
   if (isLoading) {
     return (
-      <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        height="100vh"
+      >
         <CircularProgress />
       </Box>
     );
@@ -82,15 +103,58 @@ const BusinessOrderPage = () => {
           </ButtonAtom>
         ))}
       </Stack>
-      <List sx={{ width: '100%' }}>
+      <List sx={{ width: '100%', paddingX: 5 }}>
         {ordersFilteredByStatus?.length > 0 ? (
           ordersFilteredByStatus.map((order, index) => (
-            <ListItem key={order.id} alignItems="flex-start">
+            <ListItem
+              key={order.id}
+              alignItems="flex-start"
+              secondaryAction={
+                <Box display="flex" alignItems="center" gap={1}>
+                  {/* Mostrar botón "Finalizar tarea" */}
+                  {userRole === 'service' && order.status === 2 && (
+                    <Tooltip title="Finalizar tarea">
+                      <IconButton
+                        color="success"
+                        size="small"
+                        onClick={() =>
+                          console.log(`Finalizar tarea para order ${order.id}`)
+                        }
+                      >
+                        <CheckCircleIcon fontSize="small" />
+                      </IconButton>
+                    </Tooltip>
+                  )}
+
+                  {/* Mostrar botón "Chat" */}
+                  {(userRole === 'user' || userRole === 'service') &&
+                    order.status < 3 && (
+                      <Tooltip title="Iniciar conversación">
+                        <IconButton
+                          color="primary"
+                          size="small"
+                          onClick={() =>
+                            console.log(`Iniciar chat para order ${order.id}`)
+                          }
+                        >
+                          <ChatIcon fontSize="small" />
+                        </IconButton>
+                      </Tooltip>
+                    )}
+                </Box>
+              }
+            >
               <ListItemAvatar>
                 <Avatar
                   alt={order?.details[0]?.productService?.name}
                   variant="rounded"
-                  src={order?.details[0]?.productService?.urlImage || `https://picsum.photos/50/50?random=${index}`}
+                  src={
+                    order?.details[0]?.productService?.urlImage
+                      ? getFullImageUrl(
+                          order.details[0].productService.urlImage,
+                        )
+                      : DEFAULT_IMAGE
+                  }
                 />
               </ListItemAvatar>
               <ListItemText
@@ -111,7 +175,12 @@ const BusinessOrderPage = () => {
             </ListItem>
           ))
         ) : (
-          <Box display="flex" justifyContent="center" alignItems="center" height="100px">
+          <Box
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            height="100px"
+          >
             <TextAtom variant="body" size="small">
               {t('No hay órdenes para mostrar')}
             </TextAtom>
