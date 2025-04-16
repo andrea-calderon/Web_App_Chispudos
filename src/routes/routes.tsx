@@ -17,10 +17,10 @@ import PasswordRecovery from '../features/auth/components/pages/PasswordRecovery
 import RegisterPage from '../features/auth/components/pages/RegisterPage';
 import ErrorPage from '../components/organisms/ErrorPage';
 import { BusinessStepper } from '../features/Business/Components/pages/BusinessStepperPage';
-import { BusinessProfilePage } from '../features/Business/Components/pages/BusinessProfilePage';
 import ErrorBoundaryWrapper from '../components/Generics/ErrorBoundaryWrapper';
 import { TasksPage } from '../features/tasks/components/pages/TaskPage';
 import { FavoritesPage } from '../features/favorites/components/pages/FavoritesPage';
+import { ProfilePage } from '../features/profile/components/pages/ProfilePage';
 
 const AppRoutes = () => {
   const { isAuthenticated } = useAppSelector(selectAuth);
@@ -50,7 +50,7 @@ const AppRoutes = () => {
             <Route element={<ProtectedRoutesWrapper />}>
               <Route path="/service-details" element={<TaskDetailsPage />} />
               <Route path="/stepper" element={<BusinessStepper />} />
-              <Route path="/profile" element={<BusinessProfilePage />} />
+              <Route path="/profile" element={<ProfilePage />} />
               <Route path="/tasks" element={<TasksPage />} />
               <Route path="/favorites" element={<FavoritesPage />} />
             </Route>

@@ -191,13 +191,15 @@
       "tabs": {
         "profile": "Mi perfil",
         "services": "Mis servicios",
-        "chat": "Chat",
-        "tasks": "Detalle de tus tareas"
+        "chat": "Chat"
       },
       "profile": {
-        "dayPrice": "Tarifa por día",
+        "dailyRate": "Tarifa por día",
         "skillsTitle": "Habilidades y experiencia",
+        "avatarAlt": "Habilidades y experiencia",
         "recentsProjects": "Proyectos recientes",
+        "noProjects": "No hay proyectos completados disponibles.",
+        "projectsComingSoon": "Pronto podrás ver los proyectos realizados aquí.",
         "otherSkills": "Otras habilidades",
         "editButton": "Editar"
       }

@@ -184,6 +184,21 @@
       }
     },
 
+    "businessProfilePage":{
+      "tabs": {
+        "profile": "Profile",
+        "services": "Services",
+        "chat": "Chat"
+      },
+      "profile": {
+        "dayPrice": "Daily Rate",
+        "skillsTitle": "Skills",
+        "recentsProjects": "Recent Projects",
+        "otherSkills": "Other Skills",
+        "editButton": "Edit"
+      }
+  },
+
     "errorPage": {
       "title": "Oops Page Not Found",
       "notFoundMessage": "Sorry, the page you're looking for doesn't exist.",

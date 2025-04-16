@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { Tabs, Tab, Box } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import BusinessProfile from './BusinessProfile';
-import BusinessChat from './BusinessChat';
-import BusinessOrderPage from './BusinessOrders';
+import BusinessProfile from '../../../Business/Components/Organisms/BusinessProfile';
+import BusinessChat from '../../../Business/Components/Organisms/BusinessChat';
 import { ProfilePage } from '../../../profile/components/pages/ProfilePage';
+import UserProfile from './UserProfile';
 
-const BusinessTabs = () => {
+const ProfileTabs = () => {
   const { t } = useTranslation();
   const [selectedTab, setSelectedTab] = useState(2);
 
@@ -63,10 +63,10 @@ const BusinessTabs = () => {
       >
         {selectedTab === 0 && <BusinessChat />}
         {selectedTab === 1 && <BusinessProfile />}
-        {selectedTab === 2 && <ProfilePage />}
+        {selectedTab === 2 && <UserProfile />}
       </Box>
     </Box>
   );
 };
 
-export default BusinessTabs;
+export default ProfileTabs;
