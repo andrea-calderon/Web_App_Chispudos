@@ -29,8 +29,6 @@ const BusinessProfilePage = () => {
   const allProducts = Array.isArray(productsData?.data?.items)
     ? productsData.data.items
     : [];
-
-  // Filtrar productos por el usuario autenticado
   const products = allProducts.filter((product) => product.userId === userID);
 
   // Estado para el producto seleccionado
@@ -251,7 +249,13 @@ const BusinessProfilePage = () => {
             {selectedProduct.details.map((detail, index) => (
               <Grid item xs={12} md={4} key={index}>
                 <Box p={2} border="1px solid #ccc" borderRadius={2}>
-                  <Chip label={detail.label} />
+                  <Chip
+                    label={detail.label}
+                    sx={{
+                      backgroundColor: '#EADDFF',
+                      color: '#6750A4',
+                    }}
+                  />
                   <Typography fontWeight="bold">{detail.value}</Typography>
                   <Typography>{detail.description}</Typography>
                 </Box>
