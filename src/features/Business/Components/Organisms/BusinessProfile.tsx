@@ -6,14 +6,61 @@ import {
   Typography,
   Button,
   useTheme,
+  MenuItem,
+  Select,
+  FormControl,
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import TextAtom from '../../../../components/atoms/TextAtom';
 import EditIcon from '@mui/icons-material/Edit';
+import { useGetProductsQuery } from '../../../../services/productApi';
+import { useState, useEffect } from 'react';
+import { useAppSelector } from '../../../../hooks/useAppSelector';
+import { selectAuth } from '../../../../redux/slices/authSlice';
+import DEFAULT_IMAGE from '../../../../assets/images/DEFAULT_IMAGE.png';
+import StorefrontIcon from '@mui/icons-material/Storefront';
 
 const BusinessProfilePage = () => {
   const { t } = useTranslation();
   const theme = useTheme();
+  const userID = useAppSelector(selectAuth)?.user?.id;
+
+  const { data: productsData, isLoading, error } = useGetProductsQuery();
+  const allProducts = Array.isArray(productsData?.data?.items)
+    ? productsData.data.items
+    : [];
+  const products = allProducts.filter((product) => product.userId === userID);
+
+  // Estado para el producto seleccionado
+  const [selectedProductId, setSelectedProductId] = useState<number | null>(
+    null,
+  );
+
+  // Seleccionar el producto más reciente por defecto
+  useEffect(() => {
+    if (products.length > 0 && selectedProductId === null) {
+      const mostRecentProduct = products.sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+      )[0];
+      setSelectedProductId(mostRecentProduct.id);
+    }
+  }, [products, selectedProductId]);
+
+  // Producto actualmente seleccionado
+  const selectedProduct = products.find(
+    (product) => product.id === selectedProductId,
+  );
+
+  const getImageUrl = (urlImage: string | null | undefined) => {
+    if (urlImage) {
+      return `${import.meta.env.VITE_BASE_API_URL}${urlImage}`;
+    }
+    return DEFAULT_IMAGE;
+  };
+
+  if (isLoading) return <p>Loading...</p>;
+  if (error) return <p>Error loading products</p>;
 
   return (
     <Box px={{ xs: 4, md: 10, lg: 24 }} py={5}>
@@ -21,8 +68,14 @@ const BusinessProfilePage = () => {
       <Box display="flex" flexDirection="column" alignItems="center" mb={4}>
         <Box position="relative">
           <Avatar
-            src="https://picsum.photos/300/200?random=4"
-            alt={t('businessProfile.avatarAlt')}
+            src={getImageUrl(selectedProduct?.urlImage)}
+            alt={
+              selectedProduct?.name ||
+              t(
+                'businessProfilePage.profile.avatarAlt',
+                'Service image or logo',
+              )
+            }
             sx={{ width: 150, height: 150 }}
           />
           <Button
@@ -40,16 +93,50 @@ const BusinessProfilePage = () => {
             <EditIcon fontSize="small" />
           </Button>
         </Box>
-        <TextAtom
-          variant="headline"
-          size="small"
-          fontWeight="bold"
-          sx={{ mt: 2 }}
-        >
-          Fontanería La Bendición
-        </TextAtom>
+
+        {/* Título con dropdown */}
+        <Box display="flex" alignItems="center" mt={2}>
+          <TextAtom
+            variant="headline"
+            size="small"
+            fontWeight="bold"
+            sx={{ mr: 2 }}
+          >
+            {selectedProduct?.name ||
+              t(
+                'businessProfilePage.profile.noServiceSelected',
+                'No service selected',
+              )}
+          </TextAtom>
+          <FormControl size="small" disabled={products.length === 0}>
+            <Select
+              value={selectedProductId || ''}
+              onChange={(e) => setSelectedProductId(Number(e.target.value))}
+              displayEmpty
+              renderValue={() => <StorefrontIcon />}
+              sx={{ minWidth: 50 }}
+            >
+              {products.length === 0 ? (
+                <MenuItem value="">
+                  {t(
+                    'businessProfilePage.profile.noServiceAvailable',
+                    'No service available',
+                  )}
+                </MenuItem>
+              ) : (
+                products.map((product) => (
+                  <MenuItem key={product.id} value={product.id}>
+                    {product.name}
+                  </MenuItem>
+                ))
+              )}
+            </Select>
+          </FormControl>
+        </Box>
+
         <Typography>
-          {t('businessProfilePage.profile.dayPrice')} <strong>Q300</strong>
+          {t('businessProfilePage.profile.dailyRate', 'Daily Rate')}{' '}
+          <strong>Q{selectedProduct?.price || 'N/A'}</strong>
         </Typography>
       </Box>
 
@@ -63,18 +150,21 @@ const BusinessProfilePage = () => {
         >
           <Box display="flex" alignItems="center">
             <TextAtom variant="title" size="large" fontWeight="bold">
-              {t('businessProfilePage.profile.skillsTitle')}
+              {t('businessProfilePage.profile.skillsTitle', 'Skills')}
             </TextAtom>
             <Button
               size="small"
               startIcon={<EditIcon />}
               sx={{ ml: 2, textTransform: 'none' }}
             >
-              {t('businessProfilePage.profile.editButton')}
+              {t('businessProfilePage.profile.editButton', 'Edit')}
             </Button>
           </Box>
         </Box>
-        <Typography>{t('businessProfile.skillsDescription')}</Typography>
+        <Typography>
+          {selectedProduct?.description ||
+            t('businessProfile.skillsDescription', 'No description available')}
+        </Typography>
       </Box>
 
       {/* Proyectos recientes */}
@@ -87,31 +177,44 @@ const BusinessProfilePage = () => {
         >
           <Box display="flex" alignItems="center">
             <TextAtom variant="title" size="large" fontWeight="bold">
-              {t('businessProfilePage.profile.recentsProjects')}
+              {t(
+                'businessProfilePage.profile.recentsProjects',
+                'Recent Projects',
+              )}
             </TextAtom>
             <Button
               size="small"
               startIcon={<EditIcon />}
               sx={{ ml: 2, textTransform: 'none' }}
             >
-              {t('businessProfilePage.profile.editButton')}
+              {t('businessProfilePage.profile.editButton', 'Edit')}
             </Button>
           </Box>
         </Box>
-        <Grid container spacing={4}>
-          {[1, 2, 3, 4].map((project, index) => (
-            <Grid item xs={6} md={3} lg={2.4} key={index}>
-              <img
-                src="https://picsum.photos/300/200?random=4"
-                alt={t('businessProfile.projectAlt')}
-                style={{ width: '100%', borderRadius: '8px' }}
-              />
-              <TextAtom variant="title" size="medium">
-                {t('businessProfilePage.profile.recentsProjects')}
-              </TextAtom>
-            </Grid>
-          ))}
-        </Grid>
+
+        {/* Placeholder temporal */}
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          flexDirection="column"
+          py={4}
+          border="1px dashed #ccc"
+          borderRadius={2}
+        >
+          <Typography variant="body1" color="textSecondary" textAlign="center">
+            {t(
+              'businessProfilePage.profile.noProjects',
+              'There are no completed projects available.',
+            )}
+          </Typography>
+          <Typography variant="body2" color="textSecondary" textAlign="center">
+            {t(
+              'businessProfilePage.profile.projectsComingSoon',
+              'You will soon be able to see completed projects here.',
+            )}
+          </Typography>
+        </Box>
       </Box>
 
       {/* Otras habilidades */}
@@ -124,32 +227,42 @@ const BusinessProfilePage = () => {
         >
           <Box display="flex" alignItems="center">
             <TextAtom variant="title" size="large" fontWeight="bold">
-              {t('businessProfilePage.profile.otherSkills')}
+              {t('businessProfilePage.profile.otherSkills', 'Other Skills')}
             </TextAtom>
             <Button
               size="small"
               startIcon={<EditIcon />}
               sx={{ ml: 2, textTransform: 'none' }}
             >
-              {t('businessProfilePage.profile.editButton')}
+              {t('businessProfilePage.profile.editButton', 'Edit')}
             </Button>
           </Box>
         </Box>
-        <Grid container spacing={2}>
-          {[1, 2, 3].map((skill, index) => (
-            <Grid item xs={12} md={4} key={index}>
-              <Box p={2} border="1px solid #ccc" borderRadius={2}>
-                <Chip label={t('businessProfile.urgentElectrician')} />
-                <Typography fontWeight="bold">
-                  {t('businessProfile.electricService')}
-                </Typography>
-                <Typography>
-                  {t('businessProfile.electricServiceDesc')}
-                </Typography>
-              </Box>
-            </Grid>
-          ))}
-        </Grid>
+
+        {/* Mostrar mensaje si no hay habilidades */}
+        {!selectedProduct?.details || selectedProduct.details.length === 0 ? (
+          <Typography>
+            {t('businessProfilePage.profile.noSkills', 'No skills listed')}
+          </Typography>
+        ) : (
+          <Grid container spacing={2}>
+            {selectedProduct.details.map((detail, index) => (
+              <Grid item xs={12} md={4} key={index}>
+                <Box p={2} border="1px solid #ccc" borderRadius={2}>
+                  <Chip
+                    label={detail.label}
+                    sx={{
+                      backgroundColor: '#EADDFF',
+                      color: '#6750A4',
+                    }}
+                  />
+                  <Typography fontWeight="bold">{detail.value}</Typography>
+                  <Typography>{detail.description}</Typography>
+                </Box>
+              </Grid>
+            ))}
+          </Grid>
+        )}
       </Box>
     </Box>
   );

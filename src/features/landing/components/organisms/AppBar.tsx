@@ -41,7 +41,7 @@ function ResponsiveAppBar() {
       icon: <StorefrontIcon sx={{ color: theme.palette.primary.main }} />,
       path: '/login',
     },
-    { label: t('appBar.navItems.services'), path: '/services' },
+    { label: t('appBar.navItems.services'), path: '/search-services' },
     { label: <TranslateIcon />, action: () => toggleLanguage() },
     { label: t('auth.login.title'), path: '/login' },
     {
