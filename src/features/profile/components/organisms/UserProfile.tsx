@@ -68,6 +68,7 @@ export const UserProfile: React.FC = () => {
         flexDirection: 'column',
         alignItems: 'center',
         position: 'relative',
+        mb: 12,
       }}
     >
       {/* Header para dispositivos pequeños */}
