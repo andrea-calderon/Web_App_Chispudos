@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { List, ListItem } from '@mui/material';
+import { List, ListItem, TextField } from '@mui/material';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import Grid from '@mui/material/Grid2';
 import { ButtonAtom, TextAtom } from '../../../../components/atoms';
@@ -10,13 +10,21 @@ import { useAvatarUpload } from '../../../../hooks/useAvatarUpload';
 import { ModalComponent } from '../../../../components/molecules';
 import AvatarUpload from '../organisms/AvatarUpload';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { useUpdateUserNameMutation } from '../../../../services/userApi';
 
 export const UserProfile: React.FC = () => {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const { user } = useAppSelector(selectAuth);
-  const [modalOpen, setModalOpen] = useState(false);
   const navigate = useNavigate();
 
+  const [editNameModalOpen, setEditNameModalOpen] = useState(false);
+  const [name, setName] = useState(user?.name || '');
+  const [lastname, setLastname] = useState(user?.lastname || '');
+  const [updateUserName, { isLoading }] = useUpdateUserNameMutation();
+
+  const [modalOpen, setModalOpen] = useState(false);
   const {
     selectedImage,
     previewImage,
@@ -26,14 +34,28 @@ export const UserProfile: React.FC = () => {
     handleSaveImage,
   } = useAvatarUpload({ userId: user?.id?.toString() || '' });
 
-  const handleCloseModal = () => {
-    setModalOpen(false);
-  };
-
+  const handleCloseModal = () => setModalOpen(false);
   const handleSaveClick = async () => {
     if (selectedImage) {
       await handleSaveImage();
       handleCloseModal();
+    }
+  };
+
+  const handleOpenEditNameModal = () => setEditNameModalOpen(true);
+  const handleCloseEditNameModal = () => setEditNameModalOpen(false);
+  const handleSaveNameChanges = async () => {
+    if (user?.id) {
+      try {
+        await updateUserName({
+          userId: user.id.toString(),
+          name,
+          lastname,
+        }).unwrap();
+        handleCloseEditNameModal();
+      } catch (error) {
+        console.error('Error updating user name:', error);
+      }
     }
   };
 
@@ -48,6 +70,7 @@ export const UserProfile: React.FC = () => {
         position: 'relative',
       }}
     >
+      {/* Header para dispositivos pequeños */}
       <Grid
         size={{ xs: 12, sm: 0 }}
         sx={{
@@ -60,14 +83,14 @@ export const UserProfile: React.FC = () => {
         }}
       >
         <TextAtom variant="title" size="medium" sx={{ fontWeight: 'bold' }}>
-          Perfil
+          {t('userProfile.profile', 'Profile')}
         </TextAtom>
         <ButtonAtom
           variant="text"
           sx={{ fontWeight: 'bold', textTransform: 'none' }}
           onClick={() => dispatch(logout())}
         >
-          Salir
+          {t('userProfile.logout', 'Logout')}
         </ButtonAtom>
       </Grid>
 
@@ -78,6 +101,7 @@ export const UserProfile: React.FC = () => {
           flexDirection: 'column',
           alignItems: 'center',
           mb: { xs: 4, sm: 6 },
+          mt: { xs: 4, sm: 6 },
         }}
       >
         <AvatarUpload
@@ -89,9 +113,54 @@ export const UserProfile: React.FC = () => {
           }}
           errorMsg={errorMsg}
         />
+        <ModalComponent
+          open={modalOpen}
+          onClose={handleCloseModal}
+          title={t('userProfile.changeProfilePhoto', 'Change profile photo')}
+          onConfirm={handleSaveClick}
+          confirmButtonText={t('userProfile.updateButton', 'Update')}
+          isConfirmButtonLoading={isUploading}
+        >
+          <AvatarUpload
+            previewImage={previewImage}
+            userAvatarUrl={user?.avatarUrl || ''}
+            handleImageChange={handleImageChange}
+            errorMsg={errorMsg}
+          />
+        </ModalComponent>
         <TextAtom variant="title" size="large">
           {user?.name || 'Name'} {user?.lastname || 'Lastname'}
         </TextAtom>
+        <ButtonAtom
+          variant="text"
+          sx={{ mt: 1, textTransform: 'none' }}
+          onClick={handleOpenEditNameModal}
+        >
+          {t('userProfile.editName', 'Edit Name')}
+        </ButtonAtom>
+        <ModalComponent
+          open={editNameModalOpen}
+          onClose={handleCloseEditNameModal}
+          title={t('userProfile.editNameTitle', 'Edit Name')}
+          onConfirm={handleSaveNameChanges}
+          confirmButtonText={t('userProfile.save', 'Save')}
+          isConfirmButtonLoading={isLoading}
+        >
+          <TextField
+            label={t('userProfile.name', 'Name')}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            fullWidth
+            margin="dense"
+          />
+          <TextField
+            label={t('userProfile.lastname', 'Lastname')}
+            value={lastname}
+            onChange={(e) => setLastname(e.target.value)}
+            fullWidth
+            margin="dense"
+          />
+        </ModalComponent>
       </Grid>
 
       <Grid size={{ xs: 12, md: 8, lg: 6, xl: 5 }}>
@@ -109,26 +178,21 @@ export const UserProfile: React.FC = () => {
               }}
             >
               <TextAtom variant="title" size="medium">
-                Account
+                {t('userProfile.email', 'Email')}
               </TextAtom>
               <TextAtom variant="title" size="medium">
                 {user?.email || 'email'}
               </TextAtom>
             </ButtonAtom>
           </ListItem>
-          {[
-            'Cambiar contraseña',
-            'Métodos de pago',
-            'Promociones',
-            'Notificaciones',
-            'Soporte',
-          ].map((item, index) => (
+          {['Cambiar contraseña'].map((item, index) => (
             <ListItem
               key={index}
               disablePadding
               sx={{ borderBottom: '1px solid rgb(226, 226, 230)' }}
             >
               <ButtonAtom
+                onClick={() => navigate('/password-recovery')}
                 variant="text"
                 fullWidth
                 sx={{
@@ -138,7 +202,7 @@ export const UserProfile: React.FC = () => {
                 }}
               >
                 <TextAtom variant="title" size="medium">
-                  {item}
+                  {t('userProfile.changePassword', 'Change password')}
                 </TextAtom>
                 <ArrowForwardIosIcon
                   fontSize="small"
@@ -158,13 +222,14 @@ export const UserProfile: React.FC = () => {
           alignItems: 'center',
           justifyContent: { xs: 'center', sm: 'flex-end' },
           gap: 2,
-          mt: { xs: 2, sm: 0 },
+          mt: { xs: 4, sm: 4 },
+          mb: { xs: 4, sm: 4 },
           textAlign: { xs: 'center', sm: 'right' },
         }}
       >
         <ButtonAtom
           variant="outlined"
-          onClick={() => navigate('/services')}
+          onClick={() => navigate('/stepper')}
           sx={{
             fontWeight: 'bold',
             mr: 2,
@@ -178,7 +243,7 @@ export const UserProfile: React.FC = () => {
             size="medium"
             sx={{ cursor: 'pointer', textTransform: 'none' }}
           >
-            Ofrecer mis servicios
+            {t('userProfile.publishServices', 'Publish my services')}
           </TextAtom>
         </ButtonAtom>
 
@@ -197,25 +262,9 @@ export const UserProfile: React.FC = () => {
             size="medium"
             sx={{ cursor: 'pointer', textTransform: 'none', mr: 3, ml: 3 }}
           >
-            Cerrar Sesión
+            {t('userProfile.logout', 'Logout')}
           </TextAtom>
         </ButtonAtom>
-
-        <ModalComponent
-          open={modalOpen}
-          onClose={handleCloseModal}
-          title="Cambiar foto de perfil"
-          onConfirm={handleSaveClick}
-          confirmButtonText="Actualizar"
-          isConfirmButtonLoading={isUploading}
-        >
-          <AvatarUpload
-            previewImage={previewImage}
-            userAvatarUrl={user?.avatarUrl || ''}
-            handleImageChange={handleImageChange}
-            errorMsg={errorMsg}
-          />
-        </ModalComponent>
       </Grid>
     </Grid>
   );
