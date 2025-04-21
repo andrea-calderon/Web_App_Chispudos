@@ -11,6 +11,7 @@ import { userApi } from '../../services/userApi';
 import { ordersApi } from '../../services/ordersApi';
 import { locationsApi } from '../../services/locationsApi';
 import { chatApi } from '../../services/chatApi';
+import { mailchimpApi } from '../../services/mailchimpApi';
 
 const rootReducer = combineReducers({
   auth: authReducer,
@@ -21,7 +22,8 @@ const rootReducer = combineReducers({
   [userApi.reducerPath]: userApi.reducer,
   [ordersApi.reducerPath]: ordersApi.reducer,
   [locationsApi.reducerPath]: locationsApi.reducer,
-  [chatApi.reducerPath]: chatApi.reducer
+  [chatApi.reducerPath]: chatApi.reducer,
+  [mailchimpApi.reducerPath]: mailchimpApi.reducer, 
   // Add other reducers here
 });
 
@@ -45,7 +47,8 @@ export const store = configureStore({
       userApi.middleware,
       ordersApi.middleware,
       locationsApi.middleware,
-      chatApi.middleware
+      chatApi.middleware,
+      mailchimpApi.middleware
     ),
 });
 

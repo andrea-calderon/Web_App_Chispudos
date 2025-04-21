@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Grid,
   Box,
@@ -6,12 +6,38 @@ import {
   IconButton,
   TextField,
   InputAdornment,
+  Snackbar,
+  Alert,
 } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import { useTranslation } from 'react-i18next';
+import { useSubscribeToNewsletterMutation } from '../../services/mailchimpApi';
 
 const NewsletterSubscription: React.FC = () => {
   const { t } = useTranslation();
+
+  const [email, setEmail] = useState('');
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState(false);
+
+  const [subscribeToNewsletter, { isLoading }] =
+    useSubscribeToNewsletterMutation();
+
+  const handleSubscribe = async () => {
+    if (!email) {
+      setError(true);
+      return;
+    }
+
+    try {
+      await subscribeToNewsletter(email).unwrap();
+      setSuccess(true);
+      setEmail(''); // Limpiar el campo de correo
+    } catch (err) {
+      console.error(err);
+      setError(true);
+    }
+  };
 
   return (
     <Box
@@ -34,6 +60,8 @@ const NewsletterSubscription: React.FC = () => {
           <TextField
             variant="outlined"
             placeholder={t('footer.placeholder')}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             sx={{
               mt: 2,
               width: '60%',
@@ -50,6 +78,8 @@ const NewsletterSubscription: React.FC = () => {
               endAdornment: (
                 <InputAdornment position="end">
                   <IconButton
+                    onClick={handleSubscribe}
+                    disabled={isLoading}
                     sx={{
                       '&:hover': {
                         backgroundColor: '#5D50C6',
@@ -67,6 +97,26 @@ const NewsletterSubscription: React.FC = () => {
           />
         </Grid>
       </Grid>
+
+      {/* Snackbar para mensajes de éxito y error */}
+      <Snackbar
+        open={success}
+        autoHideDuration={6000}
+        onClose={() => setSuccess(false)}
+      >
+        <Alert onClose={() => setSuccess(false)} severity="success">
+          {t('footer.successMessage')}
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        open={error}
+        autoHideDuration={6000}
+        onClose={() => setError(false)}
+      >
+        <Alert onClose={() => setError(false)} severity="error">
+          {t('footer.errorMessage')}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };
