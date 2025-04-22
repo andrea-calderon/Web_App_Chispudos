@@ -3,7 +3,14 @@ export type UserResponseType = {
   name: string;
   lastname: string;
   email: string;
-  role: 1 | 2 | 3; // 1: Usuario, 2: Servicio, 3: Admin
+  roles: Array<{
+    id: number;
+    name: 'Admin' | 'User' | 'Merchant'; // Ajusta los nombres según el backend
+    description: string;
+    createdAt: Date;
+    updatedAt: Date;
+    deletedAt: null | Date;
+  }>;
   averageRating: null;
   createdAt: Date;
   updatedAt: Date;
@@ -11,17 +18,9 @@ export type UserResponseType = {
   avatarUrl: string;
 };
 
-
 export type LoginResponse = {
   user: UserResponseType;
   token: string;
-};
-
-// Mapeo de roles
-export const RoleMap: Record<number, 'user' | 'service' | 'admin'> = {
-  1: 'user',
-  2: 'service',
-  3: 'admin',
 };
 
 export type SuccessResponseType<T> = {

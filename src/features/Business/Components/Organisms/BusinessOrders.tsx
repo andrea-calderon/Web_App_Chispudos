@@ -33,8 +33,8 @@ const BusinessOrderPage = () => {
   const { data, isLoading } = useGetOrdersQuery();
   const [orderStatus, setOrderStatus] = React.useState(1);
 
-  const userRole = useUserRole();
-  console.log('Rol del usuario:', userRole);
+  const userRoles = useUserRole();
+  console.log('Roles del usuario:', userRoles);
 
   const handleStatusChange = (status: number) => {
     setOrderStatus(status);
@@ -49,22 +49,22 @@ const BusinessOrderPage = () => {
   const FILTER_OPTIONS = useMemo(
     () => [
       {
-        label: 'Empiezan pronto',
+        label: t('BusinessOrdersPage.soon', 'Beginning soon'),
         status: 1,
         value: orders?.filter((order) => order.status === 1).length,
       },
       {
-        label: 'En curso',
+        label: t('BusinessOrdersPage.inProgress', 'In progress'),
         status: 2,
         value: orders?.filter((order) => order.status === 2).length,
       },
       {
-        label: 'Completadas',
+        label: t('BusinessOrdersPage.completed', 'Completed'),
         status: 3,
         value: orders?.filter((order) => order.status === 3).length,
       },
       {
-        label: 'Canceladas',
+        label: t('BusinessOrdersPage.canceled', 'Canceled'),
         status: 4,
         value: orders?.filter((order) => order.status === 4).length,
       },
@@ -85,10 +85,25 @@ const BusinessOrderPage = () => {
     );
   }
 
+  if (!userRoles) {
+    return (
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        height="100vh"
+      >
+        <Typography variant="h6">
+          {t('BusinessOrdersPage.loadingRoles', 'Loading user roles...')}
+        </Typography>
+      </Box>
+    );
+  }
+
   return (
-    <Box display="flex" flexDirection="column" mb={4}>
-      <TextAtom variant="headline" size="small" fontWeight="bold">
-        {t('Tus ordenes')}
+    <Box display="flex" flexDirection="column" mt={2} mb={4} ml={4} mr={4}>
+      <TextAtom variant="headline" size="small" fontWeight="bold" mb={2}>
+        {t('BusinessOrdersPage.yourOrders', 'Your orders')}
       </TextAtom>
       <Stack direction="row" spacing={2} mb={2}>
         {FILTER_OPTIONS.map((option) => (
@@ -112,7 +127,7 @@ const BusinessOrderPage = () => {
               secondaryAction={
                 <Box display="flex" alignItems="center" gap={1}>
                   {/* Mostrar botón "Finalizar tarea" */}
-                  {userRole === 'service' && order.status === 2 && (
+                  {userRoles?.includes('merchant') && order.status === 2 && (
                     <Tooltip title="Finalizar tarea">
                       <IconButton
                         color="success"
@@ -127,7 +142,8 @@ const BusinessOrderPage = () => {
                   )}
 
                   {/* Mostrar botón "Chat" */}
-                  {(userRole === 'user' || userRole === 'service') &&
+                  {(userRoles?.includes('user') ||
+                    userRoles?.includes('merchant')) &&
                     order.status < 3 && (
                       <Tooltip title="Iniciar conversación">
                         <IconButton

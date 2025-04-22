@@ -37,11 +37,11 @@ const BusinessTabs = () => {
         }}
       >
         <Tab
-          label={t('tasksPage.tabs.summary')}
+          label={t('tasksPage.tabs.summary', 'Task summary')}
           sx={{ color: selectedTab === 0 ? 'black' : 'gray' }}
         />
         <Tab
-          label={t('tasksPage.tabs.chat')}
+          label={t('tasksPage.tabs.chat', 'Chat')}
           sx={{ color: selectedTab === 1 ? 'black' : 'gray' }}
         />
       </Tabs>
