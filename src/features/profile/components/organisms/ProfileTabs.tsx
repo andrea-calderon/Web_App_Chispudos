@@ -3,7 +3,6 @@ import { Tabs, Tab, Box } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import BusinessProfile from '../../../Business/Components/Organisms/BusinessProfile';
 import BusinessChat from '../../../Business/Components/Organisms/BusinessChat';
-import { ProfilePage } from '../../../profile/components/pages/ProfilePage';
 import UserProfile from './UserProfile';
 
 const ProfileTabs = () => {
@@ -20,7 +19,7 @@ const ProfileTabs = () => {
         py: { xs: '10px', md: '30px' },
         px: { xs: '10px', md: '20px' },
         width: '100%',
-        height: '100%',
+        height: '100%vh',
         bgcolor: '#F5F1FF',
       }}
     >

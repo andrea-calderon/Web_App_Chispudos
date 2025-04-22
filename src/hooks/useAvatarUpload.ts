@@ -1,5 +1,8 @@
 import { useState } from 'react';
 import { useUpdateAvatarMutation } from '../services/userApi';
+import { useAppDispatch } from './useAppDispatch';
+import { selectAuth, setAuthUserState } from '../redux/slices/authSlice';
+import { useAppSelector } from './useAppSelector';
 
 interface UseAvatarUploadProps {
   userId: string;
@@ -17,7 +20,9 @@ export const useAvatarUpload = ({
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState<boolean>(false);
 
+  const { user } = useAppSelector(selectAuth);
   const [updateAvatar] = useUpdateAvatarMutation(); 
+  const dispatch = useAppDispatch();
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -49,6 +54,12 @@ export const useAvatarUpload = ({
 
     try {
       const response = await updateAvatar({ userId, formData }).unwrap();
+      dispatch(
+        setAuthUserState({
+          ...user,
+          avatarUrl: response?.data?.avatarUrl,
+        }),
+      );
       const avatarUrl = response?.avatarUrl;
 
       if (avatarUrl) {

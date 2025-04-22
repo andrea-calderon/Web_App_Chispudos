@@ -25,7 +25,11 @@ const AvatarUpload: React.FC<AvatarUploadProps> = ({
         }}
       >
         <Avatar
-          src={previewImage ? previewImage : import.meta.env.VITE_BASE_API_URL + userAvatarUrl}
+          src={
+            previewImage
+              ? previewImage
+              : import.meta.env.VITE_BASE_API_URL + userAvatarUrl
+          }
           alt="Avatar"
           sx={{ width: 120, height: 120, mb: 2 }}
         />
