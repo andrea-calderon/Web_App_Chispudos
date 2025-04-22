@@ -4,7 +4,11 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import Grid from '@mui/material/Grid2';
 import { ButtonAtom, TextAtom } from '../../../../components/atoms';
 import { useAppDispatch } from '../../../../hooks/useAppDispatch';
-import { logout, selectAuth } from '../../../../redux/slices/authSlice';
+import {
+  logout,
+  selectAuth,
+  setAuthUserState,
+} from '../../../../redux/slices/authSlice';
 import { useAppSelector } from '../../../../hooks/useAppSelector';
 import { useAvatarUpload } from '../../../../hooks/useAvatarUpload';
 import { ModalComponent } from '../../../../components/molecules';
@@ -47,11 +51,23 @@ export const UserProfile: React.FC = () => {
   const handleSaveNameChanges = async () => {
     if (user?.id) {
       try {
-        await updateUserName({
+        const userUpdateResponse = await updateUserName({
           userId: user.id.toString(),
           name,
           lastname,
         }).unwrap();
+        dispatch(
+          setAuthUserState({
+            ...user,
+            name,
+            lastname,
+          }),
+        );
+
+        console.error(
+          'User name updated successfully:',
+          userUpdateResponse?.data,
+        );
         handleCloseEditNameModal();
       } catch (error) {
         console.error('Error updating user name:', error);
