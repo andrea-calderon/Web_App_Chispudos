@@ -1,8 +1,8 @@
+import React, { useMemo } from 'react';
 import {
   Box,
   Avatar,
   Typography,
-  useTheme,
   Stack,
   List,
   ListItem,
@@ -13,14 +13,13 @@ import {
 import { useTranslation } from 'react-i18next';
 import TextAtom from '../../../../components/atoms/TextAtom';
 import { ButtonAtom } from '../../../../components/atoms';
-import React, { useMemo } from 'react';
 import { useGetOrdersQuery } from '../../../../services/ordersApi';
 import { format } from 'date-fns';
-import ChatIcon from '@mui/icons-material/Chat';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import { IconButton, Tooltip } from '@mui/material';
-import { useUserRole } from '../../../../features/auth/hooks/authHooks';
 import DEFAULT_IMAGE from '../../../../assets/images/DEFAULT_IMAGE.png';
+import { useSelector } from 'react-redux';
+import { selectMode } from '../../../../redux/slices/modeSlice';
+import { useUserRole } from '../../../../features/auth/hooks/authHooks';
+import OrderActions from '../../../tasks/components/organisms/OrderActions'; // Importa el componente OrderActions
 
 const getFullImageUrl = (url: string | null) => {
   const baseUrl = import.meta.env.VITE_BASE_API_URL || 'http://localhost:8000';
@@ -29,12 +28,11 @@ const getFullImageUrl = (url: string | null) => {
 
 const BusinessOrderPage = () => {
   const { t } = useTranslation();
-  const theme = useTheme();
   const { data, isLoading } = useGetOrdersQuery();
   const [orderStatus, setOrderStatus] = React.useState(1);
 
-  const userRoles = useUserRole();
-  console.log('Roles del usuario:', userRoles);
+  const currentMode = useSelector(selectMode); // Obtén el modo actual ('user' o 'merchant')
+  const userRoles = useUserRole(); // Obtén los roles del usuario
 
   const handleStatusChange = (status: number) => {
     setOrderStatus(status);
@@ -120,44 +118,33 @@ const BusinessOrderPage = () => {
       </Stack>
       <List sx={{ width: '100%', paddingX: 5 }}>
         {ordersFilteredByStatus?.length > 0 ? (
-          ordersFilteredByStatus.map((order, index) => (
+          ordersFilteredByStatus.map((order) => (
             <ListItem
               key={order.id}
               alignItems="flex-start"
               secondaryAction={
-                <Box display="flex" alignItems="center" gap={1}>
-                  {/* Mostrar botón "Finalizar tarea" */}
-                  {userRoles?.includes('merchant') && order.status === 2 && (
-                    <Tooltip title="Finalizar tarea">
-                      <IconButton
-                        color="success"
-                        size="small"
-                        onClick={() =>
-                          console.log(`Finalizar tarea para order ${order.id}`)
-                        }
-                      >
-                        <CheckCircleIcon fontSize="small" />
-                      </IconButton>
-                    </Tooltip>
-                  )}
-
-                  {/* Mostrar botón "Chat" */}
-                  {(userRoles?.includes('user') ||
-                    userRoles?.includes('merchant')) &&
-                    order.status < 3 && (
-                      <Tooltip title="Iniciar conversación">
-                        <IconButton
-                          color="primary"
-                          size="small"
-                          onClick={() =>
-                            console.log(`Iniciar chat para order ${order.id}`)
-                          }
-                        >
-                          <ChatIcon fontSize="small" />
-                        </IconButton>
-                      </Tooltip>
-                    )}
-                </Box>
+                <OrderActions
+                  orderStatus={order.status}
+                  userRoles={userRoles}
+                  currentMode={currentMode}
+                  onViewDetails={() =>
+                    console.log(
+                      `Ver detalle de la tarea para order ${order.id}`,
+                    )
+                  }
+                  onChat={() =>
+                    console.log(`Iniciar chat para order ${order.id}`)
+                  }
+                  onAcceptTask={() =>
+                    console.log(`Aceptar tarea para order ${order.id}`)
+                  }
+                  onCompleteTask={() =>
+                    console.log(`Completar tarea para order ${order.id}`)
+                  }
+                  onRateService={() =>
+                    console.log(`Calificar servicio para order ${order.id}`)
+                  }
+                />
               }
             >
               <ListItemAvatar>
@@ -193,13 +180,41 @@ const BusinessOrderPage = () => {
         ) : (
           <Box
             display="flex"
+            flexDirection="column"
             justifyContent="center"
             alignItems="center"
-            height="100px"
+            height="200px"
+            textAlign="center"
+            gap={2}
+            sx={{
+              border: '2px dashed',
+              borderColor: 'primary.light',
+              borderRadius: 2,
+              padding: 3,
+            }}
           >
-            <TextAtom variant="body" size="small">
-              {t('No hay órdenes para mostrar')}
+            <Avatar
+              sx={{
+                bgcolor: 'primary.light',
+                width: 80,
+                height: 80,
+              }}
+            >
+              <Typography variant="h1" color="primary">
+                😜
+              </Typography>
+            </Avatar>
+
+            {/* Mensaje descriptivo */}
+            <TextAtom variant="body" size="medium" fontWeight="bold">
+              {t('BusinessOrdersPage.noOrders', 'No hay órdenes disponibles')}
             </TextAtom>
+            <Typography variant="body2" color="text.secondary">
+              {t(
+                'BusinessOrdersPage.noOrdersDescription',
+                'Parece que no tienes órdenes en este momento. ¡Vuelve más tarde o crea una nueva orden!',
+              )}
+            </Typography>
           </Box>
         )}
       </List>
