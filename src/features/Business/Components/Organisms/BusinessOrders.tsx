@@ -16,10 +16,12 @@ import { ButtonAtom } from '../../../../components/atoms';
 import { useGetOrdersQuery } from '../../../../services/ordersApi';
 import { format } from 'date-fns';
 import DEFAULT_IMAGE from '../../../../assets/images/DEFAULT_IMAGE.png';
+import okIcon from '../../../../assets/images/ok_icon-01.svg';
 import { useSelector } from 'react-redux';
 import { selectMode } from '../../../../redux/slices/modeSlice';
 import { useUserRole } from '../../../../features/auth/hooks/authHooks';
-import OrderActions from '../../../tasks/components/organisms/OrderActions'; // Importa el componente OrderActions
+import OrderActions from '../../../tasks/components/organisms/OrderActions';
+import { hasPermission } from '../../../../utils/permissions'; // Importa hasPermission
 
 const getFullImageUrl = (url: string | null) => {
   const baseUrl = import.meta.env.VITE_BASE_API_URL || 'http://localhost:8000';
@@ -33,6 +35,11 @@ const BusinessOrderPage = () => {
 
   const currentMode = useSelector(selectMode); // Obtén el modo actual ('user' o 'merchant')
   const userRoles = useUserRole(); // Obtén los roles del usuario
+
+  console.log('userRoles', userRoles);
+  console.log('currentMode', currentMode);
+  console.log('orderStatus', orderStatus);
+  console.log('data', data);
 
   const handleStatusChange = (status: number) => {
     setOrderStatus(status);
@@ -135,12 +142,34 @@ const BusinessOrderPage = () => {
                   onChat={() =>
                     console.log(`Iniciar chat para order ${order.id}`)
                   }
-                  onAcceptTask={() =>
-                    console.log(`Aceptar tarea para order ${order.id}`)
-                  }
-                  onCompleteTask={() =>
-                    console.log(`Completar tarea para order ${order.id}`)
-                  }
+                  onAcceptTask={() => {
+                    if (
+                      hasPermission(
+                        { id: 'user-id', roles: userRoles },
+                        'tasks',
+                        'accept',
+                      )
+                    ) {
+                      console.log(`Aceptar tarea para order ${order.id}`);
+                    } else {
+                      console.log('No tienes permiso para aceptar esta tarea.');
+                    }
+                  }}
+                  onCompleteTask={() => {
+                    if (
+                      hasPermission(
+                        { id: 'user-id', roles: userRoles },
+                        'tasks',
+                        'complete',
+                      )
+                    ) {
+                      console.log(`Completar tarea para order ${order.id}`);
+                    } else {
+                      console.log(
+                        'No tienes permiso para completar esta tarea.',
+                      );
+                    }
+                  }}
                   onRateService={() =>
                     console.log(`Calificar servicio para order ${order.id}`)
                   }
@@ -183,7 +212,7 @@ const BusinessOrderPage = () => {
             flexDirection="column"
             justifyContent="center"
             alignItems="center"
-            height="200px"
+            height="300px"
             textAlign="center"
             gap={2}
             sx={{
@@ -193,17 +222,14 @@ const BusinessOrderPage = () => {
               padding: 3,
             }}
           >
-            <Avatar
-              sx={{
-                bgcolor: 'primary.light',
-                width: 80,
-                height: 80,
+            <img
+              src={okIcon}
+              alt="Ok Icon"
+              style={{
+                width: '150px',
+                height: '150px',
               }}
-            >
-              <Typography variant="h1" color="primary">
-                😜
-              </Typography>
-            </Avatar>
+            />
 
             {/* Mensaje descriptivo */}
             <TextAtom variant="body" size="medium" fontWeight="bold">
