@@ -86,11 +86,11 @@ const Step3 = () => {
   const validationSchema = Yup.object().shape({
     mainAddress: Yup.string().required(t('forms.commons.required')),
     department: Yup.number().required(t('forms.commons.required')),
-    city: Yup.number().required(t('forms.commons.required')),
+    city: Yup.string().required(t('forms.commons.required')),
     coverageAreas: Yup.array().of(
       Yup.object().shape({
-        department: Yup.string(),
-        city: Yup.string(),
+        department: Yup.number(),
+        city: Yup.number(),
       }),
     ),
   });
@@ -99,16 +99,23 @@ const Step3 = () => {
     <Formik
       initialValues={{
         mainAddress: '',
-        department: '',
-        city: '',
+        department: '' as number | '',
+        city: '' as number | '',
         cityId: null,
-        coverageAreas: [{ department: '', city: '', cityId: null }],
+        coverageAreas: [
+          {
+            department: '' as number | '',
+            city: '' as number | '',
+            cityId: null,
+          },
+        ],
       }}
       validationSchema={validationSchema}
       onSubmit={handleUpdate}
     >
       {({ values, errors, touched, isValid, handleSubmit, setFieldValue }) => (
         <Form>
+           
           <Box
             alignItems={{ xs: 'center', md: 'flex-start' }}
             px={{ xs: 4, md: 10, lg: 24 }}
@@ -208,7 +215,7 @@ const Step3 = () => {
                   ))}
                 </InputAtom>
               </Grid>
-
+              
               {/* Áreas de Cobertura */}
               <Grid item xs={12} md={6}>
                 <TextAtom variant="title" size="medium" fontWeight="bold">
@@ -238,10 +245,7 @@ const Step3 = () => {
                           errors.coverageAreas?.[index]?.department
                         }
                         onChange={(e) => {
-                          setFieldValue(
-                            `coverageAreas.${index}.department`,
-                            e.target.value,
-                          );
+                          setFieldValue(`coverageAreas.${index}.department`, Number(e.target.value));
                           setFieldValue(`coverageAreas.${index}.city`, '');
                           setFieldValue(`coverageAreas.${index}.cityId`, null);
                         }}
@@ -338,7 +342,6 @@ const Step3 = () => {
               !!values.mainAddress &&
               !!values.department &&
               !!values.city &&
-              isValid &&
               !isUpdating
             }
           />

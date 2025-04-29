@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react';
-import { Box, Container,IconButton, Alert } from '@mui/material';
-import Grid from '@mui/material/Grid2'
-import { Form, Formik, FormikHelpers } from 'formik';
+import { Box, Container, IconButton, Alert } from '@mui/material';
+import Grid from '@mui/material/Grid2';
+import { Form, Formik, FormikHelpers, Field } from 'formik';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
@@ -15,11 +15,11 @@ import { useAppDispatch } from '../../../../hooks/useAppDispatch';
 import { loginSuccess } from '../../../../redux/slices/authSlice';
 
 type SignupValues = {
-  
   email: string;
   password: string;
   confirmPassword: string;
-}
+  acceptTerms: boolean;
+};
 
 const Signup: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -41,6 +41,10 @@ const Signup: React.FC = () => {
     confirmPassword: Yup.string()
       .oneOf([Yup.ref('password'), undefined], 'Passwords must match')
       .required(t('forms.commons.required')),
+    acceptTerms: Yup.boolean().oneOf(
+      [true],
+      'Debes aceptar los términos y condiciones',
+    ),
   });
 
   const handleLogin = async (values: SignupValues) => {
@@ -56,7 +60,7 @@ const Signup: React.FC = () => {
       }
     } catch (error) {
       logger('error', error, 'Login.tsx.handleLogin', 'Web');
-      setErrorMsg(error.data.message)
+      setErrorMsg(error.data.message);
     }
   };
 
@@ -64,21 +68,22 @@ const Signup: React.FC = () => {
     try {
       const signupResponse = await onSignup(values).unwrap();
       setSuccessMsg(t('auth.register.signup_success'));
-      if(signupResponse.success){
-        handleLogin(values)
+      if (signupResponse.success) {
+        handleLogin(values);
       }
     } catch (error) {
       logger('error', error, 'Signup.tsx.handleSignup', 'Web');
-      setErrorMsg(error.data.message) 
+      setErrorMsg(error.data.message);
     }
   };
 
-  
-
-  const handleSubmit = async (values: SignupValues, { setSubmitting }: FormikHelpers<SignupValues>) => {
+  const handleSubmit = async (
+    values: SignupValues,
+    { setSubmitting }: FormikHelpers<SignupValues>,
+  ) => {
     await handleSignup(values);
     setSubmitting(false);
-  }
+  };
 
   const togglePasswordVisibility = useCallback(() => {
     setShowPassword((prev) => !prev);
@@ -132,29 +137,29 @@ const Signup: React.FC = () => {
             mb: '30px',
           }}
         >
-          <AppLogo maxWidth='250px' />
+          <AppLogo maxWidth="250px" />
         </Box>
         <Box sx={{ height: '100px' }} />
-        
+
         <Formik
           initialValues={{
-            
             email: '',
             password: '',
             confirmPassword: '',
+            acceptTerms: false,
           }}
           validationSchema={validationSchema}
           onSubmit={handleSubmit}
         >
           {({ isSubmitting, errors }) => (
-            <Form style={{ width: '350px' }} >
+            <Form style={{ width: '350px' }}>
               <Grid
                 container
                 spacing={2}
                 direction="column"
                 justifyContent="center"
               >
-                <Grid size={{xs: 12}}>
+                <Grid size={{ xs: 12 }}>
                   <InputAtom
                     name="email"
                     type="email"
@@ -167,7 +172,7 @@ const Signup: React.FC = () => {
                     sx={{ width: '100%', maxWidth: '328px' }}
                   />
                 </Grid>
-                <Grid size={{xs: 12}}>
+                <Grid size={{ xs: 12 }}>
                   <InputAtom
                     name="password"
                     type={showPassword ? 'text' : 'password'}
@@ -180,7 +185,7 @@ const Signup: React.FC = () => {
                     sx={{ width: '100%', maxWidth: '328px' }}
                   />
                 </Grid>
-                <Grid size={{xs: 12}}>
+                <Grid size={{ xs: 12 }}>
                   <InputAtom
                     name="confirmPassword"
                     type={showPassword ? 'text' : 'password'}
@@ -194,7 +199,7 @@ const Signup: React.FC = () => {
                   />
                 </Grid>
 
-                <Grid size={{xs: 12}}>
+                <Grid size={{ xs: 12 }}>
                   {(errorMsg || successMsg) && (
                     <Alert severity={errorMsg ? 'error' : 'success'}>
                       {errorMsg || successMsg}
@@ -202,7 +207,52 @@ const Signup: React.FC = () => {
                   )}
                 </Grid>
 
-                <Grid size={{xs: 12}}>
+                <Grid size={{ xs: 12 }}>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      flexWrap: 'wrap',
+                      gap: 1,
+                    }}
+                  >
+                    <Field
+                      type="checkbox"
+                      name="acceptTerms"
+                      style={{ marginRight: 8 }}
+                    />
+                    <TextAtom variant="body" size="medium">
+                      Acepto los 
+                      <ButtonAtom
+                        type="button"
+                        variant="text"
+                        onClick={() => navigate('/terms-&-conditions')}
+                        sx={{
+                          textTransform: 'none',
+                          p: 0.5,
+                          ml: 0.5,
+                          minWidth: 'auto',
+                          display: 'inline',
+                        }}
+                      >
+                        
+                          Términos y Condiciones
+                      </ButtonAtom>
+                    </TextAtom>
+                  </Box>
+                  {errors.acceptTerms && (
+                    <Box sx={{ mt: 1 }}>
+                      <TextAtom
+                        variant="body"
+                        size="small"
+                        sx={{ color: 'error.main' }}
+                      >
+                        {errors.acceptTerms}
+                      </TextAtom>
+                    </Box>
+                  )}
+                </Grid>
+                <Grid size={{ xs: 12 }}>
                   <ButtonAtom
                     type="submit"
                     variant="filled"
@@ -218,9 +268,10 @@ const Signup: React.FC = () => {
                     {t('auth.register.signup_title_button')}
                   </ButtonAtom>
                 </Grid>
+                
                 <Box sx={{ height: '191px' }} />
                 <Grid
-                  size={{xs: 12}}
+                  size={{ xs: 12 }}
                   sx={{
                     display: 'flex',
                     flexDirection: 'row',
