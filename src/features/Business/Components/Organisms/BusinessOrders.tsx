@@ -21,7 +21,6 @@ import { useSelector } from 'react-redux';
 import { selectMode } from '../../../../redux/slices/roleSwitcherSlice';
 import { useUserRole } from '../../../../features/auth/hooks/authHooks';
 import OrderActions from '../../../tasks/components/organisms/OrderActions';
-import { hasPermission } from '../../../../utils/permissions'; // Importa hasPermission
 import RoleSwitcherButton from '../../../../components/atoms/RoleSwitcherButton';
 
 const getFullImageUrl = (url: string | null) => {
