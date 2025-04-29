@@ -1,8 +1,8 @@
+import React, { useMemo } from 'react';
 import {
   Box,
   Avatar,
   Typography,
-  useTheme,
   Stack,
   List,
   ListItem,
@@ -13,14 +13,15 @@ import {
 import { useTranslation } from 'react-i18next';
 import TextAtom from '../../../../components/atoms/TextAtom';
 import { ButtonAtom } from '../../../../components/atoms';
-import React, { useMemo } from 'react';
 import { useGetOrdersQuery } from '../../../../services/ordersApi';
 import { format } from 'date-fns';
-import ChatIcon from '@mui/icons-material/Chat';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import { IconButton, Tooltip } from '@mui/material';
-import { useUserRole } from '../../../../features/auth/hooks/authHooks';
 import DEFAULT_IMAGE from '../../../../assets/images/DEFAULT_IMAGE.png';
+import okIcon from '../../../../assets/images/ok_icon-01.svg';
+import { useSelector } from 'react-redux';
+import { selectMode } from '../../../../redux/slices/modeSlice';
+import { useUserRole } from '../../../../features/auth/hooks/authHooks';
+import OrderActions from '../../../tasks/components/organisms/OrderActions';
+import { hasPermission } from '../../../../utils/permissions'; // Importa hasPermission
 
 const getFullImageUrl = (url: string | null) => {
   const baseUrl = import.meta.env.VITE_BASE_API_URL || 'http://localhost:8000';
@@ -29,12 +30,16 @@ const getFullImageUrl = (url: string | null) => {
 
 const BusinessOrderPage = () => {
   const { t } = useTranslation();
-  const theme = useTheme();
   const { data, isLoading } = useGetOrdersQuery();
   const [orderStatus, setOrderStatus] = React.useState(1);
 
-  const userRole = useUserRole();
-  console.log('Rol del usuario:', userRole);
+  const currentMode = useSelector(selectMode); // Obtén el modo actual ('user' o 'merchant')
+  const userRoles = useUserRole(); // Obtén los roles del usuario
+
+  console.log('userRoles', userRoles);
+  console.log('currentMode', currentMode);
+  console.log('orderStatus', orderStatus);
+  console.log('data', data);
 
   const handleStatusChange = (status: number) => {
     setOrderStatus(status);
@@ -49,22 +54,22 @@ const BusinessOrderPage = () => {
   const FILTER_OPTIONS = useMemo(
     () => [
       {
-        label: 'Empiezan pronto',
+        label: t('BusinessOrdersPage.soon', 'Beginning soon'),
         status: 1,
         value: orders?.filter((order) => order.status === 1).length,
       },
       {
-        label: 'En curso',
+        label: t('BusinessOrdersPage.inProgress', 'In progress'),
         status: 2,
         value: orders?.filter((order) => order.status === 2).length,
       },
       {
-        label: 'Completadas',
+        label: t('BusinessOrdersPage.completed', 'Completed'),
         status: 3,
         value: orders?.filter((order) => order.status === 3).length,
       },
       {
-        label: 'Canceladas',
+        label: t('BusinessOrdersPage.canceled', 'Canceled'),
         status: 4,
         value: orders?.filter((order) => order.status === 4).length,
       },
@@ -85,10 +90,25 @@ const BusinessOrderPage = () => {
     );
   }
 
+  if (!userRoles) {
+    return (
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        height="100vh"
+      >
+        <Typography variant="h6">
+          {t('BusinessOrdersPage.loadingRoles', 'Loading user roles...')}
+        </Typography>
+      </Box>
+    );
+  }
+
   return (
-    <Box display="flex" flexDirection="column" mb={4}>
-      <TextAtom variant="headline" size="small" fontWeight="bold">
-        {t('Tus ordenes')}
+    <Box display="flex" flexDirection="column" mt={2} mb={4} ml={4} mr={4}>
+      <TextAtom variant="headline" size="small" fontWeight="bold" mb={2}>
+        {t('BusinessOrdersPage.yourOrders', 'Your orders')}
       </TextAtom>
       <Stack direction="row" spacing={2} mb={2}>
         {FILTER_OPTIONS.map((option) => (
@@ -105,43 +125,55 @@ const BusinessOrderPage = () => {
       </Stack>
       <List sx={{ width: '100%', paddingX: 5 }}>
         {ordersFilteredByStatus?.length > 0 ? (
-          ordersFilteredByStatus.map((order, index) => (
+          ordersFilteredByStatus.map((order) => (
             <ListItem
               key={order.id}
               alignItems="flex-start"
               secondaryAction={
-                <Box display="flex" alignItems="center" gap={1}>
-                  {/* Mostrar botón "Finalizar tarea" */}
-                  {userRole === 'service' && order.status === 2 && (
-                    <Tooltip title="Finalizar tarea">
-                      <IconButton
-                        color="success"
-                        size="small"
-                        onClick={() =>
-                          console.log(`Finalizar tarea para order ${order.id}`)
-                        }
-                      >
-                        <CheckCircleIcon fontSize="small" />
-                      </IconButton>
-                    </Tooltip>
-                  )}
-
-                  {/* Mostrar botón "Chat" */}
-                  {(userRole === 'user' || userRole === 'service') &&
-                    order.status < 3 && (
-                      <Tooltip title="Iniciar conversación">
-                        <IconButton
-                          color="primary"
-                          size="small"
-                          onClick={() =>
-                            console.log(`Iniciar chat para order ${order.id}`)
-                          }
-                        >
-                          <ChatIcon fontSize="small" />
-                        </IconButton>
-                      </Tooltip>
-                    )}
-                </Box>
+                <OrderActions
+                  orderStatus={order.status}
+                  userRoles={userRoles}
+                  currentMode={currentMode}
+                  onViewDetails={() =>
+                    console.log(
+                      `Ver detalle de la tarea para order ${order.id}`,
+                    )
+                  }
+                  onChat={() =>
+                    console.log(`Iniciar chat para order ${order.id}`)
+                  }
+                  onAcceptTask={() => {
+                    if (
+                      hasPermission(
+                        { id: 'user-id', roles: userRoles },
+                        'tasks',
+                        'accept',
+                      )
+                    ) {
+                      console.log(`Aceptar tarea para order ${order.id}`);
+                    } else {
+                      console.log('No tienes permiso para aceptar esta tarea.');
+                    }
+                  }}
+                  onCompleteTask={() => {
+                    if (
+                      hasPermission(
+                        { id: 'user-id', roles: userRoles },
+                        'tasks',
+                        'complete',
+                      )
+                    ) {
+                      console.log(`Completar tarea para order ${order.id}`);
+                    } else {
+                      console.log(
+                        'No tienes permiso para completar esta tarea.',
+                      );
+                    }
+                  }}
+                  onRateService={() =>
+                    console.log(`Calificar servicio para order ${order.id}`)
+                  }
+                />
               }
             >
               <ListItemAvatar>
@@ -177,13 +209,38 @@ const BusinessOrderPage = () => {
         ) : (
           <Box
             display="flex"
+            flexDirection="column"
             justifyContent="center"
             alignItems="center"
-            height="100px"
+            height="300px"
+            textAlign="center"
+            gap={2}
+            sx={{
+              border: '2px dashed',
+              borderColor: 'primary.light',
+              borderRadius: 2,
+              padding: 3,
+            }}
           >
-            <TextAtom variant="body" size="small">
-              {t('No hay órdenes para mostrar')}
+            <img
+              src={okIcon}
+              alt="Ok Icon"
+              style={{
+                width: '150px',
+                height: '150px',
+              }}
+            />
+
+            {/* Mensaje descriptivo */}
+            <TextAtom variant="body" size="medium" fontWeight="bold">
+              {t('BusinessOrdersPage.noOrders', 'No hay órdenes disponibles')}
             </TextAtom>
+            <Typography variant="body2" color="text.secondary">
+              {t(
+                'BusinessOrdersPage.noOrdersDescription',
+                'Parece que no tienes órdenes en este momento. ¡Vuelve más tarde o crea una nueva orden!',
+              )}
+            </Typography>
           </Box>
         )}
       </List>

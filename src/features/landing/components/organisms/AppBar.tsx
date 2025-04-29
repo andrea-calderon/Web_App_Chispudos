@@ -8,6 +8,7 @@ import {
   MenuItem,
   Container,
   IconButton,
+  Button,
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import {
@@ -25,15 +26,38 @@ import AppLogo from '../../../../components/molecules/AppLogo';
 import { ButtonAtom } from '../../../../components/atoms';
 import { useAppSelector } from '../../../../hooks/useAppSelector';
 import { selectAuth } from '../../../../redux/slices/authSlice';
+import { User, hasPermission } from '../../../../utils/permissions'; // Importa hasPermission
 
 function ResponsiveAppBar() {
   const navigate = useNavigate();
-  const { isAuthenticated } = useAppSelector(selectAuth);
+  const { isAuthenticated, user } = useAppSelector(selectAuth); // Asegúrate de que `user` esté disponible
   const { t, i18n } = useTranslation();
   const theme = useTheme();
   const { palette } = theme;
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
   const [language, setLanguage] = useState('en');
+
+  // Estado para el modo actual
+  const [currentMode, setCurrentMode] = useState<'user' | 'merchant'>('user');
+
+  // Función para alternar entre modos
+  const toggleMode = () => {
+    if (
+      hasPermission(
+        { id: user.id, roles: ['user', 'merchant'] }, // Simula el usuario con roles
+        'tasks', // Recurso de ejemplo
+        'view', // Acción de ejemplo
+      )
+    ) {
+      setCurrentMode((prevMode) => {
+        const newMode = prevMode === 'user' ? 'merchant' : 'user';
+        console.log(`Modo cambiado a: ${newMode}`); // Depuración
+        return newMode;
+      });
+    } else {
+      console.log('El usuario no tiene permisos para cambiar de modo.');
+    }
+  };
 
   const NAV_ITEMS = [
     {
@@ -149,6 +173,17 @@ function ResponsiveAppBar() {
           >
             {renderMenuItems(isAuthenticated ? AUTH_NAV_ITEMS : NAV_ITEMS)}
           </Box>
+          {isAuthenticated &&
+            user?.roles.some((role) => role.name === 'User') &&
+            user?.roles.some((role) => role.name === 'Merchant') && (
+              <Button
+                color="inherit"
+                onClick={toggleMode}
+                sx={{ marginLeft: 'auto' }}
+              >
+                Switch to {currentMode === 'user' ? 'Merchant' : 'User'} Mode
+              </Button>
+            )}
         </Toolbar>
       </Container>
     </AppBar>
