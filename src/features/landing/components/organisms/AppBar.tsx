@@ -26,7 +26,6 @@ import AppLogo from '../../../../components/molecules/AppLogo';
 import { ButtonAtom } from '../../../../components/atoms';
 import { useAppSelector } from '../../../../hooks/useAppSelector';
 import { selectAuth } from '../../../../redux/slices/authSlice';
-import { User, hasPermission } from '../../../../utils/permissions'; // Importa hasPermission
 import RoleSwitcherButton from '../../components/atoms/RoleSwitcherButton';
 
 function ResponsiveAppBar() {
