@@ -18,10 +18,11 @@ import { format } from 'date-fns';
 import DEFAULT_IMAGE from '../../../../assets/images/DEFAULT_IMAGE.png';
 import okIcon from '../../../../assets/images/ok_icon-01.svg';
 import { useSelector } from 'react-redux';
-import { selectMode } from '../../../../redux/slices/modeSlice';
+import { selectMode } from '../../../../redux/slices/roleSwitcherSlice';
 import { useUserRole } from '../../../../features/auth/hooks/authHooks';
 import OrderActions from '../../../tasks/components/organisms/OrderActions';
 import { hasPermission } from '../../../../utils/permissions'; // Importa hasPermission
+import RoleSwitcherButton from '../../../../components/atoms/RoleSwitcherButton';
 
 const getFullImageUrl = (url: string | null) => {
   const baseUrl = import.meta.env.VITE_BASE_API_URL || 'http://localhost:8000';
@@ -32,8 +33,8 @@ const BusinessOrderPage = () => {
   const { t } = useTranslation();
   const { data, isLoading } = useGetOrdersQuery();
   const [orderStatus, setOrderStatus] = React.useState(1);
-
-  const currentMode = useSelector(selectMode); // Obtén el modo actual ('user' o 'merchant')
+  const currentMode = useSelector(selectMode);
+  console.log('Modo actual:', currentMode); // Depuración
   const userRoles = useUserRole(); // Obtén los roles del usuario
 
   console.log('userRoles', userRoles);
@@ -243,9 +244,17 @@ const BusinessOrderPage = () => {
             </Typography>
           </Box>
         )}
+        <div>
+          {/* Otros elementos del AppBar */}
+          <RoleSwitcherButton />
+        </div>
+        <div>
+          <h1>Business Orders</h1>
+          <p>Modo actual: {currentMode}</p>
+          {/* Aquí puedes agregar lógica para mostrar contenido dependiendo del modo */}
+        </div>
       </List>
     </Box>
   );
 };
-
 export default BusinessOrderPage;

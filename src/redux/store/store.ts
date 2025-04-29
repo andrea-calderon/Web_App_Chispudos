@@ -4,7 +4,7 @@ import storage from 'redux-persist/lib/storage'; // defaults to localStorage for
 import { combineReducers } from 'redux';
 import authReducer from '../slices/authSlice';
 import serviceStepperReducer from '../slices/serviceStepperSlice';
-import modeReducer from '../slices/modeSlice';
+import roleSwitcherReducer from '../slices/roleSwitcherSlice';
 import { authApi } from '../../services/authApi';
 import { productApi } from '../../services/productApi';
 import { categoryApi } from '../../services/categoryApi';
@@ -17,7 +17,7 @@ import { mailchimpApi } from '../../services/mailchimpApi';
 const rootReducer = combineReducers({
   auth: authReducer,
   serviceStepper: serviceStepperReducer,
-  mode: modeReducer, 
+  roleSwitcher: roleSwitcherReducer,
   [authApi.reducerPath]: authApi.reducer,
   [productApi.reducerPath]: productApi.reducer,
   [categoryApi.reducerPath]: categoryApi.reducer,
@@ -32,7 +32,7 @@ const rootReducer = combineReducers({
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['auth', 'serviceStepper', 'mode'], // Only persist the auth reducer
+  whitelist: ['auth', 'serviceStepper', 'roleSwitcher'], // Only persist the auth reducer
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
