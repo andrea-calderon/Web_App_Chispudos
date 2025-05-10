@@ -16,9 +16,9 @@ import {
   MenuItem,
   useMediaQuery,
 } from '@mui/material';
-import { Delete, Chat, Task, MoreVert, NotInterested, StarRate } from '@mui/icons-material';
+import { DoneAll, Chat, Task, MoreVert, NotInterested, StarRate } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
-import { useGetOrdersQuery } from '../../../../services/ordersApi';
+import { useGetOrdersQuery, useUpdateOrderMutation } from '../../../../services/ordersApi';
 import { format } from 'date-fns';
 import DEFAULT_IMAGE from '../../../../assets/images/DEFAULT_IMAGE.png';
 import { useSelector } from 'react-redux';
@@ -27,6 +27,11 @@ import { useUserRole } from '../../../../features/auth/hooks/authHooks';
 import { EmptySection } from '../../../../components/molecules';
 import { useTheme } from '@mui/material/styles';
 import RoleSwitcherButton from '../../../../components/atoms/RoleSwitcherButton';
+import { useCreateChatMutation } from '../../../../services/chatApi';
+import { useAppSelector } from '../../../../hooks/useAppSelector';
+import { selectAuth } from '../../../../redux/slices/authSlice';
+import { useNavigate } from 'react-router-dom';
+import { ButtonAtom } from '../../../../components/atoms';
 
 const getFullImageUrl = (url: string | null) => {
   const baseUrl = import.meta.env.VITE_BASE_API_URL;
@@ -35,12 +40,14 @@ const getFullImageUrl = (url: string | null) => {
 
 const BusinessOrderPage = () => {
   const { t } = useTranslation();
-  const { data, isLoading } = useGetOrdersQuery();
+  const { data, isLoading, refetch: refetchOrders } = useGetOrdersQuery();
   const [orderStatus, setOrderStatus] = React.useState(1);
   const currentMode = useSelector(selectMode);
+  const { user } = useAppSelector(selectAuth)
   const userRoles = useUserRole();
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const navigate = useNavigate();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [selectedOrder, setSelectedOrder] = useState<number | null>(null);
@@ -90,6 +97,37 @@ const BusinessOrderPage = () => {
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setOrderStatus(newValue);
   };
+
+  const [createChat] = useCreateChatMutation();
+
+  const handleChat = async (user2Id: number) => {
+      const chatBody = {
+        user1Id: user?.id,
+        user2Id 
+      };
+      const respChatCreated = await createChat(chatBody).unwrap();
+      console.log('Chat created successfully', chatBody);
+      if (respChatCreated) {
+        console.log('Chat created successfully', respChatCreated);
+        navigate(`/profile`);
+      }
+    }
+
+  // order status constants
+  // 1: requested, 2: in progress, 3: completed, 4: cancelled, 5: refunded, 6: failed, 7: reviewed
+  const [updateOrder] = useUpdateOrderMutation();
+  const handleOrderUpdate = async (orderId: number, status: number) => {
+    try {
+      await updateOrder({ orderId, status }).unwrap();
+      refetchOrders();
+      console.log('Order updated successfully');
+    } catch (error) {
+      console.error('Failed to update order:', error);
+    }
+  };
+
+  
+
 
   if (isLoading) {
     return (
@@ -188,40 +226,30 @@ const BusinessOrderPage = () => {
                       open={Boolean(anchorEl) && selectedOrder === order.id}
                       onClose={handleMenuClose}
                     >
-                      <MenuItem onClick={() => console.log(`Delete order ${order.id}`)}>
-                        <Delete fontSize="small" /> Delete
+                      <MenuItem onClick={() => handleOrderUpdate(order.id, 3)}>
+                        <ButtonAtom variant='outlined' fullWidth  startIcon={<DoneAll />} size='small' >{t('features.businessOrdersPage.actions.completed', 'Completada')}</ButtonAtom>
                       </MenuItem>
-                      <MenuItem onClick={() => console.log(`Chat for order ${order.id}`)}>
-                        <Chat fontSize="small" /> Chat
+                      <MenuItem onClick={() => handleOrderUpdate(order.id, 2)}>
+                        <ButtonAtom variant='outlined' fullWidth startIcon={<Task />} >{t('features.businessOrdersPage.actions.accept', 'Aceptar')}</ButtonAtom>
                       </MenuItem>
-                      <MenuItem onClick={() => console.log(`Task for order ${order.id}`)}>
-                        <Task fontSize="small" /> Task
+                      <MenuItem onClick={() => handleOrderUpdate(order.id, 4)}>
+                        <ButtonAtom variant='outlined' fullWidth startIcon={<NotInterested />} >{t('features.businessOrdersPage.actions.notInterested', 'No interesado')}</ButtonAtom>
                       </MenuItem>
-                      <MenuItem onClick={() => console.log(`Not interested in order ${order.id}`)}>
-                        <NotInterested fontSize="small" /> Not Interested
+                      <MenuItem onClick={() => handleChat(order?.details[0]?.productService?.userId)}>
+                        <ButtonAtom variant='outlined' fullWidth startIcon={<Chat />} >{t('features.businessOrdersPage.actions.chat', 'Chat')}</ButtonAtom>
                       </MenuItem>
                       <MenuItem onClick={() => console.log(`Rate order ${order.id}`)}>
-                        <StarRate fontSize="small" /> Rate
+                        <ButtonAtom variant='outlined' fullWidth startIcon={<StarRate />} >{t('features.businessOrdersPage.actions.rate', 'Calificar')}</ButtonAtom>
                       </MenuItem>
                     </Menu>
                   </>
                 ) : (
                   <Box display="flex" gap={1}>
-                    <IconButton onClick={() => console.log(`Delete order ${order.id}`)}>
-                      <Delete />
-                    </IconButton>
-                    <IconButton onClick={() => console.log(`Chat for order ${order.id}`)}>
-                      <Chat />
-                    </IconButton>
-                    <IconButton onClick={() => console.log(`Task for order ${order.id}`)}>
-                      <Task />
-                    </IconButton>
-                    <IconButton onClick={() => console.log(`Not interested in order ${order.id}`)}>
-                      <NotInterested />
-                    </IconButton>
-                    <IconButton onClick={() => console.log(`Rate order ${order.id}`)}>
-                      <StarRate />
-                    </IconButton>
+                    <ButtonAtom variant='elevated' startIcon={<DoneAll />} title={t('features.businessOrdersPage.actions.completed', 'Completada')} onClick={()=> handleOrderUpdate(order.id, 3) } />
+                    <ButtonAtom variant='elevated' startIcon={<Task />} title={t('features.businessOrdersPage.actions.accept', 'Aceptar')} onClick={() => handleOrderUpdate(order.id, 2)} />
+                    <ButtonAtom variant='elevated' startIcon={<NotInterested />} title={t('features.businessOrdersPage.actions.notInterested', 'No interesado')} onClick={() => handleOrderUpdate(order.id, 4)} />
+                    <ButtonAtom variant='elevated' startIcon={<Chat />} title={t('features.businessOrdersPage.actions.chat', 'Chat')} onClick={() => handleChat(order?.details[0]?.productService?.userId)} />
+                    <ButtonAtom variant='elevated' startIcon={<StarRate />} title={t('features.businessOrdersPage.actions.rate', 'Calificar')} />
                   </Box>
                 )}
               </ListItem>
