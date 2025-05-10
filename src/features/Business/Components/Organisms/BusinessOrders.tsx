@@ -1,30 +1,35 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
   Box,
   Avatar,
   Typography,
-  Stack,
   List,
   ListItem,
   ListItemAvatar,
   ListItemText,
   CircularProgress,
+  Tabs,
+  Tab,
+  IconButton,
+  Divider,
+  Menu,
+  MenuItem,
+  useMediaQuery,
 } from '@mui/material';
+import { Delete, Chat, Task, MoreVert, NotInterested, StarRate } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
-import TextAtom from '../../../../components/atoms/TextAtom';
-import { ButtonAtom } from '../../../../components/atoms';
 import { useGetOrdersQuery } from '../../../../services/ordersApi';
 import { format } from 'date-fns';
 import DEFAULT_IMAGE from '../../../../assets/images/DEFAULT_IMAGE.png';
-import okIcon from '../../../../assets/images/ok_icon-01.svg';
 import { useSelector } from 'react-redux';
 import { selectMode } from '../../../../redux/slices/roleSwitcherSlice';
 import { useUserRole } from '../../../../features/auth/hooks/authHooks';
-import OrderActions from '../../../tasks/components/organisms/OrderActions';
+import { EmptySection } from '../../../../components/molecules';
+import { useTheme } from '@mui/material/styles';
 import RoleSwitcherButton from '../../../../components/atoms/RoleSwitcherButton';
 
 const getFullImageUrl = (url: string | null) => {
-  const baseUrl = import.meta.env.VITE_BASE_API_URL || 'http://localhost:8000';
+  const baseUrl = import.meta.env.VITE_BASE_API_URL;
   return url?.startsWith('http') ? url : `${baseUrl}${url}`;
 };
 
@@ -33,16 +38,21 @@ const BusinessOrderPage = () => {
   const { data, isLoading } = useGetOrdersQuery();
   const [orderStatus, setOrderStatus] = React.useState(1);
   const currentMode = useSelector(selectMode);
-  console.log('Modo actual:', currentMode); // Depuración
-  const userRoles = useUserRole(); // Obtén los roles del usuario
+  const userRoles = useUserRole();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
-  console.log('userRoles', userRoles);
-  console.log('currentMode', currentMode);
-  console.log('orderStatus', orderStatus);
-  console.log('data', data);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [selectedOrder, setSelectedOrder] = useState<number | null>(null);
 
-  const handleStatusChange = (status: number) => {
-    setOrderStatus(status);
+  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>, orderId: number) => {
+    setAnchorEl(event.currentTarget);
+    setSelectedOrder(orderId);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+    setSelectedOrder(null);
   };
 
   const orders = data?.data;
@@ -56,26 +66,30 @@ const BusinessOrderPage = () => {
       {
         label: t('BusinessOrdersPage.soon', 'Beginning soon'),
         status: 1,
-        value: orders?.filter((order) => order.status === 1).length,
+        value: orders?.filter((order) => order.status === 1).length || 0,
       },
       {
         label: t('BusinessOrdersPage.inProgress', 'In progress'),
         status: 2,
-        value: orders?.filter((order) => order.status === 2).length,
+        value: orders?.filter((order) => order.status === 2).length || 0,
       },
       {
         label: t('BusinessOrdersPage.completed', 'Completed'),
         status: 3,
-        value: orders?.filter((order) => order.status === 3).length,
+        value: orders?.filter((order) => order.status === 3).length || 0,
       },
       {
         label: t('BusinessOrdersPage.canceled', 'Canceled'),
         status: 4,
-        value: orders?.filter((order) => order.status === 4).length,
+        value: orders?.filter((order) => order.status === 4).length || 0,
       },
     ],
     [orders],
   );
+
+  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+    setOrderStatus(newValue);
+  };
 
   if (isLoading) {
     return (
@@ -106,154 +120,127 @@ const BusinessOrderPage = () => {
   }
 
   return (
-    <Box display="flex" flexDirection="column" mt={2} mb={4} ml={4} mr={4}>
-      <TextAtom variant="headline" size="small" fontWeight="bold" mb={2}>
+    <Box display="flex" flexDirection="column">
+      <Typography variant="h5" fontWeight="bold" mb={2}>
         {t('BusinessOrdersPage.yourOrders', 'Your orders')}
-      </TextAtom>
-      <Stack direction="row" spacing={2} mb={2}>
+      </Typography>
+
+      {/* Tabs for Filtering */}
+      <Tabs
+        value={orderStatus}
+        onChange={handleTabChange}
+        variant="scrollable"
+        scrollButtons="auto"
+        aria-label="Order Status Tabs"
+        sx={{ marginBottom: 3 }}
+      >
         {FILTER_OPTIONS.map((option) => (
-          <ButtonAtom
+          <Tab
             key={option.status}
-            variant="outlined"
-            onClick={() => handleStatusChange(option.status)}
-          >
-            <TextAtom variant="body" size="small">
-              {`${option.label} (${option.value})`}
-            </TextAtom>
-          </ButtonAtom>
+            label={`${option.label} (${option.value})`}
+            value={option.status}
+          />
         ))}
-      </Stack>
-      <List sx={{ width: '100%', paddingX: 5 }}>
+      </Tabs>
+
+      {/* Orders List */}
+      <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
         {ordersFilteredByStatus?.length > 0 ? (
-          ordersFilteredByStatus.map((order) => (
-            <ListItem
-              key={order.id}
-              alignItems="flex-start"
-              secondaryAction={
-                <OrderActions
-                  orderStatus={order.status}
-                  userRoles={userRoles}
-                  currentMode={currentMode}
-                  onViewDetails={() =>
-                    console.log(
-                      `Ver detalle de la tarea para order ${order.id}`,
-                    )
-                  }
-                  onChat={() =>
-                    console.log(`Iniciar chat para order ${order.id}`)
-                  }
-                  onAcceptTask={() => {
-                    if (
-                      hasPermission(
-                        { id: 'user-id', roles: userRoles },
-                        'tasks',
-                        'accept',
-                      )
-                    ) {
-                      console.log(`Aceptar tarea para order ${order.id}`);
-                    } else {
-                      console.log('No tienes permiso para aceptar esta tarea.');
+          ordersFilteredByStatus.map((order, index) => (
+            <React.Fragment key={order.id}>
+              <ListItem alignItems="flex-start">
+                <ListItemAvatar>
+                  <Avatar
+                    alt={order?.details[0]?.productService?.name}
+                    src={
+                      order?.details[0]?.productService?.urlImage
+                        ? getFullImageUrl(order.details[0].productService.urlImage)
+                        : DEFAULT_IMAGE
                     }
-                  }}
-                  onCompleteTask={() => {
-                    if (
-                      hasPermission(
-                        { id: 'user-id', roles: userRoles },
-                        'tasks',
-                        'complete',
-                      )
-                    ) {
-                      console.log(`Completar tarea para order ${order.id}`);
-                    } else {
-                      console.log(
-                        'No tienes permiso para completar esta tarea.',
-                      );
-                    }
-                  }}
-                  onRateService={() =>
-                    console.log(`Calificar servicio para order ${order.id}`)
+                  />
+                </ListItemAvatar>
+                <ListItemText
+                  primary={order?.details[0]?.productService?.name}
+                  secondary={
+                    <React.Fragment>
+                      <Typography
+                        component="span"
+                        variant="body2"
+                        sx={{ color: 'text.primary', display: 'inline' }}
+                      >
+                        {format(new Date(order?.startDate), 'dd/MM/yyyy HH:mm')}
+                      </Typography>
+                      {` — ${order?.details[0]?.comment}`}
+                    </React.Fragment>
                   }
                 />
-              }
-            >
-              <ListItemAvatar>
-                <Avatar
-                  alt={order?.details[0]?.productService?.name}
-                  variant="rounded"
-                  src={
-                    order?.details[0]?.productService?.urlImage
-                      ? getFullImageUrl(
-                          order.details[0].productService.urlImage,
-                        )
-                      : DEFAULT_IMAGE
-                  }
-                />
-              </ListItemAvatar>
-              <ListItemText
-                primary={order?.details[0]?.productService?.name}
-                secondary={
-                  <React.Fragment>
-                    <Typography
-                      component="span"
-                      variant="body2"
-                      sx={{ color: 'text.primary', display: 'inline' }}
+                {isMobile ? (
+                  <>
+                    <IconButton
+                      edge="end"
+                      aria-label="more"
+                      onClick={(event) => handleMenuOpen(event, order.id)}
                     >
-                      {format(new Date(order?.startDate), 'dd/MM/yyyy HH:mm')}
-                    </Typography>
-                    {` — ${order?.details[0]?.comment}`}
-                  </React.Fragment>
-                }
-              />
-            </ListItem>
+                      <MoreVert />
+                    </IconButton>
+                    <Menu
+                      anchorEl={anchorEl}
+                      open={Boolean(anchorEl) && selectedOrder === order.id}
+                      onClose={handleMenuClose}
+                    >
+                      <MenuItem onClick={() => console.log(`Delete order ${order.id}`)}>
+                        <Delete fontSize="small" /> Delete
+                      </MenuItem>
+                      <MenuItem onClick={() => console.log(`Chat for order ${order.id}`)}>
+                        <Chat fontSize="small" /> Chat
+                      </MenuItem>
+                      <MenuItem onClick={() => console.log(`Task for order ${order.id}`)}>
+                        <Task fontSize="small" /> Task
+                      </MenuItem>
+                      <MenuItem onClick={() => console.log(`Not interested in order ${order.id}`)}>
+                        <NotInterested fontSize="small" /> Not Interested
+                      </MenuItem>
+                      <MenuItem onClick={() => console.log(`Rate order ${order.id}`)}>
+                        <StarRate fontSize="small" /> Rate
+                      </MenuItem>
+                    </Menu>
+                  </>
+                ) : (
+                  <Box display="flex" gap={1}>
+                    <IconButton onClick={() => console.log(`Delete order ${order.id}`)}>
+                      <Delete />
+                    </IconButton>
+                    <IconButton onClick={() => console.log(`Chat for order ${order.id}`)}>
+                      <Chat />
+                    </IconButton>
+                    <IconButton onClick={() => console.log(`Task for order ${order.id}`)}>
+                      <Task />
+                    </IconButton>
+                    <IconButton onClick={() => console.log(`Not interested in order ${order.id}`)}>
+                      <NotInterested />
+                    </IconButton>
+                    <IconButton onClick={() => console.log(`Rate order ${order.id}`)}>
+                      <StarRate />
+                    </IconButton>
+                  </Box>
+                )}
+              </ListItem>
+              {index < ordersFilteredByStatus.length - 1 && (
+                <Divider variant="inset" component="li" />
+              )}
+            </React.Fragment>
           ))
         ) : (
-          <Box
-            display="flex"
-            flexDirection="column"
-            justifyContent="center"
-            alignItems="center"
-            height="300px"
-            textAlign="center"
-            gap={2}
-            sx={{
-              border: '2px dashed',
-              borderColor: 'primary.light',
-              borderRadius: 2,
-              padding: 3,
-            }}
-          >
-            <img
-              src={okIcon}
-              alt="Ok Icon"
-              style={{
-                width: '150px',
-                height: '150px',
-              }}
-            />
-
-            {/* Mensaje descriptivo */}
-            <TextAtom variant="body" size="medium" fontWeight="bold">
-              {t('BusinessOrdersPage.noOrders', 'No hay órdenes disponibles')}
-            </TextAtom>
-            <Typography variant="body2" color="text.secondary">
-              {t(
-                'BusinessOrdersPage.noOrdersDescription',
-                'Parece que no tienes órdenes en este momento. ¡Vuelve más tarde o crea una nueva orden!',
-              )}
-            </Typography>
-          </Box>
+          <EmptySection />
         )}
-        <div>
-          {/* Otros elementos del AppBar */}
-          <RoleSwitcherButton />
-        </div>
-        <div>
-          <h1>Business Orders</h1>
-          <p>Modo actual: {currentMode}</p>
-          {/* Aquí puedes agregar lógica para mostrar contenido dependiendo del modo */}
-        </div>
       </List>
+
+      {/* Role Switcher */}
+      <Box mt={3}>
+        <RoleSwitcherButton />
+      </Box>
     </Box>
   );
 };
+
 export default BusinessOrderPage;

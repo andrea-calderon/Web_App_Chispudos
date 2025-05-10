@@ -23,21 +23,21 @@ const Footer: React.FC = () => {
             <IconButton
               href="https://www.instagram.com"
               target="_blank"
-              style={{ color: '#0A142F' }}
+              style={{ color: '#0A142F', zIndex: -1 }}
             >
               <InstagramIcon />
             </IconButton>
             <IconButton
               href="https://www.pinterest.com"
               target="_blank"
-              style={{ color: '#0A142F' }}
+              style={{ color: '#0A142F', zIndex: -1 }}
             >
               <PinterestIcon />
             </IconButton>
             <IconButton
               href="https://www.facebook.com"
               target="_blank"
-              style={{ color: '#0A142F' }}
+              style={{ color: '#0A142F', zIndex: -1 }}
             >
               <FacebookIcon />
             </IconButton>

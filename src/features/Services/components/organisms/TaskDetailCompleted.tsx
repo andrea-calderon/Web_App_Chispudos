@@ -43,7 +43,7 @@ const TaskDetailCompleted = ({ date, dateTime, time, service, userText, onBack }
 
   const handleCloseModal = () => {
     setOpenModal(false);
-    navigate('/businessProfile');
+    navigate('/tasks');
   };
 
   return (
@@ -149,7 +149,7 @@ const TaskDetailCompleted = ({ date, dateTime, time, service, userText, onBack }
               variant="filled"
               onClick={handleConfirm}
             >
-              {t('services.serviceDetails.buttonCompleted')}
+              {t('services.serviceDetails.buttonCompleted', 'Confirmar y chatear')}
             </ButtonAtom>
           </Box>
         </Grid>

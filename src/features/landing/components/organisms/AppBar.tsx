@@ -174,8 +174,8 @@ function ResponsiveAppBar() {
             {renderMenuItems(isAuthenticated ? AUTH_NAV_ITEMS : NAV_ITEMS)}
           </Box>
           {isAuthenticated &&
-            user?.roles.some((role) => role.name === 'User') &&
-            user?.roles.some((role) => role.name === 'Merchant') && (
+            user?.roles?.some((role) => role.name === 'User') &&
+            user?.roles?.some((role) => role.name === 'Merchant') && (
               <Button
                 color="inherit"
                 onClick={toggleMode}
