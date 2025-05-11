@@ -24,7 +24,7 @@ import DEFAULT_IMAGE from '../../../../assets/images/DEFAULT_IMAGE.png';
 import { useSelector } from 'react-redux';
 import { selectMode } from '../../../../redux/slices/roleSwitcherSlice';
 import { useUserRole } from '../../../../features/auth/hooks/authHooks';
-import { EmptySection } from '../../../../components/molecules';
+import { EmptySection, ModalComponent } from '../../../../components/molecules';
 import { useTheme } from '@mui/material/styles';
 import RoleSwitcherButton from '../../../../components/atoms/RoleSwitcherButton';
 import { useCreateChatMutation } from '../../../../services/chatApi';
@@ -43,7 +43,7 @@ const BusinessOrderPage = () => {
   const { data, isLoading, refetch: refetchOrders } = useGetOrdersQuery();
   const [orderStatus, setOrderStatus] = React.useState(1);
   const currentMode = useSelector(selectMode);
-  const { user } = useAppSelector(selectAuth)
+  const { user } = useAppSelector(selectAuth);
   const userRoles = useUserRole();
   const theme = useTheme();
   const navigate = useNavigate();
@@ -51,6 +51,8 @@ const BusinessOrderPage = () => {
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [selectedOrder, setSelectedOrder] = useState<number | null>(null);
+  const [selectedAction, setSelectedAction] = useState<string | null>(null);
+  const [showConfirmActionModal, setShowConfirmActionModal] = useState(false);
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>, orderId: number) => {
     setAnchorEl(event.currentTarget);
@@ -60,6 +62,37 @@ const BusinessOrderPage = () => {
   const handleMenuClose = () => {
     setAnchorEl(null);
     setSelectedOrder(null);
+  };
+
+  const handleOpenModal = (action: string, orderId: number) => {
+    setSelectedAction(action);
+    setSelectedOrder(orderId);
+    setShowConfirmActionModal(true);
+  };
+
+  const handleConfirmAction = async () => {
+    if (selectedAction && selectedOrder) {
+      switch (selectedAction) {
+        case 'complete':
+          await handleOrderUpdate(selectedOrder, 3);
+          break;
+        case 'accept':
+          await handleOrderUpdate(selectedOrder, 2);
+          break;
+        case 'notInterested':
+          await handleOrderUpdate(selectedOrder, 4);
+          break;
+        case 'chat':
+          await handleChat(selectedOrder);
+          break;
+        case 'rate':
+          console.log(`Rate order ${selectedOrder}`);
+          break;
+        default:
+          break;
+      }
+    }
+    setShowConfirmActionModal(false);
   };
 
   const orders = data?.data;
@@ -101,20 +134,18 @@ const BusinessOrderPage = () => {
   const [createChat] = useCreateChatMutation();
 
   const handleChat = async (user2Id: number) => {
-      const chatBody = {
-        user1Id: user?.id,
-        user2Id 
-      };
-      const respChatCreated = await createChat(chatBody).unwrap();
-      console.log('Chat created successfully', chatBody);
-      if (respChatCreated) {
-        console.log('Chat created successfully', respChatCreated);
-        navigate(`/profile`);
-      }
+    const chatBody = {
+      user1Id: user?.id,
+      user2Id,
+    };
+    const respChatCreated = await createChat(chatBody).unwrap();
+    console.log('Chat created successfully', chatBody);
+    if (respChatCreated) {
+      console.log('Chat created successfully', respChatCreated);
+      navigate(`/profile`);
     }
+  };
 
-  // order status constants
-  // 1: requested, 2: in progress, 3: completed, 4: cancelled, 5: refunded, 6: failed, 7: reviewed
   const [updateOrder] = useUpdateOrderMutation();
   const handleOrderUpdate = async (orderId: number, status: number) => {
     try {
@@ -126,17 +157,9 @@ const BusinessOrderPage = () => {
     }
   };
 
-  
-
-
   if (isLoading) {
     return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        height="100vh"
-      >
+      <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
         <CircularProgress />
       </Box>
     );
@@ -144,12 +167,7 @@ const BusinessOrderPage = () => {
 
   if (!userRoles) {
     return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        height="100vh"
-      >
+      <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
         <Typography variant="h6">
           {t('BusinessOrdersPage.loadingRoles', 'Loading user roles...')}
         </Typography>
@@ -159,6 +177,21 @@ const BusinessOrderPage = () => {
 
   return (
     <Box display="flex" flexDirection="column">
+      <ModalComponent
+        open={showConfirmActionModal}
+        onClose={() => setShowConfirmActionModal(false)}
+        onConfirm={handleConfirmAction}
+        cancelButtonText={t('features.businessOrdersPage.actions.cancel', 'Cancel')}
+        confirmButtonText={t('features.businessOrdersPage.actions.confirm', 'Confirm')}
+        title={t('features.businessOrdersPage.actions.title', 'Confirm action')}
+      >
+        <Typography variant="body1">
+          {t(
+            'features.businessOrdersPage.actions.confirmationMessage',
+            'Are you sure you want to perform this action?',
+          )}
+        </Typography>
+      </ModalComponent>
       <Typography variant="h5" fontWeight="bold" mb={2}>
         {t('BusinessOrdersPage.yourOrders', 'Your orders')}
       </Typography>
@@ -226,30 +259,55 @@ const BusinessOrderPage = () => {
                       open={Boolean(anchorEl) && selectedOrder === order.id}
                       onClose={handleMenuClose}
                     >
-                      <MenuItem onClick={() => handleOrderUpdate(order.id, 3)}>
-                        <ButtonAtom variant='outlined' fullWidth  startIcon={<DoneAll />} size='small' >{t('features.businessOrdersPage.actions.completed', 'Completada')}</ButtonAtom>
+                      <MenuItem onClick={() => handleOpenModal('complete', order.id)}>
+                        <DoneAll fontSize="small" /> {t('features.businessOrdersPage.actions.completed', 'Completada')}
                       </MenuItem>
-                      <MenuItem onClick={() => handleOrderUpdate(order.id, 2)}>
-                        <ButtonAtom variant='outlined' fullWidth startIcon={<Task />} >{t('features.businessOrdersPage.actions.accept', 'Aceptar')}</ButtonAtom>
+                      <MenuItem onClick={() => handleOpenModal('accept', order.id)}>
+                        <Task fontSize="small" /> {t('features.businessOrdersPage.actions.accept', 'Aceptar')}
                       </MenuItem>
-                      <MenuItem onClick={() => handleOrderUpdate(order.id, 4)}>
-                        <ButtonAtom variant='outlined' fullWidth startIcon={<NotInterested />} >{t('features.businessOrdersPage.actions.notInterested', 'No interesado')}</ButtonAtom>
+                      <MenuItem onClick={() => handleOpenModal('notInterested', order.id)}>
+                        <NotInterested fontSize="small" /> {t('features.businessOrdersPage.actions.notInterested', 'No interesado')}
                       </MenuItem>
-                      <MenuItem onClick={() => handleChat(order?.details[0]?.productService?.userId)}>
-                        <ButtonAtom variant='outlined' fullWidth startIcon={<Chat />} >{t('features.businessOrdersPage.actions.chat', 'Chat')}</ButtonAtom>
+                      <MenuItem onClick={() => handleOpenModal('chat', order.id)}>
+                        <Chat fontSize="small" /> {t('features.businessOrdersPage.actions.chat', 'Chat')}
                       </MenuItem>
-                      <MenuItem onClick={() => console.log(`Rate order ${order.id}`)}>
-                        <ButtonAtom variant='outlined' fullWidth startIcon={<StarRate />} >{t('features.businessOrdersPage.actions.rate', 'Calificar')}</ButtonAtom>
+                      <MenuItem onClick={() => handleOpenModal('rate', order.id)}>
+                        <StarRate fontSize="small" /> {t('features.businessOrdersPage.actions.rate', 'Calificar')}
                       </MenuItem>
                     </Menu>
                   </>
                 ) : (
                   <Box display="flex" gap={1}>
-                    <ButtonAtom variant='elevated' startIcon={<DoneAll />} title={t('features.businessOrdersPage.actions.completed', 'Completada')} onClick={()=> handleOrderUpdate(order.id, 3) } />
-                    <ButtonAtom variant='elevated' startIcon={<Task />} title={t('features.businessOrdersPage.actions.accept', 'Aceptar')} onClick={() => handleOrderUpdate(order.id, 2)} />
-                    <ButtonAtom variant='elevated' startIcon={<NotInterested />} title={t('features.businessOrdersPage.actions.notInterested', 'No interesado')} onClick={() => handleOrderUpdate(order.id, 4)} />
-                    <ButtonAtom variant='elevated' startIcon={<Chat />} title={t('features.businessOrdersPage.actions.chat', 'Chat')} onClick={() => handleChat(order?.details[0]?.productService?.userId)} />
-                    <ButtonAtom variant='elevated' startIcon={<StarRate />} title={t('features.businessOrdersPage.actions.rate', 'Calificar')} />
+                    <ButtonAtom
+                      variant="elevated"
+                      startIcon={<DoneAll />}
+                      title={t('features.businessOrdersPage.actions.completed', 'Completada')}
+                      onClick={() => handleOpenModal('complete', order.id)}
+                    />
+                    <ButtonAtom
+                      variant="elevated"
+                      startIcon={<Task />}
+                      title={t('features.businessOrdersPage.actions.accept', 'Aceptar')}
+                      onClick={() => handleOpenModal('accept', order.id)}
+                    />
+                    <ButtonAtom
+                      variant="elevated"
+                      startIcon={<NotInterested />}
+                      title={t('features.businessOrdersPage.actions.notInterested', 'No interesado')}
+                      onClick={() => handleOpenModal('notInterested', order.id)}
+                    />
+                    <ButtonAtom
+                      variant="elevated"
+                      startIcon={<Chat />}
+                      title={t('features.businessOrdersPage.actions.chat', 'Chat')}
+                      onClick={() => handleOpenModal('chat', order.id)}
+                    />
+                    <ButtonAtom
+                      variant="elevated"
+                      startIcon={<StarRate />}
+                      title={t('features.businessOrdersPage.actions.rate', 'Calificar')}
+                      onClick={() => handleOpenModal('rate', order.id)}
+                    />
                   </Box>
                 )}
               </ListItem>

@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { Tabs, Tab, Box } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import BusinessOrderPage from '../../../Business/Components/Organisms/BusinessOrders';
 import ChatComponent from '../../../Business/Components/Organisms/BusinessChat';
+import BusinessOrderPage from '../../../Business/Components/Organisms/BusinessOrderPage';
 
 const BusinessTabs = () => {
   const { t } = useTranslation();
