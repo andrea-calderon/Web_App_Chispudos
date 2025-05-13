@@ -1,338 +1,343 @@
 {
+  "APIs": {
+    "categories": {
+      "error": "¡Uy! No pudimos cargar las categorias. Por favor intenta más tarde.",
+      "loading": "Cargando categorías, por favor espera..."
+    }
+  },
   "app_name": "Reco",
-  "welcome": "¡Bienvenido!",
-  "components": {
-    "button": {
-      "login": "Iniciar sesión"
-    }
-  },
-
   "appBar": {
-    "navItems": {
-      "services": "Servicios",
-      "business": "Publicar mis servicios"
-    },
     "authNavItems": {
-      "home": "Inicio",
-      "tasks": "Mis Trabajos",
-      "favorites": "Guardados"
-    }
-},
-
-  "buttonTab": {
-      "home": "Inicio",
-      "task": "Mis Trabajos",
       "favorites": "Guardados",
-      "profile": "Peril"
-  },
-
-  "forms": {
-    "commons": {
-      "required": "Este campo es requerido",
-      "min_length": "El campo deberia tener al menos {{min}} caracteres",
-      "max_length": "El campo deberia tener como máximo {{max}} caracteres",
-      "min_value": "El valor deberia ser mayor o igual a {{min}}",
-      "max_value": "El valor deberia ser menor o igual a {{max}}",
-      "passwords_must_match": "Las contraseñas deben coincidir",
-      "email": "El campo deberia ser un email válido",
-      "remove": "Quitar",
-      "addAnother": "Agregar otra",
-      "mustBeNumber": "Debe ser un número"
+      "home": "Inicio",
+      "tasks": "Mis Trabajos"
+    },
+    "navItems": {
+      "business": "Publicar mis servicios",
+      "services": "Servicios"
     }
   },
   "auth": {
-    "slider_intro": {
-      "title_1": "Encuentra al experto que necesitas en pocos minutos.",
-      "title_2": "Contrata fácil y sin complicaciones.",
-      "title_3": "Basado en valoraciones de usuarios que compraron sus servicios.",
-      "title_4": "Explora, compara y agenda en pocos pasos."
-    },
-    "login": {
-      "title": "Iniciar sesión",
-      "email": "Correo electrónico",
-      "password": "Contraseña",
-      "login": "Iniciar sesión",
-      "register": "Registrarse",
-      "forgot_password": "¿Olvidaste tu contraseña?",
-      "dont_have_account": "¿No tienes una cuenta?",
-      "form": {
-        "error": {
-          "invalid_acc": "Correo electrónico o contraseña incorrectos"
-        }
-      }
-    },
-    "register": {
-      "usernameLabel": "Nombre de usuario",
-      "usernamePlaceholder": "Introduce tu nombre de usuario",
-      "emailLabel": "Correo electrónico",
-      "emailPlaceholder": "Introduce un correo electrónico válido",
-      "passwordLabel": "Contraseña",
-      "passwordPlaceholder": "Introduce tu contraseña",
-      "confirmPasswordLabel": "Confirmar contraseña",
-      "confirmPasswordPlaceholder": "Introduce la contraseña de nuevo",
-      "invalidCredentials": "Nombre de usuario o contraseña inválidos",
-      "errorOccurred": "Ocurrió un error",
-      "signup_title_button": "Registrarse",
-      "agree_terms": "Al registrarte, aceptas nuestros ",
-      "terms_of_service": "Términos de Servicio",
-      "and": "y",
-      "privacy_policy": "Política de Privacidad",
-      "have_an_account": "¿Ya tienes una cuenta?",
-      "login_title_button": "Iniciar sesión"
+    "error": {
+      "updating_password": ""
     },
     "forget_pass": {
-      "title": "¿Olvidaste tu contraseña?",
       "body": "Por favor ingresa tu correo electrónico para restablecer tu contraseña.",
-      "emailTitle": "Tu cuenta de correo",
       "emailText": "Ingresa tu correo",
-      "resetPassword": "Restablecer Contraseña"
+      "emailTitle": "Tu cuenta de correo",
+      "error_message": "",
+      "resetPassword": "Restablecer Contraseña",
+      "success_message": "",
+      "title": "¿Olvidaste tu contraseña?"
+    },
+    "initialTitle": "",
+    "login": {
+      "dont_have_account": "¿No tienes una cuenta?",
+      "email": "Correo electrónico",
+      "forgot_password": "¿Olvidaste tu contraseña?",
+      "password": "Contraseña",
+      "register": "Registrarse",
+      "success": "",
+      "title": "Iniciar sesión"
     },
     "OTPVerification": {
-      "title": "Revisa tu correo",
       "body": "¡Casi listo! Te mandamos un email con un código de 6 dígitos. Úsalo aquí para crear una nueva contraseña y seguir disfrutando de Reco.",
-      "otp_placeholder": "Ingresa tu código de 6 dígitos",
-      "otp_error": "El código de verificación debe ser numérico",
-      "otp_required": "El código de verificación es obligatorio",
-      "otp_complete": "El código de verificación debe tener 5 dígitos",
-      "verify_code": "Verificar Código",
       "did_not_receive": "¿No has recibido el correo?",
-      "resend": "Reenviar email"
+      "error": "",
+      "otp_error": "El código de verificación debe ser numérico",
+      "otp_placeholder": "Ingresa tu código de 6 dígitos",
+      "otp_required": "El código de verificación es obligatorio",
+      "resend": "Reenviar email",
+      "title": "Revisa tu correo",
+      "verify_code": "Verificar Código"
+    },
+    "register": {
+      "confirmPasswordLabel": "Confirmar contraseña",
+      "emailLabel": "Correo electrónico",
+      "have_an_account": "¿Ya tienes una cuenta?",
+      "login_title_button": "Iniciar sesión",
+      "passwordLabel": "Contraseña",
+      "signup_success": "",
+      "signup_title_button": "Registrarse"
     },
     "SetNewPass": {
-      "title": "Establece una nueva contraseña.",
       "body": "Crea una contraseña nueva y asegúrate de que sea diferente a las anteriores.",
-      "label1": "Contraseña",
       "placeholder1": "Ingresa tu nueva contraseña",
-      "label2": "Confirmar Contraseña",
       "placeholder2": "Vuelve a ingresar la contraseña",
+      "title": "Establece una nueva contraseña.",
       "update": "Actualizar Contraseña"
     },
-    "resetSuccess": {
-      "title": "¡Contraseña restablecida!",
-      "body": "Tu contraseña se restableció con éxito. Haz clic en 'Confirmar' para establecer una nueva contraseña.",
-      "confirm": "Confirmar"
+    "slider_intro": {
+      "title_1": "Encuentra al experto que necesitas en pocos minutos."
     },
     "updateSuccess": {
-      "title": "¡Todo listo!",
       "body": "¡Genial! Ya puedes iniciar sesión con tu nueva contraseña. Haz clic en continuar.",
-      "continue": "Continuar"
+      "continue": "Continuar",
+      "title": "¡Todo listo!"
     }
   },
-
+  "BusinessOrdersPage": {
+    "canceled": "Canceled",
+    "completed": "Completed",
+    "inProgress": "In progress",
+    "loadingRoles": "Loading user roles...",
+    "noOrders": "No hay órdenes disponibles",
+    "noOrdersDescription": "Parece que no tienes órdenes en este momento. ¡Vuelve más tarde o crea una nueva orden!",
+    "soon": "Beginning soon",
+    "yourOrders": "Your orders"
+  },
+  "businessProfile": {
+    "skillsDescription": "No description available"
+  },
+  "businessProfilePage": {
+    "profile": {
+      "avatarAlt": "Habilidades y experiencia",
+      "dailyRate": "Tarifa por día",
+      "editButton": "Editar",
+      "noProjects": "No hay proyectos completados disponibles.",
+      "noServiceAvailable": "No service available",
+      "noServiceSelected": "No service selected",
+      "noSkills": "No skills listed",
+      "otherSkills": "Otras habilidades",
+      "projectsComingSoon": "Pronto podrás ver los proyectos realizados aquí.",
+      "recentsProjects": "Proyectos recientes",
+      "skillsTitle": "Habilidades y experiencia"
+    },
+    "tabs": {
+      "chat": "Chat",
+      "profile": "Mi perfil",
+      "services": "Mis servicios"
+    }
+  },
   "businessStepper": {
     "step1": {
-      "title": "Paso 1",
-      "heading": "Presentá tu negocio",
-      "description": "Contanos qué servicios brindás para que los clientes te ubiquen rápido.",
-      "uploadPrompt": "Subí el logo o foto de perfil de tu negocio.",
-      "businessNameLabel": "Nombre de tu negocio",
-      "businessNamePlaceholder": "¿Cómo se llama tu negocio?",
       "businessDescriptionLabel": "Descripción",
       "businessDescriptionPlaceholder": "Ejemplo: Fontanero confiable con 10+ años de experiencia. ¡Presupuestos sin costo!",
-      "businessDescriptionTooltip": "Tip clave: ¡Menciona qué te hace único! (Ej: 'Soy puntual o te devuelvo tu pisto')"
+      "businessDescriptionTooltip": "Tip clave: ¡Menciona qué te hace único! (Ej: 'Soy puntual o te devuelvo tu pisto')",
+      "businessNameLabel": "Nombre de tu negocio",
+      "businessNamePlaceholder": "¿Cómo se llama tu negocio?",
+      "description": "Contanos qué servicios brindás para que los clientes te ubiquen rápido.",
+      "heading": "Presentá tu negocio",
+      "title": "Paso 1"
     },
     "step2": {
-      "title": "Paso 2",
+      "description": "Elegí todas las categorías donde tu negocio destaque. ¡Podés escoger más de una! 💡",
       "heading": "¿Qué servicios ofrecés?",
-      "description": "Elegí todas las categorías donde tu negocio destaque. ¡Podés escoger más de una! 💡"
+      "title": "Paso 2"
     },
     "step3": {
-      "title": "Paso 3",
-      "heading": "¿En qué zonas trabajás?",
-      "invalidCity": "Uy, este municipio no existe en nuestro sistema 🧐",
-      "description": "Subí la dirección de tu negocio y marcá las zonas donde ofrecés servicios.",
-      "mainDirectionTitle": "Ubicación principal",
-      "textField": "¿Dónde está ubicado tu negocio?",
-      "inputDeparment": "Departamento",
-      "selectDepartment": "Seleccioná tu departamento",
-      "selectAnotherDepartment": "¿Trabajás en otros departamentos?",
       "departmentTooltip": "Ej: Si sos electricista en Guatemala Ciudad pero atendés emergencias en Mixco, ¡marcá ambas zonas! 💡",
+      "description": "Subí la dirección de tu negocio y marcá las zonas donde ofrecés servicios.",
+      "heading": "¿En qué zonas trabajás?",
       "inputCity": "Municipio",
-      "selectCity": "Elegí tu municipio",
-      "selectAnotherCity": "Municipios adicionales donde trabajás",
+      "inputDeparment": "Departamento",
+      "mainDirectionTitle": "Ubicación principal",
+      "secondDirectionDescription": "Marca todas las áreas donde atendés a tus clientes.",
       "secondDirectionTitle": "Zonas de servicio | ",
-      "secondDirectionDescription": "Marca todas las áreas donde atendés a tus clientes."
+      "selectAnotherCity": "Municipios adicionales donde trabajás",
+      "selectAnotherDepartment": "¿Trabajás en otros departamentos?",
+      "selectCity": "Elegí tu municipio",
+      "selectDepartment": "Seleccioná tu departamento",
+      "textField": "¿Dónde está ubicado tu negocio?",
+      "title": "Paso 3"
     },
     "step4": {
-      "title": "Paso 4",
-      "heading": "¿Ofrecés otros servicios? 🌟",
+      "addSkill": "Agregar otra",
+      "deleteSkill": "Quitar",
       "description": "Sumá todas tus habilidades: cuántas más agregués, más clientes te encuentran.",
-      "tagsInput": "Habilidad clave",
-      "tagsTextField": "Ej: Fontanería",
-      "tagsExample": "Otros ejemplos:",
-      "electrician": "Electricista ⚡",
-      "plumber": "Carpintería 🪚",
-      "titleInput": "Título",
-      "titleTextField": "Ej: 'Fontanero experto en emergencias'",
       "descriptionInput": "Descripción",
       "descriptionTextField": "Ej: '10 años resolviendo fugas en la capital. ¡Garantía por escrito!'",
-      "deleteSkill": "Quitar",
-      "addSkill": "Agregar otra"
+      "electrician": "Electricista ⚡",
+      "heading": "¿Ofrecés otros servicios? 🌟",
+      "plumber": "Carpintería 🪚",
+      "tagsExample": "Otros ejemplos:",
+      "tagsInput": "Habilidad clave",
+      "tagsTextField": "Ej: Fontanería",
+      "title": "Paso 4",
+      "titleInput": "Título",
+      "titleTextField": "Ej: 'Fontanero experto en emergencias'"
     },
     "step5": {
-      "title": "Paso 5 |",
-      "subtitle": " ¡Estás a un paso de terminar!",
-      "heading": "¿Cuánto cobrás por día? 💰",
       "description": "Indicá tu tarifa diaria aproximada. Tranquilo, podés ajustarla después según cada trabajo.",
-      "priceTextField": "Ej: 350",
+      "heading": "¿Cuánto cobrás por día? 💰",
       "note": "💡 Recordá: Este es solo un estimado. El precio final lo definís con el cliente.",
-      "deleteSkill": "Quitar",
-      "addSkill": "Agregar otra"
+      "priceTextField": "Ej: 350",
+      "subtitle": " ¡Estás a un paso de terminar!",
+      "title": "Paso 5 |"
     },
     "step6": {
-      "heading": "¡Felicidades!",
       "description": "¡Tu perfil ya está activo! Ahora los clientes te encontrarán como agua en verano. ",
-      "tip": "Tu perfil estará visible en menos de 24 horas (pero usualmente en 1 hora) ⏱️",
-      "ctaBottom": "Ver mi perfil"
+      "heading": "¡Felicidades!",
+      "tip": "Tu perfil estará visible en menos de 24 horas (pero usualmente en 1 hora) ⏱️"
     }
   },
-
-  "businessProfilePage":{
-      "tabs": {
-        "profile": "Mi perfil",
-        "services": "Mis servicios",
-        "chat": "Chat"
-      },
-      "profile": {
-        "dailyRate": "Tarifa por día",
-        "skillsTitle": "Habilidades y experiencia",
-        "avatarAlt": "Habilidades y experiencia",
-        "recentsProjects": "Proyectos recientes",
-        "noProjects": "No hay proyectos completados disponibles.",
-        "projectsComingSoon": "Pronto podrás ver los proyectos realizados aquí.",
-        "otherSkills": "Otras habilidades",
-        "editButton": "Editar"
-      }
+  "buttonTab": {
+    "favorites": "Guardados",
+    "home": "Inicio",
+    "profile": "Peril",
+    "task": "Mis Trabajos"
   },
-
+  "categories": {
+    "electrician": "",
+    "mason": "",
+    "mechanic": "",
+    "plumber": ""
+  },
+  "downloadSection": {
+    "appPreviewAlt": ""
+  },
+  "error": {
+    "loadingCategories": ""
+  },
+  "errorFetchingCategories": "",
   "errorPage": {
-    "title": "Ups, página no encontrada",
-    "notFoundMessage": "Lo sentimos, la página que buscas no existe.",
-    "serverErrorMessage": "¡Ups! Algo salió mal en nuestro lado. Por favor, inténtalo de nuevo más tarde.",
-    "forbiddenMessage": "No tienes permiso para acceder a esta página.",
-    "unauthorizedMessage": "Necesitas iniciar sesión para acceder a esta página.",
     "badRequestMessage": "La solicitud es inválida o no puede ser procesada.",
     "defaultMessage": "Ha ocurrido un error inesperado. Por favor, inténtalo de nuevo más tarde.",
-    "notFoundImageAlt": "Ilustración de página no encontrada",
+    "forbiddenMessage": "No tienes permiso para acceder a esta página.",
     "goHomeButton": "Volver a la página de inicio",
-    "ImageAlt": "Ilustración de aliens perdidos en el espacio"
+    "notFoundImageAlt": "Ilustración de página no encontrada",
+    "notFoundMessage": "Lo sentimos, la página que buscas no existe.",
+    "serverErrorMessage": "¡Ups! Algo salió mal en nuestro lado. Por favor, inténtalo de nuevo más tarde.",
+    "unauthorizedMessage": "Necesitas iniciar sesión para acceder a esta página."
   },
-
+  "errors": {
+    "minLength": ""
+  },
+  "favoritesPage": {
+    "title": "Favoritos"
+  },
+  "footer": {
+    "copyright": "Desarrollo web y móvil."
+  },
+  "form": {
+    "category": "",
+    "descriptionPlaceholder": "",
+    "locationPlaceholder": "",
+    "professionals": "",
+    "submit": "",
+    "subtitle": "",
+    "title": "",
+    "titlePlaceholder": ""
+  },
+  "forms": {
+    "commons": {
+      "addAnother": "Agregar otra",
+      "email": "El campo deberia ser un email válido",
+      "min_length": "El campo deberia tener al menos {{min}} caracteres",
+      "mustBeNumber": "Debe ser un número",
+      "passwords_must_match": "Las contraseñas deben coincidir",
+      "remove": "Quitar",
+      "required": "Este campo es requerido"
+    }
+  },
   "landing": {
     "categories": {
-  "title": "Categorías",
-  "button": "Ver todas"
-    },
-  "form": {
-    "title": "¿Qué necesitas?",
-    "subtitle": "¡Chatea con 3 expertos al momento y consigue tu presupuesto ideal!",
-    "category": "Categoría",
-    "titlePlaceholder": "Ej. Filtraciones en la cocina",
-    "descriptionPlaceholder": "Ej. Necesito reparar una filtración",
-    "locationPlaceholder": "Ej. Guatemala, zona 9",
-    "submit": "Pedir presupuesto",
-    "professionals": "Profesionales"
-  },
-      "searchForm": {
-      "title": "¿Qué necesitas?",
-      "body": "¡Chatea con 3 profesionales al momento y consigue tu presupuesto ideal!",
-      "textPlaceholder": "Escribe qué estás buscando...",
-      "serviceInput": "Categoría",
-      "selectService": "Elige un servicio",
-      "location": "Ubicación",
-      "addLocation": "Agregar ubicación",
-      "priceRange": "Rango de precios",
-      "priceLabel": "{{price}}",
-      "selectPriceRange": "Elige un rango de precio",
-      "searchProfessional": "Buscar profesional",
-      "professional_image": "Imagen del profesional"
-    },
-      "highDemand": {
-      "category": "Top Rated",
-      "title": "Los servicios más buscados"
-      },
-      "guarantee": {
-        "category": "Garantía",
-        "tittle": "Cuentas con una cobertura del 100% contratando y pagando con Reco.",
-        "button": "Suscríbete ahora"
-        },
-      "testimonials": {
-        "title": "Testimoniales",
-        "subtitle": "Confía en nuestros clientes",
-        "feedback": [
-          {
-            "name": "Sofía Rodriguez",
-            "title": "Analista de marketing",
-            "comment": "Por fin encontré una app donde puedo encontrar profesionales de confianza a precios justos. ¡Ha sido un gran alivio!"
-          },
-          {
-            "name": "Juan Pérez",
-            "title": "Ingeniero de Software",
-            "comment": "Chispudos me ha ahorrado mucho tiempo. Encontré un plomero excelente en minutos."
-          },
-          {
-            "name": "Ana Fernández",
-            "title": "Diseñadora gráfica",
-            "comment": "Muy útil y fácil de usar. Encontré un electricista de confianza rápidamente."
-          }
-        ]
+      "button": "Ver todas",
+      "title": "Categorías"
     },
     "downloadSection": {
-      "title": "¡Descarga nuestra app ahora!",
-      "description": "¿Necesitas un electricista urgente? ¿O buscas una niñera de confianza? Encuentra al profesional perfecto en cuestión de minutos."
-      }
+      "description": "¿Necesitas un electricista urgente? ¿O buscas una niñera de confianza? Encuentra al profesional perfecto en cuestión de minutos.",
+      "title": "¡Descarga nuestra app ahora!"
     },
-
-    "services": {
-      "searchBar":{
-      "clearFilters": "Limpiar filtros"
-         },
-      "serviceDetails":{
-        "dateModalTitle": "Seleccionar fecha y hora",
-        "navigationInput": "Detalles de la tarea",
-        "navigationCompleted": "Revisar y confirmar",
-        "title": "Inicia la conversación",
-        "description": "¡Estás casi listo! Comparte algunos detalles para preparar a tu Especialista para el trabajo.",
-        "time": "Hora y fecha",
-        "noDate": "Fecha no seleccionada",
-        "label": "Escribe algo...",
-        "buttonInput": "Completar solicitud",
-        "buttonCompleted": "Confirmar y chatear",
-        "confirmationTitle": "Has agendado con 'Limpieza de casas y apartamentos'",
-        "confirmationMessage": "Descubre servicios adicionales ofrecidos por tu Especialista favorito, o forma un equipo de tus Especialistas preferidos en la sección Favoritos.",
-        "continueButton": "Continuar"
+    "guarantee": {
+      "button": "Suscríbete ahora",
+      "category": "Garantía",
+      "tittle": "Cuentas con una cobertura del 100% contratando y pagando con Reco."
     },
+    "highDemand": {
+      "category": "Top Rated",
+      "title": "Los servicios más buscados"
+    },
+    "searchForm": {
+      "body": "¡Chatea con 3 profesionales al momento y consigue tu presupuesto ideal!",
+      "location": "Ubicación",
+      "priceRange": "Rango de precios",
+      "searchProfessional": "Buscar profesional",
+      "serviceInput": "Categoría",
+      "textPlaceholder": "Escribe qué estás buscando...",
+      "title": "¿Qué necesitas?"
+    },
+    "testimonials": {
+      "feedback": {
+        "0": {
+          "comment": "Por fin encontré una app donde puedo encontrar profesionales de confianza a precios justos. ¡Ha sido un gran alivio!",
+          "name": "Sofía Rodriguez",
+          "title": "Analista de marketing"
+        },
+        "1": {
+          "comment": "Chispudos me ha ahorrado mucho tiempo. Encontré un plomero excelente en minutos.",
+          "name": "Juan Pérez",
+          "title": "Ingeniero de Software"
+        },
+        "2": {
+          "comment": "Muy útil y fácil de usar. Encontré un electricista de confianza rápidamente.",
+          "name": "Ana Fernández",
+          "title": "Diseñadora gráfica"
+        }
+      },
+      "subtitle": "Confía en nuestros clientes",
+      "title": "Testimoniales"
+    }
+  },
+  "loading": "",
+  "loginScreen": {
+    "errorOccurred": ""
+  },
+  "newsletter": {
+    "emailPlaceholder": "Enter your email *",
+    "subscribeButton": "Subscribe",
+    "title": "Subscribe to our Newsletter"
+  },
+  "professional_image": "",
+  "recommendedServices": {
+    "noServices": "",
+    "title": "Recomendados para ti"
+  },
+  "services": {
     "detailsPage": {
       "skillsAndExperience": "Habilidades y experiencia"
+    },
+    "searchBar": {
+      "clearFilters": "Limpiar filtros"
+    },
+    "serviceDetails": {
+      "buttonCompleted": "Confirmar y chatear",
+      "buttonInput": "Completar solicitud",
+      "confirmationMessage": "Descubre servicios adicionales ofrecidos por tu Especialista favorito, o forma un equipo de tus Especialistas preferidos en la sección Favoritos.",
+      "confirmationTitle": "Has agendado con 'Limpieza de casas y apartamentos'",
+      "continueButton": "Continuar",
+      "dateModalTitle": "Seleccionar fecha y hora",
+      "description": "¡Estás casi listo! Comparte algunos detalles para preparar a tu Especialista para el trabajo.",
+      "emptyMessage": "",
+      "label": "Escribe algo...",
+      "navigationCompleted": "Revisar y confirmar",
+      "navigationInput": "Detalles de la tarea",
+      "time": "Hora y fecha",
+      "title": "Inicia la conversación"
     }
   },
-
-  "tasksPage":{
+  "tasksPage": {
     "tabs": {
-      "summary": "Resumen de tareas",
-      "details": "Detalle de tarea",
-      "chat": "Chat"
+      "chat": "Chat",
+      "summary": "Resumen de tareas"
     }
   },
-
-  "favoritesPage":{
-      "title": "Favoritos"
+  "userProfile": {
+    "changePassword": "Change password",
+    "changeProfilePhoto": "Change profile photo",
+    "editName": "Edit Name",
+    "editNameTitle": "Edit Name",
+    "email": "Email",
+    "lastname": "Lastname",
+    "logout": "Logout",
+    "name": "Name",
+    "profile": "Profile",
+    "publishServices": "Publish my services",
+    "save": "Save",
+    "updateButton": "Update"
   },
-
-"recommendedServices": {
-  "title": "Recomendados para ti"
-            },
-
-"footer": {
-  "title": "Suscríbete a nuestro Newsletter",
-  "placeholder": "Tu Email",
-  "copyright": "Desarrollo web y móvil."
-            },
-
-  "APIs": {
-    "categories":{
-      "loading": "Cargando categorías, por favor espera...",
-      "error": "¡Uy! No pudimos cargar las categorias. Por favor intenta más tarde."
+  "validation": {
+    "maxLength": "",
+    "required": ""
   }
-  }
-} 
+}

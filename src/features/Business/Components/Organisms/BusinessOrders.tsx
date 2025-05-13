@@ -1,48 +1,98 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
   Box,
   Avatar,
   Typography,
-  Stack,
   List,
   ListItem,
   ListItemAvatar,
   ListItemText,
   CircularProgress,
+  Tabs,
+  Tab,
+  IconButton,
+  Divider,
+  Menu,
+  MenuItem,
+  useMediaQuery,
 } from '@mui/material';
+import { DoneAll, Chat, Task, MoreVert, NotInterested, StarRate } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
-import TextAtom from '../../../../components/atoms/TextAtom';
-import { ButtonAtom } from '../../../../components/atoms';
-import { useGetOrdersQuery } from '../../../../services/ordersApi';
+import { useGetOrdersQuery, useUpdateOrderMutation } from '../../../../services/ordersApi';
 import { format } from 'date-fns';
 import DEFAULT_IMAGE from '../../../../assets/images/DEFAULT_IMAGE.png';
-import okIcon from '../../../../assets/images/ok_icon-01.svg';
 import { useSelector } from 'react-redux';
 import { selectMode } from '../../../../redux/slices/roleSwitcherSlice';
 import { useUserRole } from '../../../../features/auth/hooks/authHooks';
-import OrderActions from '../../../tasks/components/organisms/OrderActions';
+import { EmptySection, ModalComponent } from '../../../../components/molecules';
+import { useTheme } from '@mui/material/styles';
 import RoleSwitcherButton from '../../../../components/atoms/RoleSwitcherButton';
+import { useCreateChatMutation } from '../../../../services/chatApi';
+import { useAppSelector } from '../../../../hooks/useAppSelector';
+import { selectAuth } from '../../../../redux/slices/authSlice';
+import { useNavigate } from 'react-router-dom';
+import { ButtonAtom } from '../../../../components/atoms';
 
 const getFullImageUrl = (url: string | null) => {
-  const baseUrl = import.meta.env.VITE_BASE_API_URL || 'http://localhost:8000';
+  const baseUrl = import.meta.env.VITE_BASE_API_URL;
   return url?.startsWith('http') ? url : `${baseUrl}${url}`;
 };
 
 const BusinessOrderPage = () => {
   const { t } = useTranslation();
-  const { data, isLoading } = useGetOrdersQuery();
+  const { data, isLoading, refetch: refetchOrders } = useGetOrdersQuery();
   const [orderStatus, setOrderStatus] = React.useState(1);
   const currentMode = useSelector(selectMode);
-  console.log('Modo actual:', currentMode); // Depuración
-  const userRoles = useUserRole(); // Obtén los roles del usuario
+  const { user } = useAppSelector(selectAuth);
+  const userRoles = useUserRole();
+  const theme = useTheme();
+  const navigate = useNavigate();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
-  console.log('userRoles', userRoles);
-  console.log('currentMode', currentMode);
-  console.log('orderStatus', orderStatus);
-  console.log('data', data);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [selectedOrder, setSelectedOrder] = useState<number | null>(null);
+  const [selectedAction, setSelectedAction] = useState<string | null>(null);
+  const [showConfirmActionModal, setShowConfirmActionModal] = useState(false);
 
-  const handleStatusChange = (status: number) => {
-    setOrderStatus(status);
+  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>, orderId: number) => {
+    setAnchorEl(event.currentTarget);
+    setSelectedOrder(orderId);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+    setSelectedOrder(null);
+  };
+
+  const handleOpenModal = (action: string, orderId: number) => {
+    setSelectedAction(action);
+    setSelectedOrder(orderId);
+    setShowConfirmActionModal(true);
+  };
+
+  const handleConfirmAction = async () => {
+    if (selectedAction && selectedOrder) {
+      switch (selectedAction) {
+        case 'complete':
+          await handleOrderUpdate(selectedOrder, 3);
+          break;
+        case 'accept':
+          await handleOrderUpdate(selectedOrder, 2);
+          break;
+        case 'notInterested':
+          await handleOrderUpdate(selectedOrder, 4);
+          break;
+        case 'chat':
+          await handleChat(selectedOrder);
+          break;
+        case 'rate':
+          console.log(`Rate order ${selectedOrder}`);
+          break;
+        default:
+          break;
+      }
+    }
+    setShowConfirmActionModal(false);
   };
 
   const orders = data?.data;
@@ -56,35 +106,60 @@ const BusinessOrderPage = () => {
       {
         label: t('BusinessOrdersPage.soon', 'Beginning soon'),
         status: 1,
-        value: orders?.filter((order) => order.status === 1).length,
+        value: orders?.filter((order) => order.status === 1).length || 0,
       },
       {
         label: t('BusinessOrdersPage.inProgress', 'In progress'),
         status: 2,
-        value: orders?.filter((order) => order.status === 2).length,
+        value: orders?.filter((order) => order.status === 2).length || 0,
       },
       {
         label: t('BusinessOrdersPage.completed', 'Completed'),
         status: 3,
-        value: orders?.filter((order) => order.status === 3).length,
+        value: orders?.filter((order) => order.status === 3).length || 0,
       },
       {
         label: t('BusinessOrdersPage.canceled', 'Canceled'),
         status: 4,
-        value: orders?.filter((order) => order.status === 4).length,
+        value: orders?.filter((order) => order.status === 4).length || 0,
       },
     ],
     [orders],
   );
 
+  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+    setOrderStatus(newValue);
+  };
+
+  const [createChat] = useCreateChatMutation();
+
+  const handleChat = async (user2Id: number) => {
+    const chatBody = {
+      user1Id: user?.id,
+      user2Id,
+    };
+    const respChatCreated = await createChat(chatBody).unwrap();
+    console.log('Chat created successfully', chatBody);
+    if (respChatCreated) {
+      console.log('Chat created successfully', respChatCreated);
+      navigate(`/profile`);
+    }
+  };
+
+  const [updateOrder] = useUpdateOrderMutation();
+  const handleOrderUpdate = async (orderId: number, status: number) => {
+    try {
+      await updateOrder({ orderId, status }).unwrap();
+      refetchOrders();
+      console.log('Order updated successfully');
+    } catch (error) {
+      console.error('Failed to update order:', error);
+    }
+  };
+
   if (isLoading) {
     return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        height="100vh"
-      >
+      <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
         <CircularProgress />
       </Box>
     );
@@ -92,12 +167,7 @@ const BusinessOrderPage = () => {
 
   if (!userRoles) {
     return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        height="100vh"
-      >
+      <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
         <Typography variant="h6">
           {t('BusinessOrdersPage.loadingRoles', 'Loading user roles...')}
         </Typography>
@@ -106,154 +176,157 @@ const BusinessOrderPage = () => {
   }
 
   return (
-    <Box display="flex" flexDirection="column" mt={2} mb={4} ml={4} mr={4}>
-      <TextAtom variant="headline" size="small" fontWeight="bold" mb={2}>
+    <Box display="flex" flexDirection="column">
+      <ModalComponent
+        open={showConfirmActionModal}
+        onClose={() => setShowConfirmActionModal(false)}
+        onConfirm={handleConfirmAction}
+        cancelButtonText={t('features.businessOrdersPage.actions.cancel', 'Cancel')}
+        confirmButtonText={t('features.businessOrdersPage.actions.confirm', 'Confirm')}
+        title={t('features.businessOrdersPage.actions.title', 'Confirm action')}
+      >
+        <Typography variant="body1">
+          {t(
+            'features.businessOrdersPage.actions.confirmationMessage',
+            'Are you sure you want to perform this action?',
+          )}
+        </Typography>
+      </ModalComponent>
+      <Typography variant="h5" fontWeight="bold" mb={2}>
         {t('BusinessOrdersPage.yourOrders', 'Your orders')}
-      </TextAtom>
-      <Stack direction="row" spacing={2} mb={2}>
+      </Typography>
+
+      {/* Tabs for Filtering */}
+      <Tabs
+        value={orderStatus}
+        onChange={handleTabChange}
+        variant="scrollable"
+        scrollButtons="auto"
+        aria-label="Order Status Tabs"
+        sx={{ marginBottom: 3 }}
+      >
         {FILTER_OPTIONS.map((option) => (
-          <ButtonAtom
+          <Tab
             key={option.status}
-            variant="outlined"
-            onClick={() => handleStatusChange(option.status)}
-          >
-            <TextAtom variant="body" size="small">
-              {`${option.label} (${option.value})`}
-            </TextAtom>
-          </ButtonAtom>
+            label={`${option.label} (${option.value})`}
+            value={option.status}
+          />
         ))}
-      </Stack>
-      <List sx={{ width: '100%', paddingX: 5 }}>
+      </Tabs>
+
+      {/* Orders List */}
+      <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
         {ordersFilteredByStatus?.length > 0 ? (
-          ordersFilteredByStatus.map((order) => (
-            <ListItem
-              key={order.id}
-              alignItems="flex-start"
-              secondaryAction={
-                <OrderActions
-                  orderStatus={order.status}
-                  userRoles={userRoles}
-                  currentMode={currentMode}
-                  onViewDetails={() =>
-                    console.log(
-                      `Ver detalle de la tarea para order ${order.id}`,
-                    )
-                  }
-                  onChat={() =>
-                    console.log(`Iniciar chat para order ${order.id}`)
-                  }
-                  onAcceptTask={() => {
-                    if (
-                      hasPermission(
-                        { id: 'user-id', roles: userRoles },
-                        'tasks',
-                        'accept',
-                      )
-                    ) {
-                      console.log(`Aceptar tarea para order ${order.id}`);
-                    } else {
-                      console.log('No tienes permiso para aceptar esta tarea.');
+          ordersFilteredByStatus.map((order, index) => (
+            <React.Fragment key={order.id}>
+              <ListItem alignItems="flex-start">
+                <ListItemAvatar>
+                  <Avatar
+                    alt={order?.details[0]?.productService?.name}
+                    src={
+                      order?.details[0]?.productService?.urlImage
+                        ? getFullImageUrl(order.details[0].productService.urlImage)
+                        : DEFAULT_IMAGE
                     }
-                  }}
-                  onCompleteTask={() => {
-                    if (
-                      hasPermission(
-                        { id: 'user-id', roles: userRoles },
-                        'tasks',
-                        'complete',
-                      )
-                    ) {
-                      console.log(`Completar tarea para order ${order.id}`);
-                    } else {
-                      console.log(
-                        'No tienes permiso para completar esta tarea.',
-                      );
-                    }
-                  }}
-                  onRateService={() =>
-                    console.log(`Calificar servicio para order ${order.id}`)
+                  />
+                </ListItemAvatar>
+                <ListItemText
+                  primary={order?.details[0]?.productService?.name}
+                  secondary={
+                    <React.Fragment>
+                      <Typography
+                        component="span"
+                        variant="body2"
+                        sx={{ color: 'text.primary', display: 'inline' }}
+                      >
+                        {format(new Date(order?.startDate), 'dd/MM/yyyy HH:mm')}
+                      </Typography>
+                      {` — ${order?.details[0]?.comment}`}
+                    </React.Fragment>
                   }
                 />
-              }
-            >
-              <ListItemAvatar>
-                <Avatar
-                  alt={order?.details[0]?.productService?.name}
-                  variant="rounded"
-                  src={
-                    order?.details[0]?.productService?.urlImage
-                      ? getFullImageUrl(
-                          order.details[0].productService.urlImage,
-                        )
-                      : DEFAULT_IMAGE
-                  }
-                />
-              </ListItemAvatar>
-              <ListItemText
-                primary={order?.details[0]?.productService?.name}
-                secondary={
-                  <React.Fragment>
-                    <Typography
-                      component="span"
-                      variant="body2"
-                      sx={{ color: 'text.primary', display: 'inline' }}
+                {isMobile ? (
+                  <>
+                    <IconButton
+                      edge="end"
+                      aria-label="more"
+                      onClick={(event) => handleMenuOpen(event, order.id)}
                     >
-                      {format(new Date(order?.startDate), 'dd/MM/yyyy HH:mm')}
-                    </Typography>
-                    {` — ${order?.details[0]?.comment}`}
-                  </React.Fragment>
-                }
-              />
-            </ListItem>
+                      <MoreVert />
+                    </IconButton>
+                    <Menu
+                      anchorEl={anchorEl}
+                      open={Boolean(anchorEl) && selectedOrder === order.id}
+                      onClose={handleMenuClose}
+                    >
+                      <MenuItem onClick={() => handleOpenModal('complete', order.id)}>
+                        <DoneAll fontSize="small" /> {t('features.businessOrdersPage.actions.completed', 'Completada')}
+                      </MenuItem>
+                      <MenuItem onClick={() => handleOpenModal('accept', order.id)}>
+                        <Task fontSize="small" /> {t('features.businessOrdersPage.actions.accept', 'Aceptar')}
+                      </MenuItem>
+                      <MenuItem onClick={() => handleOpenModal('notInterested', order.id)}>
+                        <NotInterested fontSize="small" /> {t('features.businessOrdersPage.actions.notInterested', 'No interesado')}
+                      </MenuItem>
+                      <MenuItem onClick={() => handleOpenModal('chat', order.id)}>
+                        <Chat fontSize="small" /> {t('features.businessOrdersPage.actions.chat', 'Chat')}
+                      </MenuItem>
+                      <MenuItem onClick={() => handleOpenModal('rate', order.id)}>
+                        <StarRate fontSize="small" /> {t('features.businessOrdersPage.actions.rate', 'Calificar')}
+                      </MenuItem>
+                    </Menu>
+                  </>
+                ) : (
+                  <Box display="flex" gap={1}>
+                    <ButtonAtom
+                      variant="elevated"
+                      startIcon={<DoneAll />}
+                      title={t('features.businessOrdersPage.actions.completed', 'Completada')}
+                      onClick={() => handleOpenModal('complete', order.id)}
+                    />
+                    <ButtonAtom
+                      variant="elevated"
+                      startIcon={<Task />}
+                      title={t('features.businessOrdersPage.actions.accept', 'Aceptar')}
+                      onClick={() => handleOpenModal('accept', order.id)}
+                    />
+                    <ButtonAtom
+                      variant="elevated"
+                      startIcon={<NotInterested />}
+                      title={t('features.businessOrdersPage.actions.notInterested', 'No interesado')}
+                      onClick={() => handleOpenModal('notInterested', order.id)}
+                    />
+                    <ButtonAtom
+                      variant="elevated"
+                      startIcon={<Chat />}
+                      title={t('features.businessOrdersPage.actions.chat', 'Chat')}
+                      onClick={() => handleOpenModal('chat', order.id)}
+                    />
+                    <ButtonAtom
+                      variant="elevated"
+                      startIcon={<StarRate />}
+                      title={t('features.businessOrdersPage.actions.rate', 'Calificar')}
+                      onClick={() => handleOpenModal('rate', order.id)}
+                    />
+                  </Box>
+                )}
+              </ListItem>
+              {index < ordersFilteredByStatus.length - 1 && (
+                <Divider variant="inset" component="li" />
+              )}
+            </React.Fragment>
           ))
         ) : (
-          <Box
-            display="flex"
-            flexDirection="column"
-            justifyContent="center"
-            alignItems="center"
-            height="300px"
-            textAlign="center"
-            gap={2}
-            sx={{
-              border: '2px dashed',
-              borderColor: 'primary.light',
-              borderRadius: 2,
-              padding: 3,
-            }}
-          >
-            <img
-              src={okIcon}
-              alt="Ok Icon"
-              style={{
-                width: '150px',
-                height: '150px',
-              }}
-            />
-
-            {/* Mensaje descriptivo */}
-            <TextAtom variant="body" size="medium" fontWeight="bold">
-              {t('BusinessOrdersPage.noOrders', 'No hay órdenes disponibles')}
-            </TextAtom>
-            <Typography variant="body2" color="text.secondary">
-              {t(
-                'BusinessOrdersPage.noOrdersDescription',
-                'Parece que no tienes órdenes en este momento. ¡Vuelve más tarde o crea una nueva orden!',
-              )}
-            </Typography>
-          </Box>
+          <EmptySection />
         )}
-        <div>
-          {/* Otros elementos del AppBar */}
-          <RoleSwitcherButton />
-        </div>
-        <div>
-          <h1>Business Orders</h1>
-          <p>Modo actual: {currentMode}</p>
-          {/* Aquí puedes agregar lógica para mostrar contenido dependiendo del modo */}
-        </div>
       </List>
+
+      {/* Role Switcher */}
+      <Box mt={3}>
+        <RoleSwitcherButton />
+      </Box>
     </Box>
   );
 };
+
 export default BusinessOrderPage;

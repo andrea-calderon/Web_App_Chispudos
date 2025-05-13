@@ -87,30 +87,6 @@ export const UserProfile: React.FC = () => {
         mb: 12,
       }}
     >
-      {/* Header para dispositivos pequeños */}
-      <Grid
-        size={{ xs: 12, sm: 0 }}
-        sx={{
-          display: { xs: 'flex', sm: 'none' },
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          width: '100%',
-          px: 2,
-          mb: 2,
-        }}
-      >
-        <TextAtom variant="title" size="medium" sx={{ fontWeight: 'bold' }}>
-          {t('userProfile.profile', 'Profile')}
-        </TextAtom>
-        <ButtonAtom
-          variant="text"
-          sx={{ fontWeight: 'bold', textTransform: 'none' }}
-          onClick={() => dispatch(logout())}
-        >
-          {t('userProfile.logout', 'Logout')}
-        </ButtonAtom>
-      </Grid>
-
       <Grid
         size={{ xs: 12, md: 6, lg: 4, xl: 3 }}
         sx={{

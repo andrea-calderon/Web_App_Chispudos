@@ -3,7 +3,7 @@ import { RootState } from '../redux/store/store';
 import { selectAuth, logout } from '../redux/slices/authSlice';
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: import.meta.env.VITE_BASE_API_URL || 'http://localhost:8000/api/v1/',
+  baseUrl: import.meta.env.VITE_BASE_API_URL,
   prepareHeaders: (headers, { getState }) => {
     const authState = selectAuth(getState() as RootState);
     const token = authState.token;
