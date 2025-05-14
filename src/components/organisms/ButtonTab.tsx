@@ -9,13 +9,15 @@ import { useTheme } from '@mui/material/styles';
 import HomeIcon from '../../assets/images/ButtonTab/HomeIcon.svg';
 import TaskIcon from '../../assets/images/ButtonTab/TaskIcon.svg';
 import FavoriteIcon from '../../assets/images/ButtonTab/FavoriteIcon.svg';
-import ProfileIcon from '../../assets/images/ButtonTab/ProfileIcon.svg';
 import HomeIconSelected from '../../assets/images/ButtonTab/HomeIconSelected.svg';
 import TaskIconSelected from '../../assets/images/ButtonTab/TaskIconSelected.svg';
 import FavoriteIconSelected from '../../assets/images/ButtonTab/FavoriteIconSelected.svg';
 import ProfileIconSelected from '../../assets/images/ButtonTab/ProfileIconSelected.svg';
 import { useTranslation } from 'react-i18next';
 import TextAtom from '../atoms/TextAtom';
+import { useAppSelector } from '../../hooks/useAppSelector';
+import { selectAuth } from '../../redux/slices/authSlice';
+import { getApiImageUrl } from '../../utils/baseEnvironment';
 
 interface Props {
   children: React.ReactNode;
@@ -26,6 +28,7 @@ export default function ButtonTab({ children }: Props) {
   const location = useLocation();
   const theme = useTheme();
   const { t } = useTranslation();
+  const {user} = useAppSelector(selectAuth);
 
   const navItems = [
     {
@@ -74,16 +77,16 @@ export default function ButtonTab({ children }: Props) {
       label: t('buttonTab.profile'),
       icon: (
         <img
-          src={ProfileIcon}
+          src={getApiImageUrl(user?.avatarUrl)}
           alt="Profile"
-          style={{ width: 24, height: 24 }}
+          style={{ width: 24, height: 24, borderRadius: 50 }}
         />
       ),
       selectedIcon: (
         <img
-          src={ProfileIconSelected}
+          src={getApiImageUrl(user?.avatarUrl)}
           alt="Profile"
-          style={{ width: 24, height: 24 }}
+          style={{ width: 24, height: 24, borderRadius: 50}}
         />
       ),
       url: '/profile',

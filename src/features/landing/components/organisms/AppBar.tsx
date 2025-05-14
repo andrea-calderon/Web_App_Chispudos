@@ -9,6 +9,7 @@ import {
   Container,
   IconButton,
   Button,
+  Avatar,
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import {
@@ -27,6 +28,7 @@ import { ButtonAtom } from '../../../../components/atoms';
 import { useAppSelector } from '../../../../hooks/useAppSelector';
 import { selectAuth } from '../../../../redux/slices/authSlice';
 import RoleSwitcherButton from '../../components/atoms/RoleSwitcherButton';
+import { getApiImageUrl } from '../../../../utils/baseEnvironment';
 
 function ResponsiveAppBar() {
   const navigate = useNavigate();
@@ -105,9 +107,22 @@ function ResponsiveAppBar() {
       path: '/favorites',
     },
     { label: <TranslateIcon />, action: () => toggleLanguage() },
-    { label: <AccountIcon fontSize="large" />, path: '/profile' },
+    {
+      label: (
+        <Avatar
+          src={getApiImageUrl(user?.avatarUrl)}
+          sx={{
+            width: 35,
+            height: 35,
+            borderRadius: 50
+            
+          }}
+        />
+      ),
+      path: '/profile',
+    },
   ];
-
+  console.error('ERROR: ', getApiImageUrl(user?.avatarUrl));
   const toggleLanguage = () => {
     const newLang = language === 'en' ? 'es' : 'en';
     i18n.changeLanguage(newLang);

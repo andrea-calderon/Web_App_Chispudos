@@ -21,6 +21,7 @@ import {
 import { useRef, useEffect, useState, useCallback } from 'react';
 import { useAppSelector } from '../../../../hooks/useAppSelector';
 import { selectAuth } from '../../../../redux/slices/authSlice';
+import { getApiImageUrl } from '../../../../utils/baseEnvironment';
 
 export default function ChatComponent() {
   const [selectedChat, setSelectedChat] = useState(null);
@@ -102,11 +103,7 @@ export default function ChatComponent() {
     }
   };
 
-  const getAvatarUrl = useCallback((avatarUrl: string) => {
-    const baseUrl = 'http://localhost:8000/api/v1';
-    return avatarUrl?.startsWith('http') ? avatarUrl : `${baseUrl}${avatarUrl}`;
-  }, []);
-
+  
   const groupMessagesByDate = useCallback((messages) => {
     return messages.reduce((groups, message) => {
       const date = new Date(message.createdAt).toLocaleDateString();
@@ -172,7 +169,7 @@ export default function ChatComponent() {
                   <ListItemAvatar sx={{ minWidth: '72px' }}>
                     <Box sx={{ position: 'relative' }}>
                       <Avatar
-                        src={getAvatarUrl(chat.user1.avatarUrl)}
+                        src={getApiImageUrl(chat.user1.avatarUrl)}
                         sx={{
                           width: 40,
                           height: 40,
@@ -182,7 +179,7 @@ export default function ChatComponent() {
                         }}
                       />
                       <Avatar
-                        src={getAvatarUrl(chat.user2.avatarUrl)}
+                        src={getApiImageUrl(chat.user2.avatarUrl)}
                         sx={{
                           width: 40,
                           height: 40,
@@ -233,11 +230,11 @@ export default function ChatComponent() {
               >
                 <Box sx={{ position: 'relative', mr: 2 }}>
                   <Avatar
-                    src={getAvatarUrl(selectedChat.user1.avatarUrl)}
+                    src={getApiImageUrl(selectedChat.user1.avatarUrl)}
                     sx={{ width: 40, height: 40 }}
                   />
                   <Avatar
-                    src={getAvatarUrl(selectedChat.user2.avatarUrl)}
+                    src={getApiImageUrl(selectedChat.user2.avatarUrl)}
                     sx={{
                       width: 40,
                       height: 40,
@@ -297,8 +294,8 @@ export default function ChatComponent() {
                             <Avatar
                               src={
                                 msg.senderId === userID
-                                  ? getAvatarUrl(selectedChat.user1.avatarUrl)
-                                  : getAvatarUrl(selectedChat.user2.avatarUrl)
+                                  ? getApiImageUrl(selectedChat.user1.avatarUrl)
+                                  : getApiImageUrl(selectedChat.user2.avatarUrl)
                               }
                               sx={{ mx: 1 }}
                             />

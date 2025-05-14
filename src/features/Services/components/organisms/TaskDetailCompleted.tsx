@@ -11,12 +11,16 @@ import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
 import { useCreateOrderMutation } from '../../../../services/ordersApi';
 import { ModalComponent } from '../../../../components/molecules';
+import { getApiImageUrl } from '../../../../utils/baseEnvironment';
+import { useAppSelector } from '../../../../hooks/useAppSelector';
+import { selectAuth } from '../../../../redux/slices/authSlice';
 
 const TaskDetailCompleted = ({ date, dateTime, time, service, userText, onBack }) => {
   const navigate = useNavigate();
   const [createOrder] = useCreateOrderMutation();
   const { t } = useTranslation();
   const [openModal, setOpenModal] = useState(false);
+  const {user} = useAppSelector(selectAuth);
 
   const handleConfirm = async () => {
     const body = {
@@ -121,7 +125,7 @@ const TaskDetailCompleted = ({ date, dateTime, time, service, userText, onBack }
             sx={{ display: 'flex', alignItems: 'center', mb: 2, paddingTop: 4 }}
           >
             <Avatar
-              src="https://lh3.googleusercontent.com/a/ACg8ocIEcCjaPZfcofU7GrGn2o4sSDLCnf6iO6Llr3L-mwXoV4vXWRs=s576-c-no"
+              src={getApiImageUrl(user?.avatarUrl)}
               alt="User Profile"
               sx={{ width: 50, height: 50, marginRight: 2 }}
             />
