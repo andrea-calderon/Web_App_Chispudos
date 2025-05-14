@@ -19,9 +19,6 @@ import CustomError from '../../../../utils/CustomError';
 import { ModalComponent } from '../../../../components/molecules';
 import { useGetProductByIdQuery } from '../../../../services/productApi';
 import DEFAULT_IMAGE from '../../../../assets/images/DEFAULT_IMAGE.png';
-import { ArrowBack } from '@mui/icons-material';
-import { IconButton } from '@mui/material';
-import { TextAtom } from '../../../../components/atoms';
 
 export const ServiceDetailPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -121,34 +118,19 @@ export const ServiceDetailPage = () => {
         image={image}
         onOpenModal={handleOpenModal}
       />
-      <Grid container spacing={2}>
-        <Grid item xs={12} md={10} lg={10}>
-          <Box
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              paddingX: '4rem',
-              marginTop: '2rem',
-            }}
-          >
-            <IconButton onClick={handleGoBack} aria-label="Go back">
-              <ArrowBack />
-            </IconButton>
-            <TextAtom variant="body" size="large" marginLeft="0.5rem">
-              Regresar a la búsqueda
-            </TextAtom>
-          </Box>
-          <Box paddingX={'4rem'} paddingY={'4rem'}>
+      <Grid container>
+        <Grid size={{ xs: 12, md: 9 }}>
+          <Box py={4} px={{ xs: 2, sm: 4, md: 18 }}>
             <ServiceSkills description={description || ''} />
             <ServiceProjects projects={service.recentProjects || []} />
             <ServiceOtherSkills skills={service.details || []} />
           </Box>
         </Grid>
-        <Grid item xs={12} md={2} lg={2}>
+        <Grid item size={{ xs: 12, md: 3 }}>
           <Box
             sx={{
-              paddingTop: { xs: '0rem', sm: '0rem', md: '4rem' },
-              paddingX: '4rem',
+              paddingTop: { xs: '0rem', sm: '0rem', md: '2rem' },
+              mx: { xs: 0, sm: 0, md: 4 },
             }}
           >
             <ServiceReviews reviews={service.reviews || []} />

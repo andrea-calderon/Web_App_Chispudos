@@ -13,16 +13,16 @@ export const ServiceSkills: React.FC<ServiceSkillsProps> = ({
   const { t } = useTranslation();
 
   return (
-    <Box marginBottom={'4rem'}>
+    <Box marginBottom={3}>
       <TextAtom
         variant="headline"
         size="small"
         fontWeight="bold"
-        marginBottom="1rem"
+        marginBottom={1}
       >
         {t('services.detailsPage.skillsAndExperience')}
       </TextAtom>
-      <Box marginBottom="1rem" />
+      <Box marginBottom={1} />
       <TextAtom variant="body" size="large" color="text.secondary">
         {description || 'No hay descripción disponible para este servicio.'}
       </TextAtom>
