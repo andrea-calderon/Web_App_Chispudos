@@ -37,7 +37,6 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
     <Card
       sx={{
         maxWidth: 400,
-        margin: '16px auto',
         boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
         borderRadius: '24px',
         cursor: onClick ? 'pointer' : 'default',

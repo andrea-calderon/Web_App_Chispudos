@@ -29,26 +29,14 @@ export const TaskDetailsPage = () => {
   return (
     <UserLayout>
       <Box>
-        {!isCompleted ? (
-          <TaskDetailInput
+        <TaskDetailInput
             date={formattedDate}
             time={formattedTime}
             dateTime={dateTime}
             service={service}
             userText={userText}
             setUserText={setUserText}
-            onComplete={() => setIsCompleted(true)}
           />
-        ) : (
-          <TaskDetailCompleted
-            date={formattedDate}
-            time={formattedTime}
-            dateTime={dateTime}
-            service={service}
-            userText={userText}
-            onBack={handleBackToInput}
-          />
-        )}
       </Box>
     </UserLayout>
   );

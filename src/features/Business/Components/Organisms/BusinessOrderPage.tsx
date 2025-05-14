@@ -13,6 +13,7 @@ import OrderTabs from './orders/OrderTabs';
 import OrderList from './orders/OrderList';
 import { useCreateChatMutation } from '../../../../services/chatApi';
 import { useNavigate } from 'react-router-dom';
+import { EmptySection } from '../../../../components/molecules';
 
 const BusinessOrderPage = () => {
   const { t } = useTranslation();
@@ -151,7 +152,14 @@ const BusinessOrderPage = () => {
         {t('BusinessOrdersPage.yourOrders', 'Your orders')}
       </Typography>
       <OrderTabs value={orderStatus} onChange={handleTabChange} options={FILTER_OPTIONS} />
-      <OrderList orders={ordersFilteredByStatus} onAction={handleOpenModal} />
+      {ordersFilteredByStatus?.length ? (
+        <OrderList
+          orders={ordersFilteredByStatus}
+          onAction={handleOpenModal}
+          />
+      ) : (
+        <EmptySection />
+      )}
       <Box mt={3}>
         <RoleSwitcherButton />
       </Box>
