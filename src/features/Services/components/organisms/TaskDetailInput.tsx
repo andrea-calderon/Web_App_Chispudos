@@ -102,8 +102,8 @@ const TaskDetailInput = ({
           <Grid item xs={12} md={3}>
             <Box sx={{ textAlign: 'center' }}>
               <img
-                src="https://picsum.photos/300/200?random=4"
-                alt="Nombre del servicio"
+                src={getApiImageUrl(service?.urlImage)}
+                alt={service?.name}
                 style={{
                   width: '100%',
                   height: '100%',
@@ -220,7 +220,7 @@ const TaskDetailInput = ({
       >
         <Box sx={{ display: 'flex', justifyContent: 'center' }}>
           <Avatar
-            src="https://picsum.photos/300/200?random=4"
+            src={getApiImageUrl(service?.urlImage)}
             alt="Service Profile"
             sx={{ width: 70, height: 70 }}
           />

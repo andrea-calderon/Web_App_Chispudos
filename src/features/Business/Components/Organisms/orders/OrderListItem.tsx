@@ -15,6 +15,7 @@ import DEFAULT_IMAGE from '../../../../../assets/images/DEFAULT_IMAGE.png';
 import { useTheme } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
 import { ButtonAtom } from '../../../../../components/atoms';
+import { getApiImageUrl } from '../../../../../utils/baseEnvironment';
 
 interface OrderListItemProps {
   order: any;
@@ -24,7 +25,7 @@ interface OrderListItemProps {
 const OrderListItem: React.FC<OrderListItemProps> = ({ order, onAction }) => {
   const { id, startDate, details } = order;
   const product = details[0]?.productService;
-  const image = product?.urlImage || DEFAULT_IMAGE;
+  const image = product?.urlImage? getApiImageUrl(product?.urlImage) : DEFAULT_IMAGE;
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));

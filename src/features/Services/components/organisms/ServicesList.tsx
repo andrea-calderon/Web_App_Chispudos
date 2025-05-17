@@ -2,6 +2,7 @@ import React from 'react';
 import { Grid, Typography, Box } from '@mui/material';
 import ServiceCard from './ServiceCard';
 import DEFAULT_IMAGE from '../../../../assets/images/DEFAULT_IMAGE.png';
+import { getApiImageUrl } from '../../../../utils/baseEnvironment';
 
 interface ServicesListProps {
   professionals: any[];
@@ -9,11 +10,6 @@ interface ServicesListProps {
   onServiceClick: (id: string) => void;
   onToggleFavorite: (id: string) => void; // Función para manejar favoritos
 }
-
-const getFullImageUrl = (url: string | null) => {
-  const baseUrl = import.meta.env.VITE_BASE_API_URL; // Usar variable de entorno
-  return url?.startsWith('http') ? url : `${baseUrl}${url}`;
-};
 
 const ServicesList: React.FC<ServicesListProps> = ({
   professionals,
@@ -38,7 +34,7 @@ const ServicesList: React.FC<ServicesListProps> = ({
           <ServiceCard
             image={
               service.urlImage
-                ? getFullImageUrl(service.urlImage)
+                ? getApiImageUrl(service?.urlImage)
                 : DEFAULT_IMAGE
             }
             user={{
