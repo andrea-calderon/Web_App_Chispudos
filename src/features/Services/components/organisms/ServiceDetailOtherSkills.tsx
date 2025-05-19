@@ -20,7 +20,7 @@ export const ServiceOtherSkills: React.FC<ServiceOtherSkillsProps> = ({
       <TextAtom variant="headline" size="small" fontWeight="bold">
         Otras Habilidades
       </TextAtom>
-      <Box marginBottom="2rem" />
+      <Box marginBottom={2} />
       {skills.length > 0 ? (
         <Grid container spacing={3}>
           {skills.map((skill, index) => (

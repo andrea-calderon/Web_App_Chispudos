@@ -21,12 +21,10 @@ export default function Step2() {
   const [updateProduct, { isLoading: isUpdating }] = useUpdateProductMutation();
   const dispatch = useAppDispatch();
   const { service } = useAppSelector(selectStepper);
-  console.error('debugStepper', { service, selectedCategories });
 
   const { t } = useTranslation();
 
   const handleSelectCategory = (category) => {
-    console.error('category', category);
     setSelectedCategories((prev) =>
       prev.some((c) => c === category.id)
         ? prev.filter((c) => c !== category.id)

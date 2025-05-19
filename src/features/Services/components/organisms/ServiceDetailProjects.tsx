@@ -16,21 +16,21 @@ export const ServiceProjects: React.FC<ServiceProjectsProps> = ({
 }) => {
   if (!projects.length) {
     return (
-      <Box marginBottom={'4rem'}>
+      <Box marginBottom={4}>
         <TextAtom
           variant="headline"
           size="small"
           fontWeight="bold"
-          marginBottom="1rem"
+          marginBottom={1}
         >
           Proyectos recientes
         </TextAtom>
-        <Box marginBottom="1rem" />
+        <Box marginBottom={1} />
         <TextAtom
           variant="body"
           size="large"
           color="textSecondary"
-          marginBottom="1rem"
+          marginBottom={1}
         >
           No hay proyectos disponibles en este momento.
         </TextAtom>

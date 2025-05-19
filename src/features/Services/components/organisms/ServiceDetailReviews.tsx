@@ -5,7 +5,6 @@ import {
   Avatar,
   Divider,
   Grid2 as Grid,
-  useMediaQuery,
   useTheme,
 } from '@mui/material';
 import { Rating } from '@mui/material';
@@ -23,7 +22,7 @@ interface ServiceReviewsProps {
 
 export const ServiceReviews: React.FC<ServiceReviewsProps> = ({ reviews }) => {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const palette = theme.palette;
 
   const calculateDaysAgo = (createdAt: string): string => {
     const reviewDate = new Date(createdAt);
@@ -33,11 +32,12 @@ export const ServiceReviews: React.FC<ServiceReviewsProps> = ({ reviews }) => {
     return `Hace ${diffDays} días`;
   };
 
+
   return (
     <Box
-      bgcolor="rgba(234, 221, 255, 0.3)"
-      paddinTop="3rem"
-      padding="2rem"
+      bgcolor={palette.primary.light}
+      paddinTop={3}
+      padding={2}
       borderRadius="8px"
     >
       <Typography variant="h5" fontWeight="bold" marginBottom="1rem">
@@ -51,7 +51,7 @@ export const ServiceReviews: React.FC<ServiceReviewsProps> = ({ reviews }) => {
                 container
                 spacing={2}
                 alignItems="flex-start"
-                marginBottom="1.5rem"
+                marginBottom={1}
               >
                 <Grid item xs={12} sm={2}>
                   <Avatar alt={review.name || 'Usuario'} />

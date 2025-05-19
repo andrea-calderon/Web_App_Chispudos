@@ -1,9 +1,15 @@
-import { Box, Grid, TextField } from '@mui/material';
+import { Avatar, Box, Grid, TextField, Typography } from '@mui/material';
 import ButtonAtom from '../../../../components/atoms/ButtonAtom';
 import TextAtom from '../../../../components/atoms/TextAtom';
-import { ChevronLeft, CalendarToday, AccessTime } from '@mui/icons-material';
+import { ChevronLeft, CalendarToday, AccessTime, ArrowBack } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { useCreateOrderMutation } from '../../../../services/ordersApi';
+import { useState } from 'react';
+import { selectAuth } from '../../../../redux/slices/authSlice';
+import { useAppSelector } from '../../../../hooks/useAppSelector';
+import { ModalComponent } from '../../../../components/molecules';
+import { getApiImageUrl } from '../../../../utils/baseEnvironment';
 
 const TaskDetailInput = ({
   date,
@@ -11,52 +17,97 @@ const TaskDetailInput = ({
   time,
   userText,
   setUserText,
-  onComplete,
   service,
 }) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
+
+  const [createOrder] = useCreateOrderMutation();
+  const [openModal, setOpenModal] = useState(false);
+  const { user } = useAppSelector(selectAuth);
+
+  const handleConfirm = async () => {
+    const body = {
+      userId: 1,
+      totalAmount: service.price,
+      status: 1, //active /complted/ //cancel
+      comment: 'This is a test order',
+      startDate: dateTime,
+      endDate: '2025-02-20T00:00:00.000Z',
+      details: [
+        {
+          productServiceId: service.id,
+          quantity: 1,
+          price: service.price,
+          discount: 0,
+          charge: 0,
+          comment: userText,
+        },
+      ],
+    };
+    await createOrder(body);
+    setOpenModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
+    navigate('/tasks');
+  };
 
   return (
     <Box>
       <Box
         sx={{
           backgroundColor: '#F3ECFF',
-          paddingBottom: 5,
+          paddingBottom: 2,
           width: '100vw',
           px: { xs: 3, sm: 20, md: 20 },
+          pt: 4,
         }}
       >
-        <Grid item xs={12} md={6}>
-          <Box
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              paddingTop: 5,
-              cursor: 'pointer',
-            }}
-            onClick={() => navigate(-1)}
-          >
-            <ChevronLeft />
-            <TextAtom variant="title" size="medium" sx={{ marginLeft: 1 }}>
-              {t('services.serviceDetails.navigationInput')}
-            </TextAtom>
+        <Grid
+          size={12}
+          sx={{
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            textAlign: 'center',
+            width: '100%',
+          }}
+        >
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <ButtonAtom variant='text' onClick={() => navigate(-1)} aria-label="Go back" startIcon={<ChevronLeft />}>
+              <TextAtom
+                variant="body"
+                size="large"
+                marginLeft="0.5rem"
+                sx={{ display: { xs: 'none', md: 'block' } }}
+              >
+                Detalles
+              </TextAtom>
+            </ButtonAtom>
           </Box>
+          <Box sx={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
+            <Typography fontWeight="bold">
+              {service?.name || 'Servicio'}
+            </Typography>
+          </Box>
+          <Box sx={{ width: 48 }} />
         </Grid>
       </Box>
 
-      <Box sx={{ padding: '2rem', px: { xs: 3, sm: 20, md: 20 } }}>
-        <Grid container spacing={4}>
+      <Box sx={{ py: {sx: 8, sm: 8, md: 4 }, px: { xs: 3, sm: 20, md: 20 } }}>
+        <Grid container spacing={2}>
           <Grid item xs={12} md={3}>
             <Box sx={{ textAlign: 'center' }}>
               <img
-                src="https://picsum.photos/300/200?random=4"
-                alt="Nombre del servicio"
+                src={getApiImageUrl(service?.urlImage)}
+                alt={service?.name}
                 style={{
                   width: '100%',
                   height: '100%',
                   borderRadius: '16px',
-                  marginBottom: '0.5rem',
                 }}
               />
               <TextAtom variant="title" size="medium">
@@ -105,6 +156,29 @@ const TaskDetailInput = ({
           </Grid>
         </Grid>
       </Box>
+      {userText && (
+        <Box
+        sx={{ display: 'flex', alignItems: 'center', mx: {xs: 4, md:20, lg: 20}, my: 5 }}
+      >
+        <Avatar
+          src={getApiImageUrl(user?.avatarUrl)}
+          alt="User Profile"
+          sx={{ width: 50, height: 50, marginRight: 2 }}
+        />
+        <Box
+          sx={{
+            backgroundColor: '#F9F5FF',
+            borderRadius: '16px',
+            padding: '1rem',
+            maxWidth: '100%',
+          }}
+        >
+          <TextAtom variant="body" size="medium" gutterBottom>
+            {userText || t('services.serviceDetails.emptyMessage')}
+          </TextAtom>
+        </Box>
+      </Box>
+      )}
 
       <Grid item xs={12} md={12} sx={{ px: { xs: 3, sm: 20, md: 20 } }}>
         <TextField
@@ -128,13 +202,41 @@ const TaskDetailInput = ({
           <ButtonAtom
             variant="filled"
             color="primary"
-            onClick={onComplete}
+            onClick={handleConfirm}
             disabled={!userText.trim()}
           >
             {t('services.serviceDetails.buttonInput')}
           </ButtonAtom>
         </Box>
       </Grid>
+      <ModalComponent
+        open={openModal}
+        onConfirm={handleCloseModal}
+        onClose={handleCloseModal}
+        hideCancelbutton
+        title={t('services.serviceDetails.confirmationTitle')}
+        confirmButtonText={t('services.serviceDetails.continueButton')}
+
+      >
+        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+          <Avatar
+            src={getApiImageUrl(service?.urlImage)}
+            alt="Service Profile"
+            sx={{ width: 70, height: 70 }}
+          />
+        </Box>
+        <Box
+          sx={{
+            display: 'flex',
+            textAlign: 'center',
+            pt: 5,
+          }}
+        >
+          <TextAtom variant="body" size="medium">
+            {t('services.serviceDetails.confirmationMessage')}
+          </TextAtom>
+        </Box>
+      </ModalComponent>
     </Box>
   );
 };

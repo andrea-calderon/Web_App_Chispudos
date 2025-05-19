@@ -16,6 +16,7 @@ import DEFAULT_IMAGE from '../../../../assets/images/DEFAULT_IMAGE.png';
 import { TextAtom } from '../../../../components/atoms';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import { getApiImageUrl } from '../../../../utils/baseEnvironment';
 
 const RecommendedServices: React.FC = () => {
   const { t } = useTranslation();
@@ -137,7 +138,7 @@ const RecommendedServices: React.FC = () => {
                       name={service.name || 'Servicio sin nombre'}
                       image={
                         service.urlImage
-                          ? `http://localhost:8000/api/v1${service.urlImage}`
+                          ? getApiImageUrl(service?.urlImage)
                           : DEFAULT_IMAGE
                       }
                       price={`Q${service.price} por día`}
@@ -189,7 +190,7 @@ const RecommendedServices: React.FC = () => {
                     name={service.name || 'Servicio sin nombre'}
                     image={
                       service.urlImage
-                        ? `http://localhost:8000/api/v1${service.urlImage}`
+                        ? getApiImageUrl(service?.urlImage)
                         : DEFAULT_IMAGE
                     }
                     price={`Q${service.price} por día`}
