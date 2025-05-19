@@ -15,7 +15,8 @@ import { ModalComponent } from '../../../../components/molecules';
 import AvatarUpload from '../organisms/AvatarUpload';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { useUpdateUserNameMutation } from '../../../../services/userApi';
+import { useUpdateUserInfoMutation } from '../../../../services/userApi';
+import { UpdateUserPayload } from '../../../../types/api/apiRequests';
 
 export const UserProfile: React.FC = () => {
   const { t } = useTranslation();
@@ -26,7 +27,7 @@ export const UserProfile: React.FC = () => {
   const [editNameModalOpen, setEditNameModalOpen] = useState(false);
   const [name, setName] = useState(user?.name || '');
   const [lastname, setLastname] = useState(user?.lastname || '');
-  const [updateUserName, { isLoading }] = useUpdateUserNameMutation();
+  const [updateUserInfo, { isLoading }] = useUpdateUserInfoMutation();
 
   const [modalOpen, setModalOpen] = useState(false);
   const {
@@ -48,29 +49,32 @@ export const UserProfile: React.FC = () => {
 
   const handleOpenEditNameModal = () => setEditNameModalOpen(true);
   const handleCloseEditNameModal = () => setEditNameModalOpen(false);
-  const handleSaveNameChanges = async () => {
-    if (user?.id) {
-      try {
-        const userUpdateResponse = await updateUserName({
-          userId: user.id.toString(),
-          name,
-          lastname,
-        }).unwrap();
-        dispatch(
-          setAuthUserState({
-            ...user,
-            name,
-            lastname,
-          }),
-        );
 
-        console.error(
-          'User name updated successfully:',
-          userUpdateResponse?.data,
+  const handleUpdateUserInfo = async ( userObjNewFields: UpdateUserPayload ) => {
+    if (user) {
+      try {
+        const userUpdateResponse = await updateUserInfo({
+          userObj: {
+            ...user,
+            ...userObjNewFields,
+          },
+        }).unwrap();
+        if (userUpdateResponse.success) {
+          handleCloseEditNameModal();
+          dispatch(
+            setAuthUserState({
+              ...userUpdateResponse.data
+            }),
+          );
+          console.error(
+          'User info updated successfully:',
+          userUpdateResponse.data,
+          user
         );
-        handleCloseEditNameModal();
+        };
+        
       } catch (error) {
-        console.error('Error updating user name:', error);
+        console.error('Error updating user info:', error);
       }
     }
   };
@@ -135,7 +139,7 @@ export const UserProfile: React.FC = () => {
           open={editNameModalOpen}
           onClose={handleCloseEditNameModal}
           title={t('userProfile.editNameTitle', 'Edit Name')}
-          onConfirm={handleSaveNameChanges}
+          onConfirm={() => handleUpdateUserInfo({name, lastname})}
           confirmButtonText={t('userProfile.save', 'Save')}
           isConfirmButtonLoading={isLoading}
         >
@@ -222,7 +226,8 @@ export const UserProfile: React.FC = () => {
       >
         <ButtonAtom
           variant="outlined"
-          onClick={() => navigate('/stepper')}
+          // onClick={() => navigate('/stepper')}
+          onClick={() => handleUpdateUserInfo({roles: [2, 3]}) }
           sx={{
             fontWeight: 'bold',
             mr: 2,

@@ -26,7 +26,6 @@ const Step3 = () => {
   const [updateProduct, { isLoading: isUpdating }] = useUpdateProductMutation();
   const dispatch = useAppDispatch();
   const { service } = useAppSelector(selectStepper);
-  console.error('debugStepper', { service });
 
   const getDepartamentsCities = (departamentId: number) => {
     return cities?.data.filter((city) => city.stateId === departamentId) || [];

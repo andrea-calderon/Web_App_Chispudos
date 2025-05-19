@@ -1,6 +1,8 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { ApiResponseType, UserResponseType } from '../types/api/apiResponses';
 import baseQueryWithReauth from './baseQueryWithReauth';
+import { User } from '../types/api/modelTypes';
+import { UpdateUserPayload } from '../types/api/apiRequests';
 
 export const userApi = createApi({
   reducerPath: 'userApi',
@@ -23,11 +25,11 @@ export const userApi = createApi({
         body: formData,
       }),
     }),
-    updateUserName: builder.mutation<any, { userId: string; name: string; lastname: string }>({
-      query: ({ userId, name, lastname }) => ({
-        url: `/users/${userId}`,
+    updateUserInfo: builder.mutation<ApiResponseType<User>, { userObj: UpdateUserPayload }>({
+      query: ({ userObj }) => ({
+        url: `/users/${userObj.id}`,
         method: 'PUT',
-        body: { name, lastname },
+        body: userObj,
       }),
     }),
   }),
@@ -37,5 +39,5 @@ export const {
   useGetUsersQuery,
   useCreateUserMutation,
   useUpdateAvatarMutation,
-  useUpdateUserNameMutation,
+  useUpdateUserInfoMutation,
 } = userApi;

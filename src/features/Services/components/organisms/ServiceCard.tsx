@@ -13,24 +13,19 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { ProductService } from '../../../../types/api/modelTypes';
 import { TextAtom } from '../../../../components/atoms';
 import { ButtonAtom } from '../../../../components/atoms';
+import { getApiImageUrl } from '../../../../utils/baseEnvironment';
 
-interface ServiceCardProps extends ProductService {
+interface ServiceCardProps {
   onClick?: () => void;
-  isFavorite: boolean; // ✅ Prop para saber si está en favoritos
-  onToggleFavorite: (id: string) => void; // ✅ Función para marcar/desmarcar favoritos
+  isFavorite: boolean;
+  onToggleFavorite: (id: string) => void;
+  productService: ProductService;
 }
 
 const ServiceCard: React.FC<ServiceCardProps> = ({
-  id,
-  image,
-  user,
-  name,
-  description,
-  location,
-  averageRating,
-  reviews = [],
   onClick,
   isFavorite,
+  productService,
   onToggleFavorite,
 }) => {
   return (
@@ -43,7 +38,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
         display: 'flex',
         flexDirection: 'column',
         height: '100%',
-        position: 'relative', // ✅ Para posicionar el ícono de favoritos
+        position: 'relative',
       }}
       onClick={onClick}
     >
@@ -54,15 +49,15 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
           right: 10,
           zIndex: 2,
           backgroundColor: isFavorite ? 'error.main' : 'rgba(0, 0, 0, 0.6)', // Fondo rojo si está en favoritos, gris oscuro si no
-          color: 'white', // Color del contorno blanco
-          border: '2px solid white', // Contorno blanco
+          color: 'white', 
+          border: '2px solid white',
           '&:hover': {
             backgroundColor: isFavorite ? 'error.dark' : 'rgba(0, 0, 0, 0.8)', // Cambiar el fondo al pasar el mouse
           },
         }}
         onClick={(e) => {
           e.stopPropagation(); // Evita que el clic afecte la navegación
-          onToggleFavorite(id); // Llama a la función para marcar/desmarcar favoritos
+          onToggleFavorite(productService.id.toString()); // Llama a la función para marcar/desmarcar favoritos
         }}
       >
         {isFavorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
@@ -74,8 +69,8 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
         <CardMedia
           component="img"
           height="180"
-          image={image || 'https://picsum.photos/345/180?random=1'}
-          alt={`${name || 'Servicio desconocido'} image`}
+          image={getApiImageUrl(productService?.urlImage)}
+          alt={`${productService.name || 'Servicio desconocido'} image`}
           sx={{
             width: 400,
             height: 200,
@@ -86,8 +81,8 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
 
       <CardContent sx={{ px: 5, flexGrow: 1 }}>
         <TextAtom variant="body" size="medium">
-          {user?.name
-            ? `${user.name} ${user.lastname || ''}`
+          {productService.user?.name
+            ? `${productService.user.name} ${productService.user.lastname }`
             : 'Usuario desconocido'}
         </TextAtom>
         <br />
@@ -98,11 +93,11 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
           gutterBottom
           sx={{ fontWeight: 'bold' }}
         >
-          {name || 'Servicio sin nombre'}
+          {productService.name || 'Servicio sin nombre'}
         </TextAtom>
         <br />
         <TextAtom variant="body" size="medium" color="text.secondary">
-          {description || 'Descripción no disponible.'}
+          {productService.description || 'Descripción no disponible.'}
         </TextAtom>
         <br />
         <TextAtom
@@ -111,12 +106,12 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
           color="text.secondary"
           sx={{ fontWeight: 'bold' }}
         >
-          Ubicación: {location || 'No especificada'}
+          Ubicación: {productService.locations?.[0]?.description  || 'No especificada'}
         </TextAtom>
         <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
           <StarIcon fontSize="medium" sx={{ color: 'gold', mr: 0.5 }} />
           <TextAtom variant="body" size="medium">
-            {averageRating || 0} | {reviews.length} reseñas
+            {productService.averageRating || 0} | {productService.reviews.length} reseñas
           </TextAtom>
         </Box>
       </CardContent>

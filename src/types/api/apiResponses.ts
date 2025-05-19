@@ -1,25 +1,13 @@
+import { User } from "./modelTypes";
+
 export type UserResponseType = {
-  id: number;
-  name: string;
-  lastname: string;
-  email: string;
-  roles: Array<{
-    id: number;
-    name: 'Admin' | 'User' | 'Merchant'; // Ajusta los nombres según el backend
-    description: string;
-    createdAt: Date;
-    updatedAt: Date;
-    deletedAt: null | Date;
-  }>;
-  averageRating: null;
-  createdAt: Date;
-  updatedAt: Date;
-  deletedAt: null;
-  avatarUrl: string;
+  success: boolean;
+  message: string;
+  data: User;
 };
 
 export type LoginResponse = {
-  user: UserResponseType;
+  user: User;
   token: string;
 };
 
@@ -36,9 +24,3 @@ export type ErrorResponseType = {
 };
 
 export type ApiResponseType<T> = SuccessResponseType<T> | ErrorResponseType;
-
-// Example usage with UserResponseType
-export type UserApiResponseType = ApiResponseType<{
-  user: UserResponseType;
-  token: string;
-}>;

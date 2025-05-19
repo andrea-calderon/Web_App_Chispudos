@@ -35,7 +35,6 @@ const SearchBar = () => {
   ]);
 
   const { data: products } = useGetProductsQuery();
-  console.error('Products:', { products });
 
   const services = useMemo(() => {
     return Array.from(

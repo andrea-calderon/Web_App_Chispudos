@@ -7,6 +7,7 @@ import ServicesList from '../organisms/ServicesList';
 import SearchBar from '../../../../components/organisms/SearchBar';
 import { useGetProductsQuery } from '../../../../services/productApi';
 import RecommendedServices from '../../../home/components/organisms/RecommendedServices';
+import { ProductService } from '../../../../types/api/modelTypes';
 
 export const SearchServicesPage: React.FC = () => {
   const navigate = useNavigate();
@@ -16,30 +17,27 @@ export const SearchServicesPage: React.FC = () => {
   const { data: allServices, isLoading } = useGetProductsQuery();
 
   const [favorites, setFavorites] = useState<ProductService[]>(() => {
-    // Recuperar favoritos almacenados como objetos
     return JSON.parse(localStorage.getItem('favoriteServices') || '[]');
   });
 
-  // 🔥 Función para agregar/eliminar favoritos
+  
   const toggleFavorite = (service: ProductService) => {
     let updatedFavorites;
     if (favorites.some((fav) => fav.id === service.id)) {
-      // Si ya está en favoritos, eliminarlo
       updatedFavorites = favorites.filter((fav) => fav.id !== service.id);
     } else {
-      // Si no está en favoritos, agregarlo
       updatedFavorites = [...favorites, service];
     }
     setFavorites(updatedFavorites);
-    localStorage.setItem('favoriteServices', JSON.stringify(updatedFavorites)); // Guardar en localStorage
+    localStorage.setItem('favoriteServices', JSON.stringify(updatedFavorites));
   };
 
   const searchParams = new URLSearchParams(location.search);
   const selectedCategory = searchParams.get('category');
 
   useEffect(() => {
-    if (!allServices?.data?.items?.length) return;
-    let results = allServices?.data?.items;
+    if (!allServices.data.items?.length) return;
+    let results = allServices?.data?.items || [];
 
     if (selectedCategory) {
       const selectedCategoryId = parseInt(selectedCategory, 10);

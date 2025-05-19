@@ -4,6 +4,7 @@ export type ProductService = {
     description:   string;
     type:          number;
     price:         number;
+    urlImage:      string;
     specialPrice:  number;
     location:      string;
     latitude:      number;
@@ -75,17 +76,36 @@ export type Review = {
     updatedAt:        Date;
 }
 
-export type User = {
-    id:            number;
-    name:          string;
-    lastname:      string;
-    email:         string;
-    password:      string;
-    role:          number;
-    averageRating: number;
-    avatarUrl:     string;
-    createdAt:     Date;
-    updatedAt:     Date;
-    deletedAt:     null;
+
+export type  User  = {
+  id: number
+  name: string
+  lastname: string
+  email: string
+  averageRating: number
+  avatarUrl: string | null
+  createdAt: string
+  updatedAt: string
+  deletedAt: null | Date | string
+  roles: Role[] | number[]
+} 
+
+export interface Role {
+  id: number
+  name: string
+  description: string
+  createdAt: string
+  updatedAt: string
+  deletedAt: null | Date | string
+  UserRole: UserRole
+}
+
+export interface UserRole {
+  id: number
+  userId: number
+  roleId: number
+  createdAt: string
+  updatedAt: string
+  deletedAt: null | Date | string
 }
 
