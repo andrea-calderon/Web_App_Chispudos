@@ -267,10 +267,13 @@
     },
     "searchForm": {
       "body": "¡Chatea con 3 profesionales al momento y consigue tu presupuesto ideal!",
+      "clearFilters": "Eliminar filtros",
       "location": "Ubicación",
+      "modalTitle": "Buscar productos y servicios",
       "priceRange": "Rango de precios",
-      "searchProfessional": "Buscar profesional",
+      "search": "Buscar",
       "serviceInput": "Categoría",
+      "startSearch": "Iniciar búsqueda",
       "textPlaceholder": "Escribe qué estás buscando...",
       "title": "¿Qué necesitas?"
     },
@@ -305,7 +308,6 @@
     "subscribeButton": "Subscribe",
     "title": "Subscribe to our Newsletter"
   },
-  "professional_image": "",
   "recommendedServices": {
     "noServices": "",
     "title": "Recomendados para ti"

@@ -267,10 +267,13 @@
     },
     "searchForm": {
       "body": "Chat with 3 experts instantly and get your perfect quote!",
+      "clearFilters": "Clear Filters",
       "location": "Location",
+      "modalTitle": "Search Services",
       "priceRange": "Price range",
-      "searchProfessional": "Find professional",
+      "search": "Search",
       "serviceInput": "Service",
+      "startSearch": "Start your search",
       "textPlaceholder": "Type what you're looking for...",
       "title": "What do you need?"
     },
@@ -305,7 +308,6 @@
     "subscribeButton": "Subscribe",
     "title": "Subscribe to our Newsletter"
   },
-  "professional_image": "",
   "recommendedServices": {
     "noServices": "",
     "title": "Recomendados para ti"

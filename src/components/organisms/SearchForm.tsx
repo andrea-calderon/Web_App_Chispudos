@@ -16,7 +16,6 @@ import { useGetProductsQuery } from '../../services/productApi';
 import { Search } from '@mui/icons-material';
 import { ButtonAtom, InputAtom } from '../atoms';
 import { ModalComponent } from '../molecules';
-import { se } from 'date-fns/locale';
 
 const SearchForm = () => {
   const { t } = useTranslation();
