@@ -4,6 +4,7 @@ import {
   Box,
   IconButton,
   CircularProgress,
+  SxProps,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { ButtonAtom, TextAtom } from '../atoms';
@@ -15,10 +16,13 @@ interface ModalComponentProps {
   title: string;
   children: React.ReactNode;
   confirmButtonText?: string;
+  confirmButtonStartIcon?: React.ReactNode;
+  confirmButtonEndIcon?: React.ReactNode;
   cancelButtonText?: string;
   isConfirmButtonDisabled?: boolean;
   isConfirmButtonLoading?: boolean;
   hideCancelbutton?: boolean;
+  sx?: SxProps;
 }
 
 const ModalComponent: React.FC<ModalComponentProps> = ({
@@ -28,15 +32,18 @@ const ModalComponent: React.FC<ModalComponentProps> = ({
   title,
   children,
   confirmButtonText = 'Confirm',
+  confirmButtonStartIcon,
+  confirmButtonEndIcon,
   cancelButtonText = 'Cancel',
   isConfirmButtonDisabled = false,
   isConfirmButtonLoading = false,
   hideCancelbutton = false,
+  sx,
 }) => {
   return (
     <Modal open={open} onClose={onClose}>
       <Box
-        sx={{
+        sx={[{
           position: 'absolute',
           top: '50%',
           left: '50%',
@@ -47,15 +54,15 @@ const ModalComponent: React.FC<ModalComponentProps> = ({
           boxShadow: 24,
           p: 4,
           borderRadius: 2,
-        }}
+        }, sx]}
       >
 
-<IconButton
-            onClick={onClose}
-            sx={{ position: 'absolute', right: 0, top: 0 }}
-          >
-            <CloseIcon />
-          </IconButton>
+        <IconButton
+          onClick={onClose}
+          sx={{ position: 'absolute', right: 0, top: 0 }}
+        >
+          <CloseIcon />
+        </IconButton>
         <Box
           sx={{
             display: 'flex',
@@ -73,18 +80,20 @@ const ModalComponent: React.FC<ModalComponentProps> = ({
             {title}
           </TextAtom>
         </Box>
-        <Box sx={{ m: 5, textAlign: 'center' }}>{children}</Box>
+        <Box sx={{ my: 5, textAlign: 'center' }}>{children}</Box>
         <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1 }}>
-            {!hideCancelbutton && (
-                <ButtonAtom variant="outlined" onClick={onClose}>
-                {cancelButtonText}
-                </ButtonAtom>
-            )}
+          {!hideCancelbutton && (
+            <ButtonAtom variant="outlined" onClick={onClose}>
+              {cancelButtonText}
+            </ButtonAtom>
+          )}
           {onConfirm && (
             <ButtonAtom
               variant="filled"
               onClick={onConfirm}
               disabled={isConfirmButtonDisabled || isConfirmButtonLoading}
+              startIcon={confirmButtonStartIcon}
+              endIcon={confirmButtonEndIcon}
             >
               {isConfirmButtonLoading ? (
                 <CircularProgress size={24} />

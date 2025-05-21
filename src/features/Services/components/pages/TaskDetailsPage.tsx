@@ -5,13 +5,11 @@ import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { UserLayout } from '../../../../components/templates/UserLayout';
 import TaskDetailInput from '../organisms/TaskDetailInput';
-import TaskDetailCompleted from '../organisms/TaskDetailCompleted';
 
 export const TaskDetailsPage = () => {
   const location = useLocation();
   const { dateTime, service } = location.state || {};
   const [userText, setUserText] = useState('');
-  const [isCompleted, setIsCompleted] = useState(false);
 
   if (!dateTime || !service) {
     return <div>No data available</div>;
@@ -22,9 +20,6 @@ export const TaskDetailsPage = () => {
   });
   const formattedTime = format(new Date(dateTime), 'hh:mm a', { locale: es });
 
-  const handleBackToInput = () => {
-    setIsCompleted(false);
-  };
 
   return (
     <UserLayout>

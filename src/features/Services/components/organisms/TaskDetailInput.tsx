@@ -1,7 +1,7 @@
 import { Avatar, Box, Grid, TextField, Typography } from '@mui/material';
 import ButtonAtom from '../../../../components/atoms/ButtonAtom';
 import TextAtom from '../../../../components/atoms/TextAtom';
-import { ChevronLeft, CalendarToday, AccessTime, ArrowBack } from '@mui/icons-material';
+import { ChevronLeft, CalendarToday, AccessTime } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useCreateOrderMutation } from '../../../../services/ordersApi';
@@ -214,7 +214,7 @@ const TaskDetailInput = ({
         onConfirm={handleCloseModal}
         onClose={handleCloseModal}
         hideCancelbutton
-        title={t('services.serviceDetails.confirmationTitle')}
+        title={t('services.serviceDetails.confirmationTitle', 'You have scheduled with {{serviceName}}', { serviceName: service?.name })}
         confirmButtonText={t('services.serviceDetails.continueButton')}
 
       >
