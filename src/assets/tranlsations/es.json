@@ -77,13 +77,11 @@
     }
   },
   "BusinessOrdersPage": {
-    "canceled": "Canceled",
-    "completed": "Completed",
-    "inProgress": "In progress",
+    "canceled": "Cancelado",
+    "completed": "Completado",
+    "inProgress": "En progreso",
     "loadingRoles": "Loading user roles...",
-    "noOrders": "No hay órdenes disponibles",
-    "noOrdersDescription": "Parece que no tienes órdenes en este momento. ¡Vuelve más tarde o crea una nueva orden!",
-    "soon": "Beginning soon",
+    "soon": "Proximamente",
     "yourOrders": "Your orders"
   },
   "businessProfile": {
@@ -183,6 +181,14 @@
     "mechanic": "",
     "plumber": ""
   },
+  "components": {
+    "molecules": {
+      "emptySection": {
+        "description": "Parece que no tienes nada aquí. ¡Vuelve más tarde o crea una nuevo registro!",
+        "title": "Sin registros para mostrar"
+      }
+    }
+  },
   "downloadSection": {
     "appPreviewAlt": ""
   },
@@ -205,6 +211,17 @@
   },
   "favoritesPage": {
     "title": "Favoritos"
+  },
+  "features": {
+    "businessOrdersPage": {
+      "actions": {
+        "accept": "Aceptar",
+        "chat": "Chat",
+        "completed": "Completada",
+        "notInterested": "No interesado",
+        "rate": "Calificar"
+      }
+    }
   },
   "footer": {
     "copyright": "Desarrollo web y móvil."
@@ -250,10 +267,13 @@
     },
     "searchForm": {
       "body": "¡Chatea con 3 profesionales al momento y consigue tu presupuesto ideal!",
+      "clearFilters": "Eliminar filtros",
       "location": "Ubicación",
+      "modalTitle": "Buscar productos y servicios",
       "priceRange": "Rango de precios",
-      "searchProfessional": "Buscar profesional",
+      "search": "Buscar",
       "serviceInput": "Categoría",
+      "startSearch": "Iniciar búsqueda",
       "textPlaceholder": "Escribe qué estás buscando...",
       "title": "¿Qué necesitas?"
     },
@@ -288,7 +308,6 @@
     "subscribeButton": "Subscribe",
     "title": "Subscribe to our Newsletter"
   },
-  "professional_image": "",
   "recommendedServices": {
     "noServices": "",
     "title": "Recomendados para ti"
@@ -301,17 +320,14 @@
       "clearFilters": "Limpiar filtros"
     },
     "serviceDetails": {
-      "buttonCompleted": "Confirmar y chatear",
       "buttonInput": "Completar solicitud",
       "confirmationMessage": "Descubre servicios adicionales ofrecidos por tu Especialista favorito, o forma un equipo de tus Especialistas preferidos en la sección Favoritos.",
-      "confirmationTitle": "Has agendado con 'Limpieza de casas y apartamentos'",
+      "confirmationTitle": "You have scheduled with {{serviceName}}",
       "continueButton": "Continuar",
       "dateModalTitle": "Seleccionar fecha y hora",
       "description": "¡Estás casi listo! Comparte algunos detalles para preparar a tu Especialista para el trabajo.",
       "emptyMessage": "",
       "label": "Escribe algo...",
-      "navigationCompleted": "Revisar y confirmar",
-      "navigationInput": "Detalles de la tarea",
       "time": "Hora y fecha",
       "title": "Inicia la conversación"
     }
@@ -331,7 +347,6 @@
     "lastname": "Lastname",
     "logout": "Logout",
     "name": "Name",
-    "profile": "Profile",
     "publishServices": "Publish my services",
     "save": "Save",
     "updateButton": "Update"

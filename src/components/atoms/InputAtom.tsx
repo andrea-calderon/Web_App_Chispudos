@@ -1,8 +1,13 @@
-import { InputAdornment, TextField, TextFieldProps } from '@mui/material';
+import { InputAdornment, TextField, TextFieldProps, MenuItem, Checkbox, ListItemText } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import React from 'react';
 import TextAtom from './TextAtom';
 import { Field } from 'formik';
+
+interface SelectOption {
+  value: string | number;
+  label: string;
+}
 
 interface InputAtomProps extends Omit<TextFieldProps, 'variant'> {
   variant: 'outlined' | 'underlined' | 'rounded';
@@ -11,9 +16,15 @@ interface InputAtomProps extends Omit<TextFieldProps, 'variant'> {
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
   errorMsg?: string;
-  helperText?: string;
+  helperText?: string | undefined
   name: string;
   type?: string;
+  // Select-specific props
+  isSelect?: boolean;
+  options?: SelectOption[];
+  multiple?: boolean;
+  renderValue?: (selected: unknown) => React.ReactNode;
+  showCheckbox?: boolean;
 }
 
 const InputAtom: React.FC<InputAtomProps> = ({
@@ -26,6 +37,11 @@ const InputAtom: React.FC<InputAtomProps> = ({
   helperText,
   type = 'text',
   name,
+  isSelect = false,
+  options = [],
+  multiple = false,
+  renderValue,
+  showCheckbox = true,
   ...props
 }) => {
   const theme = useTheme();
@@ -98,43 +114,114 @@ const InputAtom: React.FC<InputAtomProps> = ({
     }
   };
 
+  // Default renderValue function for multiple select
+  const defaultRenderValue = (selected: unknown) => {
+    if (!Array.isArray(selected)) return '';
+
+    return selected.map(value => {
+      const option = options.find(opt => opt.value === value);
+      return option?.label || value;
+    }).join(', ');
+  };
+
   return (
     <Field name={name}>
-      {({ field, form: { isSubmitting } }) => (
-        <TextField
-          {...field}
-          type={type}
-          variant={variant === 'underlined' ? 'standard' : 'outlined'}
-          label={label}
-          placeholder={placeholder}
-          error={errorMsg}
-          helperText={
-            errorMsg ? (
-              <TextAtom variant="body" size="small">
-                {errorMsg}
-              </TextAtom>
-            ) : helperText ? (
-              <TextAtom variant="body" size="small">
-                {helperText}
-              </TextAtom>
-            ) : undefined
-          }
-          {...props}
-          slotProps={{
-            input: {
+      {({ field, form: { isSubmitting, setFieldValue } }) => (
+        isSelect ? (
+          <TextField
+            select
+            {...field}
+            label={label}
+            placeholder={placeholder}
+            error={!!errorMsg}
+            disabled={isSubmitting}
+            variant={variant === 'underlined' ? 'standard' : 'outlined'}
+            helperText={
+              errorMsg ? (
+                <TextAtom variant="body" size="small">
+                  {errorMsg}
+                </TextAtom>
+              ) : helperText ? (
+                <TextAtom variant="body" size="small">
+                  {helperText}
+                </TextAtom>
+              ) : undefined
+            }
+            SelectProps={{
+              multiple,
+              renderValue: renderValue || (multiple ? defaultRenderValue : undefined),
+              displayEmpty: false,
               startAdornment: leftIcon ? (
                 <InputAdornment position="start">{leftIcon}</InputAdornment>
-              ) : null,
+              ) : undefined,
               endAdornment: rightIcon ? (
-                <InputAdornment position="start">{rightIcon}</InputAdornment>
-              ) : null,
-            },
-          }}
-          sx={[
-            getInputStyles(),
-            ...(Array.isArray(props.sx) ? props.sx : [props.sx]),
-          ]}
-        />
+                <InputAdornment position="end">{rightIcon}</InputAdornment>
+              ) : undefined,
+            }}
+            {...props}
+            sx={[
+              getInputStyles(),
+              // Add additional padding for outlined and rounded variants
+              variant !== 'underlined' && {
+                '& .MuiOutlinedInput-root': {
+                  pt: 0.5, // Add some padding to the top
+                }
+              },
+              ...(Array.isArray(props.sx) ? props.sx : [props.sx]),
+            ]}
+            onChange={e => {
+              // Handle Formik field change
+              setFieldValue(name, e.target.value);
+            }}
+          >
+            {placeholder && (
+              <MenuItem value="" disabled>
+                {placeholder}
+              </MenuItem>
+            )}
+            {options.map((option) => (
+              <MenuItem key={option.value} value={option.value}>
+                {multiple && showCheckbox && (
+                  <Checkbox checked={field.value?.includes(option.value)} />
+                )}
+                <ListItemText primary={option.label} />
+              </MenuItem>
+            ))}
+          </TextField>
+        ) : (
+          <TextField
+            {...field}
+            type={type}
+            variant={variant === 'underlined' ? 'standard' : 'outlined'}
+            label={label}
+            placeholder={placeholder}
+            error={!!errorMsg}
+            disabled={isSubmitting}
+            helperText={
+              errorMsg ? (
+                <TextAtom variant="body" size="small">
+                  {errorMsg}
+                </TextAtom>
+              ) : helperText ? (
+                <TextAtom variant="body" size="small">
+                  {helperText}
+                </TextAtom>
+              ) : undefined
+            }
+            InputProps={{
+              startAdornment: leftIcon ? (
+                <InputAdornment position="start">{leftIcon}</InputAdornment>
+              ) : undefined,
+              endAdornment: rightIcon ? (
+                <InputAdornment position="end">{rightIcon}</InputAdornment>
+              ) : undefined,
+            }}
+            sx={[
+              getInputStyles(),
+              ...(Array.isArray(props.sx) ? props.sx : [props.sx]),
+            ]}
+          />
+        )
       )}
     </Field>
   );

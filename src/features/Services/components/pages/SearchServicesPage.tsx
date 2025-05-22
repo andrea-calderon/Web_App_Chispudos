@@ -8,6 +8,7 @@ import SearchBar from '../../../../components/organisms/SearchBar';
 import { useGetProductsQuery } from '../../../../services/productApi';
 import RecommendedServices from '../../../home/components/organisms/RecommendedServices';
 import { ProductService } from '../../../../types/api/modelTypes';
+import SearchForm from '../../../../components/organisms/SearchForm';
 
 export const SearchServicesPage: React.FC = () => {
   const navigate = useNavigate();
@@ -82,7 +83,8 @@ export const SearchServicesPage: React.FC = () => {
 
   return (
     <UserLayout>
-      <SearchBar />
+      {/* <SearchBar /> */}
+      <SearchForm />
       <Box sx={{ padding: 4 }}>
         {filteredResults.length > 0 ? (
           <ServicesList

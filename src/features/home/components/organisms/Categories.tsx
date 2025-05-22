@@ -73,7 +73,7 @@ const HighlightedCategories = () => {
   const categories = data.data;
 
   return (
-    <Box sx={{ py: 5, position: 'relative', overflow: 'hidden' }}>
+    <Box sx={{ position: 'relative', overflow: 'hidden' }}>
       <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
         <TextAtom variant="title" size="large" fontWeight="bold">
           {t('landing.categories.title')}
@@ -94,7 +94,7 @@ const HighlightedCategories = () => {
         sx={{
           position: 'absolute',
           left: 10,
-          top: '50%',
+          top: '58%',
           transform: 'translateY(-50%)',
           backgroundColor: 'rgba(255, 255, 255, 0.8)',
           color: 'primary.main',
@@ -112,7 +112,7 @@ const HighlightedCategories = () => {
         sx={{
           position: 'absolute',
           right: 10,
-          top: '50%',
+          top: '58%',
           transform: 'translateY(-50%)',
           backgroundColor: 'rgba(255, 255, 255, 0.8)',
           color: 'primary.main',
@@ -144,7 +144,7 @@ const HighlightedCategories = () => {
               backgroundColor: 'primary.light',
               textAlign: 'center',
               borderRadius: '32px',
-              padding: '15px',
+              padding: '5px',
               boxShadow: 'none',
               minWidth: '150px',
               maxWidth: '150px',

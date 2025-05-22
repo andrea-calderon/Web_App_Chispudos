@@ -37,6 +37,13 @@ const BusinessOrderPage = () => {
     [orders, orderStatus]
   );
 
+// i18next-parser-start
+// t('BusinessOrdersPage.soon', 'Beginning soon')
+// t('BusinessOrdersPage.inProgress', 'In progress')
+// t('BusinessOrdersPage.completed', 'Completed')
+// t('BusinessOrdersPage.canceled', 'Canceled')
+// i18next-parser-end
+
   const FILTER_OPTIONS = useMemo(
     () =>
       [1, 2, 3, 4].map((status) => ({

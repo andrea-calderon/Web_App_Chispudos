@@ -81,8 +81,6 @@
     "completed": "Completed",
     "inProgress": "In progress",
     "loadingRoles": "Loading user roles...",
-    "noOrders": "No hay órdenes disponibles",
-    "noOrdersDescription": "Parece que no tienes órdenes en este momento. ¡Vuelve más tarde o crea una nueva orden!",
     "soon": "Beginning soon",
     "yourOrders": "Your orders"
   },
@@ -183,6 +181,14 @@
     "mechanic": "",
     "plumber": ""
   },
+  "components": {
+    "molecules": {
+      "emptySection": {
+        "description": "It seems you don't have anything here. Come back later or create a new record!",
+        "title": "No records to show"
+      }
+    }
+  },
   "downloadSection": {
     "appPreviewAlt": ""
   },
@@ -205,6 +211,17 @@
   },
   "favoritesPage": {
     "title": "Favorites"
+  },
+  "features": {
+    "businessOrdersPage": {
+      "actions": {
+        "accept": "Accept",
+        "chat": "Chat",
+        "completed": "Completed",
+        "notInterested": "Not interested",
+        "rate": "Rate"
+      }
+    }
   },
   "footer": {
     "copyright": "Web and mobile development."
@@ -250,10 +267,13 @@
     },
     "searchForm": {
       "body": "Chat with 3 experts instantly and get your perfect quote!",
+      "clearFilters": "Clear Filters",
       "location": "Location",
+      "modalTitle": "Search Services",
       "priceRange": "Price range",
-      "searchProfessional": "Find professional",
+      "search": "Search",
       "serviceInput": "Service",
+      "startSearch": "Start your search",
       "textPlaceholder": "Type what you're looking for...",
       "title": "What do you need?"
     },
@@ -288,7 +308,6 @@
     "subscribeButton": "Subscribe",
     "title": "Subscribe to our Newsletter"
   },
-  "professional_image": "",
   "recommendedServices": {
     "noServices": "",
     "title": "Recomendados para ti"
@@ -301,17 +320,14 @@
       "clearFilters": "Clear filters"
     },
     "serviceDetails": {
-      "buttonCompleted": "Confirm and chat",
       "buttonInput": "Complete application",
       "confirmationMessage": "Discover additional services offered by your favorite Specialist, or form a team of your favorite Specialists in the Favorites section.",
-      "confirmationTitle": "You have scheduled with 'Limpieza de casas y apartamentos'",
+      "confirmationTitle": "You have scheduled with {{serviceName}}",
       "continueButton": "Continue",
       "dateModalTitle": "",
       "description": "You're almost there! Share some details to prepare your Specialist for the job.",
       "emptyMessage": "",
       "label": "Write something...",
-      "navigationCompleted": "Review and confirm",
-      "navigationInput": "Task details",
       "time": "Time and date",
       "title": "Start the conversation"
     }
@@ -331,7 +347,6 @@
     "lastname": "Lastname",
     "logout": "Logout",
     "name": "Name",
-    "profile": "Profile",
     "publishServices": "Publish my services",
     "save": "Save",
     "updateButton": "Update"

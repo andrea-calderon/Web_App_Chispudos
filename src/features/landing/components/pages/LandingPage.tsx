@@ -11,8 +11,8 @@ import NewsletterSubscription from '../../../../components/organisms/NewsletterS
 export const LandingPage = () => {
   return (
     <LandingLayout>
-      <HighlightedCategories />
       <SearchForm />
+      <HighlightedCategories />
       <CategoriesSection />
       <FeatureGuarantee />
       <FeatureTestimonials />

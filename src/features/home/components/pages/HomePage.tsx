@@ -8,8 +8,8 @@ import RecommendedServices from '../organisms/RecommendedServices';
 export const HomePage: React.FC = () => {
   return (
     <UserLayout>
-      <HighlightedCategories />
       <SearchForm />
+      <HighlightedCategories />
       <RecommendedServices />
       <NewsletterSubscription />
     </UserLayout>
