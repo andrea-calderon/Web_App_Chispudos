@@ -158,7 +158,7 @@ const Step3 = () => {
                 </TextAtom>
                 <InputAtom
                   name="mainAddress"
-                  variant="standard"
+                  variant="outlined"
                   label={t('businessStepper.step3.textField')}
                   fullWidth
                   margin="normal"
@@ -167,10 +167,10 @@ const Step3 = () => {
                 />
                 <InputAtom
                   name="department"
-                  variant="standard"
+                  variant="outlined"
                   label={t('businessStepper.step3.inputDeparment')}
                   fullWidth
-                  select
+                  isSelect
                   margin="normal"
                   error={!!errors.department && touched.department}
                   helperText={touched.department && errors.department}
@@ -179,22 +179,19 @@ const Step3 = () => {
                     setFieldValue('city', '');
                     setFieldValue('cityId', null);
                   }}
-                >
-                  <MenuItem value="">
-                    {t('businessStepper.step3.selectDepartment')}
-                  </MenuItem>
-                  {GUATEMALA_DEPARTMENTS.map((dept) => (
-                    <MenuItem key={dept.name} value={dept.id}>
-                      {dept.name}
-                    </MenuItem>
-                  ))}
-                </InputAtom>
+                  options={GUATEMALA_DEPARTMENTS.map((dept) => ({
+                    value: dept.id,
+                    label: dept.name,
+                  }))}
+                  value={[values.department]}
+                />
                 <InputAtom
                   name="city"
-                  variant="standard"
+                  variant="outlined"
                   label={t('businessStepper.step3.inputCity')}
                   fullWidth
-                  select
+                  isSelect
+                  value={[values.city]}
                   margin="normal"
                   error={!!errors.city && touched.city}
                   helperText={touched.city && errors.city}
@@ -203,16 +200,13 @@ const Step3 = () => {
                     setFieldValue('city', e.target.value);
                     setFieldValue('cityId', e.target.value);
                   }}
-                >
-                  <MenuItem value="">
-                    {t('businessStepper.step3.selectCity')}
-                  </MenuItem>
-                  {getDepartamentsCities(values.department || 1).map((city) => (
-                    <MenuItem key={city.id} value={city.id}>
-                      {city.name}
-                    </MenuItem>
-                  ))}
-                </InputAtom>
+                  options={getDepartamentsCities(values.department || 1).map(
+                    (city) => ({
+                      value: city.id,
+                      label: city.name,
+                    }),
+                  )}
+                />
               </Grid>
               
               {/* Áreas de Cobertura */}
@@ -230,10 +224,10 @@ const Step3 = () => {
                     >
                       <InputAtom
                         name={`coverageAreas.${index}.department`}
-                        variant="standard"
+                        variant="outlined"
                         label={t('businessStepper.step3.inputDeparment')}
                         fullWidth
-                        select
+                        isSelect
                         margin="normal"
                         error={
                           !!errors.coverageAreas?.[index]?.department &&
@@ -248,23 +242,21 @@ const Step3 = () => {
                           setFieldValue(`coverageAreas.${index}.city`, '');
                           setFieldValue(`coverageAreas.${index}.cityId`, null);
                         }}
-                      >
-                        <MenuItem value="">
-                          {t('businessStepper.step3.selectAnotherDepartment')}
-                        </MenuItem>
-                        {GUATEMALA_DEPARTMENTS.map((dept) => (
-                          <MenuItem key={dept.name} value={dept.id}>
-                            {dept.name}
-                          </MenuItem>
-                        ))}
-                      </InputAtom>
+                        options={GUATEMALA_DEPARTMENTS.map((dept) => ({
+                          value: dept.id,
+                          label: dept.name,
+                        }))}
+                      />
                     </Tooltip>
                     <InputAtom
                       name={`coverageAreas.${index}.city`}
-                      variant="standard"
+                      variant="outlined"
                       label={t('businessStepper.step3.inputCity')}
+                      placeholder={t(
+                        'businessStepper.step3.inputCityPlaceholder',
+                      )}
                       fullWidth
-                      select
+                      isSelect
                       margin="normal"
                       error={
                         !!errors.coverageAreas?.[index]?.city &&
@@ -288,18 +280,13 @@ const Step3 = () => {
                           selectedCity ? selectedCity.id : null,
                         );
                       }}
-                    >
-                      <MenuItem value="">
-                        {t('businessStepper.step3.selectAnotherCity')}
-                      </MenuItem>
-                      {getDepartamentsCities(
+                      options={getDepartamentsCities(
                         values.coverageAreas[index].department,
-                      ).map((city) => (
-                        <MenuItem key={city.id} value={city.id}>
-                          {city.name}
-                        </MenuItem>
-                      ))}
-                    </InputAtom>
+                      ).map((city) => ({
+                        value: city.id,
+                        label: city.name,
+                      }))}
+                    />
                     {index > 0 && (
                       <ButtonAtom
                         variant="text"
@@ -320,7 +307,6 @@ const Step3 = () => {
                 ))}
                 <ButtonAtom
                   variant="outlined"
-                  color="primary"
                   onClick={() =>
                     setFieldValue('coverageAreas', [
                       ...values.coverageAreas,

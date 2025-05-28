@@ -142,7 +142,7 @@ const Step4 = () => {
                                 </TextAtom>
                                 <InputAtom
                                   name={`skills.${index}.tagsTextField`}
-                                  variant="standard"
+                                  variant="outlined"
                                   label={t(
                                     'businessStepper.step4.tagsTextField',
                                   )}
@@ -182,7 +182,7 @@ const Step4 = () => {
                               </TextAtom>
                               <InputAtom
                                 name={`skills.${index}.titleTextField`}
-                                variant="standard"
+                                variant="outlined"
                                 label={t(
                                   'businessStepper.step4.titleTextField',
                                 )}
@@ -210,7 +210,7 @@ const Step4 = () => {
                               </TextAtom>
                               <InputAtom
                                 name={`skills.${index}.descriptionTextField`}
-                                variant="standard"
+                                variant="outlined"
                                 multiline
                                 rows={3}
                                 label={t(
