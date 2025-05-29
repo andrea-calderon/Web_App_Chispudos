@@ -189,7 +189,7 @@ export default function Step1() {
                   <Field
                     name="businessName"
                     as={InputAtom}
-                    variant="standard"
+                    variant="outlined"
                     label={t('businessStepper.step1.businessNameLabel')}
                     placeholder={t(
                       'businessStepper.step1.businessNamePlaceholder',
@@ -220,7 +220,7 @@ export default function Step1() {
                         fullWidth
                         multiline
                         rows={6}
-                        variant="standard"
+                        variant="outlined"
                         size={isMobile ? 'small' : 'medium'}
                         sx={{ mt: 2 }}
                       />

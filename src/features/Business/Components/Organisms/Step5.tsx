@@ -97,7 +97,7 @@ const Step5 = () => {
                   <Box mb={3}>
                     <InputAtom
                       name="price"
-                      variant="standard"
+                      variant="outlined"
                       label={t('businessStepper.step5.priceTextField')}
                       fullWidth
                       required
