@@ -19,6 +19,10 @@ interface InputAtomProps extends Omit<TextFieldProps, 'variant'> {
   helperText?: string | undefined
   name: string;
   type?: string;
+  // Text area specific props
+  multiline?: boolean;
+  rows?: number;
+  maxRows?: number;
   // Select-specific props
   isSelect?: boolean;
   options?: SelectOption[];
@@ -37,6 +41,11 @@ const InputAtom: React.FC<InputAtomProps> = ({
   helperText,
   type = 'text',
   name,
+  // Multiline props
+  multiline = false,
+  rows = 4,
+  maxRows,
+  // Select props
   isSelect = false,
   options = [],
   multiple = false,
@@ -67,6 +76,9 @@ const InputAtom: React.FC<InputAtomProps> = ({
                 borderColor: theme.palette.error.main,
               },
             }),
+            ...(multiline && {
+              padding: '8px 14px',
+            }),
           },
         };
       case 'underlined':
@@ -92,7 +104,7 @@ const InputAtom: React.FC<InputAtomProps> = ({
           borderRadius: '100px',
           width: '100%',
           '& .MuiOutlinedInput-root': {
-            borderRadius: '100px',
+            borderRadius: multiline ? '16px' : '100px', // Adjust border radius for multiline
             '& fieldset': {
               borderColor: theme.palette.tertiary.main,
             },
@@ -197,6 +209,9 @@ const InputAtom: React.FC<InputAtomProps> = ({
             placeholder={placeholder}
             error={!!errorMsg}
             disabled={isSubmitting}
+            multiline={multiline}
+            rows={rows}
+            maxRows={maxRows}
             helperText={
               errorMsg ? (
                 <TextAtom variant="body" size="small">
