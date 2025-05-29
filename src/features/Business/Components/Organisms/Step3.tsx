@@ -1,4 +1,4 @@
-import { Box, Grid, MenuItem } from '@mui/material';
+import { Box, Grid } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import { useTranslation } from 'react-i18next';
@@ -31,10 +31,13 @@ const Step3 = () => {
     return cities?.data.filter((city) => city.stateId === departamentId) || [];
   };
 
+  const getStateOfCity = (cityId: number) => {
+    const city = cities?.data.find((c) => c.id === cityId);
+    return city ? states?.data.find((s) => s.id === city.stateId) : null;
+  };
+
   const { data: states } = useGetStatesQuery();
   const { data: cities } = useGetAllCitiesQuery();
-  console.log('Estados:', states);
-  console.log('Ciudades:', cities);
 
   const GUATEMALA_DEPARTMENTS = states?.data || [];
   const handleUpdate = async (values, { setSubmitting }) => {
@@ -47,7 +50,7 @@ const Step3 = () => {
             name: 'Main address',
             description: values.mainAddress,
             type: 1,
-            cityId: values.cityId,
+            cityId: values.city,
             latitude: 0,
             longitude: 0,
           },
@@ -57,7 +60,7 @@ const Step3 = () => {
               name: 'Service zones',
               description: null,
               type: 2,
-              cityId: area.cityId,
+              cityId: area.city,
               latitude: 0,
               longitude: 0,
             })),
@@ -97,22 +100,22 @@ const Step3 = () => {
   return (
     <Formik
       initialValues={{
-        mainAddress: '',
-        department: '' as number | '',
-        city: '' as number | '',
-        cityId: null,
-        coverageAreas: [
-          {
-            department: '' as number | '',
-            city: '' as number | '',
-            cityId: null,
-          },
-        ],
+        mainAddress: service?.locations?.[0]?.description || '',
+        department: getStateOfCity(service?.locations?.[0]?.cityId)?.id || '' as number | '',
+        city: service?.locations?.[0]?.cityId || '' as number | '',
+        cityId: service?.locations?.[0]?.cityId || '' as number | '',
+        coverageAreas: service?.locations
+          ?.filter((location) => location.type === 2)
+          .map((location) => ({
+            department: getStateOfCity(location.cityId)?.id || '' as number | '',
+            city: location.cityId || '' as number | '',
+            cityId: location.cityId || null,
+          })) || [{ department: '', city: '', cityId: null }],
       }}
       validationSchema={validationSchema}
       onSubmit={handleUpdate}
     >
-      {({ values, errors, touched, isValid, handleSubmit, setFieldValue }) => (
+      {({ values, errors, touched, handleSubmit, setFieldValue, handleChange }) => (
         <Form>
            
           <Box
@@ -169,16 +172,13 @@ const Step3 = () => {
                   name="department"
                   variant="outlined"
                   label={t('businessStepper.step3.inputDeparment')}
+                  placeholder={t('businessStepper.step3.inputDeparment')}
                   fullWidth
                   isSelect
                   margin="normal"
                   error={!!errors.department && touched.department}
                   helperText={touched.department && errors.department}
-                  onChange={(e) => {
-                    setFieldValue('department', e.target.value);
-                    setFieldValue('city', '');
-                    setFieldValue('cityId', null);
-                  }}
+                  onChange={handleChange}
                   options={GUATEMALA_DEPARTMENTS.map((dept) => ({
                     value: dept.id,
                     label: dept.name,
@@ -196,10 +196,7 @@ const Step3 = () => {
                   error={!!errors.city && touched.city}
                   helperText={touched.city && errors.city}
                   disabled={!values.department}
-                  onChange={(e) => {
-                    setFieldValue('city', e.target.value);
-                    setFieldValue('cityId', e.target.value);
-                  }}
+                  onChange={handleChange}
                   options={getDepartamentsCities(values.department || 1).map(
                     (city) => ({
                       value: city.id,
@@ -246,15 +243,14 @@ const Step3 = () => {
                           value: dept.id,
                           label: dept.name,
                         }))}
+                        value={[values.coverageAreas[index].department]}
                       />
                     </Tooltip>
                     <InputAtom
                       name={`coverageAreas.${index}.city`}
                       variant="outlined"
                       label={t('businessStepper.step3.inputCity')}
-                      placeholder={t(
-                        'businessStepper.step3.inputCityPlaceholder',
-                      )}
+                      placeholder={t('businessStepper.step3.inputCity')}
                       fullWidth
                       isSelect
                       margin="normal"
@@ -286,6 +282,8 @@ const Step3 = () => {
                         value: city.id,
                         label: city.name,
                       }))}
+                      value={
+                        [values.coverageAreas[index].city]}
                     />
                     {index > 0 && (
                       <ButtonAtom

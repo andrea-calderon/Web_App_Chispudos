@@ -19,10 +19,16 @@ import { useAppSelector } from '../../../../hooks/useAppSelector';
 import { selectAuth } from '../../../../redux/slices/authSlice';
 import DEFAULT_IMAGE from '../../../../assets/images/DEFAULT_IMAGE.png';
 import StorefrontIcon from '@mui/icons-material/Storefront';
+import { ProductService } from '../../../../types/api/modelTypes';
+import { clearStepper, setServiceState } from '../../../../redux/slices/serviceStepperSlice';
+import { useAppDispatch } from '../../../../hooks/useAppDispatch';
+import { useNavigate } from 'react-router-dom';
 
 const BusinessProfilePage = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const theme = useTheme();
+  const dispatch = useAppDispatch();
   const userID = useAppSelector(selectAuth)?.user?.id;
 
   const { data: productsData, isLoading, error } = useGetProductsQuery();
@@ -62,6 +68,12 @@ const BusinessProfilePage = () => {
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error loading products</p>;
 
+  const handleEditProduct = (product: ProductService) => {
+    dispatch(clearStepper());
+    dispatch(setServiceState(product));
+    navigate(`/stepper`);
+  }
+
   return (
     <Box px={{ xs: 4, md: 10, lg: 24 }} py={5}>
       {/* Header */}
@@ -79,6 +91,7 @@ const BusinessProfilePage = () => {
             sx={{ width: 150, height: 150 }}
           />
           <Button
+            onClick={() => handleEditProduct(selectedProduct)}
             sx={{
               position: 'absolute',
               bottom: 0,
@@ -153,6 +166,7 @@ const BusinessProfilePage = () => {
               {t('businessProfilePage.profile.skillsTitle', 'Skills')}
             </TextAtom>
             <Button
+              onClick={() => handleEditProduct(selectedProduct)}
               size="small"
               startIcon={<EditIcon />}
               sx={{ ml: 2, textTransform: 'none' }}
@@ -183,6 +197,7 @@ const BusinessProfilePage = () => {
               )}
             </TextAtom>
             <Button
+              onClick={() => handleEditProduct(selectedProduct)}
               size="small"
               startIcon={<EditIcon />}
               sx={{ ml: 2, textTransform: 'none' }}
@@ -230,6 +245,7 @@ const BusinessProfilePage = () => {
               {t('businessProfilePage.profile.otherSkills', 'Other Skills')}
             </TextAtom>
             <Button
+              onClick={() => handleEditProduct(selectedProduct)}
               size="small"
               startIcon={<EditIcon />}
               sx={{ ml: 2, textTransform: 'none' }}

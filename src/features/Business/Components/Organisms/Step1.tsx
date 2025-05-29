@@ -15,6 +15,7 @@ import InputAtom from '../../../../components/atoms/InputAtom';
 import EditIcon from '@mui/icons-material/Edit';
 import {
   useCreateProductMutation,
+  useUpdateProductMutation,
   useUploadProductImageMutation,
 } from '../../../../services/productApi';
 import { useState } from 'react';
@@ -26,18 +27,22 @@ import {
 } from '../../../../redux/slices/serviceStepperSlice';
 import { useAppDispatch } from '../../../../hooks/useAppDispatch';
 import { selectAuth } from '../../../../redux/slices/authSlice';
+import { getApiImageUrl } from '../../../../utils/baseEnvironment';
 
 export default function Step1() {
   const { t } = useTranslation();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const authUser = useAppSelector(selectAuth);
+  const serviceStepperPersisted = useAppSelector(selectStepper);
+  const servicePersisted = serviceStepperPersisted?.service;
   const [createProduct, { isLoading: isCreating }] = useCreateProductMutation();
+  const [updateProduct, { isLoading: isUpdating }] = useUpdateProductMutation();
   const [uploadProductImage, { isLoading: isUploading }] =
     useUploadProductImageMutation();
   const [selectedImage, setSelectedImage] = useState(null);
-  const [previewUrl, setPreviewUrl] = useState(null);
-  const [productId, setProductId] = useState(null);
-  const debugAuth = useAppSelector(selectAuth);
+  const [previewUrl, setPreviewUrl] = useState(getApiImageUrl(servicePersisted?.imageUrl) || '');
+  const [productId, setProductId] = useState(servicePersisted?.id || null);
 
   const dispatch = useAppDispatch();
   const validationSchema = Yup.object({
@@ -60,10 +65,15 @@ export default function Step1() {
         description: values.businessDescription,
         type: 1,
         price: 0,
-        userId: debugAuth?.user?.id,
+        userId: authUser?.user?.id,
       };
 
-      const productResponse =
+      const productResponse = servicePersisted?.id
+        ? await updateProduct({
+            productId: servicePersisted.id,
+            productData: payloadServiceObject,
+          }).unwrap()
+        :
         await createProduct(payloadServiceObject).unwrap();
 
       dispatch(setServiceState(productResponse?.productService));
@@ -92,9 +102,10 @@ export default function Step1() {
     }
   };
 
+
   return (
     <Formik
-      initialValues={{ businessName: '', businessDescription: '' }}
+      initialValues={{ businessName: servicePersisted?.name, businessDescription: servicePersisted?.description || '' }}
       validationSchema={validationSchema}
       onSubmit={handleSubmit}
     >
@@ -157,7 +168,7 @@ export default function Step1() {
                 >
                   <Box position="relative" display="inline-block">
                     <Avatar
-                      src={previewUrl || ''}
+                      src={previewUrl}
                       sx={{ width: 80, height: 80, bgcolor: 'grey.300' }}
                     />
                     <input
@@ -196,6 +207,7 @@ export default function Step1() {
                     )}
                     fullWidth
                     size={isMobile ? 'small' : 'medium'}
+                    value={servicePersisted?.name}
                   />
                   <ErrorMessage
                     name="businessName"

@@ -9,7 +9,6 @@ import CustomStepper from './Stepper';
 import { useAppDispatch } from '../../../../hooks/useAppDispatch';
 import { useAppSelector } from '../../../../hooks/useAppSelector';
 import {
-  clearStepper,
   selectStepper,
   setServiceState,
 } from '../../../../redux/slices/serviceStepperSlice';
@@ -18,9 +17,8 @@ import { useUpdateProductMutation } from '../../../../services/productApi';
 const Step5 = () => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
-  const stepperState = useAppSelector(selectStepper);
+  const { service } = useAppSelector(selectStepper);
   const [updateProduct, { isLoading: isUpdating }] = useUpdateProductMutation();
-  //dispatch(clearStepper());
 
   const validationSchema = Yup.object().shape({
     price: Yup.number()
@@ -36,7 +34,7 @@ const Step5 = () => {
       console.log('Enviando payload:', payload);
 
       const response = await updateProduct({
-        productId: stepperState.service.id,
+        productId: service.id,
         productData: payload,
       }).unwrap();
       console.log('Respuesta del backend:', response);
@@ -54,7 +52,7 @@ const Step5 = () => {
   return (
     <Formik
       initialValues={{
-        price: '',
+        price: service?.price,
       }}
       validationSchema={validationSchema}
       onSubmit={handleUpdate}

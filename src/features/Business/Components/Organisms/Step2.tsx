@@ -14,13 +14,13 @@ import { useUpdateProductMutation } from '../../../../services/productApi';
 
 export default function Step2() {
   const { data, isLoading, error } = useGetCategoriesQuery();
-  const categories = data?.data || [];
-  const [selectedCategories, setSelectedCategories] = useState<{ id: any }[]>(
-    [],
-  );
-  const [updateProduct, { isLoading: isUpdating }] = useUpdateProductMutation();
   const dispatch = useAppDispatch();
   const { service } = useAppSelector(selectStepper);
+  const categories = data?.data || [];
+  const [selectedCategories, setSelectedCategories] = useState<{ id: any }[]>(
+    service?.categories?.map((category) => category.id) || [],
+  );
+  const [updateProduct, { isLoading: isUpdating }] = useUpdateProductMutation();
 
   const { t } = useTranslation();
 
