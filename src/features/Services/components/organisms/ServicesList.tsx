@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, Typography, Box } from '@mui/material';
+import { Grid2 as Grid, Typography, Box } from '@mui/material';
 import ServiceCard from './ServiceCard';
 import { ProductService } from '../../../../types/api/modelTypes';
 
@@ -28,8 +28,8 @@ const ServicesList: React.FC<ServicesListProps> = ({
 
   return (
     <Grid container spacing={4}>
-      {professionals.map((service) => (
-        <Grid item xs={12} sm={6} md={4} key={service.id}>
+      {professionals.map((service: ProductService) => (
+        <Grid  size={{ xs: 12, sm: 6, md: 4 }} key={service.id}>
           <ServiceCard
             productService={service}
             isFavorite={favorites.includes(service.id)}

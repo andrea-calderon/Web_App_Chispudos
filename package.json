@@ -1,7 +1,7 @@
 {
   "name": "projectx-web-vite",
   "private": true,
-  "version": "0.2.1",
+  "version": "0.2.3",
   "type": "module",
   "homepage": "https://recolatam.com",
   "scripts": {
@@ -9,7 +9,7 @@
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
     "deploy-github": "tsc --noEmit && vite build && gh-pages -d dist",
-    "lint": "eslint . --config eslint.config.js",
+    "lint": "eslint . --config eslint.config.js --quiet",
     "extract": "i18next 'src/**/*.{js,jsx,ts,tsx}'",
     "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json,css,scss,md}\""
   },

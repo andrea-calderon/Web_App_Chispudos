@@ -8,7 +8,7 @@ export const productApi = createApi({
   baseQuery: baseQueryWithReauth,
   endpoints: (builder) => ({
     getProducts: builder.query<ApiResponseType<{items: ProductService[]}>, void>({
-      query: () => 'public/products/',
+      query: () => 'public/products?limit=50&offset=1',
     }),
     getProductById: builder.query({
       query: (id) => `public/products/${id}/`,

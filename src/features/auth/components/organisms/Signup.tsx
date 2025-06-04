@@ -226,7 +226,7 @@ const Signup: React.FC = () => {
                       <ButtonAtom
                         type="button"
                         variant="text"
-                        onClick={() => navigate('/terms-&-conditions')}
+                        onClick={() => navigate('/terms-and-conditions')}
                         sx={{
                           textTransform: 'none',
                           p: 0.5,

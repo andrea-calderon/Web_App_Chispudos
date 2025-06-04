@@ -1,0 +1,112 @@
+import React from 'react';
+import {
+    Box,
+    CircularProgress,
+    Grid,
+    Typography,
+    useMediaQuery,
+    useTheme,
+} from '@mui/material';
+import ServicesCard from '../../../../components/atoms/ServicesCard';
+import { useGetProductsQuery } from '../../../../services/productApi';
+import DEFAULT_IMAGE from '../../../../assets/images/DEFAULT_IMAGE.png';
+import { TextAtom } from '../../../../components/atoms';
+import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
+import { getApiImageUrl } from '../../../../utils/baseEnvironment';
+import HorizontalScrollContainer from '../../../../components/organisms/HorizontalScrollContainer';
+import { ProductService } from '../../../../types/api/modelTypes';
+
+type GroupedServicesProps = {
+    services?: ProductService[];
+}
+
+const GroupedServices: React.FC<GroupedServicesProps> = ({ services }) => {
+    const { t } = useTranslation();
+    const { data, isLoading, isError } = useGetProductsQuery(
+        { skip: !!services?.length },
+    );
+    const navigate = useNavigate();
+
+    const topRatedServices = data?.data?.items
+        ?.slice() // Crear una copia del array para evitar modificar el original
+        ?.sort((a: any, b: any) => (b.averageRating || 0) - (a.averageRating || 0))
+        ?.slice(0, 5);
+
+
+    const handleCardClick = (id: number) => {
+        navigate(`/services/${id}`); // Redirigir a la página de detalles con el ID
+    };
+
+    if (isLoading) {
+        return (
+            <Box
+                sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    height: 200,
+                }}
+            >
+                <CircularProgress />
+            </Box>
+        );
+    }
+
+    if (isError || !topRatedServices?.length) {
+        return (
+            <Box
+                sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    height: 200,
+                }}
+            >
+                <Typography variant="h6" color="text.secondary">
+                    {t('recommendedServices.noServices')}
+                </Typography>
+            </Box>
+        );
+    }
+
+    const serviceList = services?.length ? services : topRatedServices;
+
+    return (
+        <HorizontalScrollContainer
+            title={
+                <Box sx={{ position: 'relative', mb: 3, pl: 2 }}>
+                    <TextAtom
+                        variant="title"
+                        size="large"
+                        fontWeight="bold"
+                        color="text.primary"
+                    >
+                        {t('recommendedServices.title')}
+                    </TextAtom>
+                </Box>
+            }
+            scrollAmount={300}
+            gap={0}
+        >
+            {serviceList.map((service: ProductService) => (
+                <Grid size={{ xs: 12, sm: 4, md: 3, lg: 3 }} sx={{ p: 2, cursor: 'pointer' }}
+                    onClick={() => handleCardClick(service.id)} >
+                    <ServicesCard
+                        name={service.name || 'Servicio sin nombre'}
+                        image={
+                            service.urlImage
+                                ? getApiImageUrl(service?.urlImage)
+                                : DEFAULT_IMAGE
+                        }
+                        price={`Q${service.price} por día`}
+                        rating={service.averageRating || 0}
+                        reviewCount={service.reviews?.length || 0}
+                    />
+                </Grid>
+            ))}
+        </HorizontalScrollContainer>
+    );
+};
+
+export default GroupedServices;
