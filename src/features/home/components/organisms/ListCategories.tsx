@@ -11,9 +11,11 @@ import { useNavigate } from 'react-router-dom';
 import TextAtom from '../../../../components/atoms/TextAtom';
 import { useGetCategoriesQuery } from '../../../../services/categoryApi';
 import HorizontalScrollContainer from '../../../../components/organisms/HorizontalScrollContainer';
+import { ButtonAtom } from '../../../../components/atoms';
+import { Category } from '../../../../types/api/modelTypes';
 
 type ListCategoriesProps = {
-  handleCategoryClick? : (categoryId: number) => void;
+  handleCategoryClick?: (category: Category) => void;
 };
 
 const ListCategories = ({ handleCategoryClick }: ListCategoriesProps) => {
@@ -21,10 +23,6 @@ const ListCategories = ({ handleCategoryClick }: ListCategoriesProps) => {
   const navigate = useNavigate();
   const { data, isLoading, isError } = useGetCategoriesQuery();
 
-
-  // const handleCategoryClick = (categoryId) => {
-  //   navigate(`/search-services?category=${categoryId}`);
-  // };
 
   if (isLoading) {
     return (
@@ -60,50 +58,69 @@ const ListCategories = ({ handleCategoryClick }: ListCategoriesProps) => {
 
   const categories = data.data;
 
+  const handleNavigate = () => {
+    navigate('/search-services');
+  };
+
   return (
     <HorizontalScrollContainer
-        title={t('landing.categories.title')}
-        scrollAmount={300}
-      >
-        {categories.map((category) => (
-          <Card
-            key={category.id}
-            sx={{
-              display: 'flex',
-              backgroundColor: 'primary.light',
-              textAlign: 'center',
-              borderRadius: '32px',
-              padding: '5px',
-              mx: 1,
-              boxShadow: 'none',
-              minWidth: '150px',
-              maxWidth: '150px',
-              flexShrink: 0,
-              cursor: 'pointer', // Hace que parezca clickeable
-              '&:hover': { backgroundColor: '#EADDFF', color: 'white' }, // Efecto visual
-            }}
-            onClick={() => handleCategoryClick(category.id)}
+      title={
+        <Box sx={{ display: 'flex', alignItems: 'center', mt: 3 }}>
+          <TextAtom variant="title" size="large" fontWeight="bold">
+            {t('landing.categories.title')}
+          </TextAtom>
+          <ButtonAtom
+            variant="text"
+            sx={{ textTransform: 'none', color: 'primary.main', marginLeft: 5 }}
+            onClick={handleNavigate}
           >
-            <CardContent>
-              <img
-                src={category.icon}
-                alt={category.name}
-                width="30"
-                height="30"
-              />
-              <br />
-              <TextAtom
-                variant="body"
-                size="medium"
-                color="text.primary"
-                sx={{ mt: 1 }}
-              >
-                {category.name}
-              </TextAtom>
-            </CardContent>
-          </Card>
-        ))}
-      </HorizontalScrollContainer>
+            <TextAtom variant="label" size="large">
+              {t('landing.categories.button')}
+            </TextAtom>
+          </ButtonAtom>
+        </Box>
+      }
+      scrollAmount={300}
+    >
+      {categories.map((category) => (
+        <Card
+          key={category.id}
+          sx={{
+            display: 'flex',
+            backgroundColor: 'primary.light',
+            textAlign: 'center',
+            borderRadius: '32px',
+            padding: '5px',
+            mx: 1,
+            boxShadow: 'none',
+            minWidth: '150px',
+            maxWidth: '150px',
+            flexShrink: 0,
+            cursor: 'pointer', // Hace que parezca clickeable
+            '&:hover': { backgroundColor: '#EADDFF', color: 'white' }, // Efecto visual
+          }}
+          onClick={() => handleCategoryClick(category)}
+        >
+          <CardContent>
+            <img
+              src={category.icon}
+              alt={category.name}
+              width="30"
+              height="30"
+            />
+            <br />
+            <TextAtom
+              variant="body"
+              size="medium"
+              color="text.primary"
+              sx={{ mt: 1 }}
+            >
+              {category.name}
+            </TextAtom>
+          </CardContent>
+        </Card>
+      ))}
+    </HorizontalScrollContainer>
   );
 };
 

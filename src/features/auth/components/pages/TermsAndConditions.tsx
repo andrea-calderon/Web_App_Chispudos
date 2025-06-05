@@ -1,91 +1,19 @@
 import React from 'react';
-import { Box, Typography, Container} from '@mui/material';
-import { useNavigate } from 'react-router-dom';
-import AuthLayout from '../templates/AuthLayout';
-import { ButtonAtom } from '../../../../components/atoms';
+import { Box, Container } from '@mui/material';
 
 const TermsAndConditions: React.FC = () => {
-  const navigate = useNavigate();
-
   return (
-    <AuthLayout>
-      <Container maxWidth="md" sx={{ py: 6 }}>
-        <Typography variant="h4" gutterBottom>
-          Términos y Condiciones de Uso
-        </Typography>
-
-        <Typography variant="body1" paragraph>
-          Al acceder y utilizar la aplicación Reco, aceptas cumplir con estos
-          Términos y Condiciones. Si no estás de acuerdo con alguno de estos
-          términos, por favor no utilices la aplicación.
-        </Typography>
-
-        <Box mt={4}>
-          <Typography variant="h6" gutterBottom>
-            1. Uso de la Aplicación
-          </Typography>
-          <Typography variant="body1" paragraph>
-            Reco proporciona una plataforma para facilitar [insertar descripción
-            general del propósito de la app]. El uso indebido, como actividades
-            ilegales o no autorizadas, está estrictamente prohibido.
-          </Typography>
-        </Box>
-
-        <Box mt={4}>
-          <Typography variant="h6" gutterBottom>
-            2. Propiedad Intelectual
-          </Typography>
-          <Typography variant="body1" paragraph>
-            Todos los contenidos, funcionalidades y elementos visuales de Reco son
-            propiedad de sus respectivos dueños y están protegidos por leyes de
-            derechos de autor. No puedes copiar, modificar ni distribuir ninguno
-            de estos elementos sin autorización.
-          </Typography>
-        </Box>
-
-        <Box mt={4}>
-          <Typography variant="h6" gutterBottom>
-            3. Limitación de Responsabilidad
-          </Typography>
-          <Typography variant="body1" paragraph>
-            Reco no se hace responsable de posibles errores, interrupciones o
-            daños que puedan derivarse del uso de la aplicación. El uso de la app
-            es bajo tu propio riesgo.
-          </Typography>
-        </Box>
-
-        <Box mt={4}>
-          <Typography variant="h6" gutterBottom>
-            4. Modificaciones
-          </Typography>
-          <Typography variant="body1" paragraph>
-            Nos reservamos el derecho de modificar estos Términos y Condiciones en
-            cualquier momento. Te notificaremos sobre cambios importantes a través
-            de la aplicación o por correo electrónico.
-          </Typography>
-        </Box>
-
-        <Box mt={4}>
-          <Typography variant="h6" gutterBottom>
-            5. Contacto
-          </Typography>
-          <Typography variant="body1" paragraph>
-            Si tienes preguntas sobre estos Términos y Condiciones, puedes
-            contactarnos a través de: contacto@recoapp.com
-          </Typography>
-        </Box>
-
-        <Box mt={6} display="flex" justifyContent="center">
-          <ButtonAtom
-            variant="filled"
-            onClick={() => navigate('/register')}
-            sx={{ textTransform: 'none', width: '100%', maxWidth: '100px' }}
-          >
-            Volver
-          </ButtonAtom>
-        </Box>
-      </Container>
-    </AuthLayout>
+    <Container maxWidth="lg" sx={{ height: "100vh", py: 2 }}>
+      <iframe 
+        src="/terms-and-conditions/index.html" 
+        style={{
+          width: '100%',
+          height: '100%',
+          border: 'none',
+        }}
+        title="Terms and Conditions"
+      />
+    </Container>
   );
 };
 

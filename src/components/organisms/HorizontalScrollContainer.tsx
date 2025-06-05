@@ -34,7 +34,7 @@ const HorizontalScrollContainer: React.FC<HorizontalScrollProps> = ({
   return (
     <Box sx={{ position: 'relative', overflow: 'hidden', width: '100%', ...sx }} {...rest}>
       {(title || actionButton) && (
-        <Box sx={{ display: 'flex', alignItems: 'center', mb: 3, justifyContent: 'space-between', px: 2 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', px: 5 }}>
           <Box>{title}</Box>
           {actionButton && <Box>{actionButton}</Box>}
         </Box>

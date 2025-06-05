@@ -41,7 +41,7 @@ const AppRoutes = () => {
             />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/password-recovery" element={<PasswordRecovery />} />
-            <Route path="/terms-&-conditions" element={<TermsAndConditions />} />
+            <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
 
             {/* Publicly accessible pages (FIX) */}
             <Route path="/home" element={<HomePage />} />

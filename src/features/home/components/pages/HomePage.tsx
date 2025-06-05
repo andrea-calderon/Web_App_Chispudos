@@ -6,6 +6,7 @@ import NewsletterSubscription from '../../../../components/organisms/NewsletterS
 import GroupedServices from '../organisms/GroupedServices';
 import { useGetProductsQuery } from '../../../../services/productApi';
 import { useProductServiceFilter } from '../../../../hooks/useProductServiceFilter';
+import { Category } from '../../../../types/api/modelTypes';
 
 export const HomePage: React.FC = () => {
   const { data, isLoading, isError } = useGetProductsQuery();
@@ -24,14 +25,17 @@ export const HomePage: React.FC = () => {
       totalCount
     } = useProductServiceFilter(data?.data?.items || []);
 
-    const handleCategoryClick = (categoryId: number) => {
-      updateCategories([categoryId]);
+    const [ categoryItem, setCategoryItem ] = React.useState<Category | null>(null);
+
+    const handleCategoryClick = (category: Category) => {
+      updateCategories([category.id]);
+      setCategoryItem(category);
     }
   return (
     <UserLayout>
       <SearchForm />
       <ListCategories handleCategoryClick={handleCategoryClick} />
-      <GroupedServices services={filteredServices}  />
+      <GroupedServices services={filteredServices}  titleText={categoryItem?.name} />
       <NewsletterSubscription />
     </UserLayout>
   );

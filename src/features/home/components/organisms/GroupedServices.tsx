@@ -4,13 +4,11 @@ import {
     CircularProgress,
     Grid,
     Typography,
-    useMediaQuery,
-    useTheme,
 } from '@mui/material';
 import ServicesCard from '../../../../components/atoms/ServicesCard';
 import { useGetProductsQuery } from '../../../../services/productApi';
 import DEFAULT_IMAGE from '../../../../assets/images/DEFAULT_IMAGE.png';
-import { TextAtom } from '../../../../components/atoms';
+import { ButtonAtom, TextAtom } from '../../../../components/atoms';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { getApiImageUrl } from '../../../../utils/baseEnvironment';
@@ -19,9 +17,10 @@ import { ProductService } from '../../../../types/api/modelTypes';
 
 type GroupedServicesProps = {
     services?: ProductService[];
+    titleText?: string;
 }
 
-const GroupedServices: React.FC<GroupedServicesProps> = ({ services }) => {
+const GroupedServices: React.FC<GroupedServicesProps> = ({ services, titleText }) => {
     const { t } = useTranslation();
     const { data, isLoading, isError } = useGetProductsQuery(
         { skip: !!services?.length },
@@ -71,19 +70,26 @@ const GroupedServices: React.FC<GroupedServicesProps> = ({ services }) => {
     }
 
     const serviceList = services?.length ? services : topRatedServices;
+    const handleNavigate = () => {
+        navigate('/search-services');
+    };
 
     return (
         <HorizontalScrollContainer
             title={
-                <Box sx={{ position: 'relative', mb: 3, pl: 2 }}>
-                    <TextAtom
-                        variant="title"
-                        size="large"
-                        fontWeight="bold"
-                        color="text.primary"
-                    >
-                        {t('recommendedServices.title')}
+                <Box sx={{ display: 'flex', alignItems: 'center', mt: 3 }}>
+                    <TextAtom variant="title" size="large" fontWeight="bold">
+                        { titleText || t('recommendedServices.title')}
                     </TextAtom>
+                    <ButtonAtom
+                        variant="text"
+                        sx={{ textTransform: 'none', color: 'primary.main', marginLeft: 2 }}
+                        onClick={handleNavigate}
+                    >
+                        <TextAtom variant="label" size="large">
+                            {t('recommendedServices.button', 'View all services')}
+                        </TextAtom>
+                    </ButtonAtom>
                 </Box>
             }
             scrollAmount={300}
