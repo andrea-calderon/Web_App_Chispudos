@@ -24,7 +24,7 @@ const Step4 = () => {
   const theme = useTheme();
   const isLargeScreen = useMediaQuery(theme.breakpoints.up('md'));
   const dispatch = useAppDispatch();
-  const stepperState = useAppSelector(selectStepper);
+  const { service } = useAppSelector(selectStepper);
   const [updateProduct, { isLoading: isUpdating }] = useUpdateProductMutation();
 
   const validationSchema = Yup.object().shape({
@@ -42,7 +42,7 @@ const Step4 = () => {
       const payload = {
         type: 1,
         price: 0,
-        id: stepperState.service?.id,
+        id: service?.id,
         details: values.skills.map((skill) => ({
           label: skill.tagsTextField,
           value: skill.titleTextField,
@@ -53,7 +53,7 @@ const Step4 = () => {
       console.log('Enviando payload:', payload);
 
       const response = await updateProduct({
-        productId: stepperState.service.id,
+        productId: service.id,
         productData: payload,
       }).unwrap();
       console.log('Respuesta del backend:', response);
@@ -71,9 +71,11 @@ const Step4 = () => {
   return (
     <Formik
       initialValues={{
-        skills: [
-          { tagsTextField: '', titleTextField: '', descriptionTextField: '' },
-        ],
+        skills: service?.details?.map((detail) => ({
+          tagsTextField: detail.label,
+          titleTextField: detail.value,
+          descriptionTextField: detail.description || '',
+        })) || [{ tagsTextField: '', titleTextField: '', descriptionTextField: '' }],
       }}
       validationSchema={validationSchema}
       onSubmit={handleUpdate}
@@ -82,7 +84,6 @@ const Step4 = () => {
         values,
         errors,
         touched,
-        setFieldValue,
         isSubmitting,
         isValid,
         handleSubmit,

@@ -37,7 +37,7 @@ export const SearchServicesPage: React.FC = () => {
   const selectedCategory = searchParams.get('category');
 
   useEffect(() => {
-    if (!allServices.data.items?.length) return;
+    if (!allServices?.data.items?.length) return;
     let results = allServices?.data?.items || [];
 
     if (selectedCategory) {

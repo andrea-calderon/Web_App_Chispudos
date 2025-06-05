@@ -5,12 +5,16 @@ import TextAtom from '../../../../components/atoms/TextAtom';
 import ButtonAtom from '../../../../components/atoms/ButtonAtom';
 import congratsImage from '../../../../assets/images/stepper/step6_congratsImage.svg';
 import CustomStepper from './Stepper';
+import { useAppDispatch } from '../../../../hooks/useAppDispatch';
+import { clearStepper } from '../../../../redux/slices/serviceStepperSlice';
 
 const Step6 = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   const handleFinish = () => {
+    dispatch(clearStepper());
     navigate('/profile');
   };
 
