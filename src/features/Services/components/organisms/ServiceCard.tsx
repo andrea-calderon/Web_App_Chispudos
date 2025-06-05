@@ -68,12 +68,10 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
       >
         <CardMedia
           component="img"
-          height="180"
           image={getApiImageUrl(productService?.urlImage)}
           alt={`${productService.name || 'Servicio desconocido'} image`}
           sx={{
-            width: 400,
-            height: 200,
+            height: { xs: 140, sm: 160, md: 180, lg: 200 },
             objectFit: 'cover',
           }}
         />

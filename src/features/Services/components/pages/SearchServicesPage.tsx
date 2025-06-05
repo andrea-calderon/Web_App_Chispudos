@@ -4,11 +4,10 @@ import { UserLayout } from '../../../../components/templates/UserLayout';
 import { Box, Typography } from '@mui/material';
 import { useSearchServicesFormData } from '../../../../context/SearchContext';
 import ServicesList from '../organisms/ServicesList';
-import SearchBar from '../../../../components/organisms/SearchBar';
 import { useGetProductsQuery } from '../../../../services/productApi';
-import RecommendedServices from '../../../home/components/organisms/RecommendedServices';
 import { ProductService } from '../../../../types/api/modelTypes';
 import SearchForm from '../../../../components/organisms/SearchForm';
+import GroupedServices from '../../../home/components/organisms/GroupedServices';
 
 export const SearchServicesPage: React.FC = () => {
   const navigate = useNavigate();
@@ -102,7 +101,7 @@ export const SearchServicesPage: React.FC = () => {
           </Typography>
         )}
       </Box>
-      <RecommendedServices />
+      <GroupedServices />
     </UserLayout>
   );
 };

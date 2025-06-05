@@ -76,15 +76,9 @@ export const FavoritesPage = () => {
             favoriteServices.map((service) => (
               <Grid item xs={12} sm={6} md={4} key={service.id}>
                 <ServiceCard
-                  {...service}
-                  image={
-                    service.urlImage
-                      ? getFullImageUrl(service.urlImage)
-                      : DEFAULT_IMAGE
-                  }
+                productService={service}
                   isFavorite={true} // 🔥 Siempre es favorito aquí
                   onToggleFavorite={removeFromFavorites} // 🗑 Remueve de favoritos
-                  onClick={() => console.log('Abrir detalles de', service.name)}
                 />
               </Grid>
             ))

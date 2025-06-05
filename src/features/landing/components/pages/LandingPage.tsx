@@ -3,7 +3,7 @@ import FeatureGuarantee from '../../components/organisms/FeatureGuarantee';
 import FeatureTestimonials from '../../components/organisms/FeatureTestimonials';
 import FeatureDownloadApp from '../../components/organisms/FeatureDownloadApp';
 import Footer from '../../../../components/organisms/Footer';
-import HighlightedCategories from '../../../home/components/organisms/Categories';
+import ListCategories from '../../../home/components/organisms/ListCategories';
 import CategoriesSection from '../organisms/CategoriesSection';
 import SearchForm from '../../../../components/organisms/SearchForm';
 import NewsletterSubscription from '../../../../components/organisms/NewsletterSubscription';
@@ -12,7 +12,7 @@ export const LandingPage = () => {
   return (
     <LandingLayout>
       <SearchForm />
-      <HighlightedCategories />
+      <ListCategories />
       <CategoriesSection />
       <FeatureGuarantee />
       <FeatureTestimonials />
