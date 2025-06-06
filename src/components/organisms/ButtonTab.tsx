@@ -12,12 +12,16 @@ import FavoriteIcon from '../../assets/images/ButtonTab/FavoriteIcon.svg';
 import HomeIconSelected from '../../assets/images/ButtonTab/HomeIconSelected.svg';
 import TaskIconSelected from '../../assets/images/ButtonTab/TaskIconSelected.svg';
 import FavoriteIconSelected from '../../assets/images/ButtonTab/FavoriteIconSelected.svg';
-import ProfileIconSelected from '../../assets/images/ButtonTab/ProfileIconSelected.svg';
 import { useTranslation } from 'react-i18next';
 import TextAtom from '../atoms/TextAtom';
 import { useAppSelector } from '../../hooks/useAppSelector';
-import { selectAuth } from '../../redux/slices/authSlice';
-import { getApiImageUrl } from '../../utils/baseEnvironment';
+import { selectAuth, setAuthUserState } from '../../redux/slices/authSlice';
+import { AccountCircle, AccountCircleOutlined, Chat, ChatOutlined, Sync, ViewList, ViewListOutlined } from '@mui/icons-material';
+import { useHasRole } from '../../hooks/useHasRole';
+import { ButtonAtom } from '../atoms';
+import { useUpdateUserInfoMutation } from '../../services/userApi';
+import { UpdateUserPayload } from '../../types/api/apiRequests';
+import { useAppDispatch } from '../../hooks/useAppDispatch';
 
 interface Props {
   children: React.ReactNode;
@@ -26,13 +30,47 @@ interface Props {
 export default function ButtonTab({ children }: Props) {
   const navigate = useNavigate();
   const location = useLocation();
+  const dispatch = useAppDispatch();
   const theme = useTheme();
   const { t } = useTranslation();
-  const {user} = useAppSelector(selectAuth);
+  const { user } = useAppSelector(selectAuth);
+  const [updateUserInfo, { isLoading }] = useUpdateUserInfoMutation();
+  const isMerchant = useHasRole('Merchant');
+
+  const handleUpdateUserInfo = async (userObjNewFields: UpdateUserPayload) => {
+    if (user) {
+      try {
+        const userUpdateResponse = await updateUserInfo({
+          userObj: {
+            ...user,
+            ...userObjNewFields,
+          },
+        }).unwrap();
+        if (userUpdateResponse.success) {
+          dispatch(
+            setAuthUserState({
+              ...userUpdateResponse.data
+            }),
+          );
+          console.error(
+            'User info updated successfully:',
+            userUpdateResponse.data,
+            user
+          );
+        };
+
+      } catch (error) {
+        console.error('Error updating user info:', error);
+      }
+    }
+  };
+
+
+
 
   const navItems = [
     {
-      label: t('buttonTab.home'),
+      label: t('buttonTab.home', 'Home'),
       icon: <img src={HomeIcon} alt="Home" style={{ width: 24, height: 24 }} />,
       selectedIcon: (
         <img
@@ -44,7 +82,7 @@ export default function ButtonTab({ children }: Props) {
       url: '/home',
     },
     {
-      label: t('buttonTab.task'),
+      label: t('buttonTab.task', 'Task'),
       icon: <img src={TaskIcon} alt="Task" style={{ width: 24, height: 24 }} />,
       selectedIcon: (
         <img
@@ -55,45 +93,49 @@ export default function ButtonTab({ children }: Props) {
       ),
       url: '/tasks',
     },
-    {
-      label: t('buttonTab.favorites'),
-      icon: (
-        <img
-          src={FavoriteIcon}
-          alt="Favorites"
-          style={{ width: 24, height: 24 }}
-        />
-      ),
+    isMerchant ? {
+      label: t('buttonTab.products', 'Products'),
+      icon: <ViewListOutlined fontSize="small" />,
       selectedIcon: (
-        <img
-          src={FavoriteIconSelected}
-          alt="Favorites"
-          style={{ width: 24, height: 24 }}
-        />
+        <ViewList fontSize="small" />
       ),
-      url: '/favorites',
+      url: '/products',
+    } :
+      {
+        label: t('buttonTab.favorites', 'Favorites'),
+        icon: (
+          <img
+            src={FavoriteIcon}
+            alt="Favorites"
+            style={{ width: 24, height: 24 }}
+          />
+        ),
+        selectedIcon: (
+          <img
+            src={FavoriteIconSelected}
+            alt="Favorites"
+            style={{ width: 24, height: 24 }}
+          />
+        ),
+        url: '/favorites',
+      },
+    {
+      label: t('buttonTab.chat', 'Messages'),
+      icon: <ChatOutlined fontSize="small" />,
+      selectedIcon: <Chat fontSize="small" />,
+      url: '/messages',
     },
     {
-      label: t('buttonTab.profile'),
-      icon: (
-        <img
-          src={getApiImageUrl(user?.avatarUrl)}
-          alt="Profile"
-          style={{ width: 24, height: 24, borderRadius: 50 }}
-        />
-      ),
-      selectedIcon: (
-        <img
-          src={getApiImageUrl(user?.avatarUrl)}
-          alt="Profile"
-          style={{ width: 24, height: 24, borderRadius: 50}}
-        />
-      ),
+      label: t('buttonTab.profile', 'Profile'),
+      icon: <AccountCircleOutlined fontSize="small" />,
+      selectedIcon: <AccountCircle fontSize="small" />,
       url: '/profile',
     },
   ];
 
-  const currentIndex = navItems.findIndex(
+  const filteredNavItems = navItems.filter(item => item !== null);
+
+  const currentIndex = filteredNavItems.findIndex(
     (item) => item.url === location.pathname,
   );
   const [value, setValue] = React.useState(
@@ -114,15 +156,37 @@ export default function ButtonTab({ children }: Props) {
         sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }}
         elevation={3}
       >
+        {isMerchant ? (
+          <Box sx={{ position: 'relative', height: 0 }}>
+
+            <ButtonAtom
+              variant="filled"
+              onClick={() => handleUpdateUserInfo({ roles: isMerchant ? [2] : [2, 3] })}
+              startIcon={<Sync />}
+              sx={{
+                position: 'absolute',
+                top: '-48px', // Position above the navigation
+                left: '50%',
+                transform: 'translateX(-50%)',
+                minWidth: '200px',
+                zIndex: 1,
+              }}
+            >
+              {isMerchant
+                ? t('buttonTab.switchToUser', 'Switch to User')
+                : t('buttonTab.switchToMerchant', 'Switch to Merchant')}
+            </ButtonAtom>
+          </Box>
+        ) : null}
         <BottomNavigation
           showLabels
           value={value}
           onChange={(event, newValue) => {
             setValue(newValue);
-            navigate(navItems[newValue].url);
+            navigate(filteredNavItems[newValue].url);
           }}
         >
-          {navItems.map((item, index) => (
+          {filteredNavItems.map((item, index) => (
             <BottomNavigationAction
               key={index}
               label={
@@ -141,7 +205,7 @@ export default function ButtonTab({ children }: Props) {
                         ? theme.palette.secondary.light
                         : 'transparent',
                     borderRadius: value === index ? '12px' : '0%',
-                    padding: value === index ? '0 16px' : '0',
+                    padding: value === index ? '0 10px' : '0',
                   }}
                 >
                   {value === index ? item.selectedIcon : item.icon}

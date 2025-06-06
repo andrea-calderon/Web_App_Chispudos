@@ -8,7 +8,6 @@ import {
   MenuItem,
   Container,
   IconButton,
-  Button,
   Avatar,
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
@@ -20,105 +19,83 @@ import {
   HomeOutlined as HomeIcon,
   AssignmentOutlined as TaskIcon,
   Storefront as StorefrontIcon,
+  Sync,
+  Chat,
+  Engineering,
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import AppLogo from '../../../../components/molecules/AppLogo';
-import { ButtonAtom } from '../../../../components/atoms';
 import { useAppSelector } from '../../../../hooks/useAppSelector';
 import { selectAuth } from '../../../../redux/slices/authSlice';
-import RoleSwitcherButton from '../../components/atoms/RoleSwitcherButton';
 import { getApiImageUrl } from '../../../../utils/baseEnvironment';
+import { useHasRole } from '../../../../hooks/useHasRole';
 
 function ResponsiveAppBar() {
   const navigate = useNavigate();
   const { isAuthenticated, user } = useAppSelector(selectAuth); // Asegúrate de que `user` esté disponible
   const { t, i18n } = useTranslation();
   const theme = useTheme();
+  const isMerchant = useHasRole('Merchant');
   const { palette } = theme;
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
   const [language, setLanguage] = useState('en');
 
-  // Estado para el modo actual
-  const [currentMode, setCurrentMode] = useState<'user' | 'merchant'>('user');
 
-  // Función para alternar entre modos
-  const toggleMode = () => {
-    if (
-      hasPermission(
-        { id: user.id, roles: ['user', 'merchant'] }, // Simula el usuario con roles
-        'tasks', // Recurso de ejemplo
-        'view', // Acción de ejemplo
-      )
-    ) {
-      setCurrentMode((prevMode) => {
-        const newMode = prevMode === 'user' ? 'merchant' : 'user';
-        console.log(`Modo cambiado a: ${newMode}`); // Depuración
-        return newMode;
-      });
-    } else {
-      console.log('El usuario no tiene permisos para cambiar de modo.');
-    }
-  };
+  const GLOBAL_NAV_ITEMS = [
+    { label: <TranslateIcon />, action: () => toggleLanguage() },
+    {
+      label: isMerchant ? t('appBar.navItems.user', 'Become a User') : t('appBar.navItems.merchant', 'Become a Merchant'),
+      icon: <Sync />,
+      action: isMerchant ? () => navigate('/home') : () => navigate('/register'),
+    },
+  ];
 
   const NAV_ITEMS = [
     {
-      label: t('appBar.navItems.business'),
-      icon: <StorefrontIcon sx={{ color: theme.palette.primary.main }} />,
-      path: '/login',
-    },
-    {
       label: t('appBar.authNavItems.home'),
-      icon: <HomeIcon />,
+      icon: <HomeIcon sx={{ color: theme.palette.primary.main }} />,
       path: '/home',
     },
-    { label: t('appBar.navItems.services'), path: '/search-services' },
-    { label: <TranslateIcon />, action: () => toggleLanguage() },
-    { label: t('auth.login.title'), path: '/login' },
-    {
-      label: (
-        <ButtonAtom
-          type="submit"
-          variant="filled"
-          fullWidth
-          sx={{ maxWidth: '128px', maxHeight: '38px', textTransform: 'none' }}
-        >
-          {t('auth.login.register')}
-        </ButtonAtom>
-      ),
-      path: '/register',
-    },
+    { label: t('appBar.navItems.professionals', 'Professionals'), icon: <Engineering sx={{ color: theme.palette.primary.main }} />, path: '/professionals' },
+    { label: t('auth.login.auth', 'Log in or Sign up'), icon: <AccountIcon sx={{ color: theme.palette.primary.main }} />, path: '/login' },
   ];
 
   const AUTH_NAV_ITEMS = [
     {
-      label: t('appBar.navItems.business'),
-      icon: <StorefrontIcon sx={{ color: theme.palette.primary.main }} />,
-      path: '/stepper',
-    },
-    {
-      label: t('appBar.authNavItems.home'),
-      icon: <HomeIcon />,
+      label: t('appBar.authNavItems.home', 'Home'),
+      icon: <HomeIcon sx={{ color: theme.palette.primary.main }}  />,
       path: '/home',
     },
     {
-      label: t('appBar.authNavItems.tasks'),
-      icon: <TaskIcon />,
+      label: t('appBar.authNavItems.tasks', 'Tasks'),
+      icon: <TaskIcon sx={{ color: theme.palette.primary.main }}  />,
       path: '/tasks',
     },
+    isMerchant ? 
     {
-      label: t('appBar.authNavItems.favorites'),
-      icon: <FavoriteIcon />,
+      label: t('appBar.navItems.products', 'Products'),
+      icon: <StorefrontIcon sx={{ color: theme.palette.primary.main }} />,
+      path: '/products',
+    } :
+    {
+      label: t('appBar.authNavItems.favorites', 'Favorites'),
+      icon: <FavoriteIcon sx={{ color: theme.palette.primary.main }}  />,
       path: '/favorites',
     },
-    { label: <TranslateIcon />, action: () => toggleLanguage() },
     {
-      label: (
+      label: t('appBar.authNavItems.messages', 'Messages'),
+      icon: <Chat sx={{ color: theme.palette.primary.main }}  />,
+      path: '/messages',
+    },
+    {
+      label: t('appBar.authNavItems.profile', 'Profile'),
+      icon: (
         <Avatar
           src={getApiImageUrl(user?.avatarUrl)}
           sx={{
-            width: 35,
-            height: 35,
+            width: 25,
+            height: 25,
             borderRadius: 50
             
           }}
@@ -127,7 +104,6 @@ function ResponsiveAppBar() {
       path: '/profile',
     },
   ];
-  console.error('ERROR: ', getApiImageUrl(user?.avatarUrl));
   const toggleLanguage = () => {
     const newLang = language === 'en' ? 'es' : 'en';
     i18n.changeLanguage(newLang);
@@ -167,7 +143,18 @@ function ResponsiveAppBar() {
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <AppLogo sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
-          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+
+          <AppLogo sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
+          <Box
+            sx={{
+              flexGrow: 8,
+              display: { xs: 'none', md: 'flex' },
+              justifyContent: 'flex-end',
+            }}
+          >
+            {renderMenuItems(GLOBAL_NAV_ITEMS)}
+          </Box>
+            <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             <IconButton onClick={handleMenuOpen}>
               <MenuIcon sx={{ color: palette.primary.main }} />
             </IconButton>
@@ -178,32 +165,11 @@ function ResponsiveAppBar() {
               onClick={handleMenuClose}
               anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
               transformOrigin={{ vertical: 'top', horizontal: 'left' }}
-              sx={{ display: { xs: 'block', md: 'none' } }}
+              sx={{ display: { xs: 'block', md: 'block' } }}
             >
               {renderMenuItems(isAuthenticated ? AUTH_NAV_ITEMS : NAV_ITEMS)}
             </Menu>
           </Box>
-          <AppLogo sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
-          <Box
-            sx={{
-              flexGrow: 1,
-              display: { xs: 'none', md: 'flex' },
-              justifyContent: 'flex-end',
-            }}
-          >
-            {renderMenuItems(isAuthenticated ? AUTH_NAV_ITEMS : NAV_ITEMS)}
-          </Box>
-          {isAuthenticated &&
-            user?.roles?.some((role) => role.name === 'User') &&
-            user?.roles?.some((role) => role.name === 'Merchant') && (
-              <Button
-                color="inherit"
-                onClick={toggleMode}
-                sx={{ marginLeft: 'auto' }}
-              >
-                Switch to {currentMode === 'user' ? 'Merchant' : 'User'} Mode
-              </Button>
-            )}
         </Toolbar>
       </Container>
     </AppBar>
