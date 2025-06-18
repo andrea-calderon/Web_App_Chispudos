@@ -91,7 +91,8 @@ const Testimonials = () => {
         width: '100vw',
         maxWidth: '100vw',
         marginLeft: 'calc(-50vw + 50%)',
-        mb: 5,
+        mt: 5,
+        py: 10,
       }}
     >
       <Box>

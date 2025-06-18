@@ -49,7 +49,7 @@ export const LandingPage: React.FC = () => {
       />
       {/* <CategoriesSection /> */}
       <FeatureTestimonials />
-      <FeatureGuarantee />
+      {/* <FeatureGuarantee /> */}
       <FeatureDownloadApp />
       <NewsletterSubscription />
       <Footer />
