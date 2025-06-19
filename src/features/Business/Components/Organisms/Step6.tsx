@@ -15,7 +15,7 @@ const Step6 = () => {
 
   const handleFinish = () => {
     dispatch(clearStepper());
-    navigate('/profile');
+    navigate('/myProducts');
   };
 
   return (

@@ -16,6 +16,7 @@ import { useTheme } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
 import { ButtonAtom } from '../../../../../components/atoms';
 import { getApiImageUrl } from '../../../../../utils/baseEnvironment';
+import { useHasRole } from '../../../../../hooks/useHasRole';
 
 interface OrderListItemProps {
   order: any;
@@ -24,6 +25,7 @@ interface OrderListItemProps {
 
 const OrderListItem: React.FC<OrderListItemProps> = ({ order, onAction }) => {
   const { id, startDate, details } = order;
+  const isMerchant = useHasRole('Merchant');
   const product = details[0]?.productService;
   const image = product?.urlImage? getApiImageUrl(product?.urlImage) : DEFAULT_IMAGE;
 
@@ -40,6 +42,49 @@ const OrderListItem: React.FC<OrderListItemProps> = ({ order, onAction }) => {
   const handleMenuClose = () => {
     setAnchorEl(null);
   };
+
+  const ButtonsObjUser = [
+    {
+      icon: <Chat />,
+      title: t('features.businessOrdersPage.actions.chat', 'Chat'),
+      action: () => onAction('chat', id),
+    },
+    {
+      icon: <StarRate />,
+      title: t('features.businessOrdersPage.actions.rate', 'Calificar'),
+      action: () => onAction('rate', id),
+    },
+  ];
+
+  const ButtonsObjMerchant = [
+    {
+      icon: <DoneAll />,
+      title: t('features.businessOrdersPage.actions.completed', 'Completada'),
+      action: () => onAction('complete', id),
+    },
+    {
+      icon: <Task />,
+      title: t('features.businessOrdersPage.actions.accept', 'Aceptar'),
+      action: () => onAction('accept', id),
+    },
+    {
+      icon: <NotInterested />,
+      title: t('features.businessOrdersPage.actions.notInterested', 'No interesado'),
+      action: () => onAction('notInterested', id),
+    },
+    {
+      icon: <Chat />,
+      title: t('features.businessOrdersPage.actions.chat', 'Chat'),
+      action: () => onAction('chat', id),
+    },
+    {
+      icon: <StarRate />,
+      title: t('features.businessOrdersPage.actions.rate', 'Calificar'),
+      action: () => onAction('rate', id),
+    },
+  ];
+
+  const ButtonsObj = isMerchant ? ButtonsObjMerchant : ButtonsObjUser;
 
   return (
     <ListItem alignItems="flex-start">
@@ -69,60 +114,28 @@ const OrderListItem: React.FC<OrderListItemProps> = ({ order, onAction }) => {
             open={Boolean(anchorEl)}
             onClose={handleMenuClose}
           >
-            <MenuItem onClick={() => onAction('complete', id)}>
-              <DoneAll fontSize="small" />
-              {t('features.businessOrdersPage.actions.completed', 'Completada')}
-            </MenuItem>
-            <MenuItem onClick={() => onAction('accept', id)}>
-              <Task fontSize="small" />
-              {t('features.businessOrdersPage.actions.accept', 'Aceptar')}
-            </MenuItem>
-            <MenuItem onClick={() => onAction('notInterested', id)}>
-              <NotInterested fontSize="small" />
-              {t('features.businessOrdersPage.actions.notInterested', 'No interesado')}
-            </MenuItem>
-            <MenuItem onClick={() => onAction('chat', id)}>
-              <Chat fontSize="small" />
-              {t('features.businessOrdersPage.actions.chat', 'Chat')}
-            </MenuItem>
-            <MenuItem onClick={() => onAction('rate', id)}>
-              <StarRate fontSize="small" />
-              {t('features.businessOrdersPage.actions.rate', 'Calificar')}
-            </MenuItem>
+            {ButtonsObj.map((button, index) => (
+              <MenuItem key={index} onClick={() => {
+                button.action();
+                handleMenuClose();
+              }}>
+                {button.icon}
+                {button.title}
+              </MenuItem>
+            ))}
           </Menu>
         </>
       ) : (
         <Box display="flex" gap={1}>
-          <ButtonAtom
-            variant="elevated"
-            startIcon={<DoneAll />}
-            title={t('features.businessOrdersPage.actions.completed', 'Completada')}
-            onClick={() => onAction('complete', id)}
-          />
-          <ButtonAtom
-            variant="elevated"
-            startIcon={<Task />}
-            title={t('features.businessOrdersPage.actions.accept', 'Aceptar')}
-            onClick={() => onAction('accept', id)}
-          />
-          <ButtonAtom
-            variant="elevated"
-            startIcon={<NotInterested />}
-            title={t('features.businessOrdersPage.actions.notInterested', 'No interesado')}
-            onClick={() => onAction('notInterested', id)}
-          />
-          <ButtonAtom
-            variant="elevated"
-            startIcon={<Chat />}
-            title={t('features.businessOrdersPage.actions.chat', 'Chat')}
-            onClick={() => onAction('chat', id)}
-          />
-          <ButtonAtom
-            variant="elevated"
-            startIcon={<StarRate />}
-            title={t('features.businessOrdersPage.actions.rate', 'Calificar')}
-            onClick={() => onAction('rate', id)}
-          />
+          {ButtonsObj.map((button, index) => (
+            <ButtonAtom
+              key={index}
+              variant="elevated"
+              startIcon={button.icon}
+              title={button.title}
+              onClick={() => button.action()}
+            />
+          ))}
         </Box>
       )}
     </ListItem>

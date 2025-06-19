@@ -3,11 +3,8 @@ import { List, ListItem, TextField } from '@mui/material';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import Grid from '@mui/material/Grid2';
 import { ButtonAtom, TextAtom } from '../../../../components/atoms';
-import { useAppDispatch } from '../../../../hooks/useAppDispatch';
 import {
-  logout,
   selectAuth,
-  setAuthUserState,
 } from '../../../../redux/slices/authSlice';
 import { useAppSelector } from '../../../../hooks/useAppSelector';
 import { useAvatarUpload } from '../../../../hooks/useAvatarUpload';
@@ -15,13 +12,13 @@ import { ModalComponent } from '../../../../components/molecules';
 import AvatarUpload from '../organisms/AvatarUpload';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { useUpdateUserInfoMutation } from '../../../../services/userApi';
-import { UpdateUserPayload } from '../../../../types/api/apiRequests';
 import { useHasRole } from '../../../../hooks/useHasRole';
+import { useUserEvents } from '../../../auth/hooks/authHooks';
 
 export const UserProfile: React.FC = () => {
   const { t } = useTranslation();
-  const dispatch = useAppDispatch();
+  // const dispatch = useAppDispatch();
+  const { logoutUser, handleUpdateUserInfo } = useUserEvents();
   const { user } = useAppSelector(selectAuth);
   const navigate = useNavigate();
 
@@ -30,7 +27,6 @@ export const UserProfile: React.FC = () => {
   const [editNameModalOpen, setEditNameModalOpen] = useState(false);
   const [name, setName] = useState(user?.name || '');
   const [lastname, setLastname] = useState(user?.lastname || '');
-  const [updateUserInfo, { isLoading }] = useUpdateUserInfoMutation();
 
   const [modalOpen, setModalOpen] = useState(false);
   const {
@@ -53,35 +49,6 @@ export const UserProfile: React.FC = () => {
   const handleOpenEditNameModal = () => setEditNameModalOpen(true);
   const handleCloseEditNameModal = () => setEditNameModalOpen(false);
 
-  const handleUpdateUserInfo = async ( userObjNewFields: UpdateUserPayload ) => {
-    if (user) {
-      try {
-        const userUpdateResponse = await updateUserInfo({
-          userObj: {
-            ...user,
-            ...userObjNewFields,
-          },
-        }).unwrap();
-        if (userUpdateResponse.success) {
-          handleCloseEditNameModal();
-          dispatch(
-            setAuthUserState({
-              ...userUpdateResponse.data
-            }),
-          );
-          navigate('/stepper');
-          console.error(
-          'User info updated successfully:',
-          userUpdateResponse.data,
-          user
-        );
-        };
-        
-      } catch (error) {
-        console.error('Error updating user info:', error);
-      }
-    }
-  };
 
   return (
     <Grid
@@ -145,7 +112,6 @@ export const UserProfile: React.FC = () => {
           title={t('userProfile.editNameTitle', 'Edit Name')}
           onConfirm={() => handleUpdateUserInfo({name, lastname})}
           confirmButtonText={t('userProfile.save', 'Save')}
-          isConfirmButtonLoading={isLoading}
         >
           <TextField
             label={t('userProfile.name', 'Name')}
@@ -230,7 +196,7 @@ export const UserProfile: React.FC = () => {
       >
         <ButtonAtom
           variant="outlined"
-          onClick={() => handleUpdateUserInfo({roles: [2, 3]}) }
+          onClick={() => handleUpdateUserInfo({roles: isMerchant ? [2] : [2, 3]})}
           sx={{
             fontWeight: 'bold',
             mr: 2,
@@ -244,16 +210,15 @@ export const UserProfile: React.FC = () => {
             size="medium"
             sx={{ cursor: 'pointer', textTransform: 'none' }}
           >
-            {/* {t('userProfile.publishServices', 'Publish my services')} */}
             {isMerchant
-              ? t('userProfile.switchToUser', 'Switch to Merchant')
+              ? t('userProfile.switchToUser', 'Switch to User')
               : t('userProfile.switchToMerchant', 'Become Merchant')}
           </TextAtom>
         </ButtonAtom>
 
         <ButtonAtom
           variant="filled"
-          onClick={() => dispatch(logout())}
+          onClick={logoutUser}
           sx={{
             fontWeight: 'bold',
             mb: 2,

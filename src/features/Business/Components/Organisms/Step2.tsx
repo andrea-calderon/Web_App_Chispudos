@@ -11,6 +11,7 @@ import {
 import { useAppSelector } from '../../../../hooks/useAppSelector';
 import CustomStepper from './Stepper';
 import { useUpdateProductMutation } from '../../../../services/productApi';
+import { getApiImageUrl } from '../../../../utils/baseEnvironment';
 
 export default function Step2() {
   const { data, isLoading, error } = useGetCategoriesQuery();
@@ -109,7 +110,7 @@ export default function Step2() {
                 }}
               >
                 <img
-                  src={category.icon}
+                  src={getApiImageUrl(category.icon)}
                   alt={category.name}
                   style={{ width: 40, height: 40 }}
                 />
