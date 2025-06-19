@@ -23,7 +23,6 @@ const ListCategories = ({ handleCategoryClick }: ListCategoriesProps) => {
   const navigate = useNavigate();
   const { data, isLoading, isError } = useGetCategoriesQuery();
 
-
   if (isLoading) {
     return (
       <Box
@@ -64,6 +63,16 @@ const ListCategories = ({ handleCategoryClick }: ListCategoriesProps) => {
 
   return (
     <HorizontalScrollContainer
+      sx={{
+        mt: 2,
+        mb: 1,
+        pl: 3,
+        overflowX: 'auto',
+        scrollbarWidth: 'none',
+        '&::-webkit-scrollbar': {
+          display: 'none',
+        },
+      }}
       title={
         <Box sx={{ display: 'flex', alignItems: 'center', mt: 3 }}>
           <TextAtom variant="title" size="large" fontWeight="bold">

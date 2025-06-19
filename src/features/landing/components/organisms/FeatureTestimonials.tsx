@@ -85,7 +85,16 @@ const Testimonials = () => {
   };
 
   return (
-    <StyledContainer>
+    <StyledContainer
+      sx={{
+        backgroundColor: '#FFF9E9',
+        width: '100vw',
+        maxWidth: '100vw',
+        marginLeft: 'calc(-50vw + 50%)',
+        mt: 5,
+        py: 10,
+      }}
+    >
       <Box>
         <TextAtom
           variant="label"

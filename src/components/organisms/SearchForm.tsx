@@ -27,19 +27,25 @@ const SearchForm = () => {
 
   const [showSearchModal, setShowSearchModal] = useState(false);
 
-  const services = useMemo(() => (
-    Array.from(
-      new Set(
-        products?.data?.items?.flatMap(
-          (product) => product.categories?.map((cat) => cat.name) || [],
+  const services = useMemo(
+    () =>
+      Array.from(
+        new Set(
+          products?.data?.items?.flatMap(
+            (product) => product.categories?.map((cat) => cat.name) || [],
+          ),
         ),
       ),
-    )
-  ), [products]);
+    [products],
+  );
 
-  const locations = useMemo(() => (
-    Array.from(new Set(products?.data?.items.map((product) => product.location)))
-  ), [products]);
+  const locations = useMemo(
+    () =>
+      Array.from(
+        new Set(products?.data?.items.map((product) => product.location)),
+      ),
+    [products],
+  );
 
   const validationSchema = Yup.object().shape({
     textSearch: Yup.string().max(50, t('validation.maxLength')),
@@ -85,11 +91,11 @@ const SearchForm = () => {
             alignItems="center"
             sx={{
               borderRadius: { xs: 5, md: 25 },
-              boxShadow: 5,
+              boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.2)',
               width: { md: '70%' },
               mx: 'auto',
               py: 1,
-              my: 2,
+              my: 1,
               backgroundColor: 'background.paper',
             }}
           >
@@ -150,7 +156,10 @@ const SearchForm = () => {
                 />
               </FormControl>
             </Grid>
-            <Grid size={{ xs: 12, sm: 12, md: 1 }} sx={{display: {xs: 'none', sm: 'none', md: 'block'} }} >
+            <Grid
+              size={{ xs: 12, sm: 12, md: 1 }}
+              sx={{ display: { xs: 'none', sm: 'none', md: 'block' } }}
+            >
               <IconButton
                 type="submit"
                 sx={{
@@ -166,12 +175,11 @@ const SearchForm = () => {
               </IconButton>
             </Grid>
           </Grid>
-          <Divider sx={{ pt: 1 }} />
+          <Divider sx={{ mt: 4, mb: 1, pt: 1 }} />
         </Form>
       )}
     </Formik>
   );
-
 
   return (
     <>
@@ -186,7 +194,7 @@ const SearchForm = () => {
             <ButtonAtom
               fullWidth
               variant="elevated"
-              sx={{ width: "100%", height: 50 }}
+              sx={{ width: '100%', height: 50 }}
               onClick={() => setShowSearchModal(true)}
               startIcon={<Search />}
             >
@@ -200,7 +208,10 @@ const SearchForm = () => {
           onConfirm={handleModalConfirm}
           confirmButtonEndIcon={<Search />}
           title={t('landing.searchForm.modalTitle', 'Search Services')}
-          cancelButtonText={t('landing.searchForm.clearFilters', 'Clear Filters')}
+          cancelButtonText={t(
+            'landing.searchForm.clearFilters',
+            'Clear Filters',
+          )}
           confirmButtonText={t('landing.searchForm.search', 'Search')}
           isConfirmButtonDisabled={false}
           sx={{ width: '95%', height: 'auto', maxWidth: '100%' }}
