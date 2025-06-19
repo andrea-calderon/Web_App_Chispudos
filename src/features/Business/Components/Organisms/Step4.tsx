@@ -41,7 +41,7 @@ const Step4 = () => {
     try {
       const payload = {
         type: 1,
-        price: 0,
+        price: service?.price || 0,
         id: service?.id,
         details: values.skills.map((skill) => ({
           label: skill.tagsTextField,

@@ -14,14 +14,10 @@ import TaskIconSelected from '../../assets/images/ButtonTab/TaskIconSelected.svg
 import FavoriteIconSelected from '../../assets/images/ButtonTab/FavoriteIconSelected.svg';
 import { useTranslation } from 'react-i18next';
 import TextAtom from '../atoms/TextAtom';
-import { useAppSelector } from '../../hooks/useAppSelector';
-import { selectAuth, setAuthUserState } from '../../redux/slices/authSlice';
 import { AccountCircle, AccountCircleOutlined, Chat, ChatOutlined, Sync, ViewList, ViewListOutlined } from '@mui/icons-material';
 import { useHasRole } from '../../hooks/useHasRole';
 import { ButtonAtom } from '../atoms';
-import { useUpdateUserInfoMutation } from '../../services/userApi';
-import { UpdateUserPayload } from '../../types/api/apiRequests';
-import { useAppDispatch } from '../../hooks/useAppDispatch';
+import { useUserEvents } from '../../features/auth/hooks/authHooks';
 
 interface Props {
   children: React.ReactNode;
@@ -30,43 +26,10 @@ interface Props {
 export default function ButtonTab({ children }: Props) {
   const navigate = useNavigate();
   const location = useLocation();
-  const dispatch = useAppDispatch();
   const theme = useTheme();
   const { t } = useTranslation();
-  const { user } = useAppSelector(selectAuth);
-  const [updateUserInfo, { isLoading }] = useUpdateUserInfoMutation();
   const isMerchant = useHasRole('Merchant');
-
-  const handleUpdateUserInfo = async (userObjNewFields: UpdateUserPayload) => {
-    if (user) {
-      try {
-        const userUpdateResponse = await updateUserInfo({
-          userObj: {
-            ...user,
-            ...userObjNewFields,
-          },
-        }).unwrap();
-        if (userUpdateResponse.success) {
-          dispatch(
-            setAuthUserState({
-              ...userUpdateResponse.data
-            }),
-          );
-          console.error(
-            'User info updated successfully:',
-            userUpdateResponse.data,
-            user
-          );
-        };
-
-      } catch (error) {
-        console.error('Error updating user info:', error);
-      }
-    }
-  };
-
-
-
+  const { handleUpdateUserInfo } = useUserEvents();
 
   const navItems = [
     {
@@ -99,7 +62,7 @@ export default function ButtonTab({ children }: Props) {
       selectedIcon: (
         <ViewList fontSize="small" />
       ),
-      url: '/products',
+      url: '/myProducts',
     } :
       {
         label: t('buttonTab.favorites', 'Favorites'),

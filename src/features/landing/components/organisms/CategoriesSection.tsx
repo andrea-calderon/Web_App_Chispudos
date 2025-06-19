@@ -5,6 +5,7 @@ import 'swiper/css';
 import { useTranslation } from 'react-i18next';
 import TextAtom from '../../../../components/atoms/TextAtom';
 import { useGetCategoriesQuery } from '../../../../services/categoryApi';
+import { getApiImageUrl } from '../../../../utils/baseEnvironment';
 
 const CategoriesSection: React.FC = () => {
   const { t } = useTranslation();
@@ -74,7 +75,7 @@ const CategoriesSection: React.FC = () => {
                   }}
                 >
                   <img
-                    src={category.icon}
+                    src={getApiImageUrl(category.icon)}
                     alt={category.name}
                     style={{ height: '80px', marginBottom: '16px' }}
                   />

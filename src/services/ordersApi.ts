@@ -8,9 +8,17 @@ import { ApiResponseType } from '../types/api/apiResponses';
 export const ordersApi = createApi({
   reducerPath: 'ordersApi',
   baseQuery: baseQueryWithReauth,
+  tagTypes: ['Order'],
   endpoints: (builder) => ({
     getOrders: builder.query<ApiResponseType<[]>, void>({
       query: () => 'orders/',
+      providesTags: ['Order'],
+    }),
+    getOrdersByUserId: builder.query<ApiResponseType<[]>, number>({
+      query: (userId) => `orders/user/${userId}`,
+    }),
+    getOrdersByMerchantId: builder.query<ApiResponseType<[]>, number>({
+      query: (userId) => `orders/merchant/${userId}`,
     }),
     createOrder: builder.mutation({
         query: (body) => ({
@@ -25,12 +33,15 @@ export const ordersApi = createApi({
         method: 'PUT',
         body: { status }, // Ensure the status is sent in the body
       }),
+      invalidatesTags: ['Order'],
     }),
   }),
 });
 
 export const {
     useGetOrdersQuery,
+    useGetOrdersByUserIdQuery,
+    useGetOrdersByMerchantIdQuery,
     useCreateOrderMutation,
     useUpdateOrderMutation,
 } = ordersApi;

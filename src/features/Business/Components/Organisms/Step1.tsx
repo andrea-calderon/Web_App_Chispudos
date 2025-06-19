@@ -64,7 +64,7 @@ export default function Step1() {
         name: values.businessName,
         description: values.businessDescription,
         type: 1,
-        price: 0,
+        price: servicePersisted?.price || 0,
         userId: authUser?.user?.id,
       };
 

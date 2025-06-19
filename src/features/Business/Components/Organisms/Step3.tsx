@@ -44,7 +44,7 @@ const Step3 = () => {
     try {
       const payload = {
         type: 1,
-        price: 0,
+        price: service?.price || 0,
         locations: [
           {
             name: 'Main address',

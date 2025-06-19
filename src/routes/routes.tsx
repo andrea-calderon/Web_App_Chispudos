@@ -54,11 +54,11 @@ const AppRoutes = () => {
             {/* Protected Routes */}
             <Route element={<ProtectedRoutesWrapper />}>
               <Route path="/service-details" element={<TaskDetailsPage />} />
-              <Route path="/stepper" element={<BusinessStepper />} />
+              <Route path="/addProduct" element={<BusinessStepper />} />
               <Route path="/profile" element={<ProfilePage />} />
               <Route path="/tasks" element={<TasksPage />} />
               <Route path="/favorites" element={<FavoritesPage />} />
-              <Route path="/products" element={<BusinessProfilePage />} />
+              <Route path="/myProducts" element={<BusinessProfilePage />} />
               <Route path="/messages" element={<BusinessChat />} />
             </Route>
 

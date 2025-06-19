@@ -24,6 +24,7 @@ import { clearStepper, setServiceState } from '../../../../redux/slices/serviceS
 import { useAppDispatch } from '../../../../hooks/useAppDispatch';
 import { useNavigate } from 'react-router-dom';
 import { UserLayout } from '../../../../components/templates/UserLayout';
+import { useHasRole } from '../../../../hooks/useHasRole';
 
 const BusinessProfilePage = () => {
   const { t } = useTranslation();
@@ -38,6 +39,8 @@ const BusinessProfilePage = () => {
     : [];
   const products = allProducts.filter((product) => product.userId === userID);
 
+  if (products.length < 1 && !isLoading )
+    navigate(`/addProduct`);
   // Estado para el producto seleccionado
   const [selectedProductId, setSelectedProductId] = useState<number | null>(
     null,
@@ -72,7 +75,7 @@ const BusinessProfilePage = () => {
   const handleEditProduct = (product: ProductService) => {
     dispatch(clearStepper());
     dispatch(setServiceState(product));
-    navigate(`/stepper`);
+    navigate(`/addProduct`);
   }
 
   return (
@@ -145,6 +148,12 @@ const BusinessProfilePage = () => {
                   </MenuItem>
                 ))
               )}
+              <MenuItem value="addNew" onClick={() => navigate(`/addProduct`)}>
+                {t(
+                  'businessProfilePage.profile.addNewService',
+                  'Add new service',
+                )}
+              </MenuItem>
             </Select>
           </FormControl>
         </Box>

@@ -1,36 +1,38 @@
 import React, { useMemo, useState } from 'react';
 import { Box, CircularProgress, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { useGetOrdersQuery, useUpdateOrderMutation } from '../../../../services/ordersApi';
-import { useSelector } from 'react-redux';
-import { selectMode } from '../../../../redux/slices/roleSwitcherSlice';
+import { useGetOrdersByMerchantIdQuery, useGetOrdersByUserIdQuery, useUpdateOrderMutation } from '../../../../services/ordersApi';
 import { useAppSelector } from '../../../../hooks/useAppSelector';
 import { selectAuth } from '../../../../redux/slices/authSlice';
-import { useUserRole } from '../../../../features/auth/hooks/authHooks';
-import RoleSwitcherButton from '../../../../components/atoms/RoleSwitcherButton';
 import ConfirmActionModal from './orders/ConfirmActionModal';
 import OrderTabs from './orders/OrderTabs';
 import OrderList from './orders/OrderList';
 import { useCreateChatMutation } from '../../../../services/chatApi';
 import { useNavigate } from 'react-router-dom';
 import { EmptySection } from '../../../../components/molecules';
+import { useHasRole } from '../../../../hooks/useHasRole';
 
 const BusinessOrderPage = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { data, isLoading, refetch } = useGetOrdersQuery();
+  const { user } = useAppSelector(selectAuth);
+  const isMerchant = useHasRole('Merchant');
+  const { data, isLoading, refetch } = useGetOrdersByUserIdQuery(user?.id, {
+    skip: !user?.id || isMerchant,
+  });
+  const { data: ordersMerchant, isLoading: isOrdersMerchantLoading} = useGetOrdersByMerchantIdQuery(user?.id, {
+    skip: !user?.id || !isMerchant,
+  });
+
   const [updateOrder] = useUpdateOrderMutation();
   const [createChat] = useCreateChatMutation();
-  const currentMode = useSelector(selectMode);
-  const { user } = useAppSelector(selectAuth);
-  const userRoles = useUserRole();
 
   const [orderStatus, setOrderStatus] = useState(1);
   const [selectedOrder, setSelectedOrder] = useState<number | null>(null);
   const [selectedAction, setSelectedAction] = useState<string | null>(null);
   const [showConfirmActionModal, setShowConfirmActionModal] = useState(false);
 
-  const orders = data?.data;
+  const orders = data?.data || ordersMerchant?.data || [];
 
   const ordersFilteredByStatus = useMemo(
     () => orders?.filter((order) => order.status === orderStatus) || [],
@@ -72,7 +74,7 @@ const BusinessOrderPage = () => {
     try {
       const respChatCreated = await createChat(chatBody).unwrap();
       if (respChatCreated) {
-        navigate(`/profile`);
+        navigate(`/messages`);
       }
     } catch (error) {
       console.error('Failed to create chat:', error);
@@ -91,7 +93,7 @@ const BusinessOrderPage = () => {
 
     const user2Id = orders?.find((order) => order.id === selectedOrder)?.details[0]?.productService?.userId;
 
-    const actionMap: Record<string, () => Promise<void>> = {
+    const actionMerchantMap: Record<string, () => Promise<void>> = {
       complete: async () => {
         await updateOrder({ orderId: selectedOrder, status: 3 }).unwrap();
         refetch();
@@ -116,7 +118,20 @@ const BusinessOrderPage = () => {
       },
     };
 
-    const actionHandler = actionMap[selectedAction];
+    const actionUserMap: Record<string, () => Promise<void>> = {
+      chat: async () => {
+        if (user2Id) {
+          await handleChat(user2Id);
+        } else {
+          console.error('User ID for chat not found');
+        }
+      },
+      rate: async () => {
+        handleReview(selectedOrder);
+      },
+    };
+
+    const actionHandler = isMerchant? actionMerchantMap[selectedAction] : actionUserMap[selectedAction];
 
     if (actionHandler) {
       try {
@@ -135,14 +150,6 @@ const BusinessOrderPage = () => {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
         <CircularProgress />
-      </Box>
-    );
-  }
-
-  if (!userRoles) {
-    return (
-      <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
-        <Typography variant="h6">{t('BusinessOrdersPage.loadingRoles', 'Loading user roles...')}</Typography>
       </Box>
     );
   }
@@ -167,9 +174,6 @@ const BusinessOrderPage = () => {
       ) : (
         <EmptySection />
       )}
-      <Box mt={3}>
-        <RoleSwitcherButton />
-      </Box>
     </Box>
   );
 };

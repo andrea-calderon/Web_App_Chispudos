@@ -22,6 +22,7 @@ import {
   Sync,
   Chat,
   Engineering,
+  Logout,
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -30,16 +31,24 @@ import { useAppSelector } from '../../../../hooks/useAppSelector';
 import { selectAuth } from '../../../../redux/slices/authSlice';
 import { getApiImageUrl } from '../../../../utils/baseEnvironment';
 import { useHasRole } from '../../../../hooks/useHasRole';
+import { useUserEvents } from '../../../auth/hooks/authHooks';
 
 function ResponsiveAppBar() {
   const navigate = useNavigate();
   const { isAuthenticated, user } = useAppSelector(selectAuth); // Asegúrate de que `user` esté disponible
   const { t, i18n } = useTranslation();
+  const { logoutUser, handleUpdateUserInfo } = useUserEvents();
   const theme = useTheme();
   const isMerchant = useHasRole('Merchant');
   const { palette } = theme;
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
   const [language, setLanguage] = useState('en');
+
+  const handleBecomeMerchant = () => {
+    handleUpdateUserInfo({ roles: isMerchant ? [2] : [2, 3] })
+    //TODO: Evaluate with the team if we need to navigate to a specific page after becoming a merchant
+    //navigate('/myProducts');
+  };
 
 
   const GLOBAL_NAV_ITEMS = [
@@ -47,7 +56,7 @@ function ResponsiveAppBar() {
     {
       label: isMerchant ? t('appBar.navItems.user', 'Become a User') : t('appBar.navItems.merchant', 'Become a Merchant'),
       icon: <Sync />,
-      action: isMerchant ? () => navigate('/home') : () => navigate('/register'),
+      action: isAuthenticated ? handleBecomeMerchant : () => navigate('/register'),
     },
   ];
 
@@ -76,7 +85,7 @@ function ResponsiveAppBar() {
     {
       label: t('appBar.navItems.products', 'Products'),
       icon: <StorefrontIcon sx={{ color: theme.palette.primary.main }} />,
-      path: '/products',
+      path: '/myProducts',
     } :
     {
       label: t('appBar.authNavItems.favorites', 'Favorites'),
@@ -102,6 +111,13 @@ function ResponsiveAppBar() {
         />
       ),
       path: '/profile',
+    },
+    {
+      label: t('appBar.authNavItems.logout', 'Logout'),
+      icon: <Logout sx={{ color: theme.palette.primary.main }}  />,
+      action: () => {
+        logoutUser();
+      },
     },
   ];
   const toggleLanguage = () => {

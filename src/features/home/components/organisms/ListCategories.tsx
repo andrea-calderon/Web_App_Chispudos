@@ -13,6 +13,7 @@ import { useGetCategoriesQuery } from '../../../../services/categoryApi';
 import HorizontalScrollContainer from '../../../../components/organisms/HorizontalScrollContainer';
 import { ButtonAtom } from '../../../../components/atoms';
 import { Category } from '../../../../types/api/modelTypes';
+import { getApiImageUrl } from '../../../../utils/baseEnvironment';
 
 type ListCategoriesProps = {
   handleCategoryClick?: (category: Category) => void;
@@ -103,7 +104,7 @@ const ListCategories = ({ handleCategoryClick }: ListCategoriesProps) => {
         >
           <CardContent>
             <img
-              src={category.icon}
+              src={getApiImageUrl(category.icon)}
               alt={category.name}
               width="30"
               height="30"
