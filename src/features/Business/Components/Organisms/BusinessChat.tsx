@@ -22,6 +22,7 @@ import { useRef, useEffect, useState, useCallback } from 'react';
 import { useAppSelector } from '../../../../hooks/useAppSelector';
 import { selectAuth } from '../../../../redux/slices/authSlice';
 import { getApiImageUrl } from '../../../../utils/baseEnvironment';
+import { UserLayout } from '../../../../components/templates/UserLayout';
 
 export default function ChatComponent() {
   const [selectedChat, setSelectedChat] = useState(null);
@@ -114,6 +115,8 @@ export default function ChatComponent() {
   }, []);
 
   return (
+
+    <UserLayout>
     <Box
       sx={{
         height: '70vh',
@@ -389,5 +392,6 @@ export default function ChatComponent() {
         </Grid>
       </Grid>
     </Box>
+    </UserLayout>
   );
 }

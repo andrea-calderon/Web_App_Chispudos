@@ -40,11 +40,11 @@ const CustomStepper: React.FC<StepperProps> = ({
     <Box
       sx={{
         position: 'fixed',
-        bottom: 0,
+        bottom: { xs: 46, sm: 46, md: 0, lg: 0, xl: 0 },
         left: 0,
         right: 0,
         backgroundColor: 'white',
-        zIndex: 1000,
+        zIndex: 100,
         boxShadow: '0 -2px 10px rgba(0, 0, 0, 0.1)',
       }}
     >

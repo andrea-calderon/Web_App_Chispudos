@@ -17,12 +17,15 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useUpdateUserInfoMutation } from '../../../../services/userApi';
 import { UpdateUserPayload } from '../../../../types/api/apiRequests';
+import { useHasRole } from '../../../../hooks/useHasRole';
 
 export const UserProfile: React.FC = () => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const { user } = useAppSelector(selectAuth);
   const navigate = useNavigate();
+
+  const isMerchant = useHasRole('Merchant');
 
   const [editNameModalOpen, setEditNameModalOpen] = useState(false);
   const [name, setName] = useState(user?.name || '');
@@ -66,6 +69,7 @@ export const UserProfile: React.FC = () => {
               ...userUpdateResponse.data
             }),
           );
+          navigate('/stepper');
           console.error(
           'User info updated successfully:',
           userUpdateResponse.data,
@@ -226,7 +230,6 @@ export const UserProfile: React.FC = () => {
       >
         <ButtonAtom
           variant="outlined"
-          // onClick={() => navigate('/stepper')}
           onClick={() => handleUpdateUserInfo({roles: [2, 3]}) }
           sx={{
             fontWeight: 'bold',
@@ -241,7 +244,10 @@ export const UserProfile: React.FC = () => {
             size="medium"
             sx={{ cursor: 'pointer', textTransform: 'none' }}
           >
-            {t('userProfile.publishServices', 'Publish my services')}
+            {/* {t('userProfile.publishServices', 'Publish my services')} */}
+            {isMerchant
+              ? t('userProfile.switchToUser', 'Switch to Merchant')
+              : t('userProfile.switchToMerchant', 'Become Merchant')}
           </TextAtom>
         </ButtonAtom>
 

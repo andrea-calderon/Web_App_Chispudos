@@ -23,6 +23,7 @@ import { ProductService } from '../../../../types/api/modelTypes';
 import { clearStepper, setServiceState } from '../../../../redux/slices/serviceStepperSlice';
 import { useAppDispatch } from '../../../../hooks/useAppDispatch';
 import { useNavigate } from 'react-router-dom';
+import { UserLayout } from '../../../../components/templates/UserLayout';
 
 const BusinessProfilePage = () => {
   const { t } = useTranslation();
@@ -75,6 +76,7 @@ const BusinessProfilePage = () => {
   }
 
   return (
+    <UserLayout>
     <Box px={{ xs: 4, md: 10, lg: 24 }} py={5}>
       {/* Header */}
       <Box display="flex" flexDirection="column" alignItems="center" mb={4}>
@@ -281,6 +283,7 @@ const BusinessProfilePage = () => {
         )}
       </Box>
     </Box>
+    </UserLayout>
   );
 };
 

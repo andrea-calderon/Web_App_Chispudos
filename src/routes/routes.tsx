@@ -22,6 +22,9 @@ import { TasksPage } from '../features/tasks/components/pages/TaskPage';
 import { FavoritesPage } from '../features/favorites/components/pages/FavoritesPage';
 import { ProfilePage } from '../features/profile/components/pages/ProfilePage';
 import TermsAndConditions from '../features/auth/components/pages/TermsAndConditions';
+import BusinessProfilePage from '../features/Business/Components/Organisms/BusinessProfile';
+import { UserLayout } from '../components/templates/UserLayout';
+import BusinessChat from '../features/Business/Components/Organisms/BusinessChat';
 
 const AppRoutes = () => {
   const { isAuthenticated } = useAppSelector(selectAuth);
@@ -55,6 +58,8 @@ const AppRoutes = () => {
               <Route path="/profile" element={<ProfilePage />} />
               <Route path="/tasks" element={<TasksPage />} />
               <Route path="/favorites" element={<FavoritesPage />} />
+              <Route path="/products" element={<BusinessProfilePage />} />
+              <Route path="/messages" element={<BusinessChat />} />
             </Route>
 
             {/* Error Page */}

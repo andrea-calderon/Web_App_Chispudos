@@ -1,10 +1,10 @@
 import { UserLayout } from '../../../../components/templates/UserLayout';
-import ProfileTabs from '../organisms/ProfileTabs';
+import UserProfile from '../organisms/UserProfile';
 
 export const ProfilePage = () => {
   return (
     <UserLayout>
-      <ProfileTabs />
+      <UserProfile />
     </UserLayout>
   );
 };
