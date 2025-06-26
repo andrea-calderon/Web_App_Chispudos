@@ -212,7 +212,7 @@ export const UserProfile: React.FC = () => {
           >
             {isMerchant
               ? t('userProfile.switchToUser', 'Switch to User')
-              : t('userProfile.switchToMerchant', 'Become Merchant')}
+              : t('userProfile.switchToMerchant', 'Become a Professional')}
           </TextAtom>
         </ButtonAtom>
 

@@ -1,4 +1,4 @@
-import { Grid } from '@mui/material';
+import { Grid2 as Grid } from '@mui/material';
 import IntroSlider from '../organisms/IntroSlider';
 
 interface AuthLayoutProps {
@@ -7,22 +7,13 @@ interface AuthLayoutProps {
 
 const AuthLayout: React.FC<AuthLayoutProps> = ({ children }) => {
   return (
-    <Grid container>
-      <IntroSlider />
+    <Grid container >
+      <Grid size={{ xs: 12, md: 6 }}>
+        <IntroSlider />
+      </Grid>
 
       <Grid
-        item
-        xs={12}
-        md={4}
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-          padding: 0,
-          backgroundColor: '#fff',
-          position: 'relative',
-        }}
+        size={{ xs: 12, md: 6 }}
       >
         {children}
       </Grid>

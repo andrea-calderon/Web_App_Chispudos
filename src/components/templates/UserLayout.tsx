@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { useMediaQuery, useTheme } from '@mui/material';
+import { Box, useMediaQuery, useTheme } from '@mui/material';
 import ButtonTab from '../organisms/ButtonTab';
 import ResponsiveAppBar from '../../features/landing/components/organisms/AppBar';
 import Footer from '../organisms/Footer';
@@ -17,7 +17,9 @@ export const UserLayout = ({ children }: Props) => {
       {isLargeScreen ? (
         <>
           <ResponsiveAppBar />
-          {children}
+          <Box sx={{ marginTop: '64px'}}>
+            {children}
+          </Box>
         </>
       ) : (
         <ButtonTab children={children} />

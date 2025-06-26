@@ -104,7 +104,7 @@ const Signup: React.FC = () => {
       maxWidth="sm"
       sx={{
         height: '100vh',
-        width: '100vw',
+        width: '100%',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',

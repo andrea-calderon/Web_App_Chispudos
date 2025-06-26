@@ -19,6 +19,7 @@ const NewsletterSubscription: React.FC = () => {
         marginLeft: '-50vw',
         marginRight: '-50vw',
         textAlign: 'center',
+        display: { xs: 'none', md: 'flex' },
       }}
     >
       {/* Formulario incrustado de Mailchimp */}

@@ -54,9 +54,10 @@ function ResponsiveAppBar() {
   const GLOBAL_NAV_ITEMS = [
     { label: <TranslateIcon />, action: () => toggleLanguage() },
     {
-      label: isMerchant ? t('appBar.navItems.user', 'Become a User') : t('appBar.navItems.merchant', 'Become a Merchant'),
-      icon: <Sync />,
+      label: isMerchant ? t('appBar.navItems.user', 'Switch to User') : t('appBar.navItems.merchant', 'Become a Professional'),
+      icon: <Sync sx={{ color: theme.palette.primary.main }}  />,
       action: isAuthenticated ? handleBecomeMerchant : () => navigate('/register'),
+      butonStyle: { backgroundColor: palette.primary.light, borderRadius: 10, },
     },
   ];
 
@@ -140,22 +141,23 @@ function ResponsiveAppBar() {
   };
 
   const renderMenuItems = (items) =>
-    items.map(({ label, icon, path, action }, index) => (
+    items.map(({ label, icon, path, action, butonStyle }, index) => (
       <MenuItem
         key={index}
         onClick={() => (action ? action() : handleNavigation(path))}
+        sx={{...butonStyle}}
       >
         <Typography
           sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}
         >
-          {icon && <IconButton>{icon}</IconButton>}
+          {icon && <Box sx={{mx: 1}}>{icon}</Box>}
           {label}
         </Typography>
       </MenuItem>
     ));
 
   return (
-    <AppBar position="static" color="transparent" sx={{ boxShadow: 'none' }}>
+    <AppBar position="fixed" color="transparent" sx={{ boxShadow: 'none', backgroundColor: palette.background.paper }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <AppLogo sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />

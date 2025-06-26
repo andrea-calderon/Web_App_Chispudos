@@ -13,7 +13,7 @@ const Footer: React.FC = () => {
 
   return (
     <>
-      <Box>
+      <Box sx={{display: { xs: 'none', md: 'block', }}}>
         <Grid item xs={12} textAlign="center">
           <Box padding={8}>
             <AppLogo maxWidth="250px" />
