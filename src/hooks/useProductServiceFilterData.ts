@@ -1,72 +1,69 @@
-import { useState, useMemo, useCallback } from 'react';
+import { useMemo, useCallback } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { ProductService, Category } from '../types/api/modelTypes';
+import { RootState } from '../redux/store/store';
+import {
+  FilterOptions,
+  setSearchTerm,
+  setPriceRange,
+  setCategories,
+  setLocationIds,
+  setMinRating,
+  setSortBy,
+  setType,
+  resetFilters,
+  clearFilters,
+} from '../redux/slices/filterProductsSlice';
+import { useGetProductsQuery } from '../services/productApi';
 
-export type FilterOptions = {
-  searchTerm: string;
-  priceRange: {
-    min: number | null;
-    max: number | null;
-  };
-  categories: number[];
-  locationIds: number[];
-  minRating: number | null;
-  sortBy: 'price_asc' | 'price_desc' | 'rating' | 'newest' | null;
-  type: number | null;
-};
-
-const initialFilterOptions: FilterOptions = {
-  searchTerm: '',
-  priceRange: {
-    min: null,
-    max: null,
-  },
-  categories: [],
-  locationIds: [],
-  minRating: null,
-  sortBy: null,
-  type: null,
-};
-
-export const useProductServiceFilter = (services: ProductService[] = []) => {
-  const [filters, setFilters] = useState<FilterOptions>(initialFilterOptions);
+export const useProductServiceFilterData
+ = () => {
+  const { data } = useGetProductsQuery();
+  const servicesData: ProductService[] = data?.data?.items || [];
+  const dispatch = useDispatch();
+  const filters = useSelector((state: RootState) => state.filter.options);
 
   // Update filter functions
   const updateSearchTerm = useCallback((searchTerm: string) => {
-    setFilters(prev => ({ ...prev, searchTerm }));
-  }, []);
+    dispatch(setSearchTerm(searchTerm));
+  }, [dispatch]);
 
   const updatePriceRange = useCallback((min: number | null, max: number | null) => {
-    setFilters(prev => ({ ...prev, priceRange: { min, max } }));
-  }, []);
+    dispatch(setPriceRange({ min, max }));
+  }, [dispatch]);
 
   const updateCategories = useCallback((categories: number[]) => {
-    setFilters(prev => ({ ...prev, categories }));
-  }, []);
+    dispatch(setCategories(categories));
+  }, [dispatch]);
 
   const updateLocations = useCallback((locationIds: number[]) => {
-    setFilters(prev => ({ ...prev, locationIds }));
-  }, []);
+    dispatch(setLocationIds(locationIds));
+  }, [dispatch]);
 
   const updateMinRating = useCallback((minRating: number | null) => {
-    setFilters(prev => ({ ...prev, minRating }));
-  }, []);
+    dispatch(setMinRating(minRating));
+  }, [dispatch]);
 
   const updateSortBy = useCallback((sortBy: FilterOptions['sortBy']) => {
-    setFilters(prev => ({ ...prev, sortBy }));
-  }, []);
+    dispatch(setSortBy(sortBy));
+  }, [dispatch]);
 
   const updateType = useCallback((type: number | null) => {
-    setFilters(prev => ({ ...prev, type }));
-  }, []);
+    dispatch(setType(type));
+  }, [dispatch]);
 
-  const resetFilters = useCallback(() => {
-    setFilters(initialFilterOptions);
-  }, []);
+  const handleResetFilters = useCallback(() => {
+    dispatch(resetFilters());
+  }, [dispatch]);
+
+  const handleClearFilters = useCallback(() => {
+    dispatch(clearFilters());
+  }, [dispatch]);
 
   // Apply all filters
   const filteredServices = useMemo(() => {
     // Start with all services
-    let result = [...services];
+    let result = [...servicesData];
 
     // Apply text search filter
     if (filters.searchTerm) {
@@ -130,12 +127,12 @@ export const useProductServiceFilter = (services: ProductService[] = []) => {
     }
 
     return result;
-  }, [services, filters]);
+  }, [servicesData, filters]);
 
   // Extracting available filters from data
   const availableCategories = useMemo(() => {
     const categoryMap = new Map<number, Category>();
-    services.forEach(service => {
+    servicesData.forEach(service => {
       service.categories.forEach(category => {
         if (!categoryMap.has(category.id)) {
           categoryMap.set(category.id, category);
@@ -143,36 +140,38 @@ export const useProductServiceFilter = (services: ProductService[] = []) => {
       });
     });
     return Array.from(categoryMap.values());
-  }, [services]);
+  }, [servicesData]);
 
   const availableLocations = useMemo(() => {
     const locationMap = new Map<number, { id: number, name: string }>();
-    services.forEach(service => {
+    servicesData.forEach(service => {
       service.locations.forEach(location => {
         if (!locationMap.has(location.cityId)) {
           locationMap.set(location.cityId, { 
             id: location.cityId, 
-            name: location.name 
+            name: location.description || '',
+            description: location.description || '',
+            cityName: location.city?.name || '',
           });
         }
       });
     });
     return Array.from(locationMap.values());
-  }, [services]);
+  }, [servicesData]);
 
   const priceRange = useMemo(() => {
-    if (services.length === 0) return { min: 0, max: 0 };
+    if (servicesData.length === 0) return { min: 0, max: 0 };
     
-    let min = services[0].price;
-    let max = services[0].price;
+    let min = servicesData[0].price;
+    let max = servicesData[0].price;
     
-    services.forEach(service => {
+    servicesData.forEach(service => {
       if (service.price < min) min = service.price;
       if (service.price > max) max = service.price;
     });
     
     return { min, max };
-  }, [services]);
+  }, [servicesData]);
 
   return {
     filteredServices,
@@ -184,11 +183,12 @@ export const useProductServiceFilter = (services: ProductService[] = []) => {
     updateMinRating,
     updateSortBy,
     updateType,
-    resetFilters,
+    resetFilters: handleResetFilters,
+    clearFilters: handleClearFilters,
     availableCategories,
     availableLocations,
     priceRange,
-    totalCount: services.length,
+    totalCount: servicesData.length,
     filteredCount: filteredServices.length
   };
 };

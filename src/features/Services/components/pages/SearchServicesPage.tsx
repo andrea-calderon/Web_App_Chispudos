@@ -1,20 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { UserLayout } from '../../../../components/templates/UserLayout';
 import { Box, Typography } from '@mui/material';
-import { useSearchServicesFormData } from '../../../../context/SearchContext';
 import ServicesList from '../organisms/ServicesList';
-import { useGetProductsQuery } from '../../../../services/productApi';
 import { ProductService } from '../../../../types/api/modelTypes';
 import SearchForm from '../../../../components/organisms/SearchForm';
 import GroupedServices from '../../../home/components/organisms/GroupedServices';
+import { useProductServiceFilterData } from '../../../../hooks/useProductServiceFilterData';
 
 export const SearchServicesPage: React.FC = () => {
   const navigate = useNavigate();
-  const location = useLocation();
-  const { searchData } = useSearchServicesFormData();
-  const [filteredResults, setFilteredResults] = useState([]);
-  const { data: allServices, isLoading } = useGetProductsQuery();
+  const {
+      filteredServices: filteredResults,
+    } = useProductServiceFilterData();
+
+    const allServices = filteredResults || [];
 
   const [favorites, setFavorites] = useState<ProductService[]>(() => {
     return JSON.parse(localStorage.getItem('favoriteServices') || '[]');
@@ -32,53 +32,7 @@ export const SearchServicesPage: React.FC = () => {
     localStorage.setItem('favoriteServices', JSON.stringify(updatedFavorites));
   };
 
-  const searchParams = new URLSearchParams(location.search);
-  const selectedCategory = searchParams.get('category');
 
-  useEffect(() => {
-    if (!allServices?.data.items?.length) return;
-    let results = allServices?.data?.items || [];
-
-    if (selectedCategory) {
-      const selectedCategoryId = parseInt(selectedCategory, 10);
-      results = results.filter((service) =>
-        service.categories?.some(
-          (category) => category.id === selectedCategoryId,
-        ),
-      );
-    }
-
-    if (searchData?.service?.length) {
-      results = results.filter((service) =>
-        searchData.service.includes(service.categories?.[0]?.name),
-      );
-    }
-
-    if (searchData?.location?.length) {
-      results = results.filter((service) =>
-        searchData.location.includes(service.location),
-      );
-    }
-
-    if (searchData?.priceRange) {
-      const { min, max } = searchData.priceRange;
-      results = results.filter(
-        (service) => service.pricePerHour >= min && service.pricePerHour <= max,
-      );
-    }
-
-    setFilteredResults(results);
-  }, [searchData, allServices, selectedCategory]);
-
-  if (isLoading) {
-    return (
-      <UserLayout>
-        <Box sx={{ padding: 4 }}>
-          <Typography variant="h6">Cargando servicios...</Typography>
-        </Box>
-      </UserLayout>
-    );
-  }
 
   return (
     <UserLayout>

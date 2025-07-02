@@ -55,7 +55,7 @@ function ResponsiveAppBar() {
     { label: <TranslateIcon />, action: () => toggleLanguage() },
     {
       label: isMerchant ? t('appBar.navItems.user', 'Switch to User') : t('appBar.navItems.merchant', 'Become a Professional'),
-      icon: <Sync sx={{ color: theme.palette.primary.main }}  />,
+      icon: <Sync sx={{ color: theme.palette.primary.main }} />,
       action: isAuthenticated ? handleBecomeMerchant : () => navigate('/register'),
       butonStyle: { backgroundColor: palette.primary.light, borderRadius: 10, },
     },
@@ -74,28 +74,28 @@ function ResponsiveAppBar() {
   const AUTH_NAV_ITEMS = [
     {
       label: t('appBar.authNavItems.home', 'Home'),
-      icon: <HomeIcon sx={{ color: theme.palette.primary.main }}  />,
+      icon: <HomeIcon sx={{ color: theme.palette.primary.main }} />,
       path: '/home',
     },
     {
       label: t('appBar.authNavItems.tasks', 'Tasks'),
-      icon: <TaskIcon sx={{ color: theme.palette.primary.main }}  />,
+      icon: <TaskIcon sx={{ color: theme.palette.primary.main }} />,
       path: '/tasks',
     },
-    isMerchant ? 
-    {
-      label: t('appBar.navItems.products', 'Products'),
-      icon: <StorefrontIcon sx={{ color: theme.palette.primary.main }} />,
-      path: '/myProducts',
-    } :
-    {
-      label: t('appBar.authNavItems.favorites', 'Favorites'),
-      icon: <FavoriteIcon sx={{ color: theme.palette.primary.main }}  />,
-      path: '/favorites',
-    },
+    isMerchant ?
+      {
+        label: t('appBar.navItems.products', 'Products'),
+        icon: <StorefrontIcon sx={{ color: theme.palette.primary.main }} />,
+        path: '/myProducts',
+      } :
+      {
+        label: t('appBar.authNavItems.favorites', 'Favorites'),
+        icon: <FavoriteIcon sx={{ color: theme.palette.primary.main }} />,
+        path: '/favorites',
+      },
     {
       label: t('appBar.authNavItems.messages', 'Messages'),
-      icon: <Chat sx={{ color: theme.palette.primary.main }}  />,
+      icon: <Chat sx={{ color: theme.palette.primary.main }} />,
       path: '/messages',
     },
     {
@@ -107,7 +107,7 @@ function ResponsiveAppBar() {
             width: 25,
             height: 25,
             borderRadius: 50
-            
+
           }}
         />
       ),
@@ -115,7 +115,7 @@ function ResponsiveAppBar() {
     },
     {
       label: t('appBar.authNavItems.logout', 'Logout'),
-      icon: <Logout sx={{ color: theme.palette.primary.main }}  />,
+      icon: <Logout sx={{ color: theme.palette.primary.main }} />,
       action: () => {
         logoutUser();
       },
@@ -145,12 +145,12 @@ function ResponsiveAppBar() {
       <MenuItem
         key={index}
         onClick={() => (action ? action() : handleNavigation(path))}
-        sx={{...butonStyle}}
+        sx={{ ...butonStyle }}
       >
         <Typography
           sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}
         >
-          {icon && <Box sx={{mx: 1}}>{icon}</Box>}
+          {icon && <Box sx={{ mx: 1 }}>{icon}</Box>}
           {label}
         </Typography>
       </MenuItem>
@@ -166,14 +166,13 @@ function ResponsiveAppBar() {
           <Box
             sx={{
               flexGrow: 8,
-              display: { xs: 'none', md: 'flex' },
+              display: { xs: 'flex', md: 'flex' },
               justifyContent: 'flex-end',
             }}
           >
             {renderMenuItems(GLOBAL_NAV_ITEMS)}
           </Box>
-            <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            <IconButton onClick={handleMenuOpen}>
+            <IconButton onClick={handleMenuOpen} sx={{mr: {md: 3}}}>
               <MenuIcon sx={{ color: palette.primary.main }} />
             </IconButton>
             <Menu
@@ -183,11 +182,10 @@ function ResponsiveAppBar() {
               onClick={handleMenuClose}
               anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
               transformOrigin={{ vertical: 'top', horizontal: 'left' }}
-              sx={{ display: { xs: 'block', md: 'block' } }}
+              sx={{ display: { xs: 'flex', md: 'flex' } }}
             >
               {renderMenuItems(isAuthenticated ? AUTH_NAV_ITEMS : NAV_ITEMS)}
             </Menu>
-          </Box>
         </Toolbar>
       </Container>
     </AppBar>

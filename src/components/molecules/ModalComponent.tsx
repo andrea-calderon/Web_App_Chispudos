@@ -13,6 +13,7 @@ interface ModalComponentProps {
   open: boolean;
   onClose: () => void;
   onConfirm?: () => void;
+  onCancel?: () => void;
   title: string;
   children: React.ReactNode;
   confirmButtonText?: string;
@@ -29,6 +30,7 @@ const ModalComponent: React.FC<ModalComponentProps> = ({
   open,
   onClose,
   onConfirm,
+  onCancel,
   title,
   children,
   confirmButtonText = 'Confirm',
@@ -83,7 +85,7 @@ const ModalComponent: React.FC<ModalComponentProps> = ({
         <Box sx={{ my: 5, textAlign: 'center' }}>{children}</Box>
         <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1 }}>
           {!hideCancelbutton && (
-            <ButtonAtom variant="outlined" onClick={onClose}>
+            <ButtonAtom variant="outlined" onClick={onCancel || onClose}>
               {cancelButtonText}
             </ButtonAtom>
           )}

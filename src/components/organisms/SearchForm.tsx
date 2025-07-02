@@ -6,186 +6,220 @@ import {
   useTheme,
   Box,
   Divider,
+  TextField,
+  MenuItem,
+  Select,
+  OutlinedInput,
+  Checkbox,
+  ListItemText,
+  InputLabel,
 } from '@mui/material';
-import { Formik, Form } from 'formik';
-import * as Yup from 'yup';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useSearchServicesFormData } from '../../context/SearchContext';
-import { useGetProductsQuery } from '../../services/productApi';
 import { Search } from '@mui/icons-material';
-import { ButtonAtom, InputAtom } from '../atoms';
+import { ButtonAtom } from '../atoms';
 import { ModalComponent } from '../molecules';
+import { useProductsServiceFilters } from '../../hooks/useProductsServiceFilters';
+import { useProductServiceFilterData } from '../../hooks/useProductServiceFilterData';
 
 const SearchForm = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const theme = useTheme();
   const palette = theme.palette;
-  const { searchData, updateSearchData } = useSearchServicesFormData();
-  const { data: products } = useGetProductsQuery();
 
   const [showSearchModal, setShowSearchModal] = useState(false);
 
-  const services = useMemo(
-    () =>
-      Array.from(
-        new Set(
-          products?.data?.items?.flatMap(
-            (product) => product.categories?.map((cat) => cat.name) || [],
-          ),
-        ),
-      ),
-    [products],
-  );
 
-  const locations = useMemo(
-    () =>
-      Array.from(
-        new Set(products?.data?.items.map((product) => product.location)),
-      ),
-    [products],
-  );
+  const {
+    filters,
+    updateSearchTerm,
+    updatePriceRange,
+    updateCategories,
+    updateLocationIds,
+    resetFilters,
+    clearFilters,
+  } = useProductsServiceFilters();
 
-  const validationSchema = Yup.object().shape({
-    textSearch: Yup.string().max(50, t('validation.maxLength')),
-    service: Yup.array().of(Yup.string()).min(1, t('validation.required')),
-    location: Yup.array().of(Yup.string()).min(1, t('validation.required')),
-  });
+  const {
+    availableLocations,
+    availableCategories,
+    priceRange,
+    totalCount,
+    filteredCount,
+  } = useProductServiceFilterData();
 
-  const initialValues = {
-    textSearch: searchData.textSearch || '',
-    service: searchData.categories || [],
-    location: searchData.location || [],
-  };
+
 
   const handleSubmit = (values: typeof initialValues) => {
-    updateSearchData('textSearch', values.textSearch);
-    updateSearchData('categories', values.service);
-    updateSearchData('location', values.location);
+    // resetFilters();
     navigate('/search-services');
   };
 
-  const handleClearFilters = () => {
-    updateSearchData('textSearch', '');
-    updateSearchData('categories', []);
-    updateSearchData('location', []);
-    setShowSearchModal(false);
-  };
+
   const handleModalConfirm = () => {
-    handleSubmit(initialValues);
+    // handleSubmit(initialValues);
     setShowSearchModal(false);
   };
 
   const FormSection = () => (
-    <Formik
-      initialValues={initialValues}
-      validationSchema={validationSchema}
-      onSubmit={handleSubmit}
-    >
-      {({ values, handleChange, setFieldValue, errors, touched }) => (
-        <Form sx={{ my: 2 }}>
-          <Grid
-            container
-            spacing={2}
-            alignItems="center"
+    <>
+      <Grid
+        container
+        spacing={2}
+        alignItems="center"
+        sx={{
+          borderRadius: { xs: 5, md: 25 },
+          boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.2)',
+          width: { md: '90%', lg: '65%' },
+          minHeight: 85, 
+          mx: 'auto',
+          py: 1,
+          my: 1,
+          backgroundColor: 'background.paper',
+        }}
+      >
+        <Grid size={{ xs: 12, sm: 12, md: 4 }} mx={{ xs: 2, sm: 2, md: 1 }}>
+          <FormControl fullWidth>
+            <TextField
+              name="textSearch"
+              value={filters.searchTerm}
+              onChange={(e) => updateSearchTerm(e.target.value)}
+              placeholder={t('landing.searchForm.title')}
+              aria-label={t('landing.searchForm.textPlaceholder')}
+              variant="standard"
+              label={t('landing.searchForm.textPlaceholder')}
+              sx={{
+                ml: 3,
+                '& .MuiInput-underline:before': { borderBottom: 'none' },
+                '& .MuiInput-underline:after': { borderBottom: 'none' },
+                '& .MuiInput-underline:hover:not(.Mui-disabled):before': { borderBottom: 'none' },
+              }}
+            />
+          </FormControl>
+        </Grid>
+        <Grid size={{ xs: 12, sm: 12, md: 3 }} mx={{ xs: 2, sm: 2, md: 1 }}>
+          <FormControl fullWidth>
+            <InputLabel id="service-multiselect-label">
+              {t('landing.searchForm.serviceInput')}
+            </InputLabel>
+            <Select
+              labelId="service-multiselect-label"
+              id="service-multiselect"
+              variant="standard"
+              multiple
+              value={filters.categories}
+              onChange={(e) => updateCategories(e.target.value)}
+              input={
+                <OutlinedInput
+                  label={t('landing.searchForm.serviceInput')}
+                  sx={{
+                    '& .MuiOutlinedInput-notchedOutline': { border: 'none' },
+                    '&:before': { borderBottom: 'none' },
+                    '&:after': { borderBottom: 'none' },
+                    '&:hover .MuiOutlinedInput-notchedOutline': { border: 'none' },
+                  }}
+                />
+              }
+              renderValue={(selected) => (availableCategories.reduce((acc, category) => {
+                if (selected ) {
+                  if (selected.includes(category.id)) acc.push(category.name);
+                }
+                return acc;
+              }, [])).join(', ')}
+              MenuProps={{
+                PaperProps: {
+                  style: {
+                    maxHeight: 48 * 4.5 + 8,
+                    width: 250,
+                  },
+                },
+              }}
+            >
+              {availableCategories.map((option) => (
+                <MenuItem key={option.id} value={option.id}>
+                  <Checkbox checked={filters?.categories?.indexOf(option.id) > -1} />
+                  <ListItemText primary={option.name} />
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Grid>
+        <Grid size={{ xs: 12, sm: 12, md: 3 }} mx={{ xs: 2, sm: 2, md: 1 }}>
+          <FormControl fullWidth>
+            <InputLabel id="location-multiselect-label">
+              {t('landing.searchForm.location')}
+            </InputLabel>
+            <Select
+              labelId="location-multiselect-label"
+              id="location-multiselect"
+              multiple
+              value={filters.locationIds}
+              onChange={(e) => updateLocationIds(e.target.value)}
+              input={
+              <OutlinedInput 
+                label={t('landing.searchForm.location')}
+                sx={{
+                  '& .MuiOutlinedInput-notchedOutline': { border: 'none' },
+                  '&:before': { borderBottom: 'none' },
+                  '&:after': { borderBottom: 'none' },
+                  '&:hover .MuiOutlinedInput-notchedOutline': { border: 'none' },
+                }}
+              />
+              }
+              renderValue={(selected) => (
+                availableLocations.reduce((acc, location) => {
+                  if (selected.includes(location.id)) {
+                    acc.push(location.name);
+                  }
+                  return acc;
+                }, []).join(', ')
+              )}
+              MenuProps={{
+                PaperProps: {
+                  style: {
+                    maxHeight: 48 * 4.5 + 8,
+                    width: 250,
+                  },
+                },
+              }}
+            >
+              {availableLocations.map((location) => (
+                <MenuItem key={location.id} value={location.id}>
+                  <Checkbox checked={filters?.locationIds?.indexOf(location.id) > -1} />
+                  <ListItemText primary={location.cityName} />
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Grid>
+        <Grid
+          size={{ xs: 12, sm: 12, md: 1 }}
+          sx={{ display: { xs: 'none', sm: 'none', md: 'block' } }}
+        >
+          <IconButton
+            onClick={handleSubmit}
             sx={{
-              borderRadius: { xs: 5, md: 25 },
-              boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.2)',
-              width: { md: '70%' },
-              mx: 'auto',
-              py: 1,
-              my: 1,
-              backgroundColor: 'background.paper',
+              backgroundColor: palette.primary.main,
+              color: palette.common.white,
+              '&:hover': {
+                backgroundColor: palette.primary.main,
+              },
+              ml: 5,
             }}
           >
-            <Grid size={{ xs: 12, sm: 12, md: 4 }} mx={{ xs: 2, sm: 2, md: 1 }}>
-              <FormControl fullWidth>
-                <InputAtom
-                  name="textSearch"
-                  value={values.textSearch}
-                  onChange={handleChange}
-                  placeholder={t('landing.searchForm.title')}
-                  aria-label={t('landing.searchForm.textPlaceholder')}
-                  error={touched.textSearch && Boolean(errors.textSearch)}
-                  helperText={touched.textSearch && errors.textSearch}
-                  variant="rounded"
-                  label={t('landing.searchForm.textPlaceholder')}
-                />
-              </FormControl>
-            </Grid>
-            <Grid size={{ xs: 12, sm: 12, md: 3 }} mx={{ xs: 2, sm: 2, md: 1 }}>
-              <FormControl fullWidth>
-                <InputAtom
-                  name="service"
-                  value={values.service}
-                  onChange={(e) => setFieldValue('service', e.target.value)}
-                  placeholder={t('landing.searchForm.serviceInput')}
-                  error={touched.service && Boolean(errors.service)}
-                  helperText={errors.service}
-                  variant="rounded"
-                  label={t('landing.searchForm.serviceInput')}
-                  isSelect
-                  multiple
-                  options={services.map((service) => ({
-                    value: service,
-                    label: service,
-                  }))}
-                />
-              </FormControl>
-            </Grid>
-            <Grid size={{ xs: 12, sm: 12, md: 3 }} mx={{ xs: 2, sm: 2, md: 1 }}>
-              <FormControl fullWidth>
-                <InputAtom
-                  name="location"
-                  multiple
-                  value={values.location}
-                  onChange={(e) => setFieldValue('location', e.target.value)}
-                  renderValue={(selected) => selected.join(', ')}
-                  aria-label={t('landing.searchForm.location')}
-                  variant="rounded"
-                  label={t('landing.searchForm.location')}
-                  placeholder={t('landing.searchForm.location')}
-                  isSelect
-                  options={locations.map((location) => ({
-                    value: location,
-                    label: location,
-                  }))}
-                  error={touched.location && errors.location}
-                  helperText={errors.location}
-                />
-              </FormControl>
-            </Grid>
-            <Grid
-              size={{ xs: 12, sm: 12, md: 1 }}
-              sx={{ display: { xs: 'none', sm: 'none', md: 'block' } }}
-            >
-              <IconButton
-                type="submit"
-                sx={{
-                  backgroundColor: palette.primary.main,
-                  color: palette.common.white,
-                  '&:hover': {
-                    backgroundColor: palette.primary.main,
-                  },
-                  ml: 5,
-                }}
-              >
-                <Search />
-              </IconButton>
-            </Grid>
-          </Grid>
-          <Divider sx={{ mt: 4, mb: 1, pt: 1 }} />
-        </Form>
-      )}
-    </Formik>
+            <Search />
+          </IconButton>
+        </Grid>
+      </Grid>
+    </>
   );
 
   return (
     <>
       {/* Desktop */}
-      <Box sx={{ display: { md: 'block', sm: 'none', xs: 'none' } }}>
-        <FormSection />
+      <Box sx={{ display: { md: 'block', sm: 'none', xs: 'none' }, backgroundColor: palette.primary.light, py: 5 }}>
+        {FormSection()}
       </Box>
       {/* Mobile/Tablet */}
       <Box sx={{ display: { md: 'none', sm: 'block', xs: 'block' } }}>
@@ -204,8 +238,9 @@ const SearchForm = () => {
         </Grid>
         <ModalComponent
           open={showSearchModal}
-          onClose={handleClearFilters}
+          onClose={() => setShowSearchModal(false)}
           onConfirm={handleModalConfirm}
+          onCancel={clearFilters}
           confirmButtonEndIcon={<Search />}
           title={t('landing.searchForm.modalTitle', 'Search Services')}
           cancelButtonText={t(
@@ -216,7 +251,7 @@ const SearchForm = () => {
           isConfirmButtonDisabled={false}
           sx={{ width: '95%', height: 'auto', maxWidth: '100%' }}
         >
-          <FormSection />
+          {FormSection()}
         </ModalComponent>
       </Box>
     </>
