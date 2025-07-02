@@ -51,9 +51,8 @@ const SearchForm = () => {
 
 
 
-  const handleSubmit = (values: typeof initialValues) => {
-    resetFilters();
-    //navigate('/search-services');
+  const handleSubmit = () => {
+    navigate('/search-services');
   };
 
 
@@ -244,7 +243,6 @@ const SearchForm = () => {
             >
               {`"${filters.searchTerm}"`}
             </ButtonAtom>
-            {`${filteredCount}  items found`}
             </TextAtom>
             <ButtonAtom
               variant="elevated"
@@ -257,6 +255,7 @@ const SearchForm = () => {
             </ButtonAtom>
           </Box>)
           : null}
+          {`${filteredCount}  items found`}
           { filters.categories.length > 0 ? 
           (<Box sx={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', mb: 2 }}>
             Selected Categories:
