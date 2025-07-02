@@ -16,8 +16,8 @@ import {
 } from '@mui/material';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search } from '@mui/icons-material';
-import { ButtonAtom } from '../atoms';
+import { Clear, Search } from '@mui/icons-material';
+import { ButtonAtom, TextAtom } from '../atoms';
 import { ModalComponent } from '../molecules';
 import { useProductsServiceFilters } from '../../hooks/useProductsServiceFilters';
 import { useProductServiceFilterData } from '../../hooks/useProductServiceFilterData';
@@ -52,8 +52,8 @@ const SearchForm = () => {
 
 
   const handleSubmit = (values: typeof initialValues) => {
-    // resetFilters();
-    navigate('/search-services');
+    resetFilters();
+    //navigate('/search-services');
   };
 
 
@@ -72,14 +72,14 @@ const SearchForm = () => {
           borderRadius: { xs: 5, md: 25 },
           boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.2)',
           width: { md: '90%', lg: '65%' },
-          minHeight: 85, 
+          minHeight: 85,
           mx: 'auto',
           py: 1,
           my: 1,
           backgroundColor: 'background.paper',
         }}
       >
-        <Grid size={{ xs: 12, sm: 12, md: 4 }} mx={{ xs: 2, sm: 2, md: 1 }}>
+        <Grid size={{ xs: 12, sm: 12, md: 3 }} mx={{ xs: 2, sm: 2, md: 1 }}>
           <FormControl fullWidth>
             <TextField
               name="textSearch"
@@ -98,6 +98,7 @@ const SearchForm = () => {
             />
           </FormControl>
         </Grid>
+        <Divider orientation='vertical' flexItem sx={{ display: { xs: 'none', sm: 'none', md: 'block' } }} />
         <Grid size={{ xs: 12, sm: 12, md: 3 }} mx={{ xs: 2, sm: 2, md: 1 }}>
           <FormControl fullWidth>
             <InputLabel id="service-multiselect-label">
@@ -122,7 +123,7 @@ const SearchForm = () => {
                 />
               }
               renderValue={(selected) => (availableCategories.reduce((acc, category) => {
-                if (selected ) {
+                if (selected) {
                   if (selected.includes(category.id)) acc.push(category.name);
                 }
                 return acc;
@@ -145,6 +146,7 @@ const SearchForm = () => {
             </Select>
           </FormControl>
         </Grid>
+        <Divider orientation='vertical' flexItem sx={{ display: { xs: 'none', sm: 'none', md: 'block' } }} />
         <Grid size={{ xs: 12, sm: 12, md: 3 }} mx={{ xs: 2, sm: 2, md: 1 }}>
           <FormControl fullWidth>
             <InputLabel id="location-multiselect-label">
@@ -157,20 +159,20 @@ const SearchForm = () => {
               value={filters.locationIds}
               onChange={(e) => updateLocationIds(e.target.value)}
               input={
-              <OutlinedInput 
-                label={t('landing.searchForm.location')}
-                sx={{
-                  '& .MuiOutlinedInput-notchedOutline': { border: 'none' },
-                  '&:before': { borderBottom: 'none' },
-                  '&:after': { borderBottom: 'none' },
-                  '&:hover .MuiOutlinedInput-notchedOutline': { border: 'none' },
-                }}
-              />
+                <OutlinedInput
+                  label={t('landing.searchForm.location')}
+                  sx={{
+                    '& .MuiOutlinedInput-notchedOutline': { border: 'none' },
+                    '&:before': { borderBottom: 'none' },
+                    '&:after': { borderBottom: 'none' },
+                    '&:hover .MuiOutlinedInput-notchedOutline': { border: 'none' },
+                  }}
+                />
               }
               renderValue={(selected) => (
                 availableLocations.reduce((acc, location) => {
                   if (selected.includes(location.id)) {
-                    acc.push(location.name);
+                    acc.push(location.cityName);
                   }
                   return acc;
                 }, []).join(', ')
@@ -193,6 +195,7 @@ const SearchForm = () => {
             </Select>
           </FormControl>
         </Grid>
+        <Divider orientation='vertical' flexItem sx={{ display: { xs: 'none', sm: 'none', md: 'block' } }} />
         <Grid
           size={{ xs: 12, sm: 12, md: 1 }}
           sx={{ display: { xs: 'none', sm: 'none', md: 'block' } }}
@@ -215,11 +218,102 @@ const SearchForm = () => {
     </>
   );
 
+  const searchSummarySection = () => (
+    <Box
+          sx={{
+            textAlign: 'center',
+            mt: 2,
+            color: palette.text.secondary,
+            fontSize: '0.875rem',
+          }}
+        >
+          {filters.searchTerm? 
+          (<Box sx={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', mb: 2 }}>
+            <TextAtom
+              size="small"
+              variant="body"
+              sx={{ fontWeight: 'bold', color: palette.primary.main, mr: 1 }}
+            >
+            {`Resulsts for: `}
+            <ButtonAtom
+              variant="text"
+              onClick={() => updateSearchTerm('')}
+              endIcon={<Clear sx={{ color: palette.primary.main }} />}
+              size="small"
+              sx={{ textTransform: 'none' }}
+            >
+              {`"${filters.searchTerm}"`}
+            </ButtonAtom>
+            {`${filteredCount}  items found`}
+            </TextAtom>
+            <ButtonAtom
+              variant="elevated"
+              onClick={clearFilters}
+              endIcon={<Clear sx={{ color: palette.primary.main }} />}
+              size="small"
+              sx={{ textTransform: 'none', ml: 1 }}
+            >
+              {t('landing.searchForm.clearFilters', 'Clear Filters')}
+            </ButtonAtom>
+          </Box>)
+          : null}
+          { filters.categories.length > 0 ? 
+          (<Box sx={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', mb: 2 }}>
+            Selected Categories:
+            {filters.categories.map((categoryId) => {
+              const category = availableCategories.find((cat) => cat.id === categoryId);
+              return <ButtonAtom
+                key={categoryId}
+                variant="filled"
+                size='small'
+                endIcon={<IconButton sx={{ color: palette.primary.contrastText }}><Clear /> </IconButton>}
+                sx={{
+                  textTransform: 'none',
+                  fontSize: '0.875rem',
+                  marginRight: 1,
+                }}
+                onClick={() => {
+                  updateCategories(filters.categories.filter((id) => id !== categoryId));
+                }}
+              >
+                {category ? category.name : t('landing.searchForm.allCategories', 'All Categories')}
+              </ButtonAtom>;
+            }
+            )}
+          </Box>) : null}
+          { filters.locationIds.length > 0 ? 
+          (<Box sx={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', mb: 2 }}>
+            Selected Locations:
+            {filters.locationIds.map((locationId) => {
+              const location = availableLocations.find((loc) => loc.id === locationId);
+              return <ButtonAtom
+                key={locationId}
+                variant="filled"
+                size='small'
+                endIcon={<IconButton sx={{ color: palette.primary.contrastText }}><Clear /> </IconButton>}
+                sx={{
+                  textTransform: 'none',
+                  fontSize: '0.875rem',
+                  marginRight: 1,
+                }}
+                onClick={() => {
+                  updateLocationIds(filters.locationIds.filter((id) => id !== locationId));
+                }}
+              >
+                {location ? location.cityName : t('landing.searchForm.allLocations', 'All Locations')}
+              </ButtonAtom>;
+            }
+            )}
+          </Box>) : null}
+        </Box>
+  );
+
   return (
     <>
       {/* Desktop */}
       <Box sx={{ display: { md: 'block', sm: 'none', xs: 'none' }, backgroundColor: palette.primary.light, py: 5 }}>
         {FormSection()}
+        {searchSummarySection()}
       </Box>
       {/* Mobile/Tablet */}
       <Box sx={{ display: { md: 'none', sm: 'block', xs: 'block' } }}>
@@ -252,6 +346,7 @@ const SearchForm = () => {
           sx={{ width: '95%', height: 'auto', maxWidth: '100%' }}
         >
           {FormSection()}
+          {searchSummarySection()}
         </ModalComponent>
       </Box>
     </>
