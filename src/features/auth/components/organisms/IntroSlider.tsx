@@ -53,6 +53,7 @@ const IntroSlider: React.FC = () => {
         flexDirection: 'column',
         padding: '20px',
         position: 'relative',
+        height: '100%',
       }}
     >
       <IconButton
@@ -74,7 +75,6 @@ const IntroSlider: React.FC = () => {
           alignItems: 'center',
           justifyContent: 'center',
           width: '100%',
-          maxWidth: '500px',
           mx: 'auto',
           textAlign: 'center',
         }}

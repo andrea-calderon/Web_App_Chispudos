@@ -16,9 +16,11 @@ export const ordersApi = createApi({
     }),
     getOrdersByUserId: builder.query<ApiResponseType<[]>, number>({
       query: (userId) => `orders/user/${userId}`,
+      providesTags: ['Order'],
     }),
     getOrdersByMerchantId: builder.query<ApiResponseType<[]>, number>({
       query: (userId) => `orders/merchant/${userId}`,
+      providesTags: ['Order'],
     }),
     createOrder: builder.mutation({
         query: (body) => ({
@@ -26,6 +28,7 @@ export const ordersApi = createApi({
           method: 'POST',
           body,
         }),
+        invalidatesTags: ['Order'],
       }),
     updateOrder: builder.mutation({
       query: ({ orderId, status }: { orderId: number; status: number }) => ({

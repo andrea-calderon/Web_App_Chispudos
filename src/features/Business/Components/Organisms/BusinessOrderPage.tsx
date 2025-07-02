@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Box, CircularProgress, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useGetOrdersByMerchantIdQuery, useGetOrdersByUserIdQuery, useUpdateOrderMutation } from '../../../../services/ordersApi';
@@ -20,10 +20,18 @@ const BusinessOrderPage = () => {
   const { data, isLoading, refetch } = useGetOrdersByUserIdQuery(user?.id, {
     skip: !user?.id || isMerchant,
   });
-  const { data: ordersMerchant, isLoading: isOrdersMerchantLoading} = useGetOrdersByMerchantIdQuery(user?.id, {
+  const { data: ordersMerchant, isLoading: isOrdersMerchantLoading, refetch: refetchMerchantOrders } = useGetOrdersByMerchantIdQuery(user?.id, {
     skip: !user?.id || !isMerchant,
   });
 
+  useEffect(() => {
+    if (isMerchant) {
+      refetchMerchantOrders();
+    } else {
+      refetch();
+    }
+  }
+  , [isMerchant]);
   const [updateOrder] = useUpdateOrderMutation();
   const [createChat] = useCreateChatMutation();
 
@@ -32,7 +40,7 @@ const BusinessOrderPage = () => {
   const [selectedAction, setSelectedAction] = useState<string | null>(null);
   const [showConfirmActionModal, setShowConfirmActionModal] = useState(false);
 
-  const orders = data?.data || ordersMerchant?.data || [];
+  const orders = isMerchant ? ordersMerchant?.data : data?.data;
 
   const ordersFilteredByStatus = useMemo(
     () => orders?.filter((order) => order.status === orderStatus) || [],
@@ -162,8 +170,8 @@ const BusinessOrderPage = () => {
         onConfirm={handleConfirmAction}
         action={selectedAction}
       />
-      <Typography variant="h5" fontWeight="bold" mb={2}>
-        {t('BusinessOrdersPage.yourOrders', 'Your orders')}
+      <Typography variant="h5" fontWeight="bold" mb={2} alignContent={'center'} textAlign={'center'} py={2}>
+        {isMerchant ? t('BusinessOrdersPage.yourOrders.merchant', 'Your tasks as a Professional') : t('BusinessOrdersPage.yourOrders.user', 'Your tasks as a user')}
       </Typography>
       <OrderTabs value={orderStatus} onChange={handleTabChange} options={FILTER_OPTIONS} />
       {ordersFilteredByStatus?.length ? (

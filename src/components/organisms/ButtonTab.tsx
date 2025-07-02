@@ -119,11 +119,9 @@ export default function ButtonTab({ children }: Props) {
         sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }}
         elevation={3}
       >
-        {isMerchant ? (
           <Box sx={{ position: 'relative', height: 0 }}>
-
             <ButtonAtom
-              variant="filled"
+              variant={isMerchant ? 'elevated' : 'filled'}
               onClick={() => handleUpdateUserInfo({ roles: isMerchant ? [2] : [2, 3] })}
               startIcon={<Sync />}
               sx={{
@@ -131,16 +129,15 @@ export default function ButtonTab({ children }: Props) {
                 top: '-48px', // Position above the navigation
                 left: '50%',
                 transform: 'translateX(-50%)',
-                minWidth: '200px',
+                minWidth: '250px',
                 zIndex: 1,
               }}
             >
               {isMerchant
                 ? t('buttonTab.switchToUser', 'Switch to User')
-                : t('buttonTab.switchToMerchant', 'Switch to Merchant')}
+                : t('buttonTab.switchToMerchant', 'Switch to Professional')}
             </ButtonAtom>
           </Box>
-        ) : null}
         <BottomNavigation
           showLabels
           value={value}

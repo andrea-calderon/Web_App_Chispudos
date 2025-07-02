@@ -9,7 +9,7 @@ export const productApi = createApi({
   tagTypes: ['Product'],
   endpoints: (builder) => ({
     getProducts: builder.query<ApiResponseType<{items: ProductService[]}>, void>({
-      query: () => 'public/products?limit=50&offset=1',
+      query: () => 'public/products?limit=50&offset=0',
       providesTags: ['Product'],
     }),
     getProductById: builder.query({
