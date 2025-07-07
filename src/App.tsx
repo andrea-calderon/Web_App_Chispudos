@@ -7,7 +7,6 @@ import { themes } from './theme';
 import { CssBaseline } from '@mui/material';
 import { I18nextProvider } from 'react-i18next';
 import i18n from './utils/i18n';
-import { SearchProvider } from './context/SearchContext';
 
 function App() {
   return (
@@ -15,10 +14,8 @@ function App() {
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
           <ThemeProvider theme={themes.light}>
-            <SearchProvider>
               <CssBaseline />
               <AppRoutes />
-            </SearchProvider>
           </ThemeProvider>
         </PersistGate>
       </Provider>

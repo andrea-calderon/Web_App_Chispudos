@@ -11,8 +11,8 @@ import SearchForm from '../../../../components/organisms/SearchForm';
 import NewsletterSubscription from '../../../../components/organisms/NewsletterSubscription';
 import HeroSection from '../organisms/HeroSection';
 import { useGetProductsQuery } from '../../../../services/productApi';
-import { useProductServiceFilter } from '../../../../hooks/useProductServiceFilter';
 import { Category } from '../../../../types/api/modelTypes';
+import { useProductServiceFilterData } from '../../../../hooks/useProductServiceFilterData';
 
 export const LandingPage: React.FC = () => {
   const { data, isLoading, isError } = useGetProductsQuery();
@@ -29,7 +29,7 @@ export const LandingPage: React.FC = () => {
     priceRange,
     filteredCount,
     totalCount,
-  } = useProductServiceFilter(data?.data?.items || []);
+  } = useProductServiceFilterData();
 
   const [categoryItem, setCategoryItem] = React.useState<Category | null>(null);
 

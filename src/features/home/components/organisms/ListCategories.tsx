@@ -79,7 +79,7 @@ const ListCategories = ({ handleCategoryClick }: ListCategoriesProps) => {
           <TextAtom variant="title" size="large" fontWeight="bold">
             {t('landing.categories.title')}
           </TextAtom>
-          <ButtonAtom
+          {/* <ButtonAtom
             variant="text"
             sx={{ textTransform: 'none', color: 'primary.main', marginLeft: 5 }}
             onClick={handleNavigate}
@@ -87,7 +87,7 @@ const ListCategories = ({ handleCategoryClick }: ListCategoriesProps) => {
             <TextAtom variant="label" size="large">
               {t('landing.categories.button')}
             </TextAtom>
-          </ButtonAtom>
+          </ButtonAtom> */}
         </Box>
       }
       scrollAmount={300}

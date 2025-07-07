@@ -23,7 +23,6 @@ import { FavoritesPage } from '../features/favorites/components/pages/FavoritesP
 import { ProfilePage } from '../features/profile/components/pages/ProfilePage';
 import TermsAndConditions from '../features/auth/components/pages/TermsAndConditions';
 import BusinessProfilePage from '../features/Business/Components/Organisms/BusinessProfile';
-import { UserLayout } from '../components/templates/UserLayout';
 import BusinessChat from '../features/Business/Components/Organisms/BusinessChat';
 
 const AppRoutes = () => {
@@ -44,7 +43,7 @@ const AppRoutes = () => {
             />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/password-recovery" element={<PasswordRecovery />} />
-            <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
+            {/* <Route path="/terms-and-conditions" element={<TermsAndConditions />} /> */}
 
             {/* Publicly accessible pages (FIX) */}
             <Route path="/home" element={<HomePage />} />
