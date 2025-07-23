@@ -213,7 +213,8 @@ const Signup: React.FC = () => {
                       display: 'flex',
                       alignItems: 'center',
                       flexWrap: 'wrap',
-                      gap: 1,
+                      justifyContent: 'center',
+                      textAlign: 'center',
                     }}
                   >
                     <Field
@@ -222,23 +223,50 @@ const Signup: React.FC = () => {
                       style={{ marginRight: 8 }}
                     />
                     <TextAtom variant="body" size="medium">
-                      Acepto los 
-                      <ButtonAtom
-                        type="button"
-                        variant="text"
-                        onClick={() => navigate('/terms-and-conditions')}
-                        sx={{
-                          textTransform: 'none',
-                          p: 0.5,
-                          ml: 0.5,
-                          minWidth: 'auto',
-                          display: 'inline',
-                        }}
-                      >
-                        
-                          Términos y Condiciones
-                      </ButtonAtom>
+                      {t(
+                        'auth.register.accept_terms_prefix',
+                        'Al registrarte, aceptas los',
+                      )}
                     </TextAtom>
+                    <ButtonAtom
+                      type="button"
+                      variant="text"
+                      onClick={() => navigate('/terms-and-conditions')}
+                      sx={{
+                        textTransform: 'none',
+                        p: 0.5,
+                        minWidth: 'auto',
+                        display: 'inline',
+                      }}
+                    >
+                      {t(
+                        'auth.register.terms_of_service',
+                        'Términos y Condiciones',
+                      )}
+                    </ButtonAtom>
+                    <TextAtom
+                      variant="body"
+                      size="medium"
+                      sx={{ display: 'inline', mx: 0.5 }}
+                    >
+                      {t('auth.register.and', 'y')}
+                    </TextAtom>
+                    <ButtonAtom
+                      type="button"
+                      variant="text"
+                      onClick={() => navigate('/privacy-policy')}
+                      sx={{
+                        textTransform: 'none',
+                        p: 0.5,
+                        minWidth: 'auto',
+                        display: 'inline',
+                      }}
+                    >
+                      {t(
+                        'auth.register.privacy_policy',
+                        'Política de Privacidad.',
+                      )}
+                    </ButtonAtom>
                   </Box>
                   {errors.acceptTerms && (
                     <Box sx={{ mt: 1 }}>
@@ -268,7 +296,7 @@ const Signup: React.FC = () => {
                     {t('auth.register.signup_title_button')}
                   </ButtonAtom>
                 </Grid>
-                
+
                 <Box sx={{ height: '191px' }} />
                 <Grid
                   size={{ xs: 12 }}

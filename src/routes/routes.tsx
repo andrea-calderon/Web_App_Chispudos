@@ -24,6 +24,7 @@ import { ProfilePage } from '../features/profile/components/pages/ProfilePage';
 import TermsAndConditions from '../features/auth/components/pages/TermsAndConditions';
 import BusinessProfilePage from '../features/Business/Components/Organisms/BusinessProfile';
 import BusinessChat from '../features/Business/Components/Organisms/BusinessChat';
+import PrivacyPolicy from '../features/auth/components/pages/PrivacyPolicy';
 
 const AppRoutes = () => {
   const { isAuthenticated } = useAppSelector(selectAuth);
@@ -43,7 +44,11 @@ const AppRoutes = () => {
             />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/password-recovery" element={<PasswordRecovery />} />
-            {/* <Route path="/terms-and-conditions" element={<TermsAndConditions />} /> */}
+            <Route
+              path="/terms-and-conditions"
+              element={<TermsAndConditions />}
+            />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
 
             {/* Publicly accessible pages (FIX) */}
             <Route path="/home" element={<HomePage />} />
