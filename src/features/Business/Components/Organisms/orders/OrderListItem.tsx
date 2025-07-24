@@ -17,6 +17,7 @@ import { useTranslation } from 'react-i18next';
 import { ButtonAtom } from '../../../../../components/atoms';
 import { getApiImageUrl } from '../../../../../utils/baseEnvironment';
 import { useHasRole } from '../../../../../hooks/useHasRole';
+import ReviewForm from '../reviews/ReviewForm';
 
 interface OrderListItemProps {
   order: any;
@@ -34,6 +35,7 @@ const OrderListItem: React.FC<OrderListItemProps> = ({ order, onAction }) => {
   const { t } = useTranslation();
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [showReviewModal, setShowReviewModal] = useState(false);
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -48,11 +50,6 @@ const OrderListItem: React.FC<OrderListItemProps> = ({ order, onAction }) => {
       icon: <Chat />,
       title: t('features.businessOrdersPage.actions.chat', 'Chat'),
       action: () => onAction('chat', id),
-    },
-    {
-      icon: <StarRate />,
-      title: t('features.businessOrdersPage.actions.rate', 'Calificar'),
-      action: () => onAction('rate', id),
     },
   ];
 
@@ -77,16 +74,12 @@ const OrderListItem: React.FC<OrderListItemProps> = ({ order, onAction }) => {
       title: t('features.businessOrdersPage.actions.chat', 'Chat'),
       action: () => onAction('chat', id),
     },
-    {
-      icon: <StarRate />,
-      title: t('features.businessOrdersPage.actions.rate', 'Calificar'),
-      action: () => onAction('rate', id),
-    },
   ];
 
   const ButtonsObj = isMerchant ? ButtonsObjMerchant : ButtonsObjUser;
 
   return (
+  <>
     <ListItem alignItems="flex-start">
       <ListItemAvatar>
         <img
@@ -123,6 +116,10 @@ const OrderListItem: React.FC<OrderListItemProps> = ({ order, onAction }) => {
                 {button.title}
               </MenuItem>
             ))}
+            <MenuItem onClick={() => setShowReviewModal(true)}>
+              <StarRate />
+              {t('features.businessOrdersPage.actions.rate', 'Calificar')}
+            </MenuItem>
           </Menu>
         </>
       ) : (
@@ -134,11 +131,25 @@ const OrderListItem: React.FC<OrderListItemProps> = ({ order, onAction }) => {
               startIcon={button.icon}
               title={button.title}
               onClick={() => button.action()}
-            />
+            >
+              {button.title}
+            </ButtonAtom>
           ))}
+          {order?.status == 3 || order?.status == 4 ? (
+            <ButtonAtom
+              variant="elevated"
+              startIcon={<StarRate />}
+              title={t('features.businessOrdersPage.actions.rate', 'Leave a review')}
+              onClick={() => setShowReviewModal(true)}
+            >
+              {t('features.businessOrdersPage.actions.rate', 'Calificar')}
+            </ButtonAtom>
+          ) : null}
         </Box>
       )}
     </ListItem>
+      <ReviewForm showReviewModal={showReviewModal} setShowReviewModal={setShowReviewModal} service={product} />
+  </>
   );
 };
 
