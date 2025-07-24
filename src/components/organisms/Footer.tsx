@@ -1,11 +1,12 @@
 import React from 'react';
-import { Grid, Box, Typography, IconButton } from '@mui/material';
+import { Grid, Box, Typography, IconButton, Divider } from '@mui/material';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import PinterestIcon from '@mui/icons-material/Pinterest';
 import { useTranslation } from 'react-i18next';
 import AppLogo from '../molecules/AppLogo';
 import packageJson from '../../../package.json';
+import { Link as RouterLink } from 'react-router-dom';
 
 const Footer: React.FC = () => {
   const { t } = useTranslation();
@@ -13,7 +14,7 @@ const Footer: React.FC = () => {
 
   return (
     <>
-      <Box sx={{display: { xs: 'none', md: 'block', }}}>
+      <Box sx={{ display: { xs: 'none', md: 'block' } }}>
         <Grid item xs={12} textAlign="center">
           <Box padding={8}>
             <AppLogo maxWidth="250px" />
@@ -44,21 +45,50 @@ const Footer: React.FC = () => {
           </Box>
         </Grid>
 
-        <Grid item xs={12} textAlign="center" mt={3} marginBottom="80px">
-          <Typography variant="body2" color="textSecondary">
-            © {new Date().getFullYear()} -
-            <a
-              href="https://www.bytecodelatam.com"
-              target="_blank"
-              style={{ textDecoration: 'none' }}
-            >
-              byteCode
-            </a>
-            : {t('footer.copyright')}
-          </Typography>
-          <Typography variant="body2" color="textSecondary">
-            Version: {version}
-          </Typography>
+        <Grid item xs={12} textAlign="center" mt={3} marginBottom="16px">
+          <Box
+            sx={{ display: 'flex', justifyContent: 'center', gap: 2, mb: 2 }}
+          >
+            <Typography variant="body2" color="textSecondary">
+              <RouterLink
+                to="/terms-and-conditions"
+                style={{
+                  color: 'inherit',
+                  textDecoration: 'underline',
+                  fontSize: '0.95em',
+                  marginRight: 8,
+                }}
+              >
+                {t('footer.terms', 'Términos y condiciones')}
+              </RouterLink>
+            </Typography>
+            <Typography variant="body2" color="textSecondary">
+              <RouterLink
+                to="/privacy-policy"
+                style={{
+                  color: 'inherit',
+                  textDecoration: 'underline',
+                  fontSize: '0.95em',
+                }}
+              >
+                {t('footer.privacy', 'Política de privacidad')}
+              </RouterLink>
+            </Typography>
+          </Box>
+          <Divider sx={{ mb: 2 }} />
+          <Box>
+            <Typography variant="body2" color="textSecondary">
+              © {new Date().getFullYear()} |{' '}
+              <a
+                href="https://www.bytecodelatam.com"
+                target="_blank"
+                style={{ textDecoration: 'none' }}
+              >
+                byteCode |{' '}
+              </a>
+              {t('footer.copyright')} Version: {version}
+            </Typography>
+          </Box>
         </Grid>
       </Box>
     </>
