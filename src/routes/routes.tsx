@@ -25,6 +25,7 @@ import TermsAndConditions from '../features/auth/components/pages/TermsAndCondit
 import BusinessProfilePage from '../features/Business/Components/Organisms/BusinessProfile';
 import BusinessChat from '../features/Business/Components/Organisms/BusinessChat';
 import PrivacyPolicy from '../features/auth/components/pages/PrivacyPolicy';
+import MessagesConversation from '../features/messages/organisms/molecules/MessagesConversation';
 
 const AppRoutes = () => {
   const { isAuthenticated } = useAppSelector(selectAuth);
@@ -64,6 +65,7 @@ const AppRoutes = () => {
               <Route path="/favorites" element={<FavoritesPage />} />
               <Route path="/myProducts" element={<BusinessProfilePage />} />
               <Route path="/messages" element={<BusinessChat />} />
+              <Route path="/messages/:chatId" element={<MessagesConversation />} />
             </Route>
 
             {/* Error Page */}
