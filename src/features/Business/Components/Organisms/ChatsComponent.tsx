@@ -5,11 +5,15 @@ import {
   Grid2 as Grid,
   List,
   ListItem,
+  ListItemButton,
   ListItemAvatar,
   ListItemText,
   CircularProgress,
+  useMediaQuery,
+  useTheme,
 } from '@mui/material';
 import {
+  useGetChatByIdQuery,
   useGetChatsByUserIdQuery,
 } from '../../../../services/chatApi';
 import { useEffect, useRef, useState } from 'react';
@@ -18,10 +22,13 @@ import { selectAuth } from '../../../../redux/slices/authSlice';
 import { getApiImageUrl } from '../../../../utils/baseEnvironment';
 import { UserLayout } from '../../../../components/templates/UserLayout';
 import MessagesConversation from '../../../messages/organisms/molecules/MessagesConversation';
+import { useParams, useNavigate } from 'react-router-dom';
 
 export default function ChatComponent() {
-  const [selectedChat, setSelectedChat] = useState(null);
-  const listRef = useRef(null); // Nueva referencia para la lista de chats
+  const { chatId } = useParams();
+  const navigate = useNavigate();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const userID = useAppSelector(selectAuth)?.user?.id;
 
   const {
@@ -30,38 +37,35 @@ export default function ChatComponent() {
   } = useGetChatsByUserIdQuery(userID, { skip: !userID });
   const chats = chatUser?.data || [];
 
+  const {
+      data: singleChatUser,
+    } = useGetChatByIdQuery(chatId, { skip: !chatId });
 
-  // console.error('chatUser', chatUser);
+  const [selectedChat, setSelectedChat] = useState<any>(null);
+  const listRef = useRef(null);
+
+  // Handle chat selection from URL param or default selection
   useEffect(() => {
-    if (chats.length > 0 && !selectedChat) {
-      setSelectedChat(chats[0]); // Selecciona el primer chat por defecto
+    if (chatId && singleChatUser?.data) {
+      // If there's a chatId in URL and we have the data, use it
+      setSelectedChat(singleChatUser.data);
+    } else if (!chatId && chats.length > 0 && !selectedChat) {
+      // If no chatId in URL, select first chat and update URL
+      setSelectedChat(chats[0]);
     }
-  }, [chats, selectedChat]);
+  }, [chatId, singleChatUser, chats, selectedChat, navigate]);
 
-  // Scroll automático optimizado
-  // const scrollToBottom = useCallback((behavior: ScrollBehavior = 'smooth') => {
-  //   messagesEndRef.current?.scrollIntoView({ behavior });
-  // }, []);
-
-  // useEffect(() => {
-  //   if (selectedChat?.messages) {
-  //     // Scroll inmediato al cargar y suave al enviar
-  //     scrollToBottom(selectedChat.messages.length > 10 ? 'auto' : 'smooth');
-  //   }
-  // }, [selectedChat, scrollToBottom]);
-
-  // Manejo de scroll en lista de chats
-  const handleChatSelect = (chat) => {
-    setSelectedChat(chat);
-    // if (listRef.current) {
-    //   // listRef.current.scrollTo({ top: 0, behavior: 'smooth' });
-    // }
+  // Handle chat selection - navigate to the chat URL
+  const handleChatSelect = (chat: any) => {
+    navigate(`/messages/${chat.id}`);
   };
 
   return (
 
     <UserLayout showFooter={false}>
       <Grid container>
+      {isMobile && chatId?
+      null :
       <Grid size={{ xs: 12, md: 4 }} sx={{ border: '1px solid #ccc', borderRadius: '8px', minHeight: { xs: '300px', md: '500px' } }}>
         {/* Lista de chats - Scroll vertical */}
         <Box
@@ -93,18 +97,19 @@ export default function ChatComponent() {
                 <CircularProgress />
               </Box>
             ) : (
-              chats.map((chat) => (
+              chats.map((chat: any) => (
                 <ListItem
                   key={chat.id}
-                  button
-                  onClick={() => handleChatSelect(chat)}
-                  selected={selectedChat?.id === chat.id}
-                  sx={{
-                    '&.Mui-selected': { backgroundColor: '#f3e5f5' },
-                    '&:hover': { backgroundColor: '#f3e5f550' },
-                  }
-                }
+                  disablePadding
                 >
+                  <ListItemButton
+                    onClick={() => handleChatSelect(chat)}
+                    selected={chatId === chat.id || (!chatId && selectedChat?.id === chat.id)}
+                    sx={{
+                      '&.Mui-selected': { backgroundColor: '#f3e5f5' },
+                      '&:hover': { backgroundColor: '#f3e5f550' },
+                    }}
+                  >
                   <ListItemAvatar sx={{ minWidth: '72px' }}>
                     <Box sx={{ml:15}}  >
                       <Avatar
@@ -138,15 +143,20 @@ export default function ChatComponent() {
                       </Typography>
                     }
                   />
+                  </ListItemButton>
                 </ListItem>
               ))
             )}
           </List>
         </Box>
-      </Grid>
-      <Grid size={{ xs: 12, md: 8 }} sx={{ border: '1px solid #ccc', borderRadius: '8px', minHeight: { xs: '300px', md: '500px' } }}>
-        <MessagesConversation conversationId={selectedChat?.id} />
-      </Grid>
+      </Grid>}
+      
+        {isMobile && !chatId ?
+        null: 
+        <Grid size={{ xs: 12, md: 8 }} sx={{ border: '1px solid #ccc', borderRadius: '8px', minHeight: { xs: '300px', md: '500px' } }}>
+          <MessagesConversation conversationId={chatId || selectedChat?.id} />
+        </Grid>
+}
       </Grid>
     </UserLayout>
   );
