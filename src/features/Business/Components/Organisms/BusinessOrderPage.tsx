@@ -81,8 +81,9 @@ const BusinessOrderPage = () => {
     };
     try {
       const respChatCreated = await createChat(chatBody).unwrap();
+      console.warn('Chat created:', respChatCreated?.data?.conversationId);
       if (respChatCreated) {
-        navigate(`/messages`);
+        navigate(`/messages/${respChatCreated?.data?.conversationId}`);
       }
     } catch (error) {
       console.error('Failed to create chat:', error);

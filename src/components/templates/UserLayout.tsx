@@ -6,9 +6,12 @@ import Footer from '../organisms/Footer';
 
 interface Props {
   children: ReactNode;
+  showFooter?: boolean;
 }
 
-export const UserLayout = ({ children }: Props) => {
+export const UserLayout = ({ children,
+  showFooter = true,
+ }: Props) => {
   const theme = useTheme();
   const isLargeScreen = useMediaQuery(theme.breakpoints.up('md'));
 
@@ -24,7 +27,7 @@ export const UserLayout = ({ children }: Props) => {
       ) : (
         <ButtonTab children={children} />
       )}
-      <Footer />
+      {showFooter && <Footer />}
     </>
   );
 };

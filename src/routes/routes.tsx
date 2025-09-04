@@ -23,8 +23,8 @@ import { FavoritesPage } from '../features/favorites/components/pages/FavoritesP
 import { ProfilePage } from '../features/profile/components/pages/ProfilePage';
 import TermsAndConditions from '../features/auth/components/pages/TermsAndConditions';
 import BusinessProfilePage from '../features/Business/Components/Organisms/BusinessProfile';
-import BusinessChat from '../features/Business/Components/Organisms/BusinessChat';
 import PrivacyPolicy from '../features/auth/components/pages/PrivacyPolicy';
+import ChatsComponent from '../features/Business/Components/Organisms/ChatsComponent';
 
 const AppRoutes = () => {
   const { isAuthenticated } = useAppSelector(selectAuth);
@@ -63,7 +63,8 @@ const AppRoutes = () => {
               <Route path="/tasks" element={<TasksPage />} />
               <Route path="/favorites" element={<FavoritesPage />} />
               <Route path="/myProducts" element={<BusinessProfilePage />} />
-              <Route path="/messages" element={<BusinessChat />} />
+              <Route path="/messages" element={<ChatsComponent />} />
+              <Route path="/messages/:chatId" element={<ChatsComponent />} />
             </Route>
 
             {/* Error Page */}

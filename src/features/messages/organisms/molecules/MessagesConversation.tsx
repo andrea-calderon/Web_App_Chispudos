@@ -4,220 +4,110 @@ import {
   TextField,
   IconButton,
   Avatar,
-  Grid,
-  List,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
+  Grid2 as Grid,
   Divider,
   CircularProgress,
+  Fab,
 } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import CameraAltOutlinedIcon from '@mui/icons-material/CameraAltOutlined';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import {
   useSendMessageMutation,
-  useGetChatsByUserIdQuery,
+  useGetChatByIdQuery,
 } from '../../../../services/chatApi';
 import { useRef, useEffect, useState, useCallback } from 'react';
 import { useAppSelector } from '../../../../hooks/useAppSelector';
 import { selectAuth } from '../../../../redux/slices/authSlice';
 import { getApiImageUrl } from '../../../../utils/baseEnvironment';
-import { UserLayout } from '../../../../components/templates/UserLayout';
+import { useParams } from 'react-router-dom';
 
-export default function ChatComponent() {
-  const [selectedChat, setSelectedChat] = useState(null);
+function MessagesConversation( {conversationId}: {conversationId: number | string}) {
   const [newMessage, setNewMessage] = useState('');
-  const messagesEndRef = useRef(null);
-  const listRef = useRef(null); // Nueva referencia para la lista de chats
+  const [showScrollButton, setShowScrollButton] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
   const userID = useAppSelector(selectAuth)?.user?.id;
+  const { chatId } = useParams();
+
+  const messagesConversationID = chatId || conversationId;
 
   const {
     data: chatUser,
-    isLoading,
-    error,
-  } = useGetChatsByUserIdQuery(userID, { skip: !userID });
-  const chats = chatUser?.data || [];
+  } = useGetChatByIdQuery(messagesConversationID, { skip: !messagesConversationID });
 
   const [sendMessage, { isLoading: isSending }] = useSendMessageMutation();
+
+  
+
+  const selectedChat = chatUser?.data;
+  console.error({selectedChat});
 
   // Scroll automático optimizado
   const scrollToBottom = useCallback((behavior: ScrollBehavior = 'smooth') => {
     messagesEndRef.current?.scrollIntoView({ behavior });
   }, []);
 
-  useEffect(() => {
-    if (selectedChat?.messages) {
-      // Scroll inmediato al cargar y suave al enviar
-      scrollToBottom(selectedChat.messages.length > 10 ? 'auto' : 'smooth');
+  // Check if user is at bottom of messages
+  const handleScroll = useCallback(() => {
+    if (messagesContainerRef.current) {
+      const { scrollTop, scrollHeight, clientHeight } = messagesContainerRef.current;
+      const isAtBottom = scrollTop + clientHeight >= scrollHeight - 10; // 10px threshold
+      setShowScrollButton(!isAtBottom);
     }
-  }, [selectedChat, scrollToBottom]);
+  }, []);
 
-  // Manejo de scroll en lista de chats
-  const handleChatSelect = (chat) => {
-    setSelectedChat(chat);
-    if (listRef.current) {
-      listRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+  useEffect(() => {
+    if (selectedChat?.messages && selectedChat.messages.length > 0) {
+      // Scroll inmediato al cargar y suave al enviar
+      const timer = setTimeout(() => {
+        scrollToBottom(selectedChat.messages.length > 10 ? 'auto' : 'smooth');
+      }, 100); // Small delay to ensure DOM is rendered
+      
+      return () => clearTimeout(timer);
     }
-  };
+  }, [selectedChat?.messages, scrollToBottom]);
+
 
   // Envío de mensajes optimizado
   const handleSend = async () => {
     if (!newMessage.trim() || !selectedChat) return;
 
     try {
-      const tempId = Date.now(); // ID temporal para optimismo
-      const optimisticMessage = {
-        id: tempId,
-        content: newMessage,
-        senderId: userID,
-        createdAt: new Date().toISOString(),
-      };
-
-      // Actualización optimista
-      setSelectedChat((prev) => ({
-        ...prev,
-        messages: [...prev.messages, optimisticMessage],
-      }));
-
-      const response = await sendMessage({
+      await sendMessage({
         conversationId: selectedChat.id,
         senderId: userID,
         content: newMessage,
       }).unwrap();
 
-      // Reemplazar mensaje temporal con respuesta real
-      setSelectedChat((prev) => ({
-        ...prev,
-        messages: prev.messages.map((msg) =>
-          msg.id === tempId ? response.data : msg,
-        ),
-      }));
-
       setNewMessage('');
-      scrollToBottom();
+      // Scroll to bottom after sending message
+      setTimeout(() => {
+        scrollToBottom('smooth');
+      }, 100);
     } catch (err) {
       console.error('Error al enviar:', err);
-      setSelectedChat((prev) => ({
-        ...prev,
-        messages: prev.messages.filter((msg) => msg.id !== tempId),
-      }));
     }
   };
 
   
-  const groupMessagesByDate = useCallback((messages) => {
-    return messages.reduce((groups, message) => {
+  const groupMessagesByDate = useCallback((messages: any[]) => {
+    return messages.reduce((groups: { [key: string]: any[] }, message: any) => {
       const date = new Date(message.createdAt).toLocaleDateString();
       groups[date] = groups[date] || [];
       groups[date].push(message);
       return groups;
     }, {});
   }, []);
-
   return (
-
-    <UserLayout>
-    <Box
-      sx={{
-        height: '70vh',
-        maxHeight: '800px',
-        display: 'flex',
-        border: '1px solid #ccc',
-        borderRadius: '10px',
-        overflow: 'hidden',
-        margin: { xs: 2, md: 5 },
-      }}
-    >
-      <Grid container sx={{ height: '100%' }}>
-        {/* Lista de chats - Scroll vertical */}
-        <Grid
-          item
-          xs={12}
-          md={4}
+    <Grid
           sx={{
-            borderRight: '1px solid #ccc',
-            height: '100%',
-            display: 'flex',
-            flexDirection: 'column',
-          }}
-        >
-          <List
-            ref={listRef}
-            sx={{
-              flex: 1,
-              overflowY: 'auto',
-              '&::-webkit-scrollbar': { width: '6px' },
-              '&::-webkit-scrollbar-thumb': {
-                backgroundColor: '#673ab7',
-                borderRadius: '3px',
-              },
-            }}
-          >
-            {isLoading ? (
-              <Box display="flex" justifyContent="center" p={3}>
-                <CircularProgress />
-              </Box>
-            ) : (
-              chats.map((chat) => (
-                <ListItem
-                  key={chat.id}
-                  button
-                  onClick={() => handleChatSelect(chat)}
-                  selected={selectedChat?.id === chat.id}
-                  sx={{
-                    '&.Mui-selected': { backgroundColor: '#f3e5f5' },
-                    '&:hover': { backgroundColor: '#f3e5f550' },
-                  }}
-                >
-                  <ListItemAvatar sx={{ minWidth: '72px' }}>
-                    <Box sx={{ position: 'relative' }}>
-                      <Avatar
-                        src={getApiImageUrl(chat.user1.avatarUrl)}
-                        sx={{
-                          width: 40,
-                          height: 40,
-                          position: 'absolute',
-                          top: 0,
-                          left: 0,
-                        }}
-                      />
-                      <Avatar
-                        src={getApiImageUrl(chat.user2.avatarUrl)}
-                        sx={{
-                          width: 40,
-                          height: 40,
-                          position: 'absolute',
-                          top: 20,
-                          left: 20,
-                          border: '2px solid white',
-                        }}
-                      />
-                    </Box>
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary={`${chat.user1.name} & ${chat.user2.name}`}
-                    secondary={
-                      <Typography variant="caption" color="textSecondary">
-                        {new Date(chat.updatedAt).toLocaleDateString()}
-                      </Typography>
-                    }
-                  />
-                </ListItem>
-              ))
-            )}
-          </List>
-        </Grid>
-
-        {/* Área de mensajes - Scroll vertical */}
-        <Grid
-          item
-          xs={12}
-          md={8}
-          sx={{
-            height: '100%',
+            height: '90vh', // Full viewport height
+            maxHeight: '90vh', // Prevent overflow
             display: 'flex',
             flexDirection: 'column',
             backgroundColor: '#fafafa',
+            overflow: 'hidden', // Prevent container overflow
           }}
         >
           {selectedChat ? (
@@ -231,7 +121,7 @@ export default function ChatComponent() {
                   alignItems: 'center',
                 }}
               >
-                <Box sx={{ position: 'relative', mr: 2 }}>
+                <Box sx={{ position: 'relative', m: 2 }}>
                   <Avatar
                     src={getApiImageUrl(selectedChat.user1.avatarUrl)}
                     sx={{ width: 40, height: 40 }}
@@ -254,18 +144,27 @@ export default function ChatComponent() {
               </Box>
 
               <Box
+                ref={messagesContainerRef}
+                onScroll={handleScroll}
                 sx={{
                   flex: 1,
                   overflowY: 'auto',
+                  overflowX: 'hidden',
                   p: 2,
+                  minHeight: 0, // Important for flex container scrolling
+                  maxHeight: 'calc(100vh - 200px)', // Adjust based on header/footer height
+                  position: 'relative',
                   '&::-webkit-scrollbar': { width: '6px' },
                   '&::-webkit-scrollbar-thumb': {
                     backgroundColor: '#673ab7',
                     borderRadius: '3px',
                   },
+                  '&::-webkit-scrollbar-track': {
+                    backgroundColor: 'transparent',
+                  },
                 }}
               >
-                {Object.entries(groupMessagesByDate(selectedChat.messages)).map(
+                {Object.entries(groupMessagesByDate(selectedChat.messages || [])).map(
                   ([date, messages]) => (
                     <div key={date}>
                       <Divider sx={{ my: 2 }}>
@@ -273,7 +172,7 @@ export default function ChatComponent() {
                           {date}
                         </Typography>
                       </Divider>
-                      {messages.map((msg) => (
+                      {(messages as any[]).map((msg: any) => (
                         <Box
                           key={msg.id}
                           sx={{
@@ -324,6 +223,26 @@ export default function ChatComponent() {
                   ),
                 )}
                 <div ref={messagesEndRef} />
+                
+                {/* Floating scroll to bottom button */}
+                {showScrollButton && (
+                  <Fab
+                    size="small"
+                    onClick={() => scrollToBottom('smooth')}
+                    sx={{
+                      position: 'absolute',
+                      bottom: 16,
+                      right: 16,
+                      backgroundColor: '#673ab7',
+                      color: 'white',
+                      '&:hover': {
+                        backgroundColor: '#8561c5',
+                      },
+                    }}
+                  >
+                    <KeyboardArrowDownIcon />
+                  </Fab>
+                )}
               </Box>
             </>
           ) : (
@@ -340,10 +259,10 @@ export default function ChatComponent() {
                 Selecciona una conversación
               </Typography>
             </Box>
-          )}
+          )} 
 
           {/* Área de entrada de mensajes */}
-          <Box
+           <Box
             sx={{
               p: 2,
               borderTop: '1px solid #eee',
@@ -390,8 +309,7 @@ export default function ChatComponent() {
             </IconButton>
           </Box>
         </Grid>
-      </Grid>
-    </Box>
-    </UserLayout>
-  );
+  )
 }
+
+export default MessagesConversation;
