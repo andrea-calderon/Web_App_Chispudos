@@ -10,13 +10,17 @@ import {
   Fab,
   useTheme,
   useMediaQuery,
+  Menu,
+  MenuItem,
 } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import CameraAltOutlinedIcon from '@mui/icons-material/CameraAltOutlined';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
 import {
   useSendMessageMutation,
   useGetChatByIdQuery,
+  useAddReactionMutation,
 } from '../../../../services/chatApi';
 import { useRef, useEffect, useState, useCallback } from 'react';
 import { useAppSelector } from '../../../../hooks/useAppSelector';
@@ -25,9 +29,19 @@ import { getApiImageUrl } from '../../../../utils/baseEnvironment';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ArrowBack } from '@mui/icons-material';
 
+const REACTIONS = [
+  { type: 'like', emoji: '👍' },
+  { type: 'love', emoji: '❤️' },
+  { type: 'laugh', emoji: '😂' },
+  { type: 'wow', emoji: '😮' },
+  { type: 'sad', emoji: '👎' },
+];
+
 function MessagesConversation( {conversationId}: {conversationId: number | string}) {
   const [newMessage, setNewMessage] = useState('');
   const [showScrollButton, setShowScrollButton] = useState(false);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [selectedMessage, setSelectedMessage] = useState<number | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const userID = useAppSelector(selectAuth)?.user?.id;
@@ -43,6 +57,7 @@ function MessagesConversation( {conversationId}: {conversationId: number | strin
   } = useGetChatByIdQuery(messagesConversationID, { skip: !messagesConversationID });
 
   const [sendMessage, { isLoading: isSending }] = useSendMessageMutation();
+  const [addReaction, { isLoading: isReacting }] = useAddReactionMutation();
 
   
 
@@ -105,6 +120,37 @@ function MessagesConversation( {conversationId}: {conversationId: number | strin
       return groups;
     }, {});
   }, []);
+
+  const handleReactionClick = (
+    event: React.MouseEvent<HTMLElement>,
+    messageId: number,
+  ) => {
+    setAnchorEl(event.currentTarget);
+    setSelectedMessage(messageId);
+  };
+
+  const handleReactionClose = () => {
+    setAnchorEl(null);
+    setSelectedMessage(null);
+  };
+
+  const handleAddReaction = async (reactionType: string, emoji: string) => {
+    if (selectedMessage !== null && userID) {
+      try {
+        await addReaction({
+          userId: userID,
+          reactableType: 'message',
+          reactableId: selectedMessage,
+          type: reactionType,
+        }).unwrap();
+        
+        console.log('Reaction added successfully:', { type: reactionType, emoji }, 'to message:', selectedMessage);
+      } catch (error) {
+        console.error('Error adding reaction:', error);
+      }
+    }
+    handleReactionClose();
+  };
   return (
     <Grid
           sx={{
@@ -212,21 +258,83 @@ function MessagesConversation( {conversationId}: {conversationId: number | strin
                               }
                               sx={{ mx: 1 }}
                             />
-                            <Typography
-                              sx={{
-                                p: 2,
-                                borderRadius: '15px',
-                                backgroundColor:
-                                  msg.senderId === userID ? '#673ab7' : '#fff',
-                                color:
-                                  msg.senderId === userID
-                                    ? 'white'
-                                    : 'text.primary',
-                                boxShadow: 1,
-                              }}
-                            >
-                              {msg.content}
-                            </Typography>
+                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                              {msg.senderId !== userID && (
+                                <IconButton
+                                  size="small"
+                                  onClick={(event) => handleReactionClick(event, msg.id)}
+                                  sx={{ mr: 0.5 }}
+                                  disabled={isReacting}
+                                >
+                                  <EmojiEmotionsIcon fontSize="small" />
+                                </IconButton>
+                              )}
+                              <Box>
+                                <Typography
+                                  sx={{
+                                    p: 2,
+                                    borderRadius: '15px',
+                                    backgroundColor:
+                                      msg.senderId === userID ? '#673ab7' : '#fff',
+                                    color:
+                                      msg.senderId === userID
+                                        ? 'white'
+                                        : 'text.primary',
+                                    boxShadow: 1,
+                                  }}
+                                >
+                                  {msg.content}
+                                </Typography>
+                                {/* Display reactions if they exist */}
+                                {(msg.Reactions && msg.Reactions.length > 0) && (
+                                  <Box
+                                    sx={{
+                                      display: 'flex',
+                                      flexWrap: 'wrap',
+                                      mt: 0.5,
+                                      gap: 0.5,
+                                    }}
+                                  >
+                                    {msg.Reactions.map((reaction: { id: number; type: string; userId: number }, index: number) => {
+                                      const reactionConfig = REACTIONS.find(r => r.type === reaction.type);
+                                      return (
+                                        <Typography
+                                          key={reaction.id || index}
+                                          sx={{
+                                            fontSize: '0.8rem',
+                                            backgroundColor: 'rgba(103, 58, 183, 0.1)',
+                                            borderRadius: '10px',
+                                            px: 1,
+                                            py: 0.25,
+                                            cursor: 'pointer',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: 0.5,
+                                            '&:hover': {
+                                              backgroundColor: 'rgba(103, 58, 183, 0.2)',
+                                            },
+                                          }}
+                                          title={`${reaction.type} reaction`}
+                                        >
+                                          {reactionConfig?.emoji || '👍'}
+                                          <span style={{ fontSize: '0.7rem', opacity: 0.8 }}>1</span>
+                                        </Typography>
+                                      );
+                                    })}
+                                  </Box>
+                                )}
+                              </Box>
+                              {msg.senderId === userID && (
+                                <IconButton
+                                  size="small"
+                                  onClick={(event) => handleReactionClick(event, msg.id)}
+                                  sx={{ ml: 0.5 }}
+                                  disabled={isReacting}
+                                >
+                                  <EmojiEmotionsIcon fontSize="small" />
+                                </IconButton>
+                              )}
+                            </Box>
                           </Box>
                         </Box>
                       ))}
@@ -319,6 +427,39 @@ function MessagesConversation( {conversationId}: {conversationId: number | strin
               )}
             </IconButton>
           </Box>
+
+          {/* Reaction Menu */}
+          <Menu
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={handleReactionClose}
+            PaperProps={{
+              sx: {
+                borderRadius: '20px',
+                boxShadow: '0 4px 20px rgba(0,0,0,0.15)',
+              },
+            }}
+          >
+            <Box sx={{ display: 'flex', px: 1 }}>
+              {REACTIONS.map((reaction) => (
+                <MenuItem
+                  key={reaction.type}
+                  onClick={() => handleAddReaction(reaction.type, reaction.emoji)}
+                  sx={{
+                    fontSize: '1.5rem',
+                    minWidth: 'auto',
+                    px: 1,
+                    '&:hover': {
+                      backgroundColor: 'rgba(103, 58, 183, 0.1)',
+                    },
+                  }}
+                  title={reaction.type}
+                >
+                  {reaction.emoji}
+                </MenuItem>
+              ))}
+            </Box>
+          </Menu>
         </Grid>
   )
 }
