@@ -165,6 +165,28 @@ function MessagesConversation( {conversationId}: {conversationId: number | strin
     }
     handleReactionClose();
   };
+
+  // Helper function to group reactions by type and count them
+  const groupReactionsByType = useCallback((reactions: { id: number; type: string; userId: number }[]) => {
+    const grouped = reactions.reduce((acc, reaction) => {
+      if (!acc[reaction.type]) {
+        acc[reaction.type] = {
+          type: reaction.type,
+          count: 0,
+          userIds: [],
+          hasCurrentUser: false,
+        };
+      }
+      acc[reaction.type].count += 1;
+      acc[reaction.type].userIds.push(reaction.userId);
+      if (reaction.userId === userID) {
+        acc[reaction.type].hasCurrentUser = true;
+      }
+      return acc;
+    }, {} as Record<string, { type: string; count: number; userIds: number[]; hasCurrentUser: boolean }>);
+    
+    return Object.values(grouped);
+  }, [userID]);
   return (
     <Grid
           sx={{
@@ -188,7 +210,7 @@ function MessagesConversation( {conversationId}: {conversationId: number | strin
                 }}
               >
                 {isMobile ? (
-                    <IconButton onClick={() => navigate(-1)} disabled={isSending}>
+                    <IconButton onClick={() => navigate('/messages')} disabled={isSending}>
                       <ArrowBack />
                     </IconButton>
                   ) : null}
@@ -309,14 +331,16 @@ function MessagesConversation( {conversationId}: {conversationId: number | strin
                                       gap: 0.5,
                                     }}
                                   >
-                                    {msg.Reactions.map((reaction: { id: number; type: string; userId: number }, index: number) => {
-                                      const reactionConfig = REACTIONS.find(r => r.type === reaction.type);
+                                    {groupReactionsByType(msg.Reactions).map((groupedReaction) => {
+                                      const reactionConfig = REACTIONS.find(r => r.type === groupedReaction.type);
                                       return (
                                         <Typography
-                                          key={reaction.id || index}
+                                          key={groupedReaction.type}
                                           sx={{
                                             fontSize: '0.8rem',
-                                            backgroundColor: 'rgba(103, 58, 183, 0.1)',
+                                            backgroundColor: groupedReaction.hasCurrentUser 
+                                              ? 'rgba(103, 58, 183, 0.2)' 
+                                              : 'rgba(103, 58, 183, 0.1)',
                                             borderRadius: '10px',
                                             px: 1,
                                             py: 0.25,
@@ -324,14 +348,19 @@ function MessagesConversation( {conversationId}: {conversationId: number | strin
                                             display: 'flex',
                                             alignItems: 'center',
                                             gap: 0.5,
+                                            border: groupedReaction.hasCurrentUser 
+                                              ? '1px solid rgba(103, 58, 183, 0.3)' 
+                                              : 'none',
                                             '&:hover': {
-                                              backgroundColor: 'rgba(103, 58, 183, 0.2)',
+                                              backgroundColor: 'rgba(103, 58, 183, 0.3)',
                                             },
                                           }}
-                                          title={`${reaction.type} reaction`}
+                                          title={`${groupedReaction.count} ${groupedReaction.type} reaction${groupedReaction.count > 1 ? 's' : ''}${groupedReaction.hasCurrentUser ? ' (including you)' : ''}`}
                                         >
                                           {reactionConfig?.emoji || '👍'}
-                                          <span style={{ fontSize: '0.7rem', opacity: 0.8 }}>1</span>
+                                          <span style={{ fontSize: '0.7rem', opacity: 0.8 }}>
+                                            {groupedReaction.count}
+                                          </span>
                                         </Typography>
                                       );
                                     })}
