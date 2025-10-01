@@ -54,7 +54,7 @@ function MessagesConversation( {conversationId}: {conversationId: number | strin
 
   const {
     data: chatUser,
-  } = useGetChatByIdQuery(messagesConversationID, { skip: !messagesConversationID });
+  } = useGetChatByIdQuery(messagesConversationID, { skip: !messagesConversationID, pollingInterval: 60000, });
 
   const [sendMessage, { isLoading: isSending }] = useSendMessageMutation();
   const [addReaction, { isLoading: isReacting }] = useAddReactionMutation();
@@ -113,12 +113,26 @@ function MessagesConversation( {conversationId}: {conversationId: number | strin
 
   
   const groupMessagesByDate = useCallback((messages: any[]) => {
-    return messages.reduce((groups: { [key: string]: any[] }, message: any) => {
+    // First sort all messages by creation date
+    const sortedMessages = [...messages].sort((a, b) => 
+      new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+    );
+
+    // Group messages by date
+    const groups = sortedMessages.reduce((groups: { [key: string]: any[] }, message: any) => {
       const date = new Date(message.createdAt).toLocaleDateString();
       groups[date] = groups[date] || [];
       groups[date].push(message);
       return groups;
     }, {});
+
+    // Convert to array of [date, messages] pairs and sort by date
+    const sortedGroups = Object.entries(groups).sort(([dateA], [dateB]) => {
+      return new Date(dateA).getTime() - new Date(dateB).getTime();
+    });
+
+    // Convert back to object to maintain the expected structure
+    return Object.fromEntries(sortedGroups);
   }, []);
 
   const handleReactionClick = (
