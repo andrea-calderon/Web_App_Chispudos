@@ -8,6 +8,8 @@ import {
   Divider,
   CircularProgress,
   Fab,
+  useTheme,
+  useMediaQuery,
 } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import CameraAltOutlinedIcon from '@mui/icons-material/CameraAltOutlined';
@@ -20,7 +22,8 @@ import { useRef, useEffect, useState, useCallback } from 'react';
 import { useAppSelector } from '../../../../hooks/useAppSelector';
 import { selectAuth } from '../../../../redux/slices/authSlice';
 import { getApiImageUrl } from '../../../../utils/baseEnvironment';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { ArrowBack } from '@mui/icons-material';
 
 function MessagesConversation( {conversationId}: {conversationId: number | string}) {
   const [newMessage, setNewMessage] = useState('');
@@ -29,6 +32,9 @@ function MessagesConversation( {conversationId}: {conversationId: number | strin
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const userID = useAppSelector(selectAuth)?.user?.id;
   const { chatId } = useParams();
+  const navigate = useNavigate();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   const messagesConversationID = chatId || conversationId;
 
@@ -41,7 +47,7 @@ function MessagesConversation( {conversationId}: {conversationId: number | strin
   
 
   const selectedChat = chatUser?.data;
-  console.error({selectedChat});
+  // console.error({selectedChat});
 
   // Scroll automático optimizado
   const scrollToBottom = useCallback((behavior: ScrollBehavior = 'smooth') => {
@@ -121,6 +127,11 @@ function MessagesConversation( {conversationId}: {conversationId: number | strin
                   alignItems: 'center',
                 }}
               >
+                {isMobile ? (
+                    <IconButton onClick={() => navigate(-1)} disabled={isSending}>
+                      <ArrowBack />
+                    </IconButton>
+                  ) : null}
                 <Box sx={{ position: 'relative', m: 2 }}>
                   <Avatar
                     src={getApiImageUrl(selectedChat.user1.avatarUrl)}
@@ -273,7 +284,7 @@ function MessagesConversation( {conversationId}: {conversationId: number | strin
             }}
           >
             <IconButton disabled={isSending}>
-              <CameraAltOutlinedIcon />
+              {/* <CameraAltOutlinedIcon /> */}
             </IconButton>
             <TextField
               fullWidth
