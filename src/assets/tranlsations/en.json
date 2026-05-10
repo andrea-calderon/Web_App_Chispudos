@@ -28,8 +28,8 @@
     },
     "forget_pass": {
       "body": "Please enter your email to reset the password.",
-      "emailText": "Ingresa tu correo",
-      "emailTitle": "Tu cuenta de correo",
+      "emailText": "Enter your email",
+      "emailTitle": "Your email account",
       "error_message": "",
       "resetPassword": "Reset Password",
       "success_message": "",
@@ -58,17 +58,17 @@
       "verify_code": "Verify Code"
     },
     "register": {
-      "accept_terms_prefix": "Al registrarte, aceptas los",
-      "and": "y",
+      "accept_terms_prefix": "By registering, you accept the",
+      "and": "and",
       "confirmPasswordLabel": "Confirm Password",
       "emailLabel": "Email",
       "have_an_account": "Already have an account?",
       "login_title_button": "Log In",
       "passwordLabel": "Password",
-      "privacy_policy": "Política de Privacidad.",
+      "privacy_policy": "Privacy Policy.",
       "signup_success": "",
       "signup_title_button": "Sign Up",
-      "terms_of_service": "Términos y Condiciones"
+      "terms_of_service": "Terms and Conditions"
     },
     "SetNewPass": {
       "body": "Create a new password. Ensure it differs from previous ones for security.",
@@ -127,7 +127,7 @@
       "businessNamePlaceholder": "What's your business called?",
       "description": "Tell us about the services you offer so clients can find you easily.",
       "heading": "Describe Your Business",
-      "title": "Paso 1"
+      "title": "Step 1"
     },
     "step2": {
       "description": "Choose all the categories where your business stands out. You can choose more than one! 💡",
@@ -251,8 +251,8 @@
   },
   "footer": {
     "copyright": "Web and mobile development",
-    "privacy": "Política de privacidad",
-    "terms": "Términos y condiciones"
+    "privacy": "Privacy Policy",
+    "terms": "Terms and Conditions"
   },
   "form": {
     "category": "",
@@ -276,8 +276,8 @@
     }
   },
   "heroSection": {
-    "subtitle": "Plomeros, electricistas, mecánicos y más — todos de confianza y verificados por la comunidad.",
-    "title": "Encuentra profesionales recomendados por gente real"
+    "subtitle": "Plumbers, electricians, mechanics and more — all trustworthy and verified by the community.",
+    "title": "Find professionals recommended by real people"
   },
   "landing": {
     "categories": {
@@ -344,7 +344,7 @@
   "recommendedServices": {
     "button": "View all services",
     "noServices": "",
-    "title": "Recomendados para ti"
+    "title": "Recommended for you"
   },
   "services": {
     "detailsPage": {
@@ -381,6 +381,6 @@
     "updateButton": "Update"
   },
   "welcomeBanner": {
-    "greeting": "¡Hola, {{userName}}! ¿Qué necesitás resolver hoy?"
+    "greeting": "Hello, {{userName}}! What do you want to solve today?"
   }
 }
