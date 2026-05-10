@@ -13,6 +13,7 @@ import { ServiceDetailPage } from '../features/Services/components/pages/Service
 import { TaskDetailsPage } from '../features/Services/components/pages/TaskDetailsPage';
 import { useAppSelector } from '../hooks/useAppSelector';
 import { selectAuth } from '../redux/slices/authSlice';
+import { selectBranding } from '../redux/slices/brandingSlice';
 import PasswordRecovery from '../features/auth/components/pages/PasswordRecovery';
 import RegisterPage from '../features/auth/components/pages/RegisterPage';
 import ErrorPage from '../components/organisms/ErrorPage';
@@ -28,6 +29,9 @@ import ChatsComponent from '../features/Business/Components/Organisms/ChatsCompo
 
 const AppRoutes = () => {
   const { isAuthenticated } = useAppSelector(selectAuth);
+  const { config } = useAppSelector(selectBranding);
+  const tasksEnabled = !config || config.features.tasksEnabled;
+  const chatEnabled = !config || config.features.chatEnabled;
 
   return (
     <div>
@@ -60,11 +64,11 @@ const AppRoutes = () => {
               <Route path="/service-details" element={<TaskDetailsPage />} />
               <Route path="/addProduct" element={<BusinessStepper />} />
               <Route path="/profile" element={<ProfilePage />} />
-              <Route path="/tasks" element={<TasksPage />} />
+              {tasksEnabled && <Route path="/tasks" element={<TasksPage />} />}
               <Route path="/favorites" element={<FavoritesPage />} />
               <Route path="/myProducts" element={<BusinessProfilePage />} />
-              <Route path="/messages" element={<ChatsComponent />} />
-              <Route path="/messages/:chatId" element={<ChatsComponent />} />
+              {chatEnabled && <Route path="/messages" element={<ChatsComponent />} />}
+              {chatEnabled && <Route path="/messages/:chatId" element={<ChatsComponent />} />}
             </Route>
 
             {/* Error Page */}

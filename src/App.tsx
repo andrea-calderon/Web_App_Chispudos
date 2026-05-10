@@ -8,24 +8,24 @@ import { themes, createThemes } from './theme';
 import { CssBaseline } from '@mui/material';
 import { I18nextProvider } from 'react-i18next';
 import i18n from './utils/i18n';
-import { useGetBrandingQuery } from './services/brandingApi';
-import { setBranding } from './redux/slices/brandingSlice';
-import { useBranding } from './hooks/useBranding';
+import { fetchBranding, selectBranding } from './redux/slices/brandingSlice';
+import { useSelector } from 'react-redux';
 
 function BrandingLoader() {
   const dispatch = useDispatch();
-  const { config } = useBranding();
-  const { data } = useGetBrandingQuery();
+  const { config } = useSelector(selectBranding);
 
   useEffect(() => {
-    if (data && 'data' in data && data.data) {
-      dispatch(setBranding(data.data));
-      const overrides = data.data.copyOverrides || {};
-      Object.entries(overrides).forEach(([lang, keys]) => {
+    dispatch(fetchBranding() as any);
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (config?.copyOverrides) {
+      Object.entries(config.copyOverrides).forEach(([lang, keys]) => {
         i18n.addResourceBundle(lang, 'translation', keys, true, true);
       });
     }
-  }, [data, dispatch]);
+  }, [config]);
 
   useEffect(() => {
     if (config?.appName) {

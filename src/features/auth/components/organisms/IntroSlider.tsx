@@ -9,8 +9,12 @@ import introSliderImg1 from '../../../../assets/images/intro_sliders/intro_1.png
 import introSliderImg2 from '../../../../assets/images/intro_sliders/intro_2.png';
 import introSliderImg3 from '../../../../assets/images/intro_sliders/intro_3.png';
 import introSliderImg4 from '../../../../assets/images/intro_sliders/intro_4.png';
+import { useSelector } from 'react-redux';
+import { selectBranding } from '../../../../redux/slices/brandingSlice';
 
-const slides = [
+const BASE_API_URL = (import.meta.env.VITE_BASE_API_URL || '').replace(/\/$/, '');
+
+const LOCAL_SLIDES = [
   { title: 'auth.slider_intro.title_1', image: introSliderImg1 },
   { title: 'auth.slider_intro.title_2', image: introSliderImg2 },
   { title: 'auth.slider_intro.title_3', image: introSliderImg3 },
@@ -22,6 +26,15 @@ const IntroSlider: React.FC = () => {
   const theme = useTheme();
   const { palette } = theme;
   const [currentSlide, setCurrentSlide] = useState(0);
+  const { config } = useSelector(selectBranding);
+
+  const slides = config?.introSlides?.length
+    ? config.introSlides.map((s) => ({
+        title: s.title,
+        image: s.imageUrl.startsWith('http') ? s.imageUrl : `${BASE_API_URL}${s.imageUrl}`,
+        isUrl: true,
+      }))
+    : LOCAL_SLIDES.map((s) => ({ ...s, isUrl: false }));
 
   const handlePrev = () => {
     setCurrentSlide((prev) => (prev === 0 ? slides.length - 1 : prev - 1));
@@ -90,11 +103,21 @@ const IntroSlider: React.FC = () => {
             fontWeight: 'bold',
           }}
         >
-          {t(slides[currentSlide].title)}
+          {slides[currentSlide].isUrl
+            ? slides[currentSlide].title
+            : t(slides[currentSlide].title)}
         </TextAtom>
       </Box>
       <Box sx={{ textAlign: 'center' }}>
-        <PersonAppImage imageSrc={slides[currentSlide].image} />
+        {slides[currentSlide].isUrl ? (
+          <img
+            src={slides[currentSlide].image as string}
+            alt={slides[currentSlide].title}
+            style={{ maxWidth: 340, maxHeight: 340, objectFit: 'contain' }}
+          />
+        ) : (
+          <PersonAppImage imageSrc={slides[currentSlide].image} />
+        )}
       </Box>
       <IconButton
         onClick={handleNext}
