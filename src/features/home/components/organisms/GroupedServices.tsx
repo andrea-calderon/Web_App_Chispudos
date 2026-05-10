@@ -66,7 +66,7 @@ const GroupedServices: React.FC<GroupedServicesProps> = ({
     );
   }
 
-  const serviceList = services?.length ? services : topRatedServices;
+  const serviceList = services || [];
   const handleNavigate = () => {
     navigate('/search-services');
   };
