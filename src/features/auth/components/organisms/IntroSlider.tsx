@@ -14,6 +14,13 @@ import { selectBranding } from '../../../../redux/slices/brandingSlice';
 
 const BASE_API_URL = (import.meta.env.VITE_BASE_API_URL || '').replace(/\/$/, '');
 
+// i18next-parser-start
+// t('auth.slider_intro.title_1', 'Find the expert you need in minutes.')
+// t('auth.slider_intro.title_2', 'Hire easily and without complications.')
+// t('auth.slider_intro.title_3', 'Based on user ratings who bought their services.')
+// t('auth.slider_intro.title_4', 'Explore, compare and schedule in a few steps.')
+// i18next-parser-end
+
 const LOCAL_SLIDES = [
   { title: 'auth.slider_intro.title_1', image: introSliderImg1 },
   { title: 'auth.slider_intro.title_2', image: introSliderImg2 },

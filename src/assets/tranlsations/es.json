@@ -10,11 +10,16 @@
     "authNavItems": {
       "favorites": "Guardados",
       "home": "Inicio",
+      "logout": "Logout",
+      "messages": "Messages",
+      "profile": "Profile",
       "tasks": "Tareas"
     },
     "navItems": {
-      "business": "Publicar mis servicios",
-      "services": "Servicios"
+      "merchant": "Become a Professional",
+      "products": "Products",
+      "professionals": "Professionals",
+      "user": "Switch to User"
     }
   },
   "auth": {
@@ -32,10 +37,16 @@
     },
     "initialTitle": "",
     "login": {
+      "auth": "Log in or Sign up",
+      "dial_code": "Code",
       "dont_have_account": "¿No tienes una cuenta?",
       "email": "Correo electrónico",
+      "email_toggle": "Email",
+      "error": "Login failed",
       "forgot_password": "¿Olvidaste tu contraseña?",
       "password": "Contraseña",
+      "phone": "Phone number",
+      "phone_toggle": "Phone",
       "register": "Registrarse",
       "success": "",
       "title": "Iniciar sesión"
@@ -52,13 +63,26 @@
       "verify_code": "Verificar Código"
     },
     "register": {
+      "accept_terms_prefix": "I agree to the",
+      "accept_terms_required": "You must accept the terms",
+      "and": "and",
       "confirmPasswordLabel": "Confirmar contraseña",
+      "dial_code": "Code",
+      "email_toggle": "Email",
       "emailLabel": "Correo electrónico",
+      "error": "",
       "have_an_account": "¿Ya tienes una cuenta?",
       "login_title_button": "Iniciar sesión",
+      "merchant_description": "You will be able to publish your services and receive orders",
+      "merchant_toggle": "I want to offer services",
       "passwordLabel": "Contraseña",
+      "passwords_must_match": "Passwords must match",
+      "phone_toggle": "Phone",
+      "phoneLabel": "Phone number",
+      "privacy_policy": "Privacy Policy",
       "signup_success": "",
-      "signup_title_button": "Registrarse"
+      "signup_title_button": "Registrarse",
+      "terms_of_service": "Terms"
     },
     "SetNewPass": {
       "body": "Crea una contraseña nueva y asegúrate de que sea diferente a las anteriores.",
@@ -68,7 +92,10 @@
       "update": "Actualizar Contraseña"
     },
     "slider_intro": {
-      "title_1": "Encuentra al experto que necesitas en pocos minutos."
+      "title_1": "Encuentra al experto que necesitas en pocos minutos.",
+      "title_2": "Hire easily and without complications.",
+      "title_3": "Based on user ratings who bought their services.",
+      "title_4": "Explore, compare and schedule in a few steps."
     },
     "updateSuccess": {
       "body": "¡Genial! Ya puedes iniciar sesión con tu nueva contraseña. Haz clic en continuar.",
@@ -80,15 +107,18 @@
     "canceled": "Cancelado",
     "completed": "Completado",
     "inProgress": "En progreso",
-    "loadingRoles": "Loading user roles...",
     "soon": "Proximamente",
-    "yourOrders": "Your orders"
+    "yourOrders": {
+      "merchant": "Your tasks as a Professional",
+      "user": "Your tasks as a user"
+    }
   },
   "businessProfile": {
     "skillsDescription": "No description available"
   },
   "businessProfilePage": {
     "profile": {
+      "addNewService": "Add new service",
       "avatarAlt": "Habilidades y experiencia",
       "dailyRate": "Tarifa por día",
       "editButton": "Editar",
@@ -100,11 +130,6 @@
       "projectsComingSoon": "Pronto podrás ver los proyectos realizados aquí.",
       "recentsProjects": "Proyectos recientes",
       "skillsTitle": "Habilidades y experiencia"
-    },
-    "tabs": {
-      "chat": "Chat",
-      "profile": "Mi perfil",
-      "services": "Mis servicios"
     }
   },
   "businessStepper": {
@@ -132,10 +157,6 @@
       "mainDirectionTitle": "Ubicación principal",
       "secondDirectionDescription": "Marca todas las áreas donde atendés a tus clientes.",
       "secondDirectionTitle": "Zonas de servicio | ",
-      "selectAnotherCity": "Municipios adicionales donde trabajás",
-      "selectAnotherDepartment": "¿Trabajás en otros departamentos?",
-      "selectCity": "Elegí tu municipio",
-      "selectDepartment": "Seleccioná tu departamento",
       "textField": "¿Dónde está ubicado tu negocio?",
       "title": "Paso 3"
     },
@@ -170,9 +191,13 @@
     }
   },
   "buttonTab": {
+    "chat": "Messages",
     "favorites": "Guardados",
     "home": "Inicio",
+    "products": "Products",
     "profile": "Peril",
+    "switchToMerchant": "Switch to Professional",
+    "switchToUser": "Switch to User",
     "task": "Tareas"
   },
   "categories": {
@@ -185,7 +210,9 @@
     "molecules": {
       "emptySection": {
         "description": "Parece que no tienes nada aquí. ¡Vuelve más tarde o crea una nuevo registro!",
-        "title": "Sin registros para mostrar"
+        "merchantTitle": "No records to show for Professionals",
+        "title": "Sin registros para mostrar",
+        "userTitle": "No records to show for users"
       }
     }
   },
@@ -221,10 +248,25 @@
         "notInterested": "No interesado",
         "rate": "Calificar"
       }
+    },
+    "businessReviewsPage": {
+      "reviewLabel": "Tap a start to rate this service",
+      "reviewSubtitle": "Leave your feedback here",
+      "submit": "Submit",
+      "tags": {
+        "fast": "Fast",
+        "friendly": "Friendly",
+        "super": "Super",
+        "supportive": "Supportive"
+      },
+      "writeReview": "Write a review",
+      "writeReviewPlaceholder": "Write your review here..."
     }
   },
   "footer": {
-    "copyright": "Desarrollo web y móvil |"
+    "copyright": "Desarrollo web y móvil |",
+    "privacy": "Política de privacidad",
+    "terms": "Términos y condiciones"
   },
   "form": {
     "category": "",
@@ -247,9 +289,12 @@
       "required": "Este campo es requerido"
     }
   },
+  "heroSection": {
+    "subtitle": "Plomeros, electricistas, mecánicos y más — todos de confianza y verificados por la comunidad.",
+    "title": "Encuentra profesionales recomendados por gente real"
+  },
   "landing": {
     "categories": {
-      "button": "Ver todas",
       "title": "Categorías"
     },
     "downloadSection": {
@@ -266,6 +311,8 @@
       "title": "Los servicios más buscados"
     },
     "searchForm": {
+      "allCategories": "All Categories",
+      "allLocations": "All Locations",
       "body": "¡Chatea con 3 profesionales al momento y consigue tu presupuesto ideal!",
       "clearFilters": "Eliminar filtros",
       "location": "Ubicación",
@@ -309,6 +356,7 @@
     "title": "Subscribe to our Newsletter"
   },
   "recommendedServices": {
+    "button": "View all services",
     "noServices": "",
     "title": "Recomendados para ti"
   },
@@ -332,12 +380,6 @@
       "title": "Inicia la conversación"
     }
   },
-  "tasksPage": {
-    "tabs": {
-      "chat": "Chat",
-      "summary": "Resumen de tareas"
-    }
-  },
   "userProfile": {
     "changePassword": "Change password",
     "changeProfilePhoto": "Change profile photo",
@@ -347,12 +389,12 @@
     "lastname": "Lastname",
     "logout": "Logout",
     "name": "Name",
-    "publishServices": "Publish my services",
     "save": "Save",
+    "switchToMerchant": "Become a Professional",
+    "switchToUser": "Switch to User",
     "updateButton": "Update"
   },
-  "validation": {
-    "maxLength": "",
-    "required": ""
+  "welcomeBanner": {
+    "greeting": "¡Hola, {{userName}}! ¿Qué necesitás resolver hoy?"
   }
 }
