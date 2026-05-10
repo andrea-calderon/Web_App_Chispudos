@@ -3,6 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { SxProps, Theme, useTheme } from '@mui/material/styles';
 import RecoLogo from './../../assets/images/Reco_logo.png';
 import { useNavigate } from 'react-router-dom';
+import { useBranding } from '../../hooks/useBranding';
+
 type AppLogoProps = {
   maxWidth?: string;
   sx?: SxProps<Theme>;
@@ -13,6 +15,8 @@ const AppLogo = ({ maxWidth = '150px', sx }: AppLogoProps) => {
   const navigate = useNavigate();
   const theme = useTheme();
   const { palette } = theme;
+  const { getLogoUrl } = useBranding();
+  const logoUrl = getLogoUrl();
 
   return (
     <Box
@@ -26,7 +30,7 @@ const AppLogo = ({ maxWidth = '150px', sx }: AppLogoProps) => {
       onClick={() => navigate('/')}
     >
       <img
-        src={RecoLogo}
+        src={logoUrl || RecoLogo}
         alt={t('app_name')}
         style={{
           width: '100%',

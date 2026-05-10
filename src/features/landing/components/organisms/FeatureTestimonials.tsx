@@ -3,7 +3,7 @@ import { Box, Avatar, IconButton, Rating } from '@mui/material';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { useTranslation } from 'react-i18next';
-import { styled } from '@mui/system';
+import { styled, useTheme } from '@mui/material/styles';
 import TextAtom from '../../../../components/atoms/TextAtom';
 
 const StyledContainer = styled(Box)(({ theme }) => ({
@@ -19,14 +19,14 @@ const StyledContainer = styled(Box)(({ theme }) => ({
   },
 }));
 
-const CircleButton = styled(IconButton)(() => ({
+const CircleButton = styled(IconButton)(({ theme }) => ({
   backgroundColor: '#FFFFFF',
   border: '1px solid #CBCBCB',
   color: '#191825',
   width: '70px',
   height: '70px',
   '&:hover': {
-    backgroundColor: '#6750A4',
+    backgroundColor: theme.palette.primary.main,
     color: '#fff',
   },
 }));

@@ -6,6 +6,7 @@ import authReducer from '../slices/authSlice';
 import serviceStepperReducer from '../slices/serviceStepperSlice';
 import roleSwitcherReducer from '../slices/roleSwitcherSlice';
 import filterProductsReducer from '../slices/filterProductsSlice';
+import brandingReducer from '../slices/brandingSlice';
 import { authApi } from '../../services/authApi';
 import { productApi } from '../../services/productApi';
 import { categoryApi } from '../../services/categoryApi';
@@ -20,6 +21,7 @@ const rootReducer = combineReducers({
   serviceStepper: serviceStepperReducer,
   roleSwitcher: roleSwitcherReducer,
   filter: filterProductsReducer,
+  branding: brandingReducer,
   [authApi.reducerPath]: authApi.reducer,
   [productApi.reducerPath]: productApi.reducer,
   [categoryApi.reducerPath]: categoryApi.reducer,
@@ -27,14 +29,14 @@ const rootReducer = combineReducers({
   [ordersApi.reducerPath]: ordersApi.reducer,
   [locationsApi.reducerPath]: locationsApi.reducer,
   [chatApi.reducerPath]: chatApi.reducer,
-  [mailchimpApi.reducerPath]: mailchimpApi.reducer, 
+  [mailchimpApi.reducerPath]: mailchimpApi.reducer,
   // Add other reducers here
 });
 
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['auth', 'serviceStepper', 'roleSwitcher', 'filterProducts'], // Persist the filter state
+  whitelist: ['auth', 'serviceStepper', 'roleSwitcher', 'filterProducts', 'branding'], // Persist the filter state
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

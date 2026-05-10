@@ -10,11 +10,14 @@ import { Category } from '../../../../types/api/modelTypes';
 import WelcomeBanner from '../organisms/WelcomeBanner';
 import { useProductsServiceFilters } from '../../../../hooks/useProductsServiceFilters';
 import { useProductServiceFilterData } from '../../../../hooks/useProductServiceFilterData';
+import { useBranding } from '../../../../hooks/useBranding';
 
 export const HomePage: React.FC = () => {
   const { user } = useSelector(selectAuth);
+  const { config } = useBranding();
 
   const userName = user?.name || 'Usuario';
+  const newsletterEnabled = !config || config.features.newsletterEnabled;
 
    const {
       updateCategories,
@@ -39,7 +42,7 @@ export const HomePage: React.FC = () => {
         services={filteredServices}
         titleText={categoryItem?.name}
       />
-      <NewsletterSubscription />
+      {newsletterEnabled && <NewsletterSubscription />}
     </UserLayout>
   );
 };

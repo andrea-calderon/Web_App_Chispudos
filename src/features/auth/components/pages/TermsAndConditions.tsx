@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { Fade } from '@mui/material';
 import AppLogo from '../../../../components/molecules/AppLogo';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { useBranding } from '../../../../hooks/useBranding';
 
 const terms = {
   title: 'Términos y condiciones',
@@ -84,8 +85,17 @@ Dirección física: Residenciales San Jose, San José Pinula, Guatemala.`,
 };
 
 const TermsAndConditions: React.FC = () => {
-  const sections = terms.content.split('\n\n');
   const navigate = useNavigate();
+  const { config } = useBranding();
+
+  const legalEmail = config?.legalEmail || 'legal@recolatam.com';
+  const companyAddress = config?.companyAddress || 'Residenciales San Jose, San José Pinula, Guatemala.';
+
+  const resolvedContent = terms.content
+    .replace('legal@recolatam.com', legalEmail)
+    .replace('Residenciales San Jose, San José Pinula, Guatemala.', companyAddress);
+
+  const sections = resolvedContent.split('\n\n');
 
   return (
     <Fade in timeout={600}>
