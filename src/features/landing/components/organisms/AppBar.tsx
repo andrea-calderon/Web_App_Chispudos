@@ -32,6 +32,7 @@ import { selectAuth } from '../../../../redux/slices/authSlice';
 import { getApiImageUrl } from '../../../../utils/baseEnvironment';
 import { useHasRole } from '../../../../hooks/useHasRole';
 import { useUserEvents } from '../../../auth/hooks/authHooks';
+import { useBranding } from '../../../../hooks/useBranding';
 
 function ResponsiveAppBar() {
   const navigate = useNavigate();
@@ -43,6 +44,10 @@ function ResponsiveAppBar() {
   const { palette } = theme;
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
   const [language, setLanguage] = useState('en');
+  const { config } = useBranding();
+
+  const chatEnabled = !config || config.features.chatEnabled;
+  const tasksEnabled = !config || config.features.tasksEnabled;
 
   const handleBecomeMerchant = () => {
     handleUpdateUserInfo({ roles: isMerchant ? [2] : [2, 3] })
@@ -77,11 +82,11 @@ function ResponsiveAppBar() {
       icon: <HomeIcon sx={{ color: theme.palette.primary.main }} />,
       path: '/home',
     },
-    {
+    tasksEnabled ? {
       label: t('appBar.authNavItems.tasks', 'Tasks'),
       icon: <TaskIcon sx={{ color: theme.palette.primary.main }} />,
       path: '/tasks',
-    },
+    } : null,
     isMerchant ?
       {
         label: t('appBar.navItems.products', 'Products'),
@@ -93,11 +98,11 @@ function ResponsiveAppBar() {
         icon: <FavoriteIcon sx={{ color: theme.palette.primary.main }} />,
         path: '/favorites',
       },
-    {
+    chatEnabled ? {
       label: t('appBar.authNavItems.messages', 'Messages'),
       icon: <Chat sx={{ color: theme.palette.primary.main }} />,
       path: '/messages',
-    },
+    } : null,
     {
       label: t('appBar.authNavItems.profile', 'Profile'),
       icon: (
@@ -120,7 +125,7 @@ function ResponsiveAppBar() {
         logoutUser();
       },
     },
-  ];
+  ].filter((item): item is NonNullable<typeof item> => item !== null);
   const toggleLanguage = () => {
     const newLang = language === 'en' ? 'es' : 'en';
     i18n.changeLanguage(newLang);

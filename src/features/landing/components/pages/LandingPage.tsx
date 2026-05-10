@@ -13,9 +13,12 @@ import HeroSection from '../organisms/HeroSection';
 import { useGetProductsQuery } from '../../../../services/productApi';
 import { Category } from '../../../../types/api/modelTypes';
 import { useProductServiceFilterData } from '../../../../hooks/useProductServiceFilterData';
+import { useBranding } from '../../../../hooks/useBranding';
 
 export const LandingPage: React.FC = () => {
   const { data, isLoading, isError } = useGetProductsQuery();
+  const { config } = useBranding();
+  const newsletterEnabled = !config || config.features.newsletterEnabled;
 
   const {
     filteredServices,
@@ -51,7 +54,7 @@ export const LandingPage: React.FC = () => {
       <FeatureTestimonials />
       {/* <FeatureGuarantee /> */}
       <FeatureDownloadApp />
-      <NewsletterSubscription />
+      {newsletterEnabled && <NewsletterSubscription />}
       <Footer />
     </LandingLayout>
   );

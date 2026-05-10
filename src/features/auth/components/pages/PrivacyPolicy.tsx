@@ -4,6 +4,7 @@ import { TextAtom, ButtonAtom } from '../../../../components/atoms';
 import { useNavigate } from 'react-router-dom';
 import AppLogo from '../../../../components/molecules/AppLogo';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { useBranding } from '../../../../hooks/useBranding';
 
 const privacyPolicy = {
   title: 'Política de Privacidad',
@@ -13,8 +14,8 @@ const privacyPolicy = {
       title: '1. Responsable del Tratamiento',
       paragraphs: [
         'Nombre Legal: Reco - Profesionales de Confianza',
-        'Dirección Fiscal: Residenciales San Jose, San José Pinula, Guatemala.',
-        'Email: privacy@recolatam.com',
+        '__COMPANY_ADDRESS__',
+        '__PRIVACY_EMAIL__',
       ],
     },
     {
@@ -74,7 +75,7 @@ const privacyPolicy = {
     {
       title: '7. Derechos ARCO',
       paragraphs: [
-        'Para ejercerlos: Enviar solicitud a privacy@reco.com (respondemos en 10 días hábiles). Usted puede:',
+        '__ARCO_PRIVACY_EMAIL__',
       ],
       bullets: [
         'Acceder a sus datos almacenados',
@@ -109,8 +110,8 @@ const privacyPolicy = {
       title: '11. Contacto',
       paragraphs: ['Para dudas sobre privacidad:'],
       bullets: [
-        'privacy@recolatam.com',
-        'Oficina: Residenciales San Jose, San José Pinula, Guatemala.',
+        '__PRIVACY_EMAIL_BULLET__',
+        '__OFFICE_ADDRESS__',
       ],
     },
   ],
@@ -118,6 +119,28 @@ const privacyPolicy = {
 
 const PrivacyPolicy: React.FC = () => {
   const navigate = useNavigate();
+  const { config } = useBranding();
+
+  const privacyEmail = config?.privacyEmail || 'privacy@recolatam.com';
+  const legalEmail = config?.legalEmail || 'legal@recolatam.com';
+  const companyAddress = config?.companyAddress || 'Residenciales San Jose, San José Pinula, Guatemala.';
+
+  const resolvePlaceholder = (text: string): string => {
+    switch (text) {
+      case '__COMPANY_ADDRESS__':
+        return `Dirección Fiscal: ${companyAddress}`;
+      case '__PRIVACY_EMAIL__':
+        return `Email: ${privacyEmail}`;
+      case '__ARCO_PRIVACY_EMAIL__':
+        return `Para ejercerlos: Enviar solicitud a ${privacyEmail} (respondemos en 10 días hábiles). Usted puede:`;
+      case '__PRIVACY_EMAIL_BULLET__':
+        return privacyEmail;
+      case '__OFFICE_ADDRESS__':
+        return `Oficina: ${companyAddress}`;
+      default:
+        return text;
+    }
+  };
 
   return (
     <Fade in timeout={600}>
@@ -174,7 +197,7 @@ const PrivacyPolicy: React.FC = () => {
             {section.paragraphs &&
               section.paragraphs.map((p, i) => (
                 <TextAtom key={i} variant="body" size="medium" sx={{ mb: 1 }}>
-                  {p}
+                  {resolvePlaceholder(p)}
                 </TextAtom>
               ))}
             {section.bullets && (
@@ -191,7 +214,7 @@ const PrivacyPolicy: React.FC = () => {
                     }}
                   >
                     <TextAtom variant="body" size="medium">
-                      {b}
+                      {resolvePlaceholder(b)}
                     </TextAtom>
                   </ListItem>
                 ))}

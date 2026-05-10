@@ -95,3 +95,11 @@ export function setUserInfo(userEmail: string, userIdentifier: string) {
   email = userEmail;
   userId = userIdentifier;
 }
+
+// Shortcut methods to match expected usage
+// @ts-ignore
+logger.info = (message: string, payload?: any) => logger('info', { message, payload });
+// @ts-ignore
+logger.error = (message: string, payload?: any) => logger('error', { message, payload });
+// @ts-ignore
+logger.debug = (message: string, payload?: any) => logger('debug', { message, payload });

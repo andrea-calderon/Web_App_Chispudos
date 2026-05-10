@@ -18,6 +18,7 @@ import { AccountCircle, AccountCircleOutlined, Chat, ChatOutlined, Sync, ViewLis
 import { useHasRole } from '../../hooks/useHasRole';
 import { ButtonAtom } from '../atoms';
 import { useUserEvents } from '../../features/auth/hooks/authHooks';
+import { useBranding } from '../../hooks/useBranding';
 
 interface Props {
   children: React.ReactNode;
@@ -30,6 +31,10 @@ export default function ButtonTab({ children }: Props) {
   const { t } = useTranslation();
   const isMerchant = useHasRole('Merchant');
   const { handleUpdateUserInfo } = useUserEvents();
+  const { config } = useBranding();
+
+  const chatEnabled = !config || config.features.chatEnabled;
+  const tasksEnabled = !config || config.features.tasksEnabled;
 
   const navItems = [
     {
@@ -44,7 +49,7 @@ export default function ButtonTab({ children }: Props) {
       ),
       url: '/home',
     },
-    {
+    tasksEnabled ? {
       label: t('buttonTab.task', 'Task'),
       icon: <img src={TaskIcon} alt="Task" style={{ width: 24, height: 24 }} />,
       selectedIcon: (
@@ -55,7 +60,7 @@ export default function ButtonTab({ children }: Props) {
         />
       ),
       url: '/tasks',
-    },
+    } : null,
     isMerchant ? {
       label: t('buttonTab.products', 'Products'),
       icon: <ViewListOutlined fontSize="small" />,
@@ -82,12 +87,12 @@ export default function ButtonTab({ children }: Props) {
         ),
         url: '/favorites',
       },
-    {
+    chatEnabled ? {
       label: t('buttonTab.chat', 'Messages'),
       icon: <ChatOutlined fontSize="small" />,
       selectedIcon: <Chat fontSize="small" />,
       url: '/messages',
-    },
+    } : null,
     {
       label: t('buttonTab.profile', 'Profile'),
       icon: <AccountCircleOutlined fontSize="small" />,
@@ -96,7 +101,7 @@ export default function ButtonTab({ children }: Props) {
     },
   ];
 
-  const filteredNavItems = navItems.filter(item => item !== null);
+  const filteredNavItems = navItems.filter((item): item is NonNullable<typeof item> => item !== null);
 
   const currentIndex = filteredNavItems.findIndex(
     (item) => item.url === location.pathname,
