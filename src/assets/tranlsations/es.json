@@ -10,11 +10,16 @@
     "authNavItems": {
       "favorites": "Guardados",
       "home": "Inicio",
+      "logout": "Cerrar sesión",
+      "messages": "Mensajes",
+      "profile": "Perfil",
       "tasks": "Tareas"
     },
     "navItems": {
-      "business": "Publicar mis servicios",
-      "services": "Servicios"
+      "merchant": "Convertirse en Profesional",
+      "products": "Productos",
+      "professionals": "Profesionales",
+      "user": "Cambiar a Usuario"
     }
   },
   "auth": {
@@ -32,6 +37,7 @@
     },
     "initialTitle": "",
     "login": {
+      "auth": "Inicia sesión o Regístrate",
       "dont_have_account": "¿No tienes una cuenta?",
       "email": "Correo electrónico",
       "forgot_password": "¿Olvidaste tu contraseña?",
@@ -52,13 +58,17 @@
       "verify_code": "Verificar Código"
     },
     "register": {
+      "accept_terms_prefix": "Al registrarte, aceptas los",
+      "and": "y",
       "confirmPasswordLabel": "Confirmar contraseña",
       "emailLabel": "Correo electrónico",
       "have_an_account": "¿Ya tienes una cuenta?",
       "login_title_button": "Iniciar sesión",
       "passwordLabel": "Contraseña",
+      "privacy_policy": "Política de Privacidad.",
       "signup_success": "",
-      "signup_title_button": "Registrarse"
+      "signup_title_button": "Registrarse",
+      "terms_of_service": "Términos y Condiciones"
     },
     "SetNewPass": {
       "body": "Crea una contraseña nueva y asegúrate de que sea diferente a las anteriores.",
@@ -68,7 +78,10 @@
       "update": "Actualizar Contraseña"
     },
     "slider_intro": {
-      "title_1": "Encuentra al experto que necesitas en pocos minutos."
+      "title_1": "Encuentra al experto que necesitas en pocos minutos.",
+      "title_2": "Contrata en pocos pasos.",
+      "title_3": "Actualizaciones en tiempo real del progreso de tu tarea.",
+      "title_4": "Pagos seguros y servicios de alta calidad."
     },
     "updateSuccess": {
       "body": "¡Genial! Ya puedes iniciar sesión con tu nueva contraseña. Haz clic en continuar.",
@@ -80,31 +93,29 @@
     "canceled": "Cancelado",
     "completed": "Completado",
     "inProgress": "En progreso",
-    "loadingRoles": "Loading user roles...",
-    "soon": "Proximamente",
-    "yourOrders": "Your orders"
+    "soon": "Próximamente",
+    "yourOrders": {
+      "merchant": "Tus tareas como Profesional",
+      "user": "Tus tareas como usuario"
+    }
   },
   "businessProfile": {
-    "skillsDescription": "No description available"
+    "skillsDescription": "No hay descripción disponible"
   },
   "businessProfilePage": {
     "profile": {
+      "addNewService": "Agregar nuevo servicio",
       "avatarAlt": "Habilidades y experiencia",
       "dailyRate": "Tarifa por día",
       "editButton": "Editar",
       "noProjects": "No hay proyectos completados disponibles.",
-      "noServiceAvailable": "No service available",
-      "noServiceSelected": "No service selected",
-      "noSkills": "No skills listed",
+      "noServiceAvailable": "No hay servicios disponibles",
+      "noServiceSelected": "No hay servicio seleccionado",
+      "noSkills": "No hay habilidades listadas",
       "otherSkills": "Otras habilidades",
       "projectsComingSoon": "Pronto podrás ver los proyectos realizados aquí.",
       "recentsProjects": "Proyectos recientes",
       "skillsTitle": "Habilidades y experiencia"
-    },
-    "tabs": {
-      "chat": "Chat",
-      "profile": "Mi perfil",
-      "services": "Mis servicios"
     }
   },
   "businessStepper": {
@@ -132,10 +143,6 @@
       "mainDirectionTitle": "Ubicación principal",
       "secondDirectionDescription": "Marca todas las áreas donde atendés a tus clientes.",
       "secondDirectionTitle": "Zonas de servicio | ",
-      "selectAnotherCity": "Municipios adicionales donde trabajás",
-      "selectAnotherDepartment": "¿Trabajás en otros departamentos?",
-      "selectCity": "Elegí tu municipio",
-      "selectDepartment": "Seleccioná tu departamento",
       "textField": "¿Dónde está ubicado tu negocio?",
       "title": "Paso 3"
     },
@@ -170,9 +177,13 @@
     }
   },
   "buttonTab": {
+    "chat": "Mensajes",
     "favorites": "Guardados",
     "home": "Inicio",
-    "profile": "Peril",
+    "products": "Productos",
+    "profile": "Perfil",
+    "switchToMerchant": "Cambiar a Profesional",
+    "switchToUser": "Cambiar a Usuario",
     "task": "Tareas"
   },
   "categories": {
@@ -185,7 +196,9 @@
     "molecules": {
       "emptySection": {
         "description": "Parece que no tienes nada aquí. ¡Vuelve más tarde o crea una nuevo registro!",
-        "title": "Sin registros para mostrar"
+        "merchantTitle": "No hay registros para mostrar para Profesionales",
+        "title": "Sin registros para mostrar",
+        "userTitle": "No hay registros para mostrar para usuarios"
       }
     }
   },
@@ -221,10 +234,25 @@
         "notInterested": "No interesado",
         "rate": "Calificar"
       }
+    },
+    "businessReviewsPage": {
+      "reviewLabel": "Toca una estrella para calificar este servicio",
+      "reviewSubtitle": "Deja tu comentario aquí",
+      "submit": "Enviar",
+      "tags": {
+        "fast": "Rápido",
+        "friendly": "Amigable",
+        "super": "Súper",
+        "supportive": "Atento"
+      },
+      "writeReview": "Escribir una reseña",
+      "writeReviewPlaceholder": "Escribe tu reseña aquí..."
     }
   },
   "footer": {
-    "copyright": "Desarrollo web y móvil |"
+    "copyright": "Desarrollo web y móvil |",
+    "privacy": "Política de privacidad",
+    "terms": "Términos y condiciones"
   },
   "form": {
     "category": "",
@@ -247,9 +275,12 @@
       "required": "Este campo es requerido"
     }
   },
+  "heroSection": {
+    "subtitle": "Plomeros, electricistas, mecánicos y más — todos de confianza y verificados por la comunidad.",
+    "title": "Encuentra profesionales recomendados por gente real"
+  },
   "landing": {
     "categories": {
-      "button": "Ver todas",
       "title": "Categorías"
     },
     "downloadSection": {
@@ -262,10 +293,12 @@
       "tittle": "Cuentas con una cobertura del 100% contratando y pagando con Reco."
     },
     "highDemand": {
-      "category": "Top Rated",
+      "category": "Mejor valorados",
       "title": "Los servicios más buscados"
     },
     "searchForm": {
+      "allCategories": "Todas las categorías",
+      "allLocations": "Todas las ubicaciones",
       "body": "¡Chatea con 3 profesionales al momento y consigue tu presupuesto ideal!",
       "clearFilters": "Eliminar filtros",
       "location": "Ubicación",
@@ -304,11 +337,12 @@
     "errorOccurred": ""
   },
   "newsletter": {
-    "emailPlaceholder": "Enter your email *",
-    "subscribeButton": "Subscribe",
-    "title": "Subscribe to our Newsletter"
+    "emailPlaceholder": "Ingresa tu correo *",
+    "subscribeButton": "Suscribirse",
+    "title": "Suscríbete a nuestro boletín"
   },
   "recommendedServices": {
+    "button": "Ver todos los servicios",
     "noServices": "",
     "title": "Recomendados para ti"
   },
@@ -322,7 +356,7 @@
     "serviceDetails": {
       "buttonInput": "Completar solicitud",
       "confirmationMessage": "Descubre servicios adicionales ofrecidos por tu Especialista favorito, o forma un equipo de tus Especialistas preferidos en la sección Favoritos.",
-      "confirmationTitle": "You have scheduled with {{serviceName}}",
+      "confirmationTitle": "Has programado con {{serviceName}}",
       "continueButton": "Continuar",
       "dateModalTitle": "Seleccionar fecha y hora",
       "description": "¡Estás casi listo! Comparte algunos detalles para preparar a tu Especialista para el trabajo.",
@@ -332,27 +366,21 @@
       "title": "Inicia la conversación"
     }
   },
-  "tasksPage": {
-    "tabs": {
-      "chat": "Chat",
-      "summary": "Resumen de tareas"
-    }
-  },
   "userProfile": {
-    "changePassword": "Change password",
-    "changeProfilePhoto": "Change profile photo",
-    "editName": "Edit Name",
-    "editNameTitle": "Edit Name",
-    "email": "Email",
-    "lastname": "Lastname",
-    "logout": "Logout",
-    "name": "Name",
-    "publishServices": "Publish my services",
-    "save": "Save",
-    "updateButton": "Update"
+    "changePassword": "Cambiar contraseña",
+    "changeProfilePhoto": "Cambiar foto de perfil",
+    "editName": "Editar nombre",
+    "editNameTitle": "Editar nombre",
+    "email": "Correo electrónico",
+    "lastname": "Apellido",
+    "logout": "Cerrar sesión",
+    "name": "Nombre",
+    "save": "Guardar",
+    "switchToMerchant": "Convertirse en Profesional",
+    "switchToUser": "Cambiar a Usuario",
+    "updateButton": "Actualizar"
   },
-  "validation": {
-    "maxLength": "",
-    "required": ""
+  "welcomeBanner": {
+    "greeting": "¡Hola, {{userName}}! ¿Qué necesitás resolver hoy?"
   }
 }
