@@ -1,5 +1,6 @@
 import { Box, Grid } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import { useLabels } from '../../../../hooks/useLabels';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import TextAtom from '../../../../components/atoms/TextAtom';
@@ -16,6 +17,7 @@ import { useUpdateProductMutation } from '../../../../services/productApi';
 
 const Step5 = () => {
   const { t } = useTranslation();
+  const { productService: L } = useLabels();
   const dispatch = useAppDispatch();
   const { service } = useAppSelector(selectStepper);
   const [updateProduct, { isLoading: isUpdating }] = useUpdateProductMutation();
@@ -96,7 +98,7 @@ const Step5 = () => {
                     <InputAtom
                       name="price"
                       variant="outlined"
-                      label={t('businessStepper.step5.priceTextField')}
+                      label={t('businessStepper.step5.priceTextField', L.price)}
                       fullWidth
                       required
                       error={touched.price && Boolean(errors.price)}

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Box, IconButton, Tooltip } from '@mui/material';
+import { useLabels } from '../../../../hooks/useLabels';
 import ChatIcon from '@mui/icons-material/Chat';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import StarIcon from '@mui/icons-material/Star';
@@ -26,60 +27,47 @@ const OrderActions: React.FC<OrderActionsProps> = ({
   onCompleteTask,
   onRateService,
 }) => {
+  const { order: O } = useLabels();
+
   return (
     <Box display="flex" alignItems="center" gap={1}>
-      {/* Botón "Ver detalle de la tarea" */}
-      <Tooltip title="Ver detalle de la tarea">
-        <IconButton
-          style={{ color: '#019FE9' }}
-          size="small"
-          onClick={onViewDetails}
-        >
+      <Tooltip title={O.entityName}>
+        <IconButton style={{ color: '#019FE9' }} size="small" onClick={onViewDetails}>
           <InfoIcon fontSize="small" />
         </IconButton>
       </Tooltip>
 
-      {/* Botón "Chat" */}
       {(userRoles?.includes('user') || userRoles?.includes('merchant')) && (
-        <Tooltip title="Iniciar conversación">
+        <Tooltip title="Chat">
           <IconButton color="primary" size="small" onClick={onChat}>
             <ChatIcon fontSize="small" />
           </IconButton>
         </Tooltip>
       )}
 
-      {/* Botón "Aceptar tarea" (solo para merchant en estado "Beginning soon") */}
-      {currentMode === 'merchant' &&
-        userRoles?.includes('merchant') &&
-        orderStatus === 1 && (
-          <Tooltip title="Aceptar tarea">
-            <IconButton color="success" size="small" onClick={onAcceptTask}>
-              <CheckCircleIcon fontSize="small" />
-            </IconButton>
-          </Tooltip>
-        )}
+      {currentMode === 'merchant' && userRoles?.includes('merchant') && orderStatus === 1 && (
+        <Tooltip title={O.actions.confirm}>
+          <IconButton color="success" size="small" onClick={onAcceptTask}>
+            <CheckCircleIcon fontSize="small" />
+          </IconButton>
+        </Tooltip>
+      )}
 
-      {/* Botón "Completar tarea" (solo para merchant en estado "In progress") */}
-      {currentMode === 'merchant' &&
-        userRoles?.includes('merchant') &&
-        orderStatus === 2 && (
-          <Tooltip title="Completar tarea">
-            <IconButton color="success" size="small" onClick={onCompleteTask}>
-              <CheckCircleIcon fontSize="small" />
-            </IconButton>
-          </Tooltip>
-        )}
+      {currentMode === 'merchant' && userRoles?.includes('merchant') && orderStatus === 2 && (
+        <Tooltip title={O.statuses.completed}>
+          <IconButton color="success" size="small" onClick={onCompleteTask}>
+            <CheckCircleIcon fontSize="small" />
+          </IconButton>
+        </Tooltip>
+      )}
 
-      {/* Botón "Calificar servicio" (solo para user en estado "Completed") */}
-      {currentMode === 'user' &&
-        userRoles?.includes('user') &&
-        orderStatus === 3 && (
-          <Tooltip title="Calificar servicio">
-            <IconButton color="warning" size="small" onClick={onRateService}>
-              <StarIcon fontSize="small" />
-            </IconButton>
-          </Tooltip>
-        )}
+      {currentMode === 'user' && userRoles?.includes('user') && orderStatus === 3 && (
+        <Tooltip title={O.statuses.completed}>
+          <IconButton color="warning" size="small" onClick={onRateService}>
+            <StarIcon fontSize="small" />
+          </IconButton>
+        </Tooltip>
+      )}
     </Box>
   );
 };
