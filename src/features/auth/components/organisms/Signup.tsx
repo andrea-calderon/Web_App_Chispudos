@@ -26,6 +26,7 @@ import AppLogo from '../../../../components/molecules/AppLogo';
 import { useSignupMutation, useLoginMutation } from '../../../../services/authApi';
 import { useAppDispatch } from '../../../../hooks/useAppDispatch';
 import { loginSuccess } from '../../../../redux/slices/authSlice';
+import { useBranding } from '../../../../hooks/useBranding';
 
 const DIAL_CODES = [
   { code: '+502', label: '🇬🇹 +502 Guatemala' },
@@ -68,6 +69,7 @@ const Signup: React.FC = () => {
   const [login] = useLoginMutation();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const { config } = useBranding();
 
   const validationSchema = Yup.object({
     email: loginMethod === 'email'
@@ -275,15 +277,43 @@ const Signup: React.FC = () => {
                     <TextAtom variant="body" size="medium">
                       {t('auth.register.accept_terms_prefix', 'I agree to the')}
                     </TextAtom>
-                    <ButtonAtom type="button" variant="text" onClick={() => navigate('/terms-and-conditions')} sx={{ textTransform: 'none', p: 0.5, minWidth: 'auto' }}>
-                      {t('auth.register.terms_of_service', 'Terms')}
-                    </ButtonAtom>
+                    <a
+                      href={config?.termsUrl || '/terms-and-conditions.html'}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        textDecoration: 'none',
+                        color: 'inherit',
+                      }}
+                    >
+                      <ButtonAtom
+                        type="button"
+                        variant="text"
+                        sx={{ textTransform: 'none', p: 0.5, minWidth: 'auto' }}
+                      >
+                        {t('auth.register.terms_of_service', 'Terms')}
+                      </ButtonAtom>
+                    </a>
                     <TextAtom variant="body" size="medium" sx={{ mx: 0.5 }}>
                       {t('auth.register.and', 'and')}
                     </TextAtom>
-                    <ButtonAtom type="button" variant="text" onClick={() => navigate('/privacy-policy')} sx={{ textTransform: 'none', p: 0.5, minWidth: 'auto' }}>
-                      {t('auth.register.privacy_policy', 'Privacy Policy')}
-                    </ButtonAtom>
+                    <a
+                      href={config?.privacyUrl || '/privacy-policy.html'}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        textDecoration: 'none',
+                        color: 'inherit',
+                      }}
+                    >
+                      <ButtonAtom
+                        type="button"
+                        variant="text"
+                        sx={{ textTransform: 'none', p: 0.5, minWidth: 'auto' }}
+                      >
+                        {t('auth.register.privacy_policy', 'Privacy Policy')}
+                      </ButtonAtom>
+                    </a>
                   </Box>
                   {errors.acceptTerms && (
                     <TextAtom variant="body" size="small" sx={{ color: 'error.main', textAlign: 'center', display: 'block' }}>

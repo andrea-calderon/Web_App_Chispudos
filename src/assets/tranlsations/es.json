@@ -120,7 +120,6 @@
     "profile": {
       "addNewService": "Add new service",
       "avatarAlt": "Habilidades y experiencia",
-      "dailyRate": "Tarifa por día",
       "editButton": "Editar",
       "noProjects": "No hay proyectos completados disponibles.",
       "noServiceAvailable": "No service available",
@@ -128,8 +127,7 @@
       "noSkills": "No skills listed",
       "otherSkills": "Otras habilidades",
       "projectsComingSoon": "Pronto podrás ver los proyectos realizados aquí.",
-      "recentsProjects": "Proyectos recientes",
-      "skillsTitle": "Habilidades y experiencia"
+      "recentsProjects": "Proyectos recientes"
     }
   },
   "businessStepper": {
@@ -206,6 +204,9 @@
     "mechanic": "",
     "plumber": ""
   },
+  "commons": {
+    "as": "as"
+  },
   "components": {
     "molecules": {
       "emptySection": {
@@ -242,10 +243,7 @@
   "features": {
     "businessOrdersPage": {
       "actions": {
-        "accept": "Aceptar",
         "chat": "Chat",
-        "completed": "Completada",
-        "notInterested": "No interesado",
         "rate": "Calificar"
       }
     },

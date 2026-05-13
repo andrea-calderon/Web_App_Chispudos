@@ -52,60 +52,33 @@ const Footer: React.FC = () => {
             sx={{ display: 'flex', justifyContent: 'center', gap: 2, mb: 2 }}
           >
             <Typography variant="body2" color="textSecondary">
-              {config?.termsUrl ? (
-                <a
-                  href={config.termsUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{
-                    color: 'inherit',
-                    textDecoration: 'underline',
-                    fontSize: '0.95em',
-                    marginRight: 8,
-                  }}
-                >
-                  {t('footer.terms', 'Términos y condiciones')}
-                </a>
-              ) : (
-                <RouterLink
-                  to="/terms-and-conditions"
-                  style={{
-                    color: 'inherit',
-                    textDecoration: 'underline',
-                    fontSize: '0.95em',
-                    marginRight: 8,
-                  }}
-                >
-                  {t('footer.terms', 'Términos y condiciones')}
-                </RouterLink>
-              )}
+              <a
+                href={config?.termsUrl || '/terms-and-conditions.html'}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  color: 'inherit',
+                  textDecoration: 'underline',
+                  fontSize: '0.95em',
+                  marginRight: 8,
+                }}
+              >
+                {t('footer.terms', 'Términos y condiciones')}
+              </a>
             </Typography>
             <Typography variant="body2" color="textSecondary">
-              {config?.privacyUrl ? (
-                <a
-                  href={config.privacyUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{
-                    color: 'inherit',
-                    textDecoration: 'underline',
-                    fontSize: '0.95em',
-                  }}
-                >
-                  {t('footer.privacy', 'Política de privacidad')}
-                </a>
-              ) : (
-                <RouterLink
-                  to="/privacy-policy"
-                  style={{
-                    color: 'inherit',
-                    textDecoration: 'underline',
-                    fontSize: '0.95em',
-                  }}
-                >
-                  {t('footer.privacy', 'Política de privacidad')}
-                </RouterLink>
-              )}
+              <a
+                href={config?.privacyUrl || '/privacy-policy.html'}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  color: 'inherit',
+                  textDecoration: 'underline',
+                  fontSize: '0.95em',
+                }}
+              >
+                {t('footer.privacy', 'Política de privacidad')}
+              </a>
             </Typography>
           </Box>
           <Divider sx={{ mb: 2 }} />
