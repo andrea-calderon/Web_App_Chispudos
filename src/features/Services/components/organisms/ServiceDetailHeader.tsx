@@ -1,4 +1,5 @@
 import React from 'react';
+import { useLabels } from '../../../../hooks/useLabels';
 import {
   Box,
   Typography,
@@ -34,6 +35,7 @@ export const ServiceHeader: React.FC<ServiceHeaderProps> = ({
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const navigate = useNavigate();
+  const { productService: L, order: O } = useLabels();
 
   return (
     <Box backgroundColor="#E8DEF8" p={2}>
@@ -100,15 +102,13 @@ export const ServiceHeader: React.FC<ServiceHeaderProps> = ({
               <Avatar alt={providerName} src="/static/images/avatar/1.jpg" />
             </ListItemAvatar>
             <ListItemText
-              primary={providerName || 'Proveedor desconocido'}
+              primary={providerName || L.provider}
               secondary={
                 <Typography fontWeight="bold">
                   {rating ? (
-                    <>
-                    <span>{rating.toFixed(1)}</span><Rating value={rating} readOnly size="small" />
-                    </>
+                    <><span>{rating.toFixed(1)}</span><Rating value={rating} readOnly size="small" /></>
                   ) : (
-                    <>Sin calificacion ⭐</>
+                    <>{L.rating} —</>
                   )}
                 </Typography>
               }
@@ -118,7 +118,7 @@ export const ServiceHeader: React.FC<ServiceHeaderProps> = ({
               onClick={onOpenModal}
               sx={{ display: { xs: 'block', md: 'none', lg: 'none' }, m: 0 }}
             >
-              Solicitar
+              {O.actions.create}
             </ButtonAtom>
           </ListItem>
 

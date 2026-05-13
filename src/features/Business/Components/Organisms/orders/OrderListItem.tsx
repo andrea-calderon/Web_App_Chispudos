@@ -18,6 +18,7 @@ import { ButtonAtom } from '../../../../../components/atoms';
 import { getApiImageUrl } from '../../../../../utils/baseEnvironment';
 import { useHasRole } from '../../../../../hooks/useHasRole';
 import ReviewForm from '../reviews/ReviewForm';
+import { useLabels } from '../../../../../hooks/useLabels';
 
 interface OrderListItemProps {
   order: any;
@@ -28,6 +29,7 @@ const OrderListItem: React.FC<OrderListItemProps> = ({ order, onAction }) => {
   const { id, startDate, details } = order;
   const isMerchant = useHasRole('Merchant');
   const product = details[0]?.productService;
+  const { order: O } = useLabels();
   const image = product?.urlImage? getApiImageUrl(product?.urlImage) : DEFAULT_IMAGE;
 
   const theme = useTheme();
@@ -54,26 +56,10 @@ const OrderListItem: React.FC<OrderListItemProps> = ({ order, onAction }) => {
   ];
 
   const ButtonsObjMerchant = [
-    {
-      icon: <DoneAll />,
-      title: t('features.businessOrdersPage.actions.completed', 'Completada'),
-      action: () => onAction('complete', id),
-    },
-    {
-      icon: <Task />,
-      title: t('features.businessOrdersPage.actions.accept', 'Aceptar'),
-      action: () => onAction('accept', id),
-    },
-    {
-      icon: <NotInterested />,
-      title: t('features.businessOrdersPage.actions.notInterested', 'No interesado'),
-      action: () => onAction('notInterested', id),
-    },
-    {
-      icon: <Chat />,
-      title: t('features.businessOrdersPage.actions.chat', 'Chat'),
-      action: () => onAction('chat', id),
-    },
+    { icon: <DoneAll />, title: O.statuses.completed, action: () => onAction('complete', id) },
+    { icon: <Task />,    title: O.actions.confirm,    action: () => onAction('accept', id) },
+    { icon: <NotInterested />, title: O.actions.cancel, action: () => onAction('notInterested', id) },
+    { icon: <Chat />,    title: t('features.businessOrdersPage.actions.chat', 'Chat'), action: () => onAction('chat', id) },
   ];
 
   const ButtonsObj = isMerchant ? ButtonsObjMerchant : ButtonsObjUser;

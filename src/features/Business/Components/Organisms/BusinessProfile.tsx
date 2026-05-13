@@ -11,6 +11,7 @@ import {
   FormControl,
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import { useLabels } from '../../../../hooks/useLabels';
 import TextAtom from '../../../../components/atoms/TextAtom';
 import EditIcon from '@mui/icons-material/Edit';
 import { useGetProductsQuery } from '../../../../services/productApi';
@@ -28,6 +29,7 @@ import { useHasRole } from '../../../../hooks/useHasRole';
 
 const BusinessProfilePage = () => {
   const { t } = useTranslation();
+  const { productService: L } = useLabels();
   const navigate = useNavigate();
   const theme = useTheme();
   const dispatch = useAppDispatch();
@@ -121,10 +123,7 @@ const BusinessProfilePage = () => {
             sx={{ mr: 2 }}
           >
             {selectedProduct?.name ||
-              t(
-                'businessProfilePage.profile.noServiceSelected',
-                'No service selected',
-              )}
+              t('businessProfilePage.profile.noServiceSelected', `No ${L.entityName} selected`)}
           </TextAtom>
           <FormControl size="small" disabled={products.length === 0}>
             <Select
@@ -136,10 +135,7 @@ const BusinessProfilePage = () => {
             >
               {products.length === 0 ? (
                 <MenuItem value="">
-                  {t(
-                    'businessProfilePage.profile.noServiceAvailable',
-                    'No service available',
-                  )}
+                  {t('businessProfilePage.profile.noServiceAvailable', `No ${L.entityName} available`)}
                 </MenuItem>
               ) : (
                 products.map((product) => (
@@ -149,18 +145,14 @@ const BusinessProfilePage = () => {
                 ))
               )}
               <MenuItem value="addNew" onClick={() => navigate(`/addProduct`)}>
-                {t(
-                  'businessProfilePage.profile.addNewService',
-                  'Add new service',
-                )}
+                {t('businessProfilePage.profile.addNewService', `Add new ${L.entityName}`)}
               </MenuItem>
             </Select>
           </FormControl>
         </Box>
 
         <Typography>
-          {t('businessProfilePage.profile.dailyRate', 'Daily Rate')}{' '}
-          <strong>Q{selectedProduct?.price || 'N/A'}</strong>
+          {L.price}: <strong>Q{selectedProduct?.price || '—'}</strong>
         </Typography>
       </Box>
 
@@ -174,7 +166,7 @@ const BusinessProfilePage = () => {
         >
           <Box display="flex" alignItems="center">
             <TextAtom variant="title" size="large" fontWeight="bold">
-              {t('businessProfilePage.profile.skillsTitle', 'Skills')}
+              {L.details}
             </TextAtom>
             <Button
               onClick={() => handleEditProduct(selectedProduct)}
@@ -253,7 +245,7 @@ const BusinessProfilePage = () => {
         >
           <Box display="flex" alignItems="center">
             <TextAtom variant="title" size="large" fontWeight="bold">
-              {t('businessProfilePage.profile.otherSkills', 'Other Skills')}
+              {t('businessProfilePage.profile.otherSkills', L.details)}
             </TextAtom>
             <Button
               onClick={() => handleEditProduct(selectedProduct)}

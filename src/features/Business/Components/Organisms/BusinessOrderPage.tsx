@@ -11,9 +11,11 @@ import { useCreateChatMutation } from '../../../../services/chatApi';
 import { useNavigate } from 'react-router-dom';
 import { EmptySection } from '../../../../components/molecules';
 import { useHasRole } from '../../../../hooks/useHasRole';
+import { useLabels } from '../../../../hooks/useLabels';
 
 const BusinessOrderPage = () => {
   const { t } = useTranslation();
+  const { productService: L, order: O } = useLabels();
   const navigate = useNavigate();
   const { user } = useAppSelector(selectAuth);
   const isMerchant = useHasRole('Merchant');
@@ -54,14 +56,16 @@ const BusinessOrderPage = () => {
 // t('BusinessOrdersPage.canceled', 'Canceled')
 // i18next-parser-end
 
+  const STATUS_LABEL_MAP = [O.statuses.pending, O.statuses.confirmed, O.statuses.completed, O.statuses.cancelled];
+
   const FILTER_OPTIONS = useMemo(
     () =>
-      [1, 2, 3, 4].map((status) => ({
+      [1, 2, 3, 4].map((status, idx) => ({
         status,
         value: orders?.filter((o) => o.status === status).length || 0,
-        label: t(`BusinessOrdersPage.${['soon', 'inProgress', 'completed', 'canceled'][status - 1]}`),
+        label: STATUS_LABEL_MAP[idx],
       })),
-    [orders, t]
+    [orders, O.statuses]
   );
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -172,7 +176,9 @@ const BusinessOrderPage = () => {
         action={selectedAction}
       />
       <Typography variant="h5" fontWeight="bold" mb={2} alignContent={'center'} textAlign={'center'} py={2}>
-        {isMerchant ? t('BusinessOrdersPage.yourOrders.merchant', 'Your tasks as a Professional') : t('BusinessOrdersPage.yourOrders.user', 'Your tasks as a user')}
+        {isMerchant
+          ? `${t('BusinessOrdersPage.yourOrders.merchant', 'Your')} ${O.entityNamePlural} ${t('commons.as', 'as')} ${L.provider}`
+          : `${t('BusinessOrdersPage.yourOrders.user', 'Your')} ${O.entityNamePlural}`}
       </Typography>
       <OrderTabs value={orderStatus} onChange={handleTabChange} options={FILTER_OPTIONS} />
       {ordersFilteredByStatus?.length ? (

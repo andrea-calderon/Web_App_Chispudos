@@ -5,60 +5,84 @@
       "loading": "Loading categories, please wait..."
     }
   },
-  "app_name": "",
+  "app_name": "Reco",
   "appBar": {
     "authNavItems": {
       "favorites": "Saved",
       "home": "Home",
+      "logout": "Logout",
+      "messages": "Messages",
+      "profile": "Profile",
       "tasks": "Tasks"
     },
     "navItems": {
-      "business": "List My Services",
-      "services": "Services"
+      "merchant": "Become a Professional",
+      "products": "Products",
+      "professionals": "Professionals",
+      "user": "Switch to User"
     }
   },
   "auth": {
     "error": {
-      "updating_password": ""
+      "updating_password": "An error occurred while updating your password."
     },
     "forget_pass": {
       "body": "Please enter your email to reset the password.",
-      "emailText": "Ingresa tu correo",
-      "emailTitle": "Tu cuenta de correo",
-      "error_message": "",
+      "emailText": "Enter your email",
+      "emailTitle": "Your email account",
+      "error_message": "Error sending reset email",
       "resetPassword": "Reset Password",
-      "success_message": "",
+      "success_message": "Reset email sent successfully",
       "title": "Forgot password?"
     },
-    "initialTitle": "",
+    "initialTitle": "Welcome back",
     "login": {
+      "auth": "Log in or Sign up",
+      "dial_code": "Code",
       "dont_have_account": "Don't have an account?",
       "email": "Email",
+      "email_toggle": "Email",
+      "error": "Login failed",
       "forgot_password": "Forgot your password?",
       "password": "Password",
+      "phone": "Phone number",
+      "phone_toggle": "Phone",
       "register": "Register",
-      "success": "",
+      "success": "Login successful",
       "title": "Login"
     },
     "OTPVerification": {
-      "body": "Almost done! We'll send you an email with a 6-digit code. Use it here to create a new password and continue enjoying Reco.",
-      "did_not_receive": "Haven’t got the email yet?",
-      "error": "",
+      "body": "Almost done! We've sent you an email with a 6-digit code. Use it here to create a new password and continue enjoying Reco.",
+      "did_not_receive": "Haven’t received the email yet?",
+      "error": "Invalid code",
       "otp_error": "Verification code must be a number",
       "otp_placeholder": "Enter your 6-digit code",
       "otp_required": "Verification code is required",
       "resend": "Resend email",
-      "title": "Check you email",
+      "title": "Check your email",
       "verify_code": "Verify Code"
     },
     "register": {
+      "accept_terms_prefix": "I agree to the",
+      "accept_terms_required": "You must accept the terms",
+      "and": "and",
       "confirmPasswordLabel": "Confirm Password",
+      "dial_code": "Code",
+      "email_toggle": "Email",
       "emailLabel": "Email",
+      "error": "Registration failed",
       "have_an_account": "Already have an account?",
       "login_title_button": "Log In",
+      "merchant_description": "You will be able to publish your services and receive orders",
+      "merchant_toggle": "I want to offer services",
       "passwordLabel": "Password",
-      "signup_success": "",
-      "signup_title_button": "Sign Up"
+      "passwords_must_match": "Passwords must match",
+      "phone_toggle": "Phone",
+      "phoneLabel": "Phone number",
+      "privacy_policy": "Privacy Policy",
+      "signup_success": "Registration successful",
+      "signup_title_button": "Sign Up",
+      "terms_of_service": "Terms of Service"
     },
     "SetNewPass": {
       "body": "Create a new password. Ensure it differs from previous ones for security.",
@@ -68,29 +92,34 @@
       "update": "Update Password"
     },
     "slider_intro": {
-      "title_1": "Find the expert you need in minutes."
+      "title_1": "Find the expert you need in minutes.",
+      "title_2": "Hire easily and without complications.",
+      "title_3": "Based on user ratings who bought their services.",
+      "title_4": "Explore, compare and schedule in a few steps."
     },
     "updateSuccess": {
-      "body": "¡Congratulations! Your password has been changed. Click continue to login",
+      "body": "Congratulations! Your password has been changed. Click continue to login.",
       "continue": "Continue",
-      "title": "¡Successful!"
+      "title": "Successful!"
     }
   },
   "BusinessOrdersPage": {
     "canceled": "Canceled",
     "completed": "Completed",
     "inProgress": "In progress",
-    "loadingRoles": "Loading user roles...",
     "soon": "Beginning soon",
-    "yourOrders": "Your orders"
+    "yourOrders": {
+      "merchant": "Your tasks as a Professional",
+      "user": "Your tasks as a user"
+    }
   },
   "businessProfile": {
     "skillsDescription": "No description available"
   },
   "businessProfilePage": {
     "profile": {
+      "addNewService": "Add new service",
       "avatarAlt": "Service image or logo",
-      "dailyRate": "Daily Rate",
       "editButton": "Edit",
       "noProjects": "There are no completed projects available.",
       "noServiceAvailable": "No service available",
@@ -98,13 +127,7 @@
       "noSkills": "No skills listed",
       "otherSkills": "Other Skills",
       "projectsComingSoon": "You will soon be able to see completed projects here.",
-      "recentsProjects": "Recent Projects",
-      "skillsTitle": "Skills"
-    },
-    "tabs": {
-      "chat": "Chat",
-      "profile": "Profile",
-      "services": "Services"
+      "recentsProjects": "Recent Projects"
     }
   },
   "businessStepper": {
@@ -116,7 +139,7 @@
       "businessNamePlaceholder": "What's your business called?",
       "description": "Tell us about the services you offer so clients can find you easily.",
       "heading": "Describe Your Business",
-      "title": "Paso 1"
+      "title": "Step 1"
     },
     "step2": {
       "description": "Choose all the categories where your business stands out. You can choose more than one! 💡",
@@ -124,7 +147,7 @@
       "title": "Step 2"
     },
     "step3": {
-      "departmentTooltip": "",
+      "departmentTooltip": "Tip: If you're an electrician in the city but also cover nearby areas, mark both!",
       "description": "Add your business address and mark the areas you serve.",
       "heading": "Where do you work?",
       "inputCity": "City/Municipality",
@@ -132,10 +155,6 @@
       "mainDirectionTitle": "Primary Location",
       "secondDirectionDescription": "Mark all areas you cover",
       "secondDirectionTitle": "Service Areas | ",
-      "selectAnotherCity": "Additional cities you serve",
-      "selectAnotherDepartment": "Do you work in other departments?",
-      "selectCity": "Choose your city",
-      "selectDepartment": "Select your department",
       "textField": "Where’s your business located?",
       "title": "Step 3"
     },
@@ -164,50 +183,59 @@
       "title": "Step 5 |"
     },
     "step6": {
-      "description": "¡Your profile is now public! Get ready to connect with clients who value real skills.",
+      "description": "Your profile is now public! Get ready to connect with clients who value real skills.",
       "heading": "Congratulations!",
       "tip": "Your profile will be visible in less than 24 hours (but usually within 1 hour) ⏱️"
     }
   },
   "buttonTab": {
+    "chat": "Messages",
     "favorites": "Favorites",
     "home": "Home",
+    "products": "Products",
     "profile": "Profile",
-    "task": "Task"
+    "switchToMerchant": "Switch to Professional",
+    "switchToUser": "Switch to User",
+    "task": "Tasks"
   },
   "categories": {
-    "electrician": "",
-    "mason": "",
-    "mechanic": "",
-    "plumber": ""
+    "electrician": "Electrician",
+    "mason": "Mason",
+    "mechanic": "Mechanic",
+    "plumber": "Plumber"
+  },
+  "commons": {
+    "as": "as"
   },
   "components": {
     "molecules": {
       "emptySection": {
         "description": "It seems you don't have anything here. Come back later or create a new record!",
-        "title": "No records to show"
+        "merchantTitle": "No records to show for Professionals",
+        "title": "No records to show",
+        "userTitle": "No records to show for users"
       }
     }
   },
   "downloadSection": {
-    "appPreviewAlt": ""
+    "appPreviewAlt": "App preview screenshot"
   },
   "error": {
-    "loadingCategories": ""
+    "loadingCategories": "Error loading categories"
   },
-  "errorFetchingCategories": "",
+  "errorFetchingCategories": "Error fetching categories from server",
   "errorPage": {
-    "badRequestMessage": "",
-    "defaultMessage": "",
-    "forbiddenMessage": "",
+    "badRequestMessage": "Invalid request. Please check your data.",
+    "defaultMessage": "Something went wrong.",
+    "forbiddenMessage": "You don't have permission to access this page.",
     "goHomeButton": "Bring me to Home",
-    "notFoundImageAlt": "",
+    "notFoundImageAlt": "Page not found illustration",
     "notFoundMessage": "Sorry, the page you're looking for doesn't exist.",
-    "serverErrorMessage": "",
-    "unauthorizedMessage": ""
+    "serverErrorMessage": "Server error. Please try again later.",
+    "unauthorizedMessage": "Please log in to continue."
   },
   "errors": {
-    "minLength": ""
+    "minLength": "Minimum length required"
   },
   "favoritesPage": {
     "title": "Favorites"
@@ -215,41 +243,56 @@
   "features": {
     "businessOrdersPage": {
       "actions": {
-        "accept": "Accept",
         "chat": "Chat",
-        "completed": "Completed",
-        "notInterested": "Not interested",
         "rate": "Rate"
       }
+    },
+    "businessReviewsPage": {
+      "reviewLabel": "Tap a star to rate this service",
+      "reviewSubtitle": "Leave your feedback here",
+      "submit": "Submit",
+      "tags": {
+        "fast": "Fast",
+        "friendly": "Friendly",
+        "super": "Super",
+        "supportive": "Supportive"
+      },
+      "writeReview": "Write a review",
+      "writeReviewPlaceholder": "Write your review here..."
     }
   },
   "footer": {
-    "copyright": "Web and mobile development"
+    "copyright": "Web and mobile development",
+    "privacy": "Privacy Policy",
+    "terms": "Terms and Conditions"
   },
   "form": {
-    "category": "",
-    "descriptionPlaceholder": "",
-    "locationPlaceholder": "",
-    "professionals": "",
-    "submit": "",
-    "subtitle": "",
-    "title": "",
-    "titlePlaceholder": ""
+    "category": "Category",
+    "descriptionPlaceholder": "Description",
+    "locationPlaceholder": "Location",
+    "professionals": "Professionals",
+    "submit": "Submit",
+    "subtitle": "Please fill in the details",
+    "title": "Title",
+    "titlePlaceholder": "Enter title"
   },
   "forms": {
     "commons": {
       "addAnother": "Add another",
       "email": "The field should be a valid email",
       "min_length": "The field should have at least {{min}} characters",
-      "mustBeNumber": "",
+      "mustBeNumber": "Must be a number",
       "passwords_must_match": "Passwords must match",
       "remove": "Remove",
       "required": "This field is required"
     }
   },
+  "heroSection": {
+    "subtitle": "Plumbers, electricians, mechanics and more — all trusted and verified by the community.",
+    "title": "Find professionals recommended by real people"
+  },
   "landing": {
     "categories": {
-      "button": "View all",
       "title": "Categories"
     },
     "downloadSection": {
@@ -266,6 +309,8 @@
       "title": "Services in high demand"
     },
     "searchForm": {
+      "allCategories": "All Categories",
+      "allLocations": "All Locations",
       "body": "Chat with 3 experts instantly and get your perfect quote!",
       "clearFilters": "Clear Filters",
       "location": "Location",
@@ -299,9 +344,9 @@
       "title": "Testimonials"
     }
   },
-  "loading": "",
+  "loading": "Loading...",
   "loginScreen": {
-    "errorOccurred": ""
+    "errorOccurred": "An error occurred during login"
   },
   "newsletter": {
     "emailPlaceholder": "Enter your email *",
@@ -309,8 +354,9 @@
     "title": "Subscribe to our Newsletter"
   },
   "recommendedServices": {
-    "noServices": "",
-    "title": "Recomendados para ti"
+    "button": "View all services",
+    "noServices": "No services recommended at this time",
+    "title": "Recommended for you"
   },
   "services": {
     "detailsPage": {
@@ -324,18 +370,12 @@
       "confirmationMessage": "Discover additional services offered by your favorite Specialist, or form a team of your favorite Specialists in the Favorites section.",
       "confirmationTitle": "You have scheduled with {{serviceName}}",
       "continueButton": "Continue",
-      "dateModalTitle": "",
+      "dateModalTitle": "Select date and time",
       "description": "You're almost there! Share some details to prepare your Specialist for the job.",
-      "emptyMessage": "",
+      "emptyMessage": "No details provided",
       "label": "Write something...",
       "time": "Time and date",
       "title": "Start the conversation"
-    }
-  },
-  "tasksPage": {
-    "tabs": {
-      "chat": "Chat",
-      "summary": "Tasks Summary"
     }
   },
   "userProfile": {
@@ -347,12 +387,12 @@
     "lastname": "Lastname",
     "logout": "Logout",
     "name": "Name",
-    "publishServices": "Publish my services",
     "save": "Save",
+    "switchToMerchant": "Become a Professional",
+    "switchToUser": "Switch to User",
     "updateButton": "Update"
   },
-  "validation": {
-    "maxLength": "",
-    "required": ""
+  "welcomeBanner": {
+    "greeting": "Hello, {{userName}}! What do you need to solve today?"
   }
 }
