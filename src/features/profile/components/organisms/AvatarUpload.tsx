@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Avatar, IconButton, Typography } from '@mui/material';
+import { Box, Avatar, IconButton, Typography, useTheme } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 
 interface AvatarUploadProps {
@@ -15,6 +15,7 @@ const AvatarUpload: React.FC<AvatarUploadProps> = ({
   handleImageChange,
   errorMsg,
 }) => {
+  const theme = useTheme();
   return (
     <Box>
       <Box
@@ -39,13 +40,13 @@ const AvatarUpload: React.FC<AvatarUploadProps> = ({
             position: 'absolute',
             bottom: 0,
             right: 0,
-            backgroundColor: '#6750A4',
+            backgroundColor: theme.palette.primary.main,
             color: 'white',
             width: 32,
             height: 32,
             boxShadow: 2,
             '&:hover': {
-              backgroundColor: '#55379A',
+              backgroundColor: theme.palette.primary.dark,
             },
           }}
         >
